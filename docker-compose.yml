@@ -1,0 +1,66 @@
+services:
+  # Redis - Caching Layer
+  redis:
+    image: redis:7-alpine
+    container_name: care-beacon-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - care-beacon-network
+
+  # Redis Commander - Web UI for Redis (optional, for debugging)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: care-beacon-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - care-beacon-network
+    profiles:
+      - debug  # Only starts with: docker-compose --profile debug up
+
+  # PostgreSQL with pgvector (optional - for future if you want to try PostgreSQL + pgvector instead of Chroma)
+  # Uncomment if you want to experiment with pgvector
+  # postgres:
+  #   image: ankane/pgvector:latest
+  #   container_name: care-beacon-postgres
+  #   environment:
+  #     POSTGRES_USER: carebeacon
+  #     POSTGRES_PASSWORD: carebeacon_dev
+  #     POSTGRES_DB: care_beacon
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U carebeacon"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #   networks:
+  #     - care-beacon-network
+
+volumes:
+  redis_data:
+    driver: local
+  # postgres_data:
+  #   driver: local
+
+networks:
+  care-beacon-network:
+    driver: bridge

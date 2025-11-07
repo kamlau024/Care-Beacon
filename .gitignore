@@ -1,0 +1,168 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# API Keys and Secrets
+.env
+.env.local
+.env.*.local
+config/api_keys.env
+*.key
+*.pem
+secrets.yaml
+credentials.json
+
+# Vector Database
+data/vector_db/
+*.index
+*.faiss
+chroma_db/
+
+# Cache
+data/cache/
+*.rdb
+dump.rdb
+
+# Data Files (uncomment if you want to track markdown articles in git)
+data/markdown_articles/
+data/raw_articles/
+data/processed_articles/
+
+# Project-specific: Scraped data and outputs
+scraped_data/
+output/
+data/markdown/
+data/articles/
+*.md.backup
+
+
+# Evaluation Results
+evaluation/results/
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Testing
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Type checking
+.pytype/
+
+# Profiling
+*.prof
+
+# Documentation builds
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Logs
+logs/
+*.log
+log.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Model checkpoints (if fine-tuning)
+checkpoints/
+models/
+*.pt
+*.pth
+*.ckpt
+
+# Large files that shouldn't be in git
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+
+# Backup files
+*.backup
+backup/
+
+# Redis
+redis-data/

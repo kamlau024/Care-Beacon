@@ -1,0 +1,42 @@
+# Core Dependencies
+python-frontmatter==1.1.0  # Parse YAML frontmatter in markdown
+markdown==3.5.1  # Markdown processing
+pyyaml==6.0.1  # YAML configuration files
+
+# Vector Database
+chromadb==0.4.22  # Vector database for embeddings
+
+# Embeddings & LLM APIs
+openai==1.12.0  # OpenAI API for embeddings and GPT models
+anthropic==0.18.1  # Claude API (optional, for Phase 2)
+
+# Cache
+redis==5.0.1  # Redis cache client
+
+# API Framework (Phase 2)
+fastapi==0.109.2  # REST API framework
+uvicorn[standard]==0.27.1  # ASGI server
+pydantic==2.6.1  # Data validation
+pydantic-settings==2.1.0  # Settings management
+
+# Utilities
+python-dotenv==1.0.1  # Environment variable management
+tqdm==4.66.1  # Progress bars
+loguru==0.7.2  # Better logging
+
+# Data Processing
+numpy==1.26.4  # Numerical operations
+pandas==2.2.0  # Data manipulation (optional, for analysis)
+
+# Testing
+pytest==8.0.0  # Testing framework
+pytest-asyncio==0.23.5  # Async testing
+pytest-cov==4.1.0  # Code coverage
+httpx==0.26.0  # HTTP client for testing APIs
+
+# Development
+black==24.2.0  # Code formatting
+flake8==7.0.0  # Linting
+mypy==1.8.0  # Type checking
+ipython==8.21.0  # Interactive Python shell
+jupyter==1.0.0  # Jupyter notebooks
