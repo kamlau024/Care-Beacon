@@ -29,10 +29,14 @@ class VectorDatabase:
         # Create persist directory if it doesn't exist
         Path(self.persist_directory).mkdir(parents=True, exist_ok=True)
 
-        # Initialize Chroma client
+        # Initialize Chroma client with telemetry disabled
         self.client = chromadb.PersistentClient(
             path=self.persist_directory,
-            settings=Settings(anonymized_telemetry=False)
+            settings=Settings(
+                anonymized_telemetry=False,
+                allow_reset=True,
+                is_persistent=True
+            )
         )
 
         # Get or create collection
