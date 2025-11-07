@@ -38,8 +38,8 @@ fi
 # Create conda environment if it doesn't exist
 if ! conda env list | grep -q "^${ENV_NAME} "; then
     echo ""
-    echo "Creating conda environment '$ENV_NAME' with Python 3.10..."
-    conda create -n $ENV_NAME python=3.10 -y
+    echo "Creating conda environment '$ENV_NAME' with Python 3.10.19..."
+    conda create -n $ENV_NAME python=3.10.19 -y
     echo "✅ Conda environment created"
 fi
 
@@ -52,6 +52,12 @@ conda activate $ENV_NAME
 # Check Python version
 python_version=$(python --version 2>&1 | awk '{print $2}')
 echo "✅ Python $python_version activated"
+
+# Verify correct Python version
+if [[ ! "$python_version" =~ ^3\.10\. ]]; then
+    echo "⚠️  Warning: Expected Python 3.10.19, got $python_version"
+    echo "   This may cause compatibility issues with ChromaDB"
+fi
 
 # Upgrade pip (use python -m pip to ensure correct pip)
 echo ""

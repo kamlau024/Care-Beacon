@@ -1,5 +1,80 @@
 # Environment Troubleshooting Guide
 
+## Python Version Requirement
+
+**IMPORTANT**: This project uses **Python 3.10.19** consistently.
+
+### Why Python 3.10.19?
+
+- ✅ Stable and well-supported (LTS until October 2026)
+- ✅ Compatible with all our dependencies
+- ✅ Avoids database schema incompatibility issues between versions
+- ✅ Ensures consistent behavior across development and testing
+
+### Verify Your Python Version
+
+```bash
+# Activate the care-beacon environment
+conda activate care-beacon
+
+# Check Python version (should show 3.10.19)
+python --version
+
+# Check Python executable location
+which python
+# Expected: /opt/anaconda3/envs/care-beacon/bin/python
+```
+
+### If You Have the Wrong Version
+
+If you see a different Python version (e.g., 3.13.5 from base anaconda):
+
+```bash
+# 1. Deactivate any active environments
+conda deactivate
+
+# 2. Remove the care-beacon environment
+conda env remove -n care-beacon
+
+# 3. Recreate with Python 3.10.19
+conda create -n care-beacon python=3.10.19 -y
+
+# 4. Activate the environment
+conda activate care-beacon
+
+# 5. Verify version
+python --version
+# Should show: Python 3.10.19
+
+# 6. Install dependencies
+python -m pip install -r requirements.txt
+```
+
+### Common Issue: Multiple Python Versions
+
+**Problem**: You have Python 3.13.5 (base) and Python 3.10.19 (care-beacon), and they create incompatible databases.
+
+**Symptoms**:
+- `sqlite3.OperationalError: no such column: collections.topic`
+- Database created with one version can't be read by another
+- Tests pass with one Python but fail with another
+
+**Solution**:
+1. Always use the care-beacon environment: `conda activate care-beacon`
+2. If switching environments, delete and recreate the database:
+   ```bash
+   rm -rf data/vector_db
+   ```
+3. Run all commands with the care-beacon Python:
+   ```bash
+   # Explicit path (always works)
+   /opt/anaconda3/envs/care-beacon/bin/python scripts/test_vector_db.py
+
+   # Or ensure environment is activated first
+   conda activate care-beacon
+   python scripts/test_vector_db.py
+   ```
+
 ## Problem: pip installs to wrong location
 
 ### Symptoms
@@ -163,26 +238,30 @@ conda install pip
 When setting up the project, use these commands:
 
 ```bash
-# 1. Create conda environment
-conda create -n care-beacon python=3.10 -y
+# 1. Create conda environment with Python 3.10.19
+conda create -n care-beacon python=3.10.19 -y
 
 # 2. Activate environment
 conda activate care-beacon
 
-# 3. Verify Python location
+# 3. Verify Python version (MUST be 3.10.19)
+python --version
+# Expected: Python 3.10.19
+
+# 4. Verify Python location
 which python
 # Must show: /opt/anaconda3/envs/care-beacon/bin/python
 
-# 4. Install pip if needed
+# 5. Install pip if needed
 conda install pip -y
 
-# 5. Install requirements using python -m pip
+# 6. Install requirements using python -m pip
 python -m pip install -r requirements.txt
 
-# 6. Verify installation
+# 7. Verify installation
 python -c "import frontmatter; print('Success!')"
 
-# 7. Run tests
+# 8. Run tests
 python scripts/test_parser.py
 ```
 
@@ -195,12 +274,21 @@ If you're having issues with an existing environment:
 conda deactivate
 conda env remove -n care-beacon
 
-# 2. Recreate following steps above
-conda create -n care-beacon python=3.10 -y
+# 2. Recreate with Python 3.10.19
+conda create -n care-beacon python=3.10.19 -y
 conda activate care-beacon
+
+# 3. Verify Python version
+python --version
+# Expected: Python 3.10.19
+
+# 4. Install dependencies
 python -m pip install -r requirements.txt
 
-# 3. Test
+# 5. Clean any old databases (to avoid version conflicts)
+rm -rf data/vector_db
+
+# 6. Test
 python scripts/test_parser.py
 ```
 

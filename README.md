@@ -52,10 +52,13 @@ care-beacon/
 
 ### Prerequisites
 
+- **Python 3.10.19** (via Conda - see below)
 - Conda (Anaconda or Miniconda)
 - Redis (for caching)
 - OpenAI API key (for embeddings)
 - Anthropic API key (optional, for Claude LLM)
+
+**Important**: This project requires **Python 3.10.19** specifically. Using a different version may cause database compatibility issues.
 
 ### Step 1: Clone and Setup Environment
 
@@ -73,14 +76,17 @@ cd /Users/kamlau/Projects/Care-Beacon
 # Navigate to project directory
 cd /Users/kamlau/Projects/Care-Beacon
 
-# Create conda environment
-conda create -n care-beacon python=3.10 -y
+# Create conda environment with Python 3.10.19
+conda create -n care-beacon python=3.10.19 -y
 
 # Activate conda environment
 conda activate care-beacon
 
-# Install dependencies
-pip install -r requirements.txt
+# Verify Python version (MUST be 3.10.19)
+python --version
+
+# Install dependencies using python -m pip
+python -m pip install -r requirements.txt
 ```
 
 ### Step 2: Configure API Keys
@@ -124,11 +130,17 @@ See `docs/docker.md` for detailed Docker infrastructure guide.
 ### Step 4: Verify Installation
 
 ```bash
+# Verify Python version
+python --version
+# Expected: Python 3.10.19
+
 # Run configuration tests
 pytest tests/test_config.py -v
 
 # Should see all tests pass ✅
 ```
+
+**Troubleshooting**: If you encounter Python version issues, see `docs/environment_troubleshooting.md` for detailed guidance.
 
 ## Quick Start
 
