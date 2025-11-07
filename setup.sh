@@ -53,15 +53,15 @@ conda activate $ENV_NAME
 python_version=$(python --version 2>&1 | awk '{print $2}')
 echo "✅ Python $python_version activated"
 
-# Upgrade pip
+# Upgrade pip (use python -m pip to ensure correct pip)
 echo ""
 echo "Upgrading pip..."
-pip install --upgrade pip --quiet
+python -m pip install --upgrade pip --quiet
 
-# Install dependencies
+# Install dependencies (use python -m pip to ensure correct pip)
 echo ""
 echo "Installing dependencies..."
-pip install -r requirements.txt --quiet
+python -m pip install -r requirements.txt --quiet
 echo "✅ Dependencies installed"
 
 # Create .env file if it doesn't exist
