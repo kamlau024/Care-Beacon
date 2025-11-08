@@ -64,8 +64,7 @@ api:
   port: 8000
   debug: false
   cors_origins:
-    - "http://localhost:3000"
-    - "http://localhost:8000"
+    - "*"  # Allow all origins for development (use specific domains in production)
   rate_limit:
     enabled: true
     requests_per_minute: 60
