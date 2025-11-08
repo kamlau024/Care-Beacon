@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Activity } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -7,8 +8,15 @@ import { SearchInterface } from "@/components/search-interface"
 import { StatsDashboard } from "@/components/stats-dashboard"
 import { HealthCheck } from "@/components/health-check"
 import { AdminControls } from "@/components/admin-controls"
+import type { QuestionResponse } from "@/lib/types"
 
 export default function Home() {
+  // Lift search state to page level to persist across tab switches
+  const [question, setQuestion] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<QuestionResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -29,9 +37,6 @@ export default function Home() {
         <div className="space-y-8">
           {/* Hero Section */}
           <div className="space-y-2">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Medical AI Assistant
-            </h2>
             <p className="text-muted-foreground text-sm md:text-base max-w-3xl">
               Get evidence-based medical information powered by AI and BC Cancer&apos;s comprehensive resources.
               Ask questions in natural language and receive accurate, cited answers.
@@ -48,14 +53,16 @@ export default function Home() {
 
             {/* Search Tab */}
             <TabsContent value="search" className="space-y-6">
-              <div className="grid gap-6 lg:grid-cols-3">
-                <div className="lg:col-span-2">
-                  <SearchInterface />
-                </div>
-                <div className="space-y-6">
-                  <HealthCheck />
-                </div>
-              </div>
+              <SearchInterface
+                question={question}
+                setQuestion={setQuestion}
+                loading={loading}
+                setLoading={setLoading}
+                result={result}
+                setResult={setResult}
+                error={error}
+                setError={setError}
+              />
             </TabsContent>
 
             {/* Statistics Tab */}
@@ -78,9 +85,6 @@ export default function Home() {
       <footer className="border-t mt-12">
         <div className="container px-4 md:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>
-              Built with Next.js, shadcn/ui, and powered by OpenAI
-            </p>
             <p className="text-xs">
               ⚠️ For educational purposes only. Consult healthcare professionals for medical advice.
             </p>

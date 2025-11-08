@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Search, Loader2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,11 +8,27 @@ import { Badge } from "@/components/ui/badge"
 import { api, ApiError } from "@/lib/api"
 import type { QuestionResponse } from "@/lib/types"
 
-export function SearchInterface() {
-  const [question, setQuestion] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<QuestionResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
+interface SearchInterfaceProps {
+  question: string
+  setQuestion: (value: string) => void
+  loading: boolean
+  setLoading: (value: boolean) => void
+  result: QuestionResponse | null
+  setResult: (value: QuestionResponse | null) => void
+  error: string | null
+  setError: (value: string | null) => void
+}
+
+export function SearchInterface({
+  question,
+  setQuestion,
+  loading,
+  setLoading,
+  result,
+  setResult,
+  error,
+  setError,
+}: SearchInterfaceProps) {
 
   const handleSearch = async () => {
     if (!question.trim()) return
@@ -63,6 +78,8 @@ export function SearchInterface() {
               disabled={loading}
               className="flex-1"
             />
+          </div>
+          <div className="flex gap-2 pt-4">
             <Button onClick={handleSearch} disabled={loading || !question.trim()}>
               {loading ? (
                 <>

@@ -1,0 +1,25 @@
+# ngrok configuration for Care Beacon
+# Save this as ngrok.yml in your project root
+#
+# Usage: ngrok start --all --config ngrok.yml
+# Or: ngrok start api web --config ngrok.yml
+
+version: "2"
+
+tunnels:
+  api:
+    proto: http
+    addr: 8000
+    # Uncomment and set if you have ngrok pro (custom subdomain)
+    # subdomain: carebeacon-api
+    inspect: true
+
+  web:
+    proto: http
+    addr: 3000
+    # Uncomment and set if you have ngrok pro (custom subdomain)
+    # subdomain: carebeacon-web
+    inspect: true
+
+# For ngrok Pro users: add your authtoken here
+authtoken: 33wto5OcGgNuMHBYOiXmNrtGt2s_7ZPJRgJQFzsb42zNxdo4M

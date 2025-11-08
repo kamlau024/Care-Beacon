@@ -66,7 +66,7 @@ cors_origins = api_config.get("cors_origins", ["http://localhost:3000"])
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_credentials=True,
+    allow_credentials=False,  # Must be False when using "*" for origins
     allow_methods=["*"],
     allow_headers=["*"],
 )
