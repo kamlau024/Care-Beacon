@@ -1,5 +1,6 @@
 """Redis cache client for query results."""
 
+import os
 import json
 import hashlib
 import time
@@ -55,18 +56,22 @@ class RedisCache:
     def _load_config(self) -> CacheConfig:
         """Load cache configuration.
 
+        Checks environment variables first, then falls back to config file.
+        This allows Docker environment variables to override config.yaml.
+
         Returns:
             CacheConfig instance
         """
         config = get_config()
         cache_config = config.get("cache", {})
 
+        # Check environment variables first (for Docker deployments)
         return CacheConfig(
             enabled=cache_config.get("enabled", True),
-            host=cache_config.get("redis_host", "localhost"),
-            port=cache_config.get("redis_port", 6379),
-            db=cache_config.get("redis_db", 0),
-            password=cache_config.get("redis_password"),
+            host=os.getenv("REDIS_HOST", cache_config.get("redis_host", "localhost")),
+            port=int(os.getenv("REDIS_PORT", cache_config.get("redis_port", 6379))),
+            db=int(os.getenv("REDIS_DB", cache_config.get("redis_db", 0))),
+            password=os.getenv("REDIS_PASSWORD", cache_config.get("redis_password")),
             ttl_seconds=cache_config.get("ttl_seconds", 3600),
             key_prefix=cache_config.get("key_prefix", "care_beacon:"),
             max_retries=cache_config.get("max_retries", 3),

@@ -1,4 +1,33 @@
 services:
+  # API Service - FastAPI + RAG System + ChromaDB
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: care-beacon-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./data:/app/data              # Persist ChromaDB data
+      - ./logs:/app/logs              # Persist logs
+      - ./scraped_data:/app/scraped_data  # Source articles
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - care-beacon-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # Redis - Caching Layer
   redis:
     image: redis:7-alpine
@@ -16,6 +45,24 @@ services:
       retries: 3
     networks:
       - care-beacon-network
+
+  # Data Ingestion Service (run once or on-demand)
+  ingestion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: care-beacon-ingestion
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data              # Share ChromaDB data with API
+      - ./scraped_data:/app/scraped_data  # Source articles
+      - ./logs:/app/logs
+    command: python scripts/ingest_data.py
+    networks:
+      - care-beacon-network
+    profiles:
+      - ingest  # Only runs with: docker-compose --profile ingest up ingestion
 
   # Redis Commander - Web UI for Redis (optional, for debugging)
   redis-commander:

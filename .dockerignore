@@ -35,10 +35,10 @@ htmlcov/
 logs/
 *.log
 
-# Data (don't include in Docker image)
+# Data (mounted as volumes instead)
 data/
-scraped_data/
 evaluation/results/
+# Keep scraped_data/ - needed for ingestion
 
 # Environment
 .env
