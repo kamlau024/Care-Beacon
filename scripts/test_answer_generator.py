@@ -16,6 +16,28 @@ sys.path.insert(0, str(project_root))
 # Load environment variables from .env file
 load_dotenv(project_root / ".env")
 
+# Disable ChromaDB telemetry (before importing ChromaDB dependencies)
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
+
+
+class FilteredStderr:
+    """Filter out ChromaDB telemetry warnings from stderr."""
+
+    def __init__(self, original_stderr):
+        self.original_stderr = original_stderr
+
+    def write(self, message):
+        # Filter out telemetry warnings
+        if "telemetry" not in message.lower() and "capture()" not in message:
+            self.original_stderr.write(message)
+
+    def flush(self):
+        self.original_stderr.flush()
+
+
+# Install stderr filter to hide ChromaDB telemetry warnings
+sys.stderr = FilteredStderr(sys.stderr)
+
 from src.generation.answer_generator import AnswerGenerator
 
 
