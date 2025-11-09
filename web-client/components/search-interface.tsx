@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Loader2, ExternalLink } from "lucide-react"
+import { Search, Loader2, ExternalLink, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -70,14 +70,26 @@ export function SearchInterface({
         </CardHeader>
         <CardContent>
           <div className="flex gap-2">
-            <Input
-              placeholder="e.g., What are the symptoms of breast cancer?"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={loading}
-              className="flex-1"
-            />
+            <div className="relative flex-1">
+              <Input
+                placeholder="e.g., What are the symptoms of breast cancer?"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={loading}
+                className="pr-10"
+              />
+              {question && (
+                <button
+                  onClick={() => setQuestion("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  type="button"
+                  aria-label="Clear input"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
           <div className="flex gap-2 pt-4">
             <Button onClick={handleSearch} disabled={loading || !question.trim()}>
