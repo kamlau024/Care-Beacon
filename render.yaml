@@ -9,7 +9,7 @@ services:
   - type: web
     name: care-beacon-api
     runtime: python
-    plan: free
+    plan: starter
     buildCommand: "chmod +x scripts/render_build.sh && ./scripts/render_build.sh"
     startCommand: "python scripts/start_api.py"
     envVars:
