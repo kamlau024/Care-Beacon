@@ -1,0 +1,38 @@
+{
+  "url": "https://cancer.ca/en/living-with-cancer/how-we-can-help/connect-with-our-online-community",
+  "title": "Connect with our online community",
+  "date_scraped": "2025-11-09T20:39:58.272602",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Living With Cancer",
+    "How We Can Help",
+    "Connect With Our Online Community"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/research/research/research_cancerstats_header_1920x695.jpg?rev=8d989fc4d2b14d4fa09a8d5ef2452edd&cx=0.5&cy=0.5&cw=575&ch=425&hash=0C46FD8131EFC77C94EF2CB6B6F3CACE",
+      "alt": "a woman sits at her kitchen table working on her laptop",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/stock-images/publication-card-couple---embrace-temp.png?rev=6c75b421d6664a45bbcb228cf27244da&cx=0.5&cy=0.5&cw=900&ch=486&hash=8C8E6537E7B189BF46C60C7F2084016E",
+      "alt": "Two people embracing",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/about-us/hubs/stories/2022/7-things-to-say-to-someone-living-with-cancer/what-to-say-story-1200x628-gettyimages-918459102.jpg?rev=2e270d57de8849eaa8bd48312e208fcb&cx=0.5&cy=0.5&cw=900&ch=486&hash=284C2C104142A351CC51F21078624550",
+      "alt": "Two women talking and laughing. One woman is wearing a head scarf.",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/ways-to-give/personal-donation/wtg-tribute-women.jpg?rev=76d3c7ac93754d4d820e703efa05c1a4&cx=0.5&cy=0.5&cw=900&ch=486&hash=DA15ED6A0C28763F635F5CFEB3E26EF7",
+      "alt": "A smiling woman wraps her arms around the shoulders of an older woman",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/living-with-cancer/how-we-can-help/connect-with-our-online-community.md"
+}

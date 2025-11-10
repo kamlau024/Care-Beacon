@@ -1,0 +1,40 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/what-is-cancer/how-cancer-starts-grows-and-spreads",
+  "title": "How cancer starts, grows and spreads",
+  "date_scraped": "2025-11-08T22:47:22.727194",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "What Is Cancer",
+    "How Cancer Starts Grows And Spreads",
+    "What is cancer?",
+    "How cancer starts, grows and spreads"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://img.youtube.com/vi/HAnmCZeb4Z8/0.jpg",
+      "alt": "YouTube video poster",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cancer-101/3c9bc110-c9dc-11ea-8e8b-0242df4d59be-en.png?h=241&iar=0&mw=543&w=239&rev=8078862a396449d984f187686bac8024&hash=2E9BDDED25F38D33823F5DD930ADCCB0",
+      "alt": "Diagram of cell division",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cancer-101/3cb45220-c9dc-11ea-8e8b-0242df4d59be-en.png?h=216&iar=0&mw=543&w=431&rev=841357398fdc4f3c9102c1783d888cb7&hash=541817EA2A16D06BA4BEC049A9265AE4",
+      "alt": "Diagram of how cancer grows",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cancer-101/3ccd3150-c9dc-11ea-8e8b-0242df4d59be-en.png?h=214&iar=0&mw=543&w=445&rev=84707927d713466e8742fd3eebd04388&hash=979C2B4CBFF946AA31890A37371FD580",
+      "alt": "Diagram of how cancer spreads",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/what-is-cancer/how-cancer-starts-grows-and-spreads.md"
+}

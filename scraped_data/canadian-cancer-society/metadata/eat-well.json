@@ -1,0 +1,48 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/eat-well",
+  "title": "Eat well",
+  "date_scraped": "2025-11-09T20:39:29.025376",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Eat Well"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-slipt-image-description.jpg?rev=5e6b55c5f6f94238ae74fadeaf0eb486&cx=0.5&cy=0.5&cw=575&ch=452&hash=437D1F27B964D350CFB4F63F32FABAC0",
+      "alt": "Plate of colourful vegetables and fruit",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-card-what-your-dinner-plate-should-look-like.jpg?rev=89efccac43dd46b0b667316b57610690&cx=0.5&cy=0.5&cw=900&ch=486&hash=C40BC4AB4A0B376ABBD94C15CEF4608C",
+      "alt": "Dinner plate with salmon, vegetables and fruit, and grains",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-card-eat-more-veggies-3.jpg?rev=467c2d5d41b043a7984ebe80754985ae&cx=0.5&cy=0.5&cw=900&ch=486&hash=ABAB62DFFC020D5B08F15BDD98B84877",
+      "alt": "Toast with yogurt and berries",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-card-eating-well-extras-1.jpg?rev=1dc277d64dd74362abf2007dda438386&cx=0.5&cy=0.5&cw=900&ch=486&hash=4276F97DFA405D17A7057290C8F36DED",
+      "alt": "An assortment of grains, nuts, veggies, fruit and salmon",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-card-making-time-for-eating-well.jpg?rev=de63c36c09054b2082cb154826a3f774&cx=0.5&cy=0.5&cw=900&ch=486&hash=B20804F66F098AEDE94CC17A520E9643",
+      "alt": "People cooking in a kitchen",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-cards-eat-well-with-kids.jpg?rev=9fc19801d75e4d6c8b9ee96c2d9501e8&cx=0.5&cy=0.5&cw=900&ch=486&hash=5CEE8D1C9B61A4D01C83FBD19EB4CED0",
+      "alt": "A family preparing a meal together in the kitchen",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/eat-well.md"
+}

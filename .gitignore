@@ -58,7 +58,7 @@ data/raw_articles/
 data/processed_articles/
 
 # Project-specific: Scraped data and outputs
-scraped_data/
+# scraped_data/ - Now tracked for Render deployment
 output/
 data/markdown/
 data/articles/

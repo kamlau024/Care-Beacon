@@ -1,0 +1,24 @@
+{
+  "url": "https://cancer.ca/en/treatments/tests-and-procedures/axillary-lymph-node-dissection-alnd",
+  "title": "Axillary lymph node dissection (ALND)",
+  "date_scraped": "2025-11-09T20:49:11.169118",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Treatments",
+    "Tests And Procedures",
+    "Axillary Lymph Node Dissection Alnd",
+    "Axillary lymph node dissection (ALND)"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/5189fe20-91cb-11ed-9f04-02424b741190-en.png?h=378&iar=0&mw=543&w=356&rev=d7280bc542eb4d0b807d27367d634555&hash=62DE8641D9197F0DAEB9889D2ED72EE1",
+      "alt": "Diagram of axillary lymph nodes",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/treatments/tests-and-procedures/axillary-lymph-node-dissection-alnd.md"
+}

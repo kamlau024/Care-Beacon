@@ -1,0 +1,24 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/what-is-cancer/lymphatic-system",
+  "title": "The lymphatic system",
+  "date_scraped": "2025-11-09T20:40:41.537169",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "What Is Cancer",
+    "Lymphatic System",
+    "What is cancer?"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cancer-101/533c9370-b64c-11ea-bc3d-0242df4d59be-en.png?h=451&iar=0&mw=543&w=543&rev=0ee99f37b5a94519a669756d90f97010&hash=A01FDA5B1A2EDE62B06CB8FE27D822D0",
+      "alt": "Diagram of the lymphatic system",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/what-is-cancer/lymphatic-system.md"
+}

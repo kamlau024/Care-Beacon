@@ -1,0 +1,63 @@
+{
+  "url": "https://cancer.ca/en/treatments/tests-and-procedures/bowel-resection",
+  "title": "Bowel resection",
+  "date_scraped": "2025-11-09T20:48:48.532121",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Treatments",
+    "Tests And Procedures",
+    "Bowel Resection"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/8f5714c0-b64c-11ea-bc3d-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=41619a195fd2403193aabe20c308f070&hash=416A70E232629CBF45B9D858100CA63F",
+      "alt": "Diagram of the small and large intestine",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/67540030-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=417333c623f24e18a88c55a88cb067d7&hash=730DEFCB37F3816D3E2EBF272D6DE012",
+      "alt": "Diagram of a right hemicolectomy",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/677bac70-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=4f5cb9a053bc47a3857ae97e7c592a41&hash=386F11CB00C5C0722539A5341675BE89",
+      "alt": "Diagram of a transverse colectomy",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/679798e0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=1e1b30c6215d40339c1bdde9a4b06c81&hash=B27C6D22D9E09002F0B6BEF57890EDF1",
+      "alt": "Diagram of a left hemicolectomy",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/67ad6ad0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=0ec5a7efc1a54d0f9aa7e62eaa06472f&hash=5BA9A8EF3DA24DDAAA7A3EEBE37749FD",
+      "alt": "Diagram of a sigmoid colectomy",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/67c20440-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=e3da98fb8f394c4da027f6b7f42e6b28&hash=BEECDE3401EAFFA6F073B1C0806812F9",
+      "alt": "Diagram of a low anterior resection",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/67d62880-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=ea2315dab7c14b65aa1e80ad4ee3dd91&hash=9A5C405512099B5B63264B45D4DC4BE0",
+      "alt": "Diagram of a proctocolectomy with coloanal anastomosis",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/67f3c2a0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=d92aa65114034f2aa8c5704592d6147b&hash=7DDD8F9FCAE4AD04379DF2EF7BF9E728",
+      "alt": "Diagram of an abdominoperineal resection",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/680db340-c9ea-11ea-8e8b-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=71d066f3d4174983bc988fcb5248d44e&hash=9DAEA35CAC3F7BFD08C195B5A291D8A4",
+      "alt": "Diagram of a total colectomy",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/treatments/tests-and-procedures/bowel-resection.md"
+}

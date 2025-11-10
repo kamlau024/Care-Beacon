@@ -1,0 +1,44 @@
+{
+  "url": "https://cancer.ca/en/living-with-cancer/virtual-cancer-care-resources/patients",
+  "title": "People living with cancer and caregivers",
+  "date_scraped": "2025-11-09T02:02:51.727459",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Living With Cancer",
+    "Virtual Cancer Care Resources",
+    "Patients",
+    "People living with cancer and caregivers"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/virtual-cancer-care/living-with-cancer_virtual-cancer-care_caregivers_header.jpg?rev=c1f6dbd21c6346c4a62f4a6d722e02d3&cx=0.73&cy=0.46&cw=575&ch=425&hash=97BEEC7602D6BEEB38B6343B24B58BAE",
+      "alt": "An older adult is being shown something on a tablet by a younger family member. Another family member supportively touches their shoulder.",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/virtual-cancer-care/virtual-cancer-care_pat1_making-most-of-time-and-space-thumbnail.png?rev=341bdacbb3004e338304b6a8900f22fe&cx=0.5&cy=0.5&cw=1120&ch=630&hash=F26E24E6311A3C40F634F50E57B1629B",
+      "alt": "YouTube video poster",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/virtual-cancer-care/virtual-cancer-care_pat2_testing-technology-thumbnail.png?rev=b81c93613b164df287d654af20b6d3a5&cx=0.5&cy=0.5&cw=1120&ch=630&hash=0C65ED238F258DAC2FC45596E0409E1F",
+      "alt": "YouTube video poster",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/virtual-cancer-care/virtual-cancer-care_pat3_remembering-important-stuff-thumbnail.png?rev=7d1300b721ff4db2ba58f77a6099aeb9&cx=0.5&cy=0.5&cw=1120&ch=630&hash=21EDB8BFE5EB01BEEAD28CB48C9C9D10",
+      "alt": "YouTube video poster",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/virtual-cancer-care/living-with-cancer_virtual-cancer-care_caregivers_split-text.jpg?rev=cc1726a57e40482fa1f751f75be32f38&cx=0.5&cy=0.5&cw=575&ch=452&hash=6D201647F6E49B49EB9B0DF380648906",
+      "alt": "A person types on a cellphone with both hands.",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/living-with-cancer/virtual-cancer-care-resources/patients.md"
+}

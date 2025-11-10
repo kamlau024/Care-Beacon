@@ -1,0 +1,2449 @@
+{
+  "url": "https://www.bccancer.bc.ca/health-info/prevention",
+  "title": "Prevention",
+  "date_scraped": "2025-11-08T21:34:45.864703",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Health Info",
+    "Prevention"
+  ],
+  "sidebar_links": [
+    {
+      "text": "Learn about cancer prevention",
+      "url": "https://www.bccancer.bc.ca/prevention"
+    },
+    {
+      "text": "Sun Safety",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=542a10d2-4a5f-44aa-99e7-e8e898a7fc0f"
+    },
+    {
+      "text": "Tobacco",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=f47b3630-7a41-4354-894c-021282a22402"
+    },
+    {
+      "text": "Nutrition and Exercise",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=0950c21d-b5e2-4145-9301-1ffe2daa445d"
+    },
+    {
+      "text": "Air Quality",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=8db97d36-05c7-46c9-a169-a7e631e41d10"
+    },
+    {
+      "text": "Alcohol",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=97b05a3f-7f08-4ebd-974e-9e8ffd382c1b"
+    },
+    {
+      "text": "HPV",
+      "url": "https://www.bccancer.bc.ca/_layouts/15/FIXUPREDIRECT.ASPX?WebId=516b75d3-53e4-42f7-9a39-8d2d42b1dbd3&TermSetId=27e13e0b-4d57-412c-ae7b-82f7d2f02adf&TermId=03af1b9d-4939-40f1-99fb-4f893d942b6d"
+    },
+    {
+      "text": "Our Services",
+      "url": "https://www.bccancer.bc.ca/our-services"
+    },
+    {
+      "text": "Patient Guide",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide"
+    },
+    {
+      "text": "Introduction to BC Cancer",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/introduction"
+    },
+    {
+      "text": "New Patients Form",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/new-patients-form"
+    },
+    {
+      "text": "Your First Visit",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/first-visit"
+    },
+    {
+      "text": "Patient Handout Search",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/patient-handout-search"
+    },
+    {
+      "text": "Questions for Your Doctor",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/questions-for-your-doctor"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/cancer-care-team"
+    },
+    {
+      "text": "Services & Support",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/services-support"
+    },
+    {
+      "text": "Parking for Patients",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/parking-for-patients"
+    },
+    {
+      "text": "Fair Pharmacare",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/fair-pharmacare"
+    },
+    {
+      "text": "Request Patient Records",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/request-patient-records"
+    },
+    {
+      "text": "Your Health Information",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/your-health-information"
+    },
+    {
+      "text": "Out-of-province / Out-of-country Patients",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/out-of-province-out-of-country-patients"
+    },
+    {
+      "text": "Glossary of Terms",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/glossary-of-terms"
+    },
+    {
+      "text": "Systemic Therapy Teaching",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/systemic-therapy-teaching"
+    },
+    {
+      "text": "CST for patients",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/cst-for-patients"
+    },
+    {
+      "text": "Indigenous self-identification",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/cst-for-patients/indigenous-self-identification"
+    },
+    {
+      "text": "Influenza and COVID-19 Vaccine Information for People with Cancer",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/influenza-and-covid-vaccine-info-for-people-with-cancer"
+    },
+    {
+      "text": "Safer Space",
+      "url": "https://www.bccancer.bc.ca/our-services/patient-guide/safer-space"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/services"
+    },
+    {
+      "text": "Clinical Ethics",
+      "url": "https://www.bccancer.bc.ca/our-services/services/clinical-ethics"
+    },
+    {
+      "text": "Hereditary Cancer",
+      "url": "https://www.bccancer.bc.ca/our-services/services/hereditary-cancer"
+    },
+    {
+      "text": "High Risk Clinic",
+      "url": "https://www.bccancer.bc.ca/our-services/services/hereditary-cancer/high-risk-clinic"
+    },
+    {
+      "text": "Indigenous Cancer Control",
+      "url": "https://www.bccancer.bc.ca/our-services/services/indigenous-cancer-control"
+    },
+    {
+      "text": "Interpreters",
+      "url": "https://www.bccancer.bc.ca/our-services/services/interpreters"
+    },
+    {
+      "text": "Late Effects, Assessment & Follow-Up",
+      "url": "https://www.bccancer.bc.ca/our-services/services/late-effects-assessment-follow-up"
+    },
+    {
+      "text": "Library",
+      "url": "https://www.bccancer.bc.ca/our-services/services/library"
+    },
+    {
+      "text": "Regional Centre Libraries",
+      "url": "https://www.bccancer.bc.ca/our-services/services/library/contacts-and-hours"
+    },
+    {
+      "text": "Most-Searched Topics",
+      "url": "https://www.bccancer.bc.ca/our-services/services/library/most-searched-in-bcca-library"
+    },
+    {
+      "text": "Molecular Imaging Therapy",
+      "url": "https://www.bccancer.bc.ca/our-services/services/molecular-imaging-therapy"
+    },
+    {
+      "text": "PET Cyclotron and Radiopharmacy Facility",
+      "url": "https://www.bccancer.bc.ca/our-services/services/molecular-imaging-therapy/pet-cyclotron-and-radiopharmacy-facility"
+    },
+    {
+      "text": "Screening Programs",
+      "url": "https://www.bccancer.bc.ca/our-services/services/screening-programs"
+    },
+    {
+      "text": "Smoking Cessation Program",
+      "url": "https://www.bccancer.bc.ca/our-services/services/smoking-cessation-program"
+    },
+    {
+      "text": "Support Programs",
+      "url": "https://www.bccancer.bc.ca/our-services/services/support-programs"
+    },
+    {
+      "text": "Supportive Care",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care"
+    },
+    {
+      "text": "Art Therapy",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/art-therapy"
+    },
+    {
+      "text": "Nutrition",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/nutrition"
+    },
+    {
+      "text": "Pain & Symptom Management",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/pain-symptom-management"
+    },
+    {
+      "text": "Patient & Family Counselling",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/patient-family-counselling"
+    },
+    {
+      "text": "Physiotherapy",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/physiotherapy"
+    },
+    {
+      "text": "Psychiatry",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/psychiatry"
+    },
+    {
+      "text": "Speech-Language Pathology",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/speech-language-pathology"
+    },
+    {
+      "text": "Spiritual Health",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/spiritual-health"
+    },
+    {
+      "text": "Vocational Rehabilitation",
+      "url": "https://www.bccancer.bc.ca/our-services/services/supportive-care/vocational-rehabilitation"
+    },
+    {
+      "text": "Centres & Clinics",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics"
+    },
+    {
+      "text": "BC Cancer – Abbotsford",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-abbotsford"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-abbotsford/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-abbotsford/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-abbotsford/services"
+    },
+    {
+      "text": "Volunteer",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-abbotsford/volunteer"
+    },
+    {
+      "text": "BC Cancer – Kelowna",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/services"
+    },
+    {
+      "text": "Volunteer",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/volunteer"
+    },
+    {
+      "text": "Research",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/research"
+    },
+    {
+      "text": "Research Involvement",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-kelowna/research/research-involvement"
+    },
+    {
+      "text": "BC Cancer – Prince George",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/services"
+    },
+    {
+      "text": "Territorial Acknowledgement and Indigenous Design",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/territorial-acknowledgement-and-indigenous-design"
+    },
+    {
+      "text": "Volunteer",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/volunteer"
+    },
+    {
+      "text": "Research",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/research"
+    },
+    {
+      "text": "EPICC",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-prince-george/epicc"
+    },
+    {
+      "text": "BC Cancer – Surrey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey/services"
+    },
+    {
+      "text": "Research",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey/research"
+    },
+    {
+      "text": "Territorial Acknowledgement and Indigenous Design",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-surrey/territorial-acknowledgement-and-indigenous-design"
+    },
+    {
+      "text": "BC Cancer – Vancouver",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver/services"
+    },
+    {
+      "text": "Volunteer",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver/volunteer"
+    },
+    {
+      "text": "EPICC",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-vancouver/epicc"
+    },
+    {
+      "text": "BC Cancer – Victoria",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria"
+    },
+    {
+      "text": "Patient Journey",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/patient-journey"
+    },
+    {
+      "text": "Cancer Care Team",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/cancer-care-team"
+    },
+    {
+      "text": "Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/services"
+    },
+    {
+      "text": "Volunteer",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/volunteer"
+    },
+    {
+      "text": "Research",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/research-initiatives"
+    },
+    {
+      "text": "Deeley Research Centre",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/research-initiatives/deeley-research-centre"
+    },
+    {
+      "text": "Biobanking & Biospecimen Research Services",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/research-initiatives/biobanking-biospecimen-research-services"
+    },
+    {
+      "text": "Virtual Health",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/virtual-health"
+    },
+    {
+      "text": "Virtual Health Patient Agreement",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/virtual-health/virtual-health-patient-agreement"
+    },
+    {
+      "text": "Virtual Health Form",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/bc-cancer-victoria/virtual-health/virtual-health-form"
+    },
+    {
+      "text": "Locations",
+      "url": "https://www.bccancer.bc.ca/our-services/centres-clinics/locations"
+    },
+    {
+      "text": "Treatments",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments"
+    },
+    {
+      "text": "Biosimilar Drugs",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/biosimilar-drugs"
+    },
+    {
+      "text": "Radiation Therapy",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy"
+    },
+    {
+      "text": "Side Effects & Management",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management"
+    },
+    {
+      "text": "Brain",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/brain"
+    },
+    {
+      "text": "Breast or Chest Wall",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/breast-or-chest-wall"
+    },
+    {
+      "text": "Chest",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/chest"
+    },
+    {
+      "text": "General",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/general"
+    },
+    {
+      "text": "Head & Neck",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/head-neck"
+    },
+    {
+      "text": "Pelvis",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/pelvis"
+    },
+    {
+      "text": "Primary Skin: Care of Radiation Therapy Side Effects",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/primary-skin-care-of-radiation-therapy-side-effects"
+    },
+    {
+      "text": "Single Treatment",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/single-treatment"
+    },
+    {
+      "text": "Upper Abdomen",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/side-effects-management/upper-abdomen"
+    },
+    {
+      "text": "External Beam Radiation Therapy (EBRT)",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/external-beam-radiation-therapy"
+    },
+    {
+      "text": "Internal Radiation Therapy (Brachytherapy)",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/radiation-therapy/internal-radiation-therapy"
+    },
+    {
+      "text": "Surgery",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/surgery"
+    },
+    {
+      "text": "Systemic Therapy (Chemotherapy)",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/systemic-therapy-(chemotherapy)"
+    },
+    {
+      "text": "Immunotherapy",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/systemic-therapy-(chemotherapy)/immunotherapy"
+    },
+    {
+      "text": "Chimeric Antigen Receptor (CAR) T-cell Therapy",
+      "url": "https://www.bccancer.bc.ca/our-services/treatments/systemic-therapy-(chemotherapy)/immunotherapy/chimeric-antigen-receptor-(car)-t-cell-therapy"
+    },
+    {
+      "text": "Health Info",
+      "url": "https://www.bccancer.bc.ca/health-info"
+    },
+    {
+      "text": "Clinical Care Pathways for Patients",
+      "url": "https://www.bccancer.bc.ca/health-info/clinical-care-pathways"
+    },
+    {
+      "text": "Types of Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer"
+    },
+    {
+      "text": "About Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/about-cancer"
+    },
+    {
+      "text": "Blood & Lymphoid Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/blood-lymphoid"
+    },
+    {
+      "text": "Hodgkin Lymphoma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/blood-lymphoid/hodgkin-lymphoma"
+    },
+    {
+      "text": "Leukemia",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/blood-lymphoid/leukemia"
+    },
+    {
+      "text": "Myelomas",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/blood-lymphoid/myelomas"
+    },
+    {
+      "text": "Non-Hodgkin Lymphoma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/blood-lymphoid/non-hodgkin-lymphoma"
+    },
+    {
+      "text": "Bone & Soft Tissue Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/bone-soft-tissue"
+    },
+    {
+      "text": "Bone Sarcomas",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/bone-soft-tissue/bone-sarcomas"
+    },
+    {
+      "text": "Bone, Secondary",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/bone-soft-tissue/bone-secondary"
+    },
+    {
+      "text": "Soft Tissue Sarcomas",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/bone-soft-tissue/soft-tissue-sarcomas"
+    },
+    {
+      "text": "Brain & Central Nervous System Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/brain-central-nervous-system"
+    },
+    {
+      "text": "Patient and Family Advisory Council",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/brain-central-nervous-system/patient-and-family-advisory-council"
+    },
+    {
+      "text": "Art Show",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/brain-central-nervous-system/art-show"
+    },
+    {
+      "text": "Headlines",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/brain-central-nervous-system/headlines"
+    },
+    {
+      "text": "Terry Kennerley Award",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/brain-central-nervous-system/terry-kennerley-award"
+    },
+    {
+      "text": "Breast Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast-cancer"
+    },
+    {
+      "text": "Menopause",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast-cancer/menopause"
+    },
+    {
+      "text": "Reconstruction or Prosthesis",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast-cancer/reconstruction-or-prosthesis"
+    },
+    {
+      "text": "Lymphedema",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast-cancer/lymphedema"
+    },
+    {
+      "text": "Exercises after Surgery",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast-cancer/exercises-after-surgery"
+    },
+    {
+      "text": "Childhood Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/childhood-cancer"
+    },
+    {
+      "text": "Digestive System Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system"
+    },
+    {
+      "text": "Anal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/anus"
+    },
+    {
+      "text": "Bile Duct",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/bile-duct"
+    },
+    {
+      "text": "Colorectal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/colorectal"
+    },
+    {
+      "text": "Esophageal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/esophagus"
+    },
+    {
+      "text": "Gallbladder",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/gallbladder"
+    },
+    {
+      "text": "Liver",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/liver"
+    },
+    {
+      "text": "Liver, Secondary",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/liver-secondary"
+    },
+    {
+      "text": "Pancreatic",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/pancreas"
+    },
+    {
+      "text": "Small Bowel",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/small-bowel"
+    },
+    {
+      "text": "Stomach",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/digestive-system/stomach"
+    },
+    {
+      "text": "Eye Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/eye"
+    },
+    {
+      "text": "Head & Neck Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck"
+    },
+    {
+      "text": "Laryngeal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck/larynx"
+    },
+    {
+      "text": "Mouth (Oral)",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck/mouth"
+    },
+    {
+      "text": "Pharyngeal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck/pharynx"
+    },
+    {
+      "text": "Salivary Glands",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck/salivary-glands"
+    },
+    {
+      "text": "Thyroid",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/head-neck/thyroid"
+    },
+    {
+      "text": "Lung Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/lung"
+    },
+    {
+      "text": "Lung",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/lung/lung"
+    },
+    {
+      "text": "Mesothelioma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/lung/mesothelioma"
+    },
+    {
+      "text": "Thymus",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/lung/thymus"
+    },
+    {
+      "text": "Pelvic Area Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area"
+    },
+    {
+      "text": "Cervical",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/cervix"
+    },
+    {
+      "text": "Gestational Trophoblastic Neoplasia",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/gestational-trophoblastic-neoplasia"
+    },
+    {
+      "text": "Ovarian",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/ovary"
+    },
+    {
+      "text": "Penile",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/penis"
+    },
+    {
+      "text": "Prostate",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/prostate"
+    },
+    {
+      "text": "Testicular",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/testes"
+    },
+    {
+      "text": "Uterine / Endometrial",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/uterus"
+    },
+    {
+      "text": "Vaginal",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/vagina"
+    },
+    {
+      "text": "Vulvar",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/pelvic-area/vulva"
+    },
+    {
+      "text": "Skin Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/skin"
+    },
+    {
+      "text": "Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/skin/melanoma"
+    },
+    {
+      "text": "Skin Lymphoma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/skin/skin-lymphoma"
+    },
+    {
+      "text": "Skin, Non-Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/skin/skin-non-melanoma"
+    },
+    {
+      "text": "Urinary Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/urinary"
+    },
+    {
+      "text": "Bladder",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/urinary/bladder"
+    },
+    {
+      "text": "Kidney",
+      "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/urinary/kidney"
+    },
+    {
+      "text": "Coping with Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer"
+    },
+    {
+      "text": "Advance Care Planning",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/advance-care-planning"
+    },
+    {
+      "text": "Complementary & Alternative Therapies",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/complementary-alternative-therapies"
+    },
+    {
+      "text": "Emotional Support",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support"
+    },
+    {
+      "text": "Anger",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support/anger"
+    },
+    {
+      "text": "Loss and Grief",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support/loss-and-grief"
+    },
+    {
+      "text": "Managing Stress",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support/managing-stress"
+    },
+    {
+      "text": "Sadness and Depression",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support/sadness-and-depression"
+    },
+    {
+      "text": "Worried, Scared or Anxious",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/emotional-support/worried-scared-or-anxious"
+    },
+    {
+      "text": "Exercise Support",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/exercise-support"
+    },
+    {
+      "text": "Facts 4 Teens",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/facts-4-teens"
+    },
+    {
+      "text": "Facts & Feelings",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/facts-4-teens/facts-feelings"
+    },
+    {
+      "text": "Family Support",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/talking-to-my-family"
+    },
+    {
+      "text": "Caregivers",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/talking-to-my-family/family-caregivers"
+    },
+    {
+      "text": "Children & Teens",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/talking-to-my-family/children-teens"
+    },
+    {
+      "text": "Life after Cancer",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/life-after-cancer"
+    },
+    {
+      "text": "Managing Symptoms & Side Effects",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/managing-symptoms-side-effects"
+    },
+    {
+      "text": "Medical Cannabis",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/medical-cannabis"
+    },
+    {
+      "text": "Nutrition Support",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/nutrition-support"
+    },
+    {
+      "text": "Practical Support",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/practical-support"
+    },
+    {
+      "text": "Financial Assistance",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/practical-support/financial-assistance"
+    },
+    {
+      "text": "Home Support Services",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/practical-support/home-support-services"
+    },
+    {
+      "text": "Transportation & Lodging",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/practical-support/transportation-lodging"
+    },
+    {
+      "text": "Work & School",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/practical-support/work-school"
+    },
+    {
+      "text": "Video Resources",
+      "url": "https://www.bccancer.bc.ca/health-info/coping-with-cancer/video-resources"
+    },
+    {
+      "text": "Adolescent & Young Adult Cancer Care & Support",
+      "url": "https://www.bccancer.bc.ca/health-info/adolescent-young-adult"
+    },
+    {
+      "text": "Prevention",
+      "url": "https://www.bccancer.bc.ca/health-info/prevention"
+    },
+    {
+      "text": "Screening",
+      "url": "https://www.bccancer.bc.ca/health-info/screening"
+    },
+    {
+      "text": "Disease & System Statistics",
+      "url": "https://www.bccancer.bc.ca/health-info/disease-system-statistics"
+    },
+    {
+      "text": "About our Cancer Statistics",
+      "url": "https://www.bccancer.bc.ca/health-info/disease-system-statistics/our-cancer-statistics"
+    },
+    {
+      "text": "Cancer Statistics Online Dashboard",
+      "url": "https://www.bccancer.bc.ca/health-info/disease-system-statistics/cancer-statistics-online-dashboard"
+    },
+    {
+      "text": "Other Reports",
+      "url": "https://www.bccancer.bc.ca/health-info/disease-system-statistics/other-reports"
+    },
+    {
+      "text": "Our Research",
+      "url": "https://www.bccancer.bc.ca/our-research"
+    },
+    {
+      "text": "Research Focus",
+      "url": "https://www.bccancer.bc.ca/our-research/research-focus"
+    },
+    {
+      "text": "About our Research",
+      "url": "https://www.bccancer.bc.ca/our-research/research-focus/about-our-research"
+    },
+    {
+      "text": "Lymphoid Cancer",
+      "url": "https://www.bccancer.bc.ca/our-research/research-focus/lymphoid-cancer"
+    },
+    {
+      "text": "Nutrition",
+      "url": "https://www.bccancer.bc.ca/our-research/research-focus/nutrition"
+    },
+    {
+      "text": "Technology Development",
+      "url": "https://www.bccancer.bc.ca/our-research/research-focus/technology-development"
+    },
+    {
+      "text": "Ethics & Oversight",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight"
+    },
+    {
+      "text": "Research Ethics",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight/researchethics"
+    },
+    {
+      "text": "Application & Review",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight/researchethics/application-review"
+    },
+    {
+      "text": "Consent & Protocol Templates",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight/researchethics/consent-templates"
+    },
+    {
+      "text": "Our Policies, Procedures & Guidance",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight/researchethics/policies-procedures-guidance"
+    },
+    {
+      "text": "Resources",
+      "url": "https://www.bccancer.bc.ca/our-research/ethics-oversight/researchethics/resources"
+    },
+    {
+      "text": "Participate",
+      "url": "https://www.bccancer.bc.ca/our-research/participate"
+    },
+    {
+      "text": "BC Generations Project",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/bc-generations-project"
+    },
+    {
+      "text": "Biobanking & Biospecimen Research Services",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/biobanking-biospecimen-research-services"
+    },
+    {
+      "text": "Clinical Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials"
+    },
+    {
+      "text": "Open Clinical Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials"
+    },
+    {
+      "text": "BC Cancer – Abbotsford",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–abbotsford"
+    },
+    {
+      "text": "BC Cancer – Kelowna",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–kelowna"
+    },
+    {
+      "text": "BC Cancer – Prince George",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–prince-george"
+    },
+    {
+      "text": "BC Cancer – Surrey",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–surrey"
+    },
+    {
+      "text": "BC Cancer – Vancouver",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–vancouver"
+    },
+    {
+      "text": "BC Cancer – Victoria",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/open-clinical-trials/bc-cancer–victoria"
+    },
+    {
+      "text": "Questions",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions"
+    },
+    {
+      "text": "Importance and Types of Clinical Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/importance-and-types-of-clinical-trials"
+    },
+    {
+      "text": "Trial Phases",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/trial-phases"
+    },
+    {
+      "text": "Phase I Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-i-trials"
+    },
+    {
+      "text": "Phase I Safety",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-i-safety"
+    },
+    {
+      "text": "Phase II Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-ii-trials"
+    },
+    {
+      "text": "Phase II Safety",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-ii-safety"
+    },
+    {
+      "text": "Phase III Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-iii-trials"
+    },
+    {
+      "text": "Phase III Safety",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/phase-iii-safety"
+    },
+    {
+      "text": "Randomization, Stratification, Blinding",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/randomization-stratification-blinding"
+    },
+    {
+      "text": "Placebos",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/placebos"
+    },
+    {
+      "text": "Important Components of a Clinical Trial",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/important-components-of-a-clinical-trial"
+    },
+    {
+      "text": "Protocol and Eligibility",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/protocol-and-eligibility"
+    },
+    {
+      "text": "Informed Consent",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/informed-consent"
+    },
+    {
+      "text": "Review Process for Clinical Trials",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/review-process-for-clinical-trials"
+    },
+    {
+      "text": "Considerations and Decisions",
+      "url": "https://www.bccancer.bc.ca/our-research/participate/clinical-trials/questions/considerations-and-decisions"
+    },
+    {
+      "text": "About",
+      "url": "https://www.bccancer.bc.ca/about"
+    },
+    {
+      "text": "Who We Are",
+      "url": "https://www.bccancer.bc.ca/about/who-we-are"
+    },
+    {
+      "text": "Leadership",
+      "url": "https://www.bccancer.bc.ca/about/leadership"
+    },
+    {
+      "text": "Accountability",
+      "url": "https://www.bccancer.bc.ca/about/accountability"
+    },
+    {
+      "text": "Accreditation",
+      "url": "https://www.bccancer.bc.ca/about/accountability/accreditation"
+    },
+    {
+      "text": "Patient & Family Experience",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience"
+    },
+    {
+      "text": "Work with a Patient or Family Partner",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/work-with-a-patient-or-family-partner"
+    },
+    {
+      "text": "Get Involved as a Patient or Family Partner",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/get-involved"
+    },
+    {
+      "text": "Our Activities",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/our-activities"
+    },
+    {
+      "text": "Measuring Patient Experience",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/measuring-patient-experience"
+    },
+    {
+      "text": "Compliments & Complaints",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/compliments-complaints"
+    },
+    {
+      "text": "Professional Framework",
+      "url": "https://www.bccancer.bc.ca/about/accountability/patient-family-experience/professional-framework"
+    },
+    {
+      "text": "News & Stories",
+      "url": "https://www.bccancer.bc.ca/about/news-stories"
+    },
+    {
+      "text": "Stories",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories"
+    },
+    {
+      "text": "2025",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2025"
+    },
+    {
+      "text": "2024",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2024"
+    },
+    {
+      "text": "2023",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2023"
+    },
+    {
+      "text": "2022",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2022"
+    },
+    {
+      "text": "2021",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2021"
+    },
+    {
+      "text": "2020",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/stories/2020"
+    },
+    {
+      "text": "Media Enquiries",
+      "url": "https://www.bccancer.bc.ca/about/news-stories/media-enquiries"
+    },
+    {
+      "text": "History",
+      "url": "https://www.bccancer.bc.ca/about/history"
+    },
+    {
+      "text": "Projects & Priorities",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities"
+    },
+    {
+      "text": "B.C.'s 10-Year Cancer Action Plan",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/b-c-’s-10-year-cancer-action-plan"
+    },
+    {
+      "text": "New Surrey Hospital & BC Cancer Centre",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre"
+    },
+    {
+      "text": "Project Overview",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre/project-overview"
+    },
+    {
+      "text": "Building Design & Construction",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre/building-design-construction"
+    },
+    {
+      "text": "News & Updates",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre/news-updates"
+    },
+    {
+      "text": "Photo Gallery",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre/photo-gallery"
+    },
+    {
+      "text": "Get Involved",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/new-surrey-hospital-bc-cancer-centre/get-involved"
+    },
+    {
+      "text": "Burnaby Hospital Phase 2 and BC Cancer - Burnaby McCarthy Centre",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/burnaby-hospital-bc-cancer-centre"
+    },
+    {
+      "text": "Project Overview",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/burnaby-hospital-bc-cancer-centre/project-overview"
+    },
+    {
+      "text": "News & Updates",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/burnaby-hospital-bc-cancer-centre/news-updates"
+    },
+    {
+      "text": "Photo Gallery",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/burnaby-hospital-bc-cancer-centre/photo-gallery"
+    },
+    {
+      "text": "Get Involved",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/burnaby-hospital-bc-cancer-centre/get-involved"
+    },
+    {
+      "text": "Nanaimo Cancer Centre",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/nanaimo-cancer-centre"
+    },
+    {
+      "text": "Project Overview",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/nanaimo-cancer-centre/project-overview"
+    },
+    {
+      "text": "News & Updates",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/nanaimo-cancer-centre/news-updates"
+    },
+    {
+      "text": "Photo Gallery",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/nanaimo-cancer-centre/photo-gallery"
+    },
+    {
+      "text": "Get Involved",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/nanaimo-cancer-centre/get-involved"
+    },
+    {
+      "text": "Kamloops Cancer Centre",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/kamloops-cancer-centre"
+    },
+    {
+      "text": "Project Overview",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/kamloops-cancer-centre/project-overview"
+    },
+    {
+      "text": "News and Updates",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/kamloops-cancer-centre/news-and-updates"
+    },
+    {
+      "text": "Photo Gallery",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/kamloops-cancer-centre/photo-gallery"
+    },
+    {
+      "text": "Get Involved",
+      "url": "https://www.bccancer.bc.ca/about/projects-priorities/kamloops-cancer-centre/get-involved"
+    },
+    {
+      "text": "Contact",
+      "url": "https://www.bccancer.bc.ca/contact"
+    },
+    {
+      "text": "Health Professionals",
+      "url": "https://www.bccancer.bc.ca/health-professionals"
+    },
+    {
+      "text": "Referrals",
+      "url": "https://www.bccancer.bc.ca/health-professionals/referrals"
+    },
+    {
+      "text": "Clinical Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources"
+    },
+    {
+      "text": "Fertility Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/fertility-resources"
+    },
+    {
+      "text": "Biosimilar Drugs",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/biosimilar-drugs"
+    },
+    {
+      "text": "Cancer Drug Manual",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-drug-manual"
+    },
+    {
+      "text": "Cancer Management Manual",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual"
+    },
+    {
+      "text": "Blood and Lymphatic Cancers",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/blood-and-lymphatic-cancers"
+    },
+    {
+      "text": "Appendices",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/blood-and-lymphatic-cancers/appendices"
+    },
+    {
+      "text": "Breast Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/breast"
+    },
+    {
+      "text": "Breast",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/breast/breast"
+    },
+    {
+      "text": "Gastrointestinal Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal"
+    },
+    {
+      "text": "Anus",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/anus"
+    },
+    {
+      "text": "Appendix",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/appendix"
+    },
+    {
+      "text": "Bile Duct",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/bile-duct"
+    },
+    {
+      "text": "Colon",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/colon"
+    },
+    {
+      "text": "Esophageal & Esophagogastric Junction",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/esophageal-esophagogastric-junction"
+    },
+    {
+      "text": "Gallbladder",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/gallbladder"
+    },
+    {
+      "text": "Liver",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/liver"
+    },
+    {
+      "text": "Neuroendocrine Tumours",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/neuroendocrine-tumours"
+    },
+    {
+      "text": "Other Gastric Malignancies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/other-gastric-malignancies"
+    },
+    {
+      "text": "Pancreas",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/pancreas"
+    },
+    {
+      "text": "Rectum",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/rectum"
+    },
+    {
+      "text": "Small Bowel Malignancies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/small-bowel-malignancies"
+    },
+    {
+      "text": "Stomach",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gastrointestinal/stomach"
+    },
+    {
+      "text": "Genitourinary Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary"
+    },
+    {
+      "text": "Bladder",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary/bladder"
+    },
+    {
+      "text": "Kidney",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary/kidney"
+    },
+    {
+      "text": "Prostate",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary/prostate"
+    },
+    {
+      "text": "Testis",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary/testis"
+    },
+    {
+      "text": "Miscellaneous Genitourinary Tumours",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/genitourinary/miscellaneous-genitourinary-tumours"
+    },
+    {
+      "text": "Gynecology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology"
+    },
+    {
+      "text": "Endometrium",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/endometrium"
+    },
+    {
+      "text": "Fallopian Tube",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/fallopian-tube"
+    },
+    {
+      "text": "Gestational Trophoblastic Neoplasia",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/gestational-trophoblastic-neoplasia"
+    },
+    {
+      "text": "Gynecological Sarcomas",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/gynecological-sarcomas"
+    },
+    {
+      "text": "Ovary - Epithelial Carcinoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/ovary-epithelial-carcinoma"
+    },
+    {
+      "text": "Ovary - Non-Epithelial Carcinoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/ovary-non-epithelial-carcinoma"
+    },
+    {
+      "text": "Uterine Cervix",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/uterine-cervix"
+    },
+    {
+      "text": "Vagina",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/vagina"
+    },
+    {
+      "text": "Vulva",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/gynecology/vulva"
+    },
+    {
+      "text": "Head & Neck Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/head-neck"
+    },
+    {
+      "text": "Head & Neck",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/head-neck/head-neck"
+    },
+    {
+      "text": "Oral & Dental Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/head-neck/oral-dental-care"
+    },
+    {
+      "text": "Hereditary Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/hereditary-cancer"
+    },
+    {
+      "text": "Leukemia",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/leukemia"
+    },
+    {
+      "text": "Lung Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/lung"
+    },
+    {
+      "text": "Lung",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/lung/lung"
+    },
+    {
+      "text": "Mesothelioma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/lung/mesothelioma"
+    },
+    {
+      "text": "Thymoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/lung/thymoma"
+    },
+    {
+      "text": "Musculoskeletal Cancer & Sarcoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/musculoskeletal-cancer-sarcoma"
+    },
+    {
+      "text": "Musculoskeletal & Sarcoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/musculoskeletal-cancer-sarcoma/musculoskeletal-and-sarcoma"
+    },
+    {
+      "text": "Neuro-Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/neuro-oncology"
+    },
+    {
+      "text": "Neuro-Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/neuro-oncology/neuro-oncology"
+    },
+    {
+      "text": "Ocular & Orbital Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/ocular-orbital-cancer"
+    },
+    {
+      "text": "Pediatric Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/pediatric-oncology"
+    },
+    {
+      "text": "Primary Unknown Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/primary-unknown"
+    },
+    {
+      "text": "Primary Unknown",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/primary-unknown/primary-unknown"
+    },
+    {
+      "text": "Required Reports for Referrals",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals"
+    },
+    {
+      "text": "Breast",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/breast"
+    },
+    {
+      "text": "Gastrointestinal",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/gastrointestinal"
+    },
+    {
+      "text": "Genitourinary",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/genitourinary"
+    },
+    {
+      "text": "Gynecology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/gynecology"
+    },
+    {
+      "text": "Head & Neck",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/head-neck"
+    },
+    {
+      "text": "Lung",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/lung"
+    },
+    {
+      "text": "Lymphoma & Leukemia",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/lymphoma-leukemia"
+    },
+    {
+      "text": "Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/melanoma"
+    },
+    {
+      "text": "Musculoskeletal & Sarcoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/musculoskeletal-sarcoma"
+    },
+    {
+      "text": "Neuro-Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/neuro-oncology"
+    },
+    {
+      "text": "Primary Unknown",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/primary-unknown"
+    },
+    {
+      "text": "Skin",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/required-reports-for-referrals/skin"
+    },
+    {
+      "text": "Screening",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/screening"
+    },
+    {
+      "text": "Skin Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/skin"
+    },
+    {
+      "text": "Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/skin/melanoma"
+    },
+    {
+      "text": "Non-Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/skin/non-melanoma"
+    },
+    {
+      "text": "Supportive Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care"
+    },
+    {
+      "text": "Febrile Neutropenia",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care/febrile-neutropenia"
+    },
+    {
+      "text": "Natural Health Products",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care/natural-health-products"
+    },
+    {
+      "text": "Oral & Dental Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care/oral-dental-care"
+    },
+    {
+      "text": "Osteoporosis",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care/osteoporosis"
+    },
+    {
+      "text": "Pain & Symptom Management",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/cancer-management-manual/supportive-care/pain-symptom-management"
+    },
+    {
+      "text": "Chemotherapy Protocols",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols"
+    },
+    {
+      "text": "Breast",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/breast"
+    },
+    {
+      "text": "Gastrointestinal",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/gastrointestinal"
+    },
+    {
+      "text": "Genitourinary",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/genitourinary"
+    },
+    {
+      "text": "Gynecology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/gynecology"
+    },
+    {
+      "text": "Head & Neck",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/head-neck"
+    },
+    {
+      "text": "Immunotherapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/immunotherapy"
+    },
+    {
+      "text": "Bispecific Antibodies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/immunotherapy/bispecific-antibodies"
+    },
+    {
+      "text": "Immune Checkpoint Blockade",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/immunotherapy/immune-checkpoint-blockade"
+    },
+    {
+      "text": "Kaposi's Sarcoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/kaposis-sarcoma"
+    },
+    {
+      "text": "Leukemia & Bone Marrow Transplant",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/leukemia-bone-marrow-transplant"
+    },
+    {
+      "text": "Lung",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/lung"
+    },
+    {
+      "text": "Lymphoma & Myeloma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/lymphoma-myeloma"
+    },
+    {
+      "text": "Miscellaneous Origin",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/miscellaneous-origin"
+    },
+    {
+      "text": "Neuro-Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/neuro-oncology"
+    },
+    {
+      "text": "Ocular",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/ocular"
+    },
+    {
+      "text": "Primary Unknown",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/primary-unknown"
+    },
+    {
+      "text": "Sarcoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/sarcoma"
+    },
+    {
+      "text": "Skin & Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/skin-melanoma"
+    },
+    {
+      "text": "Supportive Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/supportive-care"
+    },
+    {
+      "text": "Tumour Agnostic",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/tumour-agnostic"
+    },
+    {
+      "text": "Unfunded",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/chemotherapy-protocols/unfunded"
+    },
+    {
+      "text": "Chimeric Antigen Receptor T-Cell Therapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/car-t-cell-therapy"
+    },
+    {
+      "text": "Clinical Care Pathways for Health Professionals",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/clinical-care-pathways"
+    },
+    {
+      "text": "Tumour-Specific Pathways",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/clinical-care-pathways/tumour-specific-pathways"
+    },
+    {
+      "text": "Consultation on Tumour-Specific Pathways",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/clinical-care-pathways/consultation-on-tumour-specific-pathways"
+    },
+    {
+      "text": "COVID-19 Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/covid-19-resources"
+    },
+    {
+      "text": "Remote Ordering of Systemic Therapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/covid-19-resources/remote-ordering-of-systemic-therapy"
+    },
+    {
+      "text": "Hereditary Cancer",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/hereditary-cancer"
+    },
+    {
+      "text": "High Risk Clinic",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/hereditary-cancer/high-risk-clinic"
+    },
+    {
+      "text": "Laboratory Services",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services"
+    },
+    {
+      "text": "Anatomic Pathology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/anatomic-pathology"
+    },
+    {
+      "text": "Cancer Genetics",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/cancer-genetics"
+    },
+    {
+      "text": "Cervical Cancer Screening Laboratory",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/cervical-cancer-screening"
+    },
+    {
+      "text": "Diagnostic Cytology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/diagnostic-cytology"
+    },
+    {
+      "text": "Flow Cytometry",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/flow-cytometry"
+    },
+    {
+      "text": "Pathology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/pathology"
+    },
+    {
+      "text": "Point of Care Testing",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/point-of-care-testing"
+    },
+    {
+      "text": "Pre and Post Analytical Laboratory",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/laboratory-services/pre-and-post-analytical-laboratory"
+    },
+    {
+      "text": "Late Effects, Assessment & Follow Up",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/late-effects-assessment-follow-up"
+    },
+    {
+      "text": "Medical Cannabis",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/medical-cannabis"
+    },
+    {
+      "text": "Molecular Imaging Therapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/molecular-imaging-therapy"
+    },
+    {
+      "text": "Clinical Indications",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/molecular-imaging-therapy/clinical-indications"
+    },
+    {
+      "text": "PET/CT Scan Referrals",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/molecular-imaging-therapy/pet-ct-scan-referrals"
+    },
+    {
+      "text": "Pluvicto",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/molecular-imaging-therapy/pluvicto"
+    },
+    {
+      "text": "Nursing",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nursing"
+    },
+    {
+      "text": "Symptom Management",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nursing/symptom-management"
+    },
+    {
+      "text": "Nursing Practice References",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nursing/nursing-practice-references"
+    },
+    {
+      "text": "Immunotherapy Checkpoint Inhibitors",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nursing/immunotherapy-checkpoint-inhibitors"
+    },
+    {
+      "text": "Bispecific Antibodies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nursing/bispecifics"
+    },
+    {
+      "text": "Nutrition",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/nutrition"
+    },
+    {
+      "text": "Oral Cancer Prevention Program",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral"
+    },
+    {
+      "text": "About Us",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/about-us"
+    },
+    {
+      "text": "Program Members",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/members"
+    },
+    {
+      "text": "Oral Cancer Q&A",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/oral-cancer-q-a"
+    },
+    {
+      "text": "Clinical Services",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/clinical-services"
+    },
+    {
+      "text": "Community Projects",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/community-projects"
+    },
+    {
+      "text": "Early Detection",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/early-detection"
+    },
+    {
+      "text": "Research Projects",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/research-projects"
+    },
+    {
+      "text": "Selected Publications",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/selected-publications"
+    },
+    {
+      "text": "Postcards for Principles",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/oral/postcards-for-principles"
+    },
+    {
+      "text": "Pain & Symptom Management/Palliative Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pain-symptom-management-palliative-care"
+    },
+    {
+      "text": "Pharmacy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy"
+    },
+    {
+      "text": "Clinical Pharmacy Guide",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/clinical-pharmacy-guide"
+    },
+    {
+      "text": "Community Oncology Network Pharmacy Educators",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/community-oncology-network-pharmacy-educators"
+    },
+    {
+      "text": "Drug Funding",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/drug-funding"
+    },
+    {
+      "text": "Frequently Asked Questions",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/frequently-asked-questions"
+    },
+    {
+      "text": "Patient Information",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/patient-information"
+    },
+    {
+      "text": "Safe Handling Standards Manual",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/safe-handling-manual"
+    },
+    {
+      "text": "Symptom & Side Effect Management Resource Guide",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/pharmacy/symptom-side-effect-management-resource-guide"
+    },
+    {
+      "text": "Prevention Programs",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/prevention-programs"
+    },
+    {
+      "text": "Psychosocial Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/psychosocial-oncology"
+    },
+    {
+      "text": "Radiation Therapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/radiation-therapy"
+    },
+    {
+      "text": "Skin Cancer Atlas",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas"
+    },
+    {
+      "text": "Basal Cell Carcinoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/basal-cell-carcinoma"
+    },
+    {
+      "text": "Keratoacanthoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/keratoacanthoma"
+    },
+    {
+      "text": "Keratoses",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/keratoses"
+    },
+    {
+      "text": "Melanoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/melanoma"
+    },
+    {
+      "text": "Nevi",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/nevi"
+    },
+    {
+      "text": "Photoaging",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/photoaging"
+    },
+    {
+      "text": "Squamous Carcinoma",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/skin-cancer-atlas/squamous-carcinoma"
+    },
+    {
+      "text": "Smoking Cessation Program",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/smoking-cessation-program"
+    },
+    {
+      "text": "Survivorship & Primary Care",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/survivorship-primary-care"
+    },
+    {
+      "text": "Systemic Therapy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/systemic-therapy"
+    },
+    {
+      "text": "Education Bulletin",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/systemic-therapy/education-bulletin"
+    },
+    {
+      "text": "Systemic Therapy Update",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/systemic-therapy/systemic-therapy-update"
+    },
+    {
+      "text": "CST Bulletin",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-resources/systemic-therapy/cst-bulletin"
+    },
+    {
+      "text": "Clinical Trials & Studies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-trials"
+    },
+    {
+      "text": "PET/CT Clinical Trials",
+      "url": "https://www.bccancer.bc.ca/health-professionals/clinical-trials/pet-ct-clinical-trials"
+    },
+    {
+      "text": "Education & Development",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development"
+    },
+    {
+      "text": "CytoSleuth Quiz",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz"
+    },
+    {
+      "text": "Gynecologic Cytology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology"
+    },
+    {
+      "text": "Case 1",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-1"
+    },
+    {
+      "text": "Case 2",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-2"
+    },
+    {
+      "text": "Case 3",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-3"
+    },
+    {
+      "text": "Case 4",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-4"
+    },
+    {
+      "text": "Case 5",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-5"
+    },
+    {
+      "text": "Case 6",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-6"
+    },
+    {
+      "text": "Case 7",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-7"
+    },
+    {
+      "text": "Case 8",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-8"
+    },
+    {
+      "text": "Case 9",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/gynecologic-cytology/case-9"
+    },
+    {
+      "text": "Non-gynecologic Cytology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology"
+    },
+    {
+      "text": "Case 01",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-01"
+    },
+    {
+      "text": "Case 02",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-02"
+    },
+    {
+      "text": "Case 03",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-03"
+    },
+    {
+      "text": "Case 04",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-04"
+    },
+    {
+      "text": "Case 05",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-05"
+    },
+    {
+      "text": "Case 06",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-06"
+    },
+    {
+      "text": "Case 07",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-07"
+    },
+    {
+      "text": "Case 08",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-08"
+    },
+    {
+      "text": "Case 09",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-09"
+    },
+    {
+      "text": "Case 10",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-10"
+    },
+    {
+      "text": "Case 11",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-11"
+    },
+    {
+      "text": "Case 12",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-12"
+    },
+    {
+      "text": "Case 13",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-13"
+    },
+    {
+      "text": "Case 14",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-14"
+    },
+    {
+      "text": "Case 15",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-15"
+    },
+    {
+      "text": "Case 16",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-16"
+    },
+    {
+      "text": "Case 17",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-17"
+    },
+    {
+      "text": "Case 18",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/cytosleuth-quiz/non-gynecologic-cytology/case-18"
+    },
+    {
+      "text": "Hereditary Cancer Education",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/hereditary-cancer-education"
+    },
+    {
+      "text": "Nursing",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/nursing"
+    },
+    {
+      "text": "Systemic Therapy Education Program",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/nursing/systemic-therapy-education-program"
+    },
+    {
+      "text": "Systemic Therapy Patient Education",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/nursing/systemic-therapy-patient-education"
+    },
+    {
+      "text": "Student and Educational Opportunities",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/nursing/student-and-educational-opportunities"
+    },
+    {
+      "text": "Pharmacy",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy"
+    },
+    {
+      "text": "Clinical Pharmacy Guide Case Studies",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies"
+    },
+    {
+      "text": "Case Study 1",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-1"
+    },
+    {
+      "text": "Case Study 2",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-2"
+    },
+    {
+      "text": "Case Study 3",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-3"
+    },
+    {
+      "text": "Case Study 4",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-4"
+    },
+    {
+      "text": "Case Study 5",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-5"
+    },
+    {
+      "text": "Case Study 6",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-6"
+    },
+    {
+      "text": "Case Study 7",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-7"
+    },
+    {
+      "text": "Case Study 8",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-8"
+    },
+    {
+      "text": "Case Study 9",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-9"
+    },
+    {
+      "text": "Case Study 10",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-10"
+    },
+    {
+      "text": "Case Study 11",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-11"
+    },
+    {
+      "text": "Case Study 12",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/clinical-pharmacy-guide-case-studies/case-study-12"
+    },
+    {
+      "text": "Pharmacy Education Program",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/pharmacy-education-program"
+    },
+    {
+      "text": "Pharmacy Residency",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/pharmacy/residency-program"
+    },
+    {
+      "text": "Psychosocial Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/psychosocial-oncology"
+    },
+    {
+      "text": "Skin Cancer Prevention & Early Diagnosis",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/skin-cancer"
+    },
+    {
+      "text": "Skin Cancer Prevention & Early Diagnosis Courses",
+      "url": "https://www.bccancer.bc.ca/health-professionals/education-development/skin-cancer/skin-cancer-courses"
+    },
+    {
+      "text": "Professional Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources"
+    },
+    {
+      "text": "Advance Care Planning",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/advance-care-planning"
+    },
+    {
+      "text": "BC Cancer Registry",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/bc-cancer-registry"
+    },
+    {
+      "text": "Request Registry Data",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/bc-cancer-registry/request-registry-data"
+    },
+    {
+      "text": "Guidelines for Reportable Cancers",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/bc-cancer-registry/guidelines-for-reportable-cancers"
+    },
+    {
+      "text": "Community Cancer Info",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/bc-cancer-registry/community-cancer-info"
+    },
+    {
+      "text": "About the Registry",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/bc-cancer-registry/about-the-registry"
+    },
+    {
+      "text": "Video Conferencing",
+      "url": "https://www.bccancer.bc.ca/health-professionals/professional-resources/video-conferencing"
+    },
+    {
+      "text": "Networks",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks"
+    },
+    {
+      "text": "Community Oncology Network",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/community-oncology-network"
+    },
+    {
+      "text": "Family Practice Oncology Network",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network"
+    },
+    {
+      "text": "Council & Working Groups",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/council-working-groups"
+    },
+    {
+      "text": "Continuing Medical Education",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/continuing-medical-education"
+    },
+    {
+      "text": "General Practitioner in Oncology Education Program",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/general-practitioner-in-oncology-education-program"
+    },
+    {
+      "text": "Guidelines & Protocols",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/guidelines-protocols"
+    },
+    {
+      "text": "Journal of Family Practice Oncology",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/journal-of-family-practice-oncology"
+    },
+    {
+      "text": "Upcoming Events and Partner Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/family-practice-oncology-network/upcoming-events"
+    },
+    {
+      "text": "Surgery Network",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network"
+    },
+    {
+      "text": "Mission, Function & Structure",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/mission-function-structure"
+    },
+    {
+      "text": "Committees",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/committees"
+    },
+    {
+      "text": "Surgical Tumour Groups",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/surgical-tumour-groups"
+    },
+    {
+      "text": "Research",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/research"
+    },
+    {
+      "text": "Spring Update",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/spring-update"
+    },
+    {
+      "text": "Newsletter",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/newsletter"
+    },
+    {
+      "text": "Surgeon Network Awards",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/surgeon-network-awards"
+    },
+    {
+      "text": "Surgeon Resources",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/surgeon-resources"
+    },
+    {
+      "text": "Contact Us",
+      "url": "https://www.bccancer.bc.ca/health-professionals/networks/surgery-network/contact-us"
+    },
+    {
+      "text": "Donate",
+      "url": "https://www.bccancer.bc.ca/donate"
+    },
+    {
+      "text": "Careers",
+      "url": "https://www.bccancer.bc.ca/careers"
+    },
+    {
+      "text": "Work with Us",
+      "url": "https://www.bccancer.bc.ca/careers/work-with-us"
+    },
+    {
+      "text": "Jobs of the Week",
+      "url": "https://www.bccancer.bc.ca/careers/work-with-us/jobs-of-the-week"
+    },
+    {
+      "text": "Hiring Events",
+      "url": "https://www.bccancer.bc.ca/careers/work-with-us/hiring-events"
+    },
+    {
+      "text": "About Working at BC Cancer",
+      "url": "https://www.bccancer.bc.ca/careers/work-with-us/about-working-at-bc-cancer"
+    },
+    {
+      "text": "Train with Us",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us"
+    },
+    {
+      "text": "Our Training Programs",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/our-training-programs"
+    },
+    {
+      "text": "Medical Oncology",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology"
+    },
+    {
+      "text": "Evaluations",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/evaluations"
+    },
+    {
+      "text": "Electives",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/electives"
+    },
+    {
+      "text": "Clinical & Postgraduate Fellowships",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/clinical-postgraduate-fellowships"
+    },
+    {
+      "text": "Faculty",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/faculty"
+    },
+    {
+      "text": "Contact Us",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/contact-us"
+    },
+    {
+      "text": "Orientation",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-oncology/orientation"
+    },
+    {
+      "text": "Medical Physics",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-physics"
+    },
+    {
+      "text": "Andrew Robertson",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-physics/andrew-robertson"
+    },
+    {
+      "text": "Clay Lindsay",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-physics/clay-lindsay"
+    },
+    {
+      "text": "Residency Sites",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/medical-physics/residency-sites"
+    },
+    {
+      "text": "Nutrition",
+      "url": "https://www.bccancer.bc.ca/careers/train-with-us/nutrition"
+    },
+    {
+      "text": "Volunteer with Us",
+      "url": "https://www.bccancer.bc.ca/careers/volunteer-with-us"
+    },
+    {
+      "text": "Physician Careers",
+      "url": "https://www.bccancer.bc.ca/careers/physician-careers"
+    },
+    {
+      "text": "International Physicians",
+      "url": "https://www.bccancer.bc.ca/careers/physician-careers/international-physicians"
+    },
+    {
+      "text": "Frequently Asked Questions",
+      "url": "https://www.bccancer.bc.ca/careers/physician-careers/frequently-asked-questions"
+    },
+    {
+      "text": "About Physician Careers",
+      "url": "https://www.bccancer.bc.ca/careers/physician-careers/about-physician-careers"
+    },
+    {
+      "text": "Nursing & Nurse Practitioner Careers",
+      "url": "https://www.bccancer.bc.ca/careers/nursing-careers"
+    },
+    {
+      "text": "Featured Careers",
+      "url": "https://www.bccancer.bc.ca/careers/featured-careers"
+    },
+    {
+      "text": "Molecular Imaging Therapy Careers",
+      "url": "https://www.bccancer.bc.ca/careers/featured-careers/molecular-imaging-therapy"
+    },
+    {
+      "text": "Administrative Careers",
+      "url": "https://www.bccancer.bc.ca/careers/featured-careers/administrative-careers"
+    },
+    {
+      "text": "Radiation Therapist Careers",
+      "url": "https://www.bccancer.bc.ca/careers/featured-careers/radiation-therapist-careers"
+    },
+    {
+      "text": "Medical Physicist Careers",
+      "url": "https://www.bccancer.bc.ca/careers/featured-careers/medical-physicist-careers"
+    },
+    {
+      "text": "Careers Across British Columbia",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia"
+    },
+    {
+      "text": "Kelowna",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/kelowna"
+    },
+    {
+      "text": "Prince George",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/prince-george"
+    },
+    {
+      "text": "Surrey",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/surrey"
+    },
+    {
+      "text": "Vancouver",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/vancouver"
+    },
+    {
+      "text": "Victoria",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/victoria"
+    },
+    {
+      "text": "Abbotsford",
+      "url": "https://www.bccancer.bc.ca/careers/careers-across-british-columbia/abbotsford"
+    },
+    {
+      "text": "Search",
+      "url": "https://www.bccancer.bc.ca/search"
+    },
+    {
+      "text": "Find a Cancer",
+      "url": "https://www.bccancer.bc.ca/find-a-cancer"
+    },
+    {
+      "text": "Document Search",
+      "url": "https://www.bccancer.bc.ca/document-search"
+    }
+  ],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/favicon.ico?rev=44",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/spcommon.png?rev=44",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/SiteAssets/bcca-logo.png?rev=44",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/spcommon.png?rev=44#ThemeKey=spcommon",
+      "alt": "Not following",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/spcommon.png?rev=44#ThemeKey=spcommon",
+      "alt": "Focus on Content",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/spcommon.png?rev=44#ThemeKey=spcommon",
+      "alt": "Focus on Content",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/Style%20Library/Go/Modules/PhsaAlert/styles/images/phsa-logo.png",
+      "alt": "Provincial Health Services Authority - Province-wide solutions. Better Health.",
+      "title": "Provincial Health Services Authority - Province-wide solutions. Better Health."
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/SiteAssets/bcca-logo.png",
+      "alt": "BC Cancer Agency logo",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/_layouts/15/images/searchresultui.png?rev=44#ThemeKey=searchresultui",
+      "alt": "Search",
+      "title": ""
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/Style Library/Go/Modules/PhsaFooter/styles/images/phsa-logo.png",
+      "alt": "Provincial Health Services Authority",
+      "title": "Provincial Health Services Authority"
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/Style Library/Go/Modules/PhsaFooter/styles/images/british-columbia.png",
+      "alt": "Go to Government of BC website",
+      "title": "Go to Government of BC website"
+    },
+    {
+      "src": "https://www.bccancer.bc.ca/Style Library/Go/Modules/PhsaFooter/styles/images/patient-care-quality-office.png",
+      "alt": "Go to the Patient Care Quality Office webpage",
+      "title": "Go to the Patient Care Quality Office webpage"
+    },
+    {
+      "src": "https://www.facebook.com/tr?id=357911573291140&ev=PageView&noscript=1",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://insight.adsrvr.org/track/pxl/?adv=5n3wlov&ct=0:68n4o8t&fmt=3",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://secure.adnxs.com/px?id=1809823&seg=38028705&t=2",
+      "alt": "",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/bc-cancer/articles/health-info/prevention.md"
+}

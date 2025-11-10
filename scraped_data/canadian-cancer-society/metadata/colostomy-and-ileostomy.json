@@ -1,0 +1,43 @@
+{
+  "url": "https://cancer.ca/en/treatments/tests-and-procedures/colostomy-and-ileostomy",
+  "title": "Colostomy and ileostomy",
+  "date_scraped": "2025-11-09T20:49:13.432265",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Treatments",
+    "Tests And Procedures",
+    "Colostomy And Ileostomy"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6f813390-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=e2f963f473c24bc09e6bf193e5e76c32&hash=FE064C6EFBDCFE49910B362BF6CA8B7D",
+      "alt": "Diagram of colostomy sites",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6f97efe0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=cc9c937879994f7693fef35df62a72cc&hash=4B56ECA691ABC178A3CCC07090FE839B",
+      "alt": "Diagram of an end stoma",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6fac6240-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=552fb3530a8b47a89bdb93a2847d1849&hash=F580FCE8BDCEA460835767AB16826984",
+      "alt": "Diagram of an end stoma with a rectal stump",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6fc5ddb0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=19752f4159be4da3b6f82b5043d32385&hash=1E40A249C46A2B95D23D701CA859523C",
+      "alt": "Diagram of an end stoma with a mucous fistula",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6fdac540-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=598138d2ed37410d889a7392dbb27e5f&hash=92330C9D5A46CE6A44170E5D2DCD60C8",
+      "alt": "Diagram of a loop stoma",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/treatments/tests-and-procedures/colostomy-and-ileostomy.md"
+}

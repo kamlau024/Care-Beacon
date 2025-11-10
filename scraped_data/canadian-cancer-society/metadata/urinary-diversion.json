@@ -1,0 +1,33 @@
+{
+  "url": "https://cancer.ca/en/treatments/tests-and-procedures/urinary-diversion",
+  "title": "Urinary diversion",
+  "date_scraped": "2025-11-09T20:48:18.859861",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Treatments",
+    "Tests And Procedures",
+    "Urinary Diversion"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/9fcd65f0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=311&iar=0&mw=543&w=543&rev=8982304b2d534217bf09c8fa8541d5c1&hash=CA692CF0C834593C2F29EF7B63919FB6",
+      "alt": "Diagram of an ileal conduit",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/a00b3240-c9ea-11ea-8e8b-0242df4d59be-en.png?h=311&iar=0&mw=543&w=543&rev=bc8d9eac95a84c239555006baa021ff1&hash=B40E2BA525CD36BE8943837CCFBC8AEC",
+      "alt": "Diagram of a continent cutaneous reservoir (Indiana pouch)",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/a04a8530-c9ea-11ea-8e8b-0242df4d59be-en.png?h=311&iar=0&mw=543&w=543&rev=ba023a312f364ecdb7fe235fabef9b91&hash=1894BF74BD69E0EFC406E0998053BB20",
+      "alt": "Diagram of an orthotopic neobladder",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/treatments/tests-and-procedures/urinary-diversion.md"
+}

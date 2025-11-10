@@ -1,0 +1,23 @@
+{
+  "url": "https://cancer.ca/en/living-with-cancer/how-we-can-help/community-services-locator",
+  "title": "Community services locator",
+  "date_scraped": "2025-11-09T20:40:09.874499",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Living With Cancer",
+    "How We Can Help",
+    "Community Services Locator"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/stock-images/connect-with-our-online-community-main-banner-generic-dark.jpg?rev=0a1cfb8e3dcc42109bbf53f8461269e7&cx=0.5&cy=0.5&cw=575&ch=425&hash=BB72321BF3257EE68A8FCC7A46ECA50A",
+      "alt": "A woman sits on a couch working on her laptop",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/living-with-cancer/how-we-can-help/community-services-locator.md"
+}

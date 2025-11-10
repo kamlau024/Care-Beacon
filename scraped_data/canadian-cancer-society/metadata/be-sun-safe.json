@@ -1,0 +1,33 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/be-sun-safe",
+  "title": "Be sun safe",
+  "date_scraped": "2025-11-09T01:57:39.386930",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Be Sun Safe"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/sunsafetytips-for-babies.webp?rev=6220420bde424acf8c386b2a06e0e219&cx=0.5&cy=0.5&cw=900&ch=486&hash=84F2613E04F0CB4311E7536CF0388A01",
+      "alt": "Parent with two babies on a beach",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/sunanduv.jpg?rev=cc202c71dcd9482eb5024a39d9a3402b&cx=0.5&cy=0.5&cw=900&ch=486&hash=66A47E0EF335A36BFD3045B8B29C8259",
+      "alt": "Child putting on sunscreen at a campsite in the winter",
+      "title": ""
+    },
+    {
+      "src": "https://img.youtube.com/vi/CQR5A6Vs9Vo/0.jpg",
+      "alt": "YouTube video poster",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/be-sun-safe.md"
+}

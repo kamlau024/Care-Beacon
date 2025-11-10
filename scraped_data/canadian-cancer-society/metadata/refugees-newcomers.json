@@ -1,0 +1,34 @@
+{
+  "url": "https://cancer.ca/en/living-with-cancer/how-we-can-help/refugees-newcomers",
+  "title": "Support for newcomers to Canada",
+  "date_scraped": "2025-11-09T20:46:51.596889",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Living With Cancer",
+    "How We Can Help",
+    "Refugees Newcomers",
+    "Support for refugees and other newcomers to Canada"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/treatments/complementary-therapies/complimentary-therapies-header.jpg?rev=a95756baab65447191bfffc4aea7f428&cx=0.5&cy=0.5&cw=575&ch=425&hash=F6F588CC47D07568D7B026791AA7E2B4",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/how-we-can-help/transportation/transportation-become-a-driver-2.jpg?rev=22253bf1c5614839b1e0f481461389c7&cx=0.5&cy=0.5&cw=575&ch=452&hash=6E021EFA7E0DFCA5238E27147F46D3FF",
+      "alt": "A driver looks backwards over their shoulder at the viewer",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/living-with-cancer/how-we-can-help/financial-help/support-refugees-newcomers.jpg?rev=44c91cab2e9547bb8fe955657cc2ab41&cx=0.5&cy=0.5&cw=575&ch=452&hash=F73C0A27A74D3E07445C6BA4ED56F59E",
+      "alt": "Support for Refugees and Newcomers",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/living-with-cancer/how-we-can-help/refugees-newcomers.md"
+}
