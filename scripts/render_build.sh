@@ -13,8 +13,8 @@ echo "✅ Dependencies installed"
 if [ ! -f "data/vector_db/chroma.sqlite3" ]; then
     echo "📦 Vector database not found."
 
-    # Check if source articles exist
-    if [ -d "scraped_data/articles" ] && [ "$(ls -A scraped_data/articles/*.md 2>/dev/null)" ]; then
+    # Check if source articles exist (recursively)
+    if [ -d "scraped_data/articles" ] && [ "$(find scraped_data/articles -name '*.md' -type f | head -1)" ]; then
         echo "📄 Source articles found. Running ingestion..."
         echo "⚠️  This will take several minutes on first deployment."
 
