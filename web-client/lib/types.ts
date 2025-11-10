@@ -6,6 +6,7 @@ export interface Citation {
   paragraph_index: number
   text_excerpt: string
   similarity_score: number
+  source: string
 }
 
 export interface QuestionResponse {
@@ -94,5 +95,6 @@ export interface StatsResponse {
 export interface QuestionRequest {
   question: string
   cancer_type?: string
+  source?: string
   max_results?: number
 }

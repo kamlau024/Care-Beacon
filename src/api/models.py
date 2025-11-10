@@ -20,6 +20,11 @@ class QuestionRequest(BaseModel):
         description="Filter by specific cancer type",
         example="Breast Cancer"
     )
+    source: Optional[str] = Field(
+        None,
+        description="Filter by information source",
+        example="BC Cancer"
+    )
     max_results: Optional[int] = Field(
         5,
         ge=1,
@@ -32,6 +37,7 @@ class QuestionRequest(BaseModel):
             "example": {
                 "question": "What are the symptoms of breast cancer?",
                 "cancer_type": "Breast Cancer",
+                "source": "BC Cancer",
                 "max_results": 5
             }
         }
@@ -46,6 +52,7 @@ class CitationResponse(BaseModel):
     paragraph_index: int = Field(..., description="Paragraph number (0-indexed)")
     text_excerpt: str = Field(..., description="Excerpt from source text")
     similarity_score: float = Field(..., description="Similarity/confidence score (0-1)")
+    source: str = Field(..., description="Information source (e.g., BC Cancer, Canadian Cancer Society)")
 
     class Config:
         json_schema_extra = {

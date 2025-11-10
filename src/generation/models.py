@@ -32,6 +32,9 @@ class Citation:
     similarity_score: float = 0.0
     """Similarity/confidence score (0-1) from vector search"""
 
+    source: str = "BC Cancer"
+    """Information source (e.g., BC Cancer, Canadian Cancer Society)"""
+
     def to_reference(self) -> str:
         """Format as a readable reference.
 

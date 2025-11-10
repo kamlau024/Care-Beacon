@@ -243,6 +243,8 @@ async def ask_question(request: Request, question_request: QuestionRequest):
         filters = {}
         if question_request.cancer_type:
             filters["cancer_type"] = question_request.cancer_type
+        if question_request.source:
+            filters["source"] = question_request.source
 
         # Generate answer
         start_time = time.time()
@@ -266,6 +268,7 @@ async def ask_question(request: Request, question_request: QuestionRequest):
                 paragraph_index=citation.paragraph_index,
                 text_excerpt=citation.text_excerpt,
                 similarity_score=citation.similarity_score,
+                source=citation.source,
             )
             for citation in answer.citations
         ]

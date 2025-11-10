@@ -98,7 +98,7 @@ class Chunk:
             "article_id": self.article_id,
             "article_title": self.article_title,
             "url": self.url,
-            "breadcrumbs": ",".join(self.breadcrumbs),
+            "breadcrumbs": ",".join(str(b) for b in self.breadcrumbs),
             "source": self.source,
             "section": self.section,
             "paragraph_index": self.paragraph_index,

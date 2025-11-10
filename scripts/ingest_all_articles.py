@@ -25,14 +25,15 @@ from src.storage.vector_db import VectorDatabase
 from src.storage.models import Article, Chunk
 
 
-def find_all_articles(base_path: Path) -> List[Path]:
+def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
     """Find all markdown articles in the scraped_data directory.
 
     Args:
-        base_path: Base directory to search (e.g., scraped_data/articles)
+        base_path: Base directory to search (e.g., scraped_data/bc-cancer/articles)
+        source_name: Name of the source (e.g., "BC Cancer")
 
     Returns:
-        List of paths to markdown files
+        List of tuples (path, source_name)
     """
     articles = []
 
@@ -40,45 +41,47 @@ def find_all_articles(base_path: Path) -> List[Path]:
     for md_file in base_path.rglob("*.md"):
         # Skip non-article files (like README)
         if md_file.name.lower() not in ["readme.md", "index.md"]:
-            articles.append(md_file)
+            articles.append((md_file, source_name))
 
     # Sort for consistent ordering
-    articles.sort()
+    articles.sort(key=lambda x: x[0])
 
     return articles
 
 
-def parse_articles(article_paths: List[Path], parser: MarkdownParser) -> Tuple[List[Article], List[Path]]:
+def parse_articles(article_paths_with_source: List[Tuple[Path, str]], parser: MarkdownParser) -> Tuple[List[Article], List[Tuple[Path, str]]]:
     """Parse all articles, collecting successes and failures.
 
     Args:
-        article_paths: List of paths to markdown files
+        article_paths_with_source: List of tuples (path, source_name)
         parser: MarkdownParser instance
 
     Returns:
-        Tuple of (successful articles, failed paths)
+        Tuple of (successful articles, failed paths with source)
     """
     articles = []
     failed = []
 
-    print(f"Parsing {len(article_paths)} articles...")
+    print(f"Parsing {len(article_paths_with_source)} articles...")
     print()
 
-    for i, article_path in enumerate(article_paths, 1):
+    for i, (article_path, source_name) in enumerate(article_paths_with_source, 1):
         try:
-            print(f"[{i}/{len(article_paths)}] Parsing: {article_path.name}")
+            print(f"[{i}/{len(article_paths_with_source)}] Parsing: {article_path.name} (Source: {source_name})")
             article = parser.parse_file(article_path)
+            # Set the source on the parsed article
+            article.source = source_name
             articles.append(article)
         except Exception as e:
             print(f"   ❌ Failed: {e}")
-            failed.append(article_path)
+            failed.append((article_path, source_name))
 
     print()
     print(f"✅ Successfully parsed: {len(articles)} articles")
     if failed:
         print(f"❌ Failed to parse: {len(failed)} articles")
-        for path in failed:
-            print(f"   - {path.name}")
+        for path, source in failed:
+            print(f"   - {path.name} ({source})")
     print()
 
     return articles, failed
@@ -242,6 +245,12 @@ def main():
     print("=" * 70)
     print()
 
+    # Define source directories
+    SOURCES = {
+        "bc-cancer": "BC Cancer",
+        "canadian-cancer-society": "Canadian Cancer Society"
+    }
+
     # Initialize components
     print("Initializing components...")
     parser = MarkdownParser()
@@ -260,20 +269,38 @@ def main():
         print("✅ Database cleared")
         print()
 
-    # Step 1: Find all articles
+    # Step 1: Find all articles from all sources
     print("=" * 70)
     print("Step 1: Finding All Articles")
     print("=" * 70)
     print()
 
-    articles_dir = project_root / "scraped_data" / "articles"
-    article_paths = find_all_articles(articles_dir)
+    all_article_paths = []
+    source_counts = {}
 
-    print(f"Found {len(article_paths)} markdown files")
+    for source_dir, source_name in SOURCES.items():
+        articles_dir = project_root / "scraped_data" / source_dir / "articles"
+
+        if not articles_dir.exists():
+            print(f"⚠️  Directory not found: {articles_dir}")
+            print(f"   Skipping {source_name}")
+            continue
+
+        article_paths = find_all_articles(articles_dir, source_name)
+        all_article_paths.extend(article_paths)
+        source_counts[source_name] = len(article_paths)
+
+        print(f"Found {len(article_paths)} articles from {source_name}")
+
+    print()
+    print(f"Total: {len(all_article_paths)} markdown files from {len(source_counts)} sources")
     print()
 
-    if not article_paths:
-        print("❌ No articles found. Check the scraped_data/articles directory.")
+    if not all_article_paths:
+        print("❌ No articles found. Check the scraped_data directory structure.")
+        print("   Expected structure:")
+        for source_dir in SOURCES.keys():
+            print(f"   - scraped_data/{source_dir}/articles/")
         return
 
     # Step 2: Parse articles
@@ -282,7 +309,7 @@ def main():
     print("=" * 70)
     print()
 
-    articles, failed_paths = parse_articles(article_paths, parser)
+    articles, failed_paths = parse_articles(all_article_paths, parser)
 
     if not articles:
         print("❌ No articles were successfully parsed.")
@@ -337,7 +364,20 @@ def main():
     print("=" * 70)
     print()
     print("📊 Final Summary:")
-    print(f"   Articles processed: {len(articles)}")
+    print(f"   Total articles processed: {len(articles)}")
+
+    # Count articles by source
+    articles_by_source = {}
+    for article in articles:
+        source = article.source
+        articles_by_source[source] = articles_by_source.get(source, 0) + 1
+
+    print()
+    print("   Articles by source:")
+    for source, count in sorted(articles_by_source.items()):
+        print(f"      - {source}: {count} articles")
+
+    print()
     print(f"   Total chunks: {len(embedded_chunks):,}")
     print(f"   Database size: {db.count():,} chunks")
 
@@ -347,13 +387,14 @@ def main():
 
     if failed_paths:
         print(f"⚠️  {len(failed_paths)} articles failed to parse:")
-        for path in failed_paths:
-            print(f"   - {path.name}")
+        for path, source in failed_paths:
+            print(f"   - {path.name} ({source})")
         print()
 
     print("Next Steps:")
     print("   - Database is ready for querying")
-    print("   - Proceed to Checkpoint 1.7: Query System")
+    print("   - Source filtering is available in vector search")
+    print("   - Proceed to update UI for source filtering")
     print()
 
 
