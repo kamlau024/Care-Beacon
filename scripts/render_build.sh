@@ -57,8 +57,8 @@ if [ "$SHOULD_INGEST" = "true" ]; then
             rm -rf data/vector_db/*
         fi
 
-        # Run ingestion script
-        python scripts/ingest_all_articles.py
+        # Run memory-efficient ingestion script (optimized for 512MB free tier)
+        python scripts/ingest_all_articles_low_memory.py
 
         echo "✅ Vector database initialized with multi-source data"
     else

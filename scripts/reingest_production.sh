@@ -44,11 +44,11 @@ if [ "$ARTICLES_FOUND" = "false" ]; then
     exit 1
 fi
 
-# Run ingestion
+# Run memory-efficient ingestion (optimized for Render free tier)
 echo ""
-echo "🚀 Running ingestion script..."
+echo "🚀 Running memory-efficient ingestion script..."
 echo "⏱️  This will take several minutes..."
-python scripts/ingest_all_articles.py
+python scripts/ingest_all_articles_low_memory.py
 
 echo ""
 echo "✅ Reingestion complete!"
