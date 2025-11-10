@@ -265,6 +265,7 @@ async def ask_question(request: Request, question_request: QuestionRequest):
                 url=citation.url,
                 paragraph_index=citation.paragraph_index,
                 text_excerpt=citation.text_excerpt,
+                similarity_score=citation.similarity_score,
             )
             for citation in answer.citations
         ]

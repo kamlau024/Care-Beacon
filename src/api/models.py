@@ -45,6 +45,7 @@ class CitationResponse(BaseModel):
     url: str = Field(..., description="URL to source article")
     paragraph_index: int = Field(..., description="Paragraph number (0-indexed)")
     text_excerpt: str = Field(..., description="Excerpt from source text")
+    similarity_score: float = Field(..., description="Similarity/confidence score (0-1)")
 
     class Config:
         json_schema_extra = {
@@ -53,7 +54,8 @@ class CitationResponse(BaseModel):
                 "section": "Symptoms",
                 "url": "https://www.bccancer.bc.ca/health-info/types-of-cancer/breast",
                 "paragraph_index": 0,
-                "text_excerpt": "Common symptoms include lumps in the breast..."
+                "text_excerpt": "Common symptoms include lumps in the breast...",
+                "similarity_score": 0.89
             }
         }
 

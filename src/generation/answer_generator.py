@@ -135,6 +135,7 @@ class AnswerGenerator:
                 url=chunk.url,
                 paragraph_index=chunk.paragraph_index,
                 text_excerpt=chunk.text[:100] + "..." if len(chunk.text) > 100 else chunk.text,
+                similarity_score=result.similarity_score,
             )
             citations.append(citation)
 

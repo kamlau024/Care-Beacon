@@ -2,7 +2,12 @@
 
 import { useState } from "react"
 import { Activity } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchInterface } from "@/components/search-interface"
 import { StatsDashboard } from "@/components/stats-dashboard"
@@ -10,8 +15,13 @@ import { HealthCheck } from "@/components/health-check"
 import { AdminControls } from "@/components/admin-controls"
 import type { QuestionResponse } from "@/lib/types"
 
+type Page = "search" | "stats" | "admin"
+
 export default function Home() {
-  // Lift search state to page level to persist across tab switches
+  // Navigation state
+  const [currentPage, setCurrentPage] = useState<Page>("search")
+
+  // Lift search state to page level to persist across navigation
   const [question, setQuestion] = useState("")
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<QuestionResponse | null>(null)
@@ -21,38 +31,59 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-8">
-          <div className="flex items-center gap-2">
-            <Activity className="h-6 w-6" />
-            <h1 className="text-xl font-bold">Care Beacon</h1>
+        <div className="container max-w-6xl mx-auto flex h-16 items-center justify-between px-4 md:px-8">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Activity className="h-6 w-6" />
+              <h1 className="text-xl font-bold">Care Beacon</h1>
+            </div>
+
+            {/* Navigation Menu */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <button
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => setCurrentPage("search")}
+                    data-active={currentPage === "search"}
+                  >
+                    Search
+                  </button>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <button
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => setCurrentPage("stats")}
+                    data-active={currentPage === "stats"}
+                  >
+                    Statistics
+                  </button>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <button
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => setCurrentPage("admin")}
+                    data-active={currentPage === "admin"}
+                  >
+                    Admin
+                  </button>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
+
           <div className="flex items-center gap-4">
             <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container px-4 md:px-8 py-8">
+      {/* Main Content - Centered */}
+      <main className="container max-w-6xl mx-auto px-4 md:px-8 py-8">
         <div className="space-y-8">
-          {/* Hero Section */}
-          <div className="space-y-2">
-            <p className="text-muted-foreground text-sm md:text-base max-w-3xl">
-              Get evidence-based medical information powered by AI and BC Cancer&apos;s comprehensive resources.
-              Ask questions in natural language and receive accurate, cited answers.
-            </p>
-          </div>
-
-          {/* Tabs */}
-          <Tabs defaultValue="search" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex">
-              <TabsTrigger value="search">Search</TabsTrigger>
-              <TabsTrigger value="stats">Statistics</TabsTrigger>
-              <TabsTrigger value="admin">Admin</TabsTrigger>
-            </TabsList>
-
-            {/* Search Tab */}
-            <TabsContent value="search" className="space-y-6">
+          {/* Page Content */}
+          {currentPage === "search" && (
+            <div className="space-y-6">
               <SearchInterface
                 question={question}
                 setQuestion={setQuestion}
@@ -63,29 +94,31 @@ export default function Home() {
                 error={error}
                 setError={setError}
               />
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Statistics Tab */}
-            <TabsContent value="stats" className="space-y-6">
+          {currentPage === "stats" && (
+            <div className="space-y-6">
               <StatsDashboard />
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Admin Tab */}
-            <TabsContent value="admin" className="space-y-6">
+          {currentPage === "admin" && (
+            <div className="space-y-6">
               <div className="grid gap-6 lg:grid-cols-2">
                 <AdminControls />
                 <HealthCheck />
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t mt-12">
-        <div className="container px-4 md:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p className="text-xs">
+        <div className="container max-w-6xl mx-auto px-4 md:px-8 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
+            <p className="text-xs text-center">
               ⚠️ For educational purposes only. Consult healthcare professionals for medical advice.
             </p>
           </div>

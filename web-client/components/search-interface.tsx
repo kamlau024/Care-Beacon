@@ -1,12 +1,13 @@
 "use client"
 
+import React from "react"
 import { Search, Loader2, ExternalLink, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { api, ApiError } from "@/lib/api"
-import type { QuestionResponse } from "@/lib/types"
+import type { QuestionResponse, Citation } from "@/lib/types"
 
 interface SearchInterfaceProps {
   question: string
@@ -17,6 +18,62 @@ interface SearchInterfaceProps {
   setResult: (value: QuestionResponse | null) => void
   error: string | null
   setError: (value: string | null) => void
+}
+
+// Helper function to parse and linkify citations in the answer
+function parseCitations(text: string, sources: Citation[]): React.ReactNode[] {
+  // Pattern to match citations like [Source: Article Title - Section] or [Article Title - Section]
+  const citationPattern = /\[(?:Source:\s*)?([^\]]+?)\s*-\s*([^\]]+?)\]/g
+
+  const parts: React.ReactNode[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = citationPattern.exec(text)) !== null) {
+    // Add text before the citation
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index))
+    }
+
+    const fullMatch = match[0]
+    const articleTitle = match[1].trim()
+    const section = match[2].trim()
+
+    // Try to find matching source
+    const matchingSource = sources.find(
+      source =>
+        source.article_title.toLowerCase().includes(articleTitle.toLowerCase()) ||
+        articleTitle.toLowerCase().includes(source.article_title.toLowerCase())
+    )
+
+    if (matchingSource) {
+      // Create clickable link
+      parts.push(
+        <a
+          key={`citation-${match.index}`}
+          href={matchingSource.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline inline-flex items-center gap-1"
+        >
+          {fullMatch}
+          <ExternalLink className="h-3 w-3" />
+        </a>
+      )
+    } else {
+      // No matching source, render as plain text
+      parts.push(fullMatch)
+    }
+
+    lastIndex = match.index + fullMatch.length
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex))
+  }
+
+  return parts.length > 0 ? parts : [text]
 }
 
 export function SearchInterface({
@@ -65,7 +122,7 @@ export function SearchInterface({
         <CardHeader>
           <CardTitle>Ask a Medical Question</CardTitle>
           <CardDescription>
-            Get evidence-based answers from BC Cancer&apos;s medical resources
+            Get evidence-based answers from trusted medical resources
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -142,7 +199,9 @@ export function SearchInterface({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="prose prose-sm dark:prose-invert max-w-none">
-                <p className="text-foreground whitespace-pre-wrap">{result.answer}</p>
+                <p className="text-foreground whitespace-pre-wrap">
+                  {parseCitations(result.answer, result.sources)}
+                </p>
               </div>
 
               {result.disclaimer && (
@@ -187,7 +246,12 @@ export function SearchInterface({
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-1">
-                          <h4 className="font-medium text-sm">{source.article_title}</h4>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-medium text-sm">{source.article_title}</h4>
+                            <Badge variant="secondary" className="text-xs">
+                              {(source.similarity_score * 100).toFixed(0)}%
+                            </Badge>
+                          </div>
                           <p className="text-xs text-muted-foreground">{source.section}</p>
                           {source.text_excerpt && (
                             <p className="text-xs text-muted-foreground italic mt-2">

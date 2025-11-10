@@ -5,6 +5,7 @@ export interface Citation {
   url: string
   paragraph_index: number
   text_excerpt: string
+  similarity_score: number
 }
 
 export interface QuestionResponse {

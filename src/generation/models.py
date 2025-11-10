@@ -29,6 +29,9 @@ class Citation:
     text_excerpt: str
     """Excerpt of text being cited (for verification)"""
 
+    similarity_score: float = 0.0
+    """Similarity/confidence score (0-1) from vector search"""
+
     def to_reference(self) -> str:
         """Format as a readable reference.
 
@@ -121,6 +124,7 @@ class GeneratedAnswer:
                     "section": c.section,
                     "url": c.url,
                     "paragraph_index": c.paragraph_index,
+                    "similarity_score": c.similarity_score,
                 }
                 for c in self.citations
             ],
