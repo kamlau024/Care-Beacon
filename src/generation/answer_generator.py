@@ -147,6 +147,7 @@ class AnswerGenerator:
         question: str,
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
     ) -> GeneratedAnswer:
         """Generate an answer to a medical question.
 
@@ -188,6 +189,7 @@ class AnswerGenerator:
         context = self.retrieval_engine.retrieve_text(
             query_text=question,
             max_results=max_results,
+            min_similarity=min_similarity,
             filters=filters,
         )
 

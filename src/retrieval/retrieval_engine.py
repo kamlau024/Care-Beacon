@@ -126,8 +126,8 @@ class RetrievalEngine:
         """
         query = Query(
             text=query_text,
-            max_results=max_results or self.config.default_max_results,
-            min_similarity=min_similarity or self.config.default_min_similarity,
+            max_results=max_results if max_results is not None else self.config.default_max_results,
+            min_similarity=min_similarity if min_similarity is not None else self.config.default_min_similarity,
             filters=filters,
         )
 

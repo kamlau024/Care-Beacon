@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Slider } from "@/components/ui/slider"
 import { api, ApiError } from "@/lib/api"
 import type { QuestionResponse, Citation } from "@/lib/types"
 
@@ -98,6 +99,9 @@ export function SearchInterface({
     "Canadian Cancer Society",
   ])
 
+  // Minimum similarity score state - default to 0.0 (no filtering)
+  const [minSimilarity, setMinSimilarity] = useState<number>(0.0)
+
   const handleSourceToggle = (sourceLabel: string) => {
     setSelectedSources((prev) => {
       // If this is the only source selected, don't allow unchecking it
@@ -122,7 +126,7 @@ export function SearchInterface({
     setResult(null)
 
     try {
-      // Build request with source filter
+      // Build request with source filter and min similarity
       const requestData: any = { question: question.trim() }
 
       // If only one source is selected, add it as a filter
@@ -130,6 +134,11 @@ export function SearchInterface({
         requestData.source = selectedSources[0]
       }
       // If both sources are selected, don't add source filter (search all)
+
+      // Add minimum similarity threshold
+      if (minSimilarity > 0) {
+        requestData.min_similarity = minSimilarity
+      }
 
       const response = await api.askQuestion(requestData)
       setResult(response)
@@ -217,6 +226,30 @@ export function SearchInterface({
                   </label>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Minimum Similarity Score Slider */}
+          <div className="pt-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-medium text-muted-foreground">
+                Minimum similarity score:
+              </div>
+              <div className="text-sm font-medium text-foreground">
+                {(minSimilarity * 100).toFixed(0)}%
+              </div>
+            </div>
+            <Slider
+              value={[minSimilarity]}
+              onValueChange={(values) => setMinSimilarity(values[0])}
+              min={0}
+              max={1}
+              step={0.05}
+              disabled={loading}
+              className="w-full"
+            />
+            <div className="text-xs text-muted-foreground">
+              Only sources with at least this similarity score will be used. Lower values return more sources.
             </div>
           </div>
 

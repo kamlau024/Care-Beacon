@@ -31,6 +31,12 @@ class QuestionRequest(BaseModel):
         le=10,
         description="Maximum number of source chunks to use"
     )
+    min_similarity: Optional[float] = Field(
+        0.0,
+        ge=0.0,
+        le=1.0,
+        description="Minimum similarity score (0-1) for sources to be included"
+    )
 
     class Config:
         json_schema_extra = {

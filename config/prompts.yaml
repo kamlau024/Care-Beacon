@@ -79,7 +79,7 @@ medical_disclaimer: |
 
 # Error messages
 no_context_found: |
-  I couldn't find relevant information in the BC Cancer educational materials to answer your question. You may want to:
+  I couldn't find relevant information in the selected sources to answer your question. You may want to:
   1. Rephrase your question
   2. Contact BC Cancer directly for more specific information
   3. Speak with your healthcare provider

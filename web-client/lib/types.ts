@@ -97,4 +97,5 @@ export interface QuestionRequest {
   cancer_type?: string
   source?: string
   max_results?: number
+  min_similarity?: number
 }
