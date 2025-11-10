@@ -35,7 +35,7 @@ projects:
 
           # Next.js Frontend
           - type: web
-            name: care-beacon-web
+            name: care-beacon
             runtime: node
             plan: free
             rootDir: web-client
