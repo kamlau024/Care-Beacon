@@ -57,7 +57,7 @@ class RedisCache:
         """Load cache configuration.
 
         Checks environment variables first, then falls back to config file.
-        This allows Docker environment variables to override config.yaml.
+        This allows Docker and cloud environment variables to override config.yaml.
 
         Returns:
             CacheConfig instance
@@ -65,13 +65,29 @@ class RedisCache:
         config = get_config()
         cache_config = config.get("cache", {})
 
-        # Check environment variables first (for Docker deployments)
+        # Check for REDIS_URL first (used by Render, Heroku, etc.)
+        redis_url = os.getenv("REDIS_URL")
+        if redis_url:
+            # Parse Redis URL (format: redis://[user:password@]host:port[/db])
+            from urllib.parse import urlparse
+            parsed = urlparse(redis_url)
+            host = parsed.hostname or "localhost"
+            port = parsed.port or 6379
+            db = int(parsed.path.lstrip("/")) if parsed.path and parsed.path != "/" else 0
+            password = parsed.password
+        else:
+            # Fall back to individual environment variables or config
+            host = os.getenv("REDIS_HOST", cache_config.get("redis_host", "localhost"))
+            port = int(os.getenv("REDIS_PORT", cache_config.get("redis_port", 6379)))
+            db = int(os.getenv("REDIS_DB", cache_config.get("redis_db", 0)))
+            password = os.getenv("REDIS_PASSWORD", cache_config.get("redis_password"))
+
         return CacheConfig(
             enabled=cache_config.get("enabled", True),
-            host=os.getenv("REDIS_HOST", cache_config.get("redis_host", "localhost")),
-            port=int(os.getenv("REDIS_PORT", cache_config.get("redis_port", 6379))),
-            db=int(os.getenv("REDIS_DB", cache_config.get("redis_db", 0))),
-            password=os.getenv("REDIS_PASSWORD", cache_config.get("redis_password")),
+            host=host,
+            port=port,
+            db=db,
+            password=password,
             ttl_seconds=cache_config.get("ttl_seconds", 3600),
             key_prefix=cache_config.get("key_prefix", "care_beacon:"),
             max_retries=cache_config.get("max_retries", 3),
