@@ -44,4 +44,4 @@ services:
           name: care-beacon-api
           envVarKey: RENDER_EXTERNAL_URL
       - key: NODE_VERSION
-        value: "18"
+        value: "20"
