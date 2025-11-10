@@ -1,0 +1,47 @@
+services:
+  # Redis Cache
+  - type: redis
+    name: care-beacon-redis
+    plan: free
+    ipAllowList: []
+
+  # FastAPI Backend
+  - type: web
+    name: care-beacon-api
+    runtime: python
+    plan: free
+    buildCommand: "chmod +x scripts/render_build.sh && ./scripts/render_build.sh"
+    startCommand: "python scripts/start_api.py"
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: care-beacon-redis
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: "3.10.19"
+      - key: ANONYMIZED_TELEMETRY
+        value: "False"
+    disk:
+      name: vector-db-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+
+  # Next.js Frontend
+  - type: web
+    name: care-beacon-web
+    runtime: node
+    plan: free
+    rootDir: web-client
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: care-beacon-api
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: NODE_VERSION
+        value: "18"
