@@ -132,6 +132,11 @@ class VectorDatabase:
         Returns:
             List of RetrievalResult objects
         """
+        # Convert where clause to ChromaDB format if multiple conditions
+        if where and len(where) > 1:
+            # ChromaDB requires $and operator for multiple conditions
+            where = {"$and": [{k: v} for k, v in where.items()]}
+
         # Query the collection
         results = self.collection.query(
             query_embeddings=[query_embedding],

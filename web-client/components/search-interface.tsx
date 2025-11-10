@@ -1,11 +1,12 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Search, Loader2, ExternalLink, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { api, ApiError } from "@/lib/api"
 import type { QuestionResponse, Citation } from "@/lib/types"
 
@@ -19,6 +20,11 @@ interface SearchInterfaceProps {
   error: string | null
   setError: (value: string | null) => void
 }
+
+const SOURCES = [
+  { id: "bc-cancer", label: "BC Cancer" },
+  { id: "canadian-cancer-society", label: "Canadian Cancer Society" },
+]
 
 // Helper function to parse and linkify citations in the answer
 function parseCitations(text: string, sources: Citation[]): React.ReactNode[] {
@@ -86,6 +92,27 @@ export function SearchInterface({
   error,
   setError,
 }: SearchInterfaceProps) {
+  // Source filter state - both sources selected by default
+  const [selectedSources, setSelectedSources] = useState<string[]>([
+    "BC Cancer",
+    "Canadian Cancer Society",
+  ])
+
+  const handleSourceToggle = (sourceLabel: string) => {
+    setSelectedSources((prev) => {
+      // If this is the only source selected, don't allow unchecking it
+      if (prev.length === 1 && prev.includes(sourceLabel)) {
+        return prev
+      }
+
+      // Toggle the source
+      if (prev.includes(sourceLabel)) {
+        return prev.filter((s) => s !== sourceLabel)
+      } else {
+        return [...prev, sourceLabel]
+      }
+    })
+  }
 
   const handleSearch = async () => {
     if (!question.trim()) return
@@ -95,7 +122,16 @@ export function SearchInterface({
     setResult(null)
 
     try {
-      const response = await api.askQuestion({ question: question.trim() })
+      // Build request with source filter
+      const requestData: any = { question: question.trim() }
+
+      // If only one source is selected, add it as a filter
+      if (selectedSources.length === 1) {
+        requestData.source = selectedSources[0]
+      }
+      // If both sources are selected, don't add source filter (search all)
+
+      const response = await api.askQuestion(requestData)
       setResult(response)
     } catch (err) {
       if (err instanceof ApiError) {
@@ -148,6 +184,42 @@ export function SearchInterface({
               )}
             </div>
           </div>
+
+          {/* Source Filter Checkboxes */}
+          <div className="pt-4 space-y-2">
+            <div className="text-sm font-medium text-muted-foreground">
+              Search in:
+            </div>
+            <div className="flex flex-wrap gap-4">
+              {SOURCES.map((source) => (
+                <div key={source.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={source.id}
+                    checked={selectedSources.includes(source.label)}
+                    onCheckedChange={() => handleSourceToggle(source.label)}
+                    disabled={
+                      loading ||
+                      (selectedSources.length === 1 &&
+                        selectedSources.includes(source.label))
+                    }
+                  />
+                  <label
+                    htmlFor={source.id}
+                    className={`text-sm cursor-pointer ${
+                      loading ||
+                      (selectedSources.length === 1 &&
+                        selectedSources.includes(source.label))
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
+                  >
+                    {source.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="flex gap-2 pt-4">
             <Button onClick={handleSearch} disabled={loading || !question.trim()}>
               {loading ? (
@@ -246,10 +318,13 @@ export function SearchInterface({
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-medium text-sm">{source.article_title}</h4>
                             <Badge variant="secondary" className="text-xs">
                               {(source.similarity_score * 100).toFixed(0)}%
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {source.source}
                             </Badge>
                           </div>
                           <p className="text-xs text-muted-foreground">{source.section}</p>
