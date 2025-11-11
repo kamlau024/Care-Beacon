@@ -233,6 +233,8 @@ class RedisCache:
                     "url": c.url,
                     "paragraph_index": c.paragraph_index,
                     "text_excerpt": c.text_excerpt,
+                    "similarity_score": c.similarity_score,
+                    "source": c.source,
                 }
                 for c in answer.citations
             ],
@@ -264,6 +266,8 @@ class RedisCache:
                 url=c["url"],
                 paragraph_index=c["paragraph_index"],
                 text_excerpt=c["text_excerpt"],
+                similarity_score=c.get("similarity_score", 0.0),
+                source=c.get("source", "Unknown"),
             )
             for c in answer_dict.get("citations", [])
         ]
