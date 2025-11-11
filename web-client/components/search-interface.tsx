@@ -83,6 +83,19 @@ function parseCitations(text: string, sources: Citation[]): React.ReactNode[] {
   return parts.length > 0 ? parts : [text]
 }
 
+// Helper function to get badge styling based on source
+function getSourceBadgeStyle(source: string): string {
+  if (source === "BC Cancer") {
+    // Blue/cyan theme matching the image
+    return "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
+  } else if (source === "Canadian Cancer Society") {
+    // Green/lime theme matching the image
+    return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
+  }
+  // Default fallback
+  return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800"
+}
+
 export function SearchInterface({
   question,
   setQuestion,
@@ -99,8 +112,8 @@ export function SearchInterface({
     "Canadian Cancer Society",
   ])
 
-  // Minimum similarity score state - default to 0.0 (no filtering)
-  const [minSimilarity, setMinSimilarity] = useState<number>(0.0)
+  // Minimum similarity score state - default to 0.5 (50%)
+  const [minSimilarity, setMinSimilarity] = useState<number>(0.5)
 
   const handleSourceToggle = (sourceLabel: string) => {
     setSelectedSources((prev) => {
@@ -356,7 +369,7 @@ export function SearchInterface({
                             <Badge variant="secondary" className="text-xs">
                               {(source.similarity_score * 100).toFixed(0)}%
                             </Badge>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className={`text-xs border ${getSourceBadgeStyle(source.source)}`}>
                               {source.source}
                             </Badge>
                           </div>
