@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "care-beacon": {
+      "command": "/opt/anaconda3/envs/care-beacon/bin/python",
+      "args": [
+        "/Users/username/Projects/Care-Beacon/mcp/stdio/mcp_server.py"
+      ],
+      "env": {
+        "CARE_BEACON_API_URL": "http://localhost:8000",
+        "CARE_BEACON_TIMEOUT": "60.0"
+      }
+    }
+  }
+}

@@ -19,6 +19,9 @@ uvicorn[standard]==0.27.1  # ASGI server
 pydantic==2.6.1  # Data validation
 pydantic-settings==2.1.0  # Settings management
 
+# MCP Server
+mcp==1.0.0  # Model Context Protocol for Claude Desktop integration
+
 # Utilities
 python-dotenv==1.0.1  # Environment variable management
 tqdm==4.66.1  # Progress bars

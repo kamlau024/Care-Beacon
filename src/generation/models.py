@@ -127,7 +127,9 @@ class GeneratedAnswer:
                     "section": c.section,
                     "url": c.url,
                     "paragraph_index": c.paragraph_index,
+                    "text_excerpt": c.text_excerpt,
                     "similarity_score": c.similarity_score,
+                    "source": c.source,
                 }
                 for c in self.citations
             ],
