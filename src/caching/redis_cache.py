@@ -99,6 +99,7 @@ class RedisCache:
         question: str,
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
     ) -> str:
         """Generate a unique cache key for a query.
 
@@ -108,6 +109,7 @@ class RedisCache:
             question: User question
             filters: Optional metadata filters
             max_results: Maximum results to retrieve
+            min_similarity: Minimum similarity threshold
 
         Returns:
             Cache key string
@@ -117,6 +119,7 @@ class RedisCache:
             "question": question.strip().lower(),  # Normalize
             "filters": filters or {},
             "max_results": max_results,
+            "min_similarity": min_similarity,
         }
 
         # Convert to JSON string (sorted for consistency)
@@ -133,6 +136,7 @@ class RedisCache:
         question: str,
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
     ) -> Optional[GeneratedAnswer]:
         """Get cached answer if available.
 
@@ -140,6 +144,7 @@ class RedisCache:
             question: User question
             filters: Optional metadata filters
             max_results: Maximum results to retrieve
+            min_similarity: Minimum similarity threshold
 
         Returns:
             Cached GeneratedAnswer if found, None otherwise
@@ -150,7 +155,7 @@ class RedisCache:
         self.stats.total_queries += 1
 
         try:
-            cache_key = self._generate_cache_key(question, filters, max_results)
+            cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
             cached_data = self.client.get(cache_key)
 
             if cached_data:
@@ -180,6 +185,7 @@ class RedisCache:
         answer: GeneratedAnswer,
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
     ):
         """Store answer in cache.
 
@@ -188,12 +194,13 @@ class RedisCache:
             answer: Generated answer to cache
             filters: Optional metadata filters
             max_results: Maximum results used
+            min_similarity: Minimum similarity threshold used
         """
         if not self.enabled or not self.client:
             return
 
         try:
-            cache_key = self._generate_cache_key(question, filters, max_results)
+            cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
 
             # Serialize answer to JSON
             answer_dict = self._serialize_answer(answer)
@@ -289,6 +296,7 @@ class RedisCache:
         question: str,
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
     ):
         """Invalidate (delete) a cached entry.
 
@@ -296,12 +304,13 @@ class RedisCache:
             question: User question
             filters: Optional metadata filters
             max_results: Maximum results used
+            min_similarity: Minimum similarity threshold used
         """
         if not self.enabled or not self.client:
             return
 
         try:
-            cache_key = self._generate_cache_key(question, filters, max_results)
+            cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
             self.client.delete(cache_key)
         except RedisError as e:
             print(f"⚠️  Cache invalidate error: {e}")

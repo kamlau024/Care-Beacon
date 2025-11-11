@@ -171,7 +171,7 @@ class AnswerGenerator:
         start_time = time.time()
 
         # Step 1: Check cache first
-        cached_answer = self.cache.get(question, filters, max_results)
+        cached_answer = self.cache.get(question, filters, max_results, min_similarity)
         if cached_answer:
             # Cache hit! Track savings
             elapsed_ms = (time.time() - start_time) * 1000
@@ -256,7 +256,7 @@ class AnswerGenerator:
         )
 
         # Step 6: Store in cache for future requests
-        self.cache.set(question, answer, filters, max_results)
+        self.cache.set(question, answer, filters, max_results, min_similarity)
 
         return answer
 
