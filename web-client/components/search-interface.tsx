@@ -192,7 +192,7 @@ export function SearchInterface({
                 onChange={(e) => setQuestion(e.target.value)}
                 onKeyPress={handleKeyPress}
                 disabled={loading}
-                className="pr-10"
+                className="pr-10 border-2 focus-visible:ring-2"
               />
               {question && (
                 <button
