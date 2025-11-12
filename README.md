@@ -316,6 +316,33 @@ python scripts/ingest_all_articles.py
 # - Store in Chroma vector database
 ```
 
+### Validating Ingestion
+
+After ingestion, use the validation script to verify your data:
+
+```bash
+# Show database statistics
+./scripts/validate_ingestion.sh stats
+
+# Search for specific content
+./scripts/validate_ingestion.sh search "What is a normal PSA level?" 5
+
+# Search with source filter (BC Cancer only)
+./scripts/validate_ingestion.sh search "What is a normal PSA level?" 5 "BC Cancer"
+
+# Check if a specific file was ingested
+./scripts/validate_ingestion.sh file scraped_data/bc-cancer/articles/health-info/types-of-cancer/pelvic-area/prostate.md
+
+# Filter by source
+./scripts/validate_ingestion.sh source "BC Cancer"
+
+# List all chunks (with limit)
+./scripts/validate_ingestion.sh list 50
+
+# Show help
+./scripts/validate_ingestion.sh help
+```
+
 ### Phase 2: Query System (Coming Soon)
 
 ```bash
