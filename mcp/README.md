@@ -46,11 +46,11 @@ The stdio-based server is spawned as a local subprocess by Claude Desktop and co
 }
 ```
 
-### sse/ - Remote MCP Server (Coming Soon)
+### sse/ - Remote MCP Server
 
 **Transport:** HTTP with Server-Sent Events (SSE)
 **Use Case:** Remote hosting on render.com
-**Status:** 🚧 Planned
+**Status:** ✅ Available
 
 The SSE-based server will run as a web service and support remote connections via HTTPS. This enables:
 
@@ -105,8 +105,10 @@ For Claude Desktop integration, update your Claude Desktop config file at:
 
 ## Future Plans
 
-- [ ] Implement HTTP/SSE transport for remote hosting
-- [ ] Add API key authentication
-- [ ] Deploy SSE server to render.com
-- [ ] Add monitoring and rate limiting
-- [ ] Support for additional tools (resources, prompts)
+- [x] Implement HTTP/SSE transport for remote hosting
+- [x] Add API key authentication
+- [x] Deploy SSE server to render.com
+- [ ] Add rate limiting for production use
+- [ ] Support for additional MCP features (resources, prompts)
+- [ ] Add request/response logging for debugging
+- [ ] Implement token-based usage tracking

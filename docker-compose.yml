@@ -28,6 +28,60 @@ services:
       retries: 3
       start_period: 40s
 
+  # MCP SSE Server - Model Context Protocol Server
+  mcp-sse:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: care-beacon-mcp-sse
+    ports:
+      - "8001:8001"
+    environment:
+      - CARE_BEACON_API_URL=http://api:8000
+      - PORT=8001
+      - MCP_API_KEY=${MCP_API_KEY:-}
+      - CARE_BEACON_TIMEOUT=60.0
+    volumes:
+      - ./mcp:/app/mcp  # MCP server code
+    command: python mcp/sse/mcp_server.py
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - care-beacon-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Web Client - Next.js Frontend
+  web:
+    build:
+      context: ./web-client
+      dockerfile: Dockerfile
+    container_name: care-beacon-web
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NODE_ENV=production
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - care-beacon-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://0.0.0.0:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
   # Redis - Caching Layer
   redis:
     image: redis:7-alpine
