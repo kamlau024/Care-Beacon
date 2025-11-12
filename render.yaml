@@ -45,35 +45,6 @@ projects:
               mountPath: /opt/render/project/src/data
               sizeGB: 1
 
-          # MCP Server (Remote HTTP/SSE)
-          - type: web
-            name: care-beacon-mcp
-            runtime: python
-            plan: starter
-            buildCommand: "pip install -r requirements.txt"
-            startCommand: "python mcp/sse/mcp_server.py"
-            autoDeploy: true
-            branch: main
-            buildFilter:
-              paths:
-                - mcp/sse/**
-                - requirements.txt
-                - render.yaml
-            envVars:
-              - key: CARE_BEACON_API_URL
-                fromService:
-                  type: web
-                  name: care-beacon-api
-                  envVarKey: RENDER_EXTERNAL_URL
-              - key: MCP_API_KEY
-                generateValue: true
-              - key: CARE_BEACON_TIMEOUT
-                value: "60.0"
-              - key: PORT
-                value: "10000"
-              - key: PYTHON_VERSION
-                value: "3.10.19"
-
           # Next.js Frontend
           - type: web
             name: care-beacon
