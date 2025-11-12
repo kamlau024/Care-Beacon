@@ -2,9 +2,9 @@
 
 import os
 import sys
-from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
+from contextlib import asynccontextmanager
 import time
 
 from fastapi import FastAPI, HTTPException, Request, status
@@ -51,7 +51,36 @@ API_VERSION = "2.0.0"
 config = get_config()
 api_config = config.get("api", {})
 
-# Create FastAPI app
+
+# Lifespan context manager for startup and shutdown events
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan (startup and shutdown)."""
+    # Startup
+    print("=" * 70)
+    print("Care-Beacon Medical RAG API")
+    print("=" * 70)
+    print(f"Version: {API_VERSION}")
+    print(f"Environment: {'Development' if api_config.get('debug', False) else 'Production'}")
+    print()
+
+    # Pre-initialize generator
+    generator = get_answer_generator()
+    print(f" Answer generator initialized")
+    print(f" Cache status: {'Enabled' if generator.cache.enabled else 'Disabled'}")
+    print(f" Cache healthy: {generator.cache.is_healthy()}")
+    print()
+    print("API is ready to accept requests!")
+    print("=" * 70)
+
+    yield
+
+    # Shutdown
+    print("\nShutting down Care-Beacon API...")
+    print(" Cleanup complete")
+
+
+# Create FastAPI app with lifespan
 app = FastAPI(
     title="Care-Beacon Medical RAG API",
     description="Retrieval-Augmented Generation API for cancer information from BC Cancer",
@@ -59,6 +88,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+    lifespan=lifespan,
 )
 
 # CORS Configuration
@@ -388,30 +418,3 @@ async def reset_stats():
             detail=f"Failed to reset statistics: {str(e)}",
         )
 
-
-# Startup and shutdown events
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup."""
-    print("=" * 70)
-    print("Care-Beacon Medical RAG API")
-    print("=" * 70)
-    print(f"Version: {API_VERSION}")
-    print(f"Environment: {'Development' if api_config.get('debug', False) else 'Production'}")
-    print()
-
-    # Pre-initialize generator
-    generator = get_answer_generator()
-    print(f" Answer generator initialized")
-    print(f" Cache status: {'Enabled' if generator.cache.enabled else 'Disabled'}")
-    print(f" Cache healthy: {generator.cache.is_healthy()}")
-    print()
-    print("API is ready to accept requests!")
-    print("=" * 70)
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown."""
-    print("\nShutting down Care-Beacon API...")
-    print(" Cleanup complete")

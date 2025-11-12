@@ -838,9 +838,9 @@ def test_reset_stats_exception_handling(client):
         assert "Failed to reset statistics" in data["message"]
 
 
-def test_startup_event_handler(capsys):
-    """Test startup event handler (lines 396-410)."""
-    from src.api.main import startup_event
+def test_lifespan_startup_and_shutdown(capsys):
+    """Test lifespan context manager handles startup and shutdown (lines 56-81)."""
+    from src.api.main import lifespan, app
     import asyncio
 
     # Mock get_answer_generator to avoid actual initialization
@@ -851,29 +851,22 @@ def test_startup_event_handler(capsys):
         mock_gen.cache.is_healthy.return_value = True
         mock_get_gen.return_value = mock_gen
 
-        # Run the startup event
-        asyncio.run(startup_event())
+        # Run the lifespan context manager
+        async def run_lifespan():
+            async with lifespan(app):
+                # This is where the app would run
+                pass
 
-        # Capture output from lines 396-410
+        asyncio.run(run_lifespan())
+
+        # Capture output from lifespan
         captured = capsys.readouterr()
 
-        # Verify startup messages are printed (exact format from lines 396-410)
+        # Verify startup messages are printed (lines 60-75)
         assert "Care-Beacon Medical RAG API" in captured.out
-        assert "Version:" in captured.out  # Line 399 prints "Version: ..."
-        assert "Answer generator initialized" in captured.out  # Line 405
-        assert "Cache healthy: True" in captured.out  # Line 407
+        assert "Version:" in captured.out
+        assert "Answer generator initialized" in captured.out
+        assert "Cache healthy: True" in captured.out
 
-
-def test_shutdown_event_handler(capsys):
-    """Test shutdown event handler (lines 416-417)."""
-    from src.api.main import shutdown_event
-    import asyncio
-
-    # Run the shutdown event
-    asyncio.run(shutdown_event())
-
-    # Capture output from lines 416-417
-    captured = capsys.readouterr()
-
-    # Verify shutdown message is printed
-    assert "Shutting down Care-Beacon API" in captured.out
+        # Verify shutdown messages are printed (lines 79-81)
+        assert "Shutting down Care-Beacon API" in captured.out
