@@ -36,11 +36,11 @@ A production-ready Retrieval-Augmented Generation (RAG) system for answering pat
 
 | Metric | Status |
 |--------|--------|
-| **Test Coverage** | 100% (1217/1217 statements) ✅ |
-| **Total Tests** | 253 passing ✅ |
+| **Test Coverage** | 100% (1359/1359 statements) ✅ |
+| **Total Tests** | 284 passing ✅ |
 | **Code Quality** | Zero deprecation warnings ✅ |
 | **API Documentation** | Comprehensive with examples ✅ |
-| **Performance** | 1-3s response time, 30-50% cache savings ✅ |
+| **Performance** | Real-time monitoring, < 2s average response time ✅ |
 
 ## 📚 Documentation
 
@@ -49,6 +49,7 @@ Comprehensive documentation is available:
 - **[API Documentation](docs/API.md)** - Complete REST API reference with examples
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Setup, testing, and development workflow
 - **[Usage Examples](docs/USAGE_EXAMPLES.md)** - Tutorials and integration patterns
+- **[Performance Optimization](docs/PERFORMANCE_OPTIMIZATION.md)** - Monitoring, benchmarking, and optimization guide
 - **[Architecture](docs/ARCHITECTURE.md)** - System design and component overview
 - **[Interactive API Docs](http://localhost:8000/docs)** - Swagger UI (when running)
 - **[Project Plan](Claude.md)** - Original requirements and design decisions
@@ -61,9 +62,10 @@ Comprehensive documentation is available:
 - **Smart Caching** - 30-50% cost reduction via Redis caching
 - **Vector Search** - Semantic similarity using OpenAI embeddings and ChromaDB
 - **Citation Transparency** - Every claim linked to original source paragraph
+- **Performance Monitoring** - Real-time metrics, benchmarking, and profiling tools
 - **REST API** - Modern FastAPI with OpenAPI documentation
 - **Docker Ready** - Full containerization for easy deployment
-- **100% Test Coverage** - Comprehensive test suite with 253 tests
+- **100% Test Coverage** - Comprehensive test suite with 284 tests
 
 ## Project Structure
 

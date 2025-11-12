@@ -43,6 +43,7 @@ from src.api.models import (
     StatsResponse,
     ErrorResponse,
 )
+from src.api.performance import get_performance_monitor
 
 # API Version
 API_VERSION = "2.0.0"
@@ -100,6 +101,28 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Performance monitoring middleware
+@app.middleware("http")
+async def performance_middleware(request: Request, call_next):
+    """Track performance metrics for all requests."""
+    start_time = time.time()
+    response = await call_next(request)
+    duration_ms = (time.time() - start_time) * 1000
+
+    # Record metrics (excluding /performance endpoint to avoid recursion)
+    if not request.url.path.startswith("/api/v1/performance"):
+        monitor = get_performance_monitor()
+        monitor.record_request(
+            endpoint=request.url.path,
+            method=request.method,
+            status_code=response.status_code,
+            duration_ms=duration_ms,
+        )
+
+    return response
+
 
 # Initialize answer generator (lazy loaded on first request)
 _answer_generator: AnswerGenerator | None = None
@@ -207,6 +230,9 @@ async def root():
             "ask": "/api/v1/ask",
             "health": "/health",
             "stats": "/api/v1/stats",
+            "performance": "/api/v1/performance",
+            "performance_endpoints": "/api/v1/performance/endpoints",
+            "performance_recent": "/api/v1/performance/recent",
         }
     }
 
@@ -416,5 +442,129 @@ async def reset_stats():
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reset statistics: {str(e)}",
+        )
+
+
+@app.get(
+    "/api/v1/performance",
+    tags=["Monitoring"],
+    summary="Get performance metrics",
+    description="Retrieve comprehensive performance metrics including response times, throughput, and error rates",
+)
+async def get_performance_metrics():
+    """Get performance monitoring metrics.
+
+    Returns:
+        Performance summary with aggregated metrics
+    """
+    try:
+        monitor = get_performance_monitor()
+        summary = monitor.get_summary()
+        percentiles = monitor.get_percentiles()
+
+        return {
+            "summary": summary,
+            "percentiles": percentiles,
+            "timestamp": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve performance metrics: {str(e)}",
+        )
+
+
+@app.get(
+    "/api/v1/performance/endpoints",
+    tags=["Monitoring"],
+    summary="Get endpoint-specific metrics",
+    description="Retrieve performance metrics broken down by endpoint",
+)
+async def get_endpoint_performance():
+    """Get endpoint-specific performance metrics.
+
+    Returns:
+        Performance metrics for each endpoint
+    """
+    try:
+        monitor = get_performance_monitor()
+        endpoint_metrics = monitor.get_endpoint_metrics()
+
+        return {
+            "endpoints": endpoint_metrics,
+            "timestamp": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve endpoint metrics: {str(e)}",
+        )
+
+
+@app.get(
+    "/api/v1/performance/recent",
+    tags=["Monitoring"],
+    summary="Get recent requests",
+    description="Retrieve metrics for recent API requests",
+)
+async def get_recent_requests(limit: int = 10):
+    """Get recent request metrics.
+
+    Args:
+        limit: Maximum number of requests to return (default: 10, max: 100)
+
+    Returns:
+        List of recent request metrics
+    """
+    try:
+        # Limit to reasonable range
+        limit = min(max(1, limit), 100)
+
+        monitor = get_performance_monitor()
+        recent = monitor.get_recent_requests(limit=limit)
+
+        return {
+            "requests": recent,
+            "count": len(recent),
+            "timestamp": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve recent requests: {str(e)}",
+        )
+
+
+@app.post(
+    "/api/v1/performance/reset",
+    tags=["Administration"],
+    summary="Reset performance metrics",
+    description="Clear all performance monitoring data",
+)
+async def reset_performance_metrics():
+    """Reset performance monitoring metrics.
+
+    Returns:
+        Confirmation message
+
+    Note:
+        This endpoint should be protected with authentication in production
+    """
+    try:
+        monitor = get_performance_monitor()
+        monitor.reset()
+
+        return {
+            "message": "Performance metrics reset successfully",
+            "timestamp": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to reset performance metrics: {str(e)}",
         )
 
