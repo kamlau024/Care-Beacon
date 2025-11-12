@@ -306,3 +306,389 @@ Some text with "quotes" and 'apostrophes'.
     assert article.title == "Special Characters & Symbols"
     all_text = ' '.join(article.get_all_paragraphs())
     assert len(all_text) > 0
+
+
+def test_source_defaults_to_bc_cancer(parser, sample_markdown_file):
+    """Test that source defaults to BC Cancer when not specified."""
+    article = parser.parse_file(sample_markdown_file)
+
+    assert article.source == "BC Cancer"
+
+
+def test_source_from_bc_cancer_path(parser, tmp_path):
+    """Test source detection from bc-cancer directory path."""
+    # Create a file in bc-cancer directory structure
+    bc_dir = tmp_path / "bc-cancer" / "articles"
+    bc_dir.mkdir(parents=True)
+
+    content = """---
+title: "BC Cancer Test Article"
+url: https://www.bccancer.bc.ca/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+
+## Content
+
+Test content from BC Cancer.
+"""
+    file_path = bc_dir / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should detect BC Cancer from path
+    assert article.source == "BC Cancer"
+
+
+def test_source_from_canadian_cancer_society_path(parser, tmp_path):
+    """Test source detection from canadian-cancer-society directory path."""
+    # Create a file in canadian-cancer-society directory structure
+    ccs_dir = tmp_path / "canadian-cancer-society" / "articles"
+    ccs_dir.mkdir(parents=True)
+
+    content = """---
+title: "Canadian Cancer Society Test Article"
+url: https://cancer.ca/en/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+
+## Content
+
+Test content from Canadian Cancer Society.
+"""
+    file_path = ccs_dir / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should detect Canadian Cancer Society from path
+    assert article.source == "Canadian Cancer Society"
+
+
+def test_source_detection_case_insensitive(parser, tmp_path):
+    """Test that source detection is case-insensitive."""
+    # Test with uppercase
+    dir1 = tmp_path / "BC-CANCER" / "articles"
+    dir1.mkdir(parents=True)
+
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file1 = dir1 / "test.md"
+    file1.write_text(content)
+
+    article1 = parser.parse_file(file1)
+    assert article1.source == "BC Cancer"
+
+    # Test with mixed case
+    dir2 = tmp_path / "Canadian-Cancer-Society" / "articles"
+    dir2.mkdir(parents=True)
+    file2 = dir2 / "test2.md"
+    file2.write_text(content)
+
+    article2 = parser.parse_file(file2)
+    assert article2.source == "Canadian Cancer Society"
+
+
+def test_source_detection_from_url_pattern(parser, tmp_path):
+    """Test source detection from cancer.ca URL pattern."""
+    # Create file with cancer.ca in path
+    dir = tmp_path / "data" / "cancer.ca" / "articles"
+    dir.mkdir(parents=True)
+
+    content = """---
+title: "Test Article"
+url: https://cancer.ca/en/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file_path = dir / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should detect Canadian Cancer Society from cancer.ca pattern
+    assert article.source == "Canadian Cancer Society"
+
+
+def test_source_detection_bccancer_variant(parser, tmp_path):
+    """Test source detection with bccancer (no hyphen) variant."""
+    dir = tmp_path / "data" / "bccancer" / "articles"
+    dir.mkdir(parents=True)
+
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file_path = dir / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should detect BC Cancer from bccancer pattern
+    assert article.source == "BC Cancer"
+
+
+def test_source_defaults_to_bc_cancer_with_no_match(parser, tmp_path):
+    """Test that source defaults to BC Cancer when no pattern matches."""
+    # Create file with no recognizable source pattern
+    dir = tmp_path / "unknown" / "source" / "articles"
+    dir.mkdir(parents=True)
+
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file_path = dir / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should default to BC Cancer
+    assert article.source == "BC Cancer"
+
+
+def test_multiple_sources_in_dataset(parser, tmp_path):
+    """Test parsing articles from different sources."""
+    # Create BC Cancer file
+    bc_dir = tmp_path / "bc-cancer"
+    bc_dir.mkdir(parents=True)
+    bc_content = """---
+title: "BC Cancer Article"
+url: https://www.bccancer.bc.ca/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+BC Cancer content.
+"""
+    bc_file = bc_dir / "bc_article.md"
+    bc_file.write_text(bc_content)
+
+    # Create Canadian Cancer Society file
+    ccs_dir = tmp_path / "canadian-cancer-society"
+    ccs_dir.mkdir(parents=True)
+    ccs_content = """---
+title: "CCS Article"
+url: https://cancer.ca/en/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Canadian Cancer Society content.
+"""
+    ccs_file = ccs_dir / "ccs_article.md"
+    ccs_file.write_text(ccs_content)
+
+    # Parse both articles
+    bc_article = parser.parse_file(bc_file)
+    ccs_article = parser.parse_file(ccs_file)
+
+    # Verify both have source information
+    assert bc_article.source is not None
+    assert ccs_article.source is not None
+    assert bc_article.source == "BC Cancer"
+    assert ccs_article.source == "Canadian Cancer Society"
+
+
+def test_date_parsing_with_timezone_plus_sign(parser, tmp_path):
+    """Test date parsing with '+' timezone (line 91)."""
+    # Use datetime objects that will work with fromisoformat
+    from datetime import datetime
+
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: "2024-01-15 10:30:00+05:00"
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file_path = tmp_path / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should parse successfully and extract date (lines 91, 94)
+    assert article.date_scraped is not None
+    # Just verify that we got a datetime object - the parsing logic
+    # splits on '+' and uses datetime parsing
+
+
+def test_date_parsing_iso_format_with_time(parser, tmp_path):
+    """Test date parsing with ISO format containing time (line 94)."""
+    # Use ISO format with 'T' but no timezone - this will hit line 94 directly
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: "2024-03-15T14:30:45"
+breadcrumbs: ["Test"]
+---
+## Content
+Test content.
+"""
+    file_path = tmp_path / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should parse ISO format with time using fromisoformat (line 94)
+    assert article.date_scraped is not None
+    assert article.date_scraped.year == 2024
+    assert article.date_scraped.month == 3
+    assert article.date_scraped.day == 15
+    assert article.date_scraped.hour == 14
+    assert article.date_scraped.minute == 30
+    assert article.date_scraped.second == 45
+
+
+def test_date_parsing_missing_date_scraped(parser, tmp_path):
+    """Test date parsing when date_scraped is missing (line 102)."""
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+breadcrumbs: ["Test"]
+---
+## Content
+Test content without date_scraped field.
+"""
+    file_path = tmp_path / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should use current time as fallback
+    assert article.date_scraped is not None
+    # Date should be recent (within last minute)
+    from datetime import datetime, timedelta
+    assert datetime.now() - article.date_scraped < timedelta(minutes=1)
+
+
+def test_parse_sections_with_paragraph_before_new_header(parser, tmp_path):
+    """Test parsing when there's a paragraph before a new header (lines 146-149)."""
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## First Section
+This is content in the first section.
+More content without blank lines.
+## Second Section
+This is the second paragraph.
+"""
+    file_path = tmp_path / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should have two sections
+    assert len(article.sections) >= 2
+
+    # First section should have saved the paragraph before the new header (lines 146-149)
+    first_section = article.sections[0]
+    assert len(first_section.paragraphs) > 0
+    assert "first section" in first_section.paragraphs[0].lower()
+
+
+def test_parse_blockquote_content(parser, tmp_path):
+    """Test parsing content with blockquotes (line 210)."""
+    content = """---
+title: "Test Article"
+url: https://example.com/test
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Section With Blockquote
+
+> This is a blockquote
+> It spans multiple lines
+
+Regular paragraph after blockquote.
+"""
+    file_path = tmp_path / "test.md"
+    file_path.write_text(content)
+
+    article = parser.parse_file(file_path)
+
+    # Should parse blockquote content
+    assert len(article.sections) > 0
+    assert len(article.sections[0].paragraphs) > 0
+
+    # Blockquote content should be extracted (without '>')
+    all_text = ' '.join(article.sections[0].paragraphs)
+    assert "blockquote" in all_text.lower()
+    assert ">" not in all_text  # '>' should be stripped
+
+
+def test_parse_directory_not_found(parser, tmp_path):
+    """Test parse_directory with non-existent directory (line 244)."""
+    nonexistent_dir = tmp_path / "nonexistent"
+
+    with pytest.raises(FileNotFoundError) as exc_info:
+        parser.parse_directory(nonexistent_dir)
+
+    assert "Directory not found" in str(exc_info.value)
+
+
+def test_parse_directory_with_invalid_file(parser, tmp_path):
+    """Test parse_directory with a file that fails to parse (lines 251-253)."""
+    # Create one valid file
+    valid_content = """---
+title: "Valid Article"
+url: https://example.com/valid
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"]
+---
+## Content
+Valid content.
+"""
+    valid_file = tmp_path / "valid.md"
+    valid_file.write_text(valid_content)
+
+    # Create one invalid file (corrupted YAML frontmatter)
+    invalid_content = """---
+title: "Invalid Article
+url: https://example.com/invalid
+date_scraped: 2025-11-07T00:00:00
+breadcrumbs: ["Test"
+---
+## Content
+Invalid content with broken YAML.
+"""
+    invalid_file = tmp_path / "invalid.md"
+    invalid_file.write_text(invalid_content)
+
+    # Parse directory - should skip invalid file and continue (lines 251-253)
+    articles = parser.parse_directory(tmp_path)
+
+    # Should still parse the valid file successfully
+    # The invalid file should be skipped with exception handling
+    assert len(articles) >= 1
+    assert any(a.title == "Valid Article" for a in articles)
+
+    # Should not include the invalid article
+    assert not any("Invalid Article" in a.title for a in articles)

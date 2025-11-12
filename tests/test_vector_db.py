@@ -314,3 +314,137 @@ def test_add_empty_chunks_list(vector_db):
     vector_db.add_chunks([], show_progress=False)
 
     assert vector_db.count() == 0
+
+
+def test_add_chunks_with_some_missing_embeddings(vector_db, sample_chunks_with_embeddings, capsys):
+    """Test adding chunks where some chunks don't have embeddings (lines 83-84)."""
+    # Create a mix of chunks with and without embeddings
+    chunks_with_embeddings = sample_chunks_with_embeddings[:3]
+
+    # Create chunks without embeddings
+    chunks_without_embeddings = [
+        Chunk(
+            chunk_id=f"no_embedding_{i}",
+            text=f"Text without embedding {i}",
+            article_id="test",
+            article_title="Test",
+            url="https://example.com",
+            breadcrumbs=["Test"],
+            section="Test",
+            paragraph_index=i,
+            total_paragraphs=10
+        )
+        for i in range(2)
+    ]
+
+    # Mix them together
+    mixed_chunks = chunks_with_embeddings + chunks_without_embeddings
+
+    # Add chunks with show_progress=False to avoid extra output
+    vector_db.add_chunks(mixed_chunks, show_progress=False)
+
+    # Capture the warning output
+    captured = capsys.readouterr()
+
+    # Should warn about skipping chunks without embeddings (line 84)
+    assert "Skipping 2 chunks without embeddings" in captured.out
+
+    # Should only add chunks with embeddings
+    assert vector_db.count() == len(chunks_with_embeddings)
+
+
+def test_add_chunks_all_missing_embeddings(vector_db, capsys):
+    """Test adding chunks where none have embeddings (lines 87-88)."""
+    # Create chunks without embeddings
+    chunks_no_embeddings = [
+        Chunk(
+            chunk_id=f"no_embedding_{i}",
+            text=f"Text without embedding {i}",
+            article_id="test",
+            article_title="Test",
+            url="https://example.com",
+            breadcrumbs=["Test"],
+            section="Test",
+            paragraph_index=i,
+            total_paragraphs=10
+        )
+        for i in range(3)
+    ]
+
+    # Try to add chunks without embeddings
+    vector_db.add_chunks(chunks_no_embeddings, show_progress=False)
+
+    # Capture the warning output
+    captured = capsys.readouterr()
+
+    # Should warn that no chunks have embeddings (line 87)
+    assert "No chunks with embeddings to add" in captured.out
+
+    # Should not add any chunks
+    assert vector_db.count() == 0
+
+
+def test_add_chunks_with_progress_display(vector_db, sample_chunks_with_embeddings, capsys):
+    """Test adding chunks with progress display enabled (lines 97-98, 115)."""
+    # Add chunks with show_progress=True
+    vector_db.add_chunks(sample_chunks_with_embeddings, batch_size=2, show_progress=True)
+
+    # Capture the output
+    captured = capsys.readouterr()
+
+    # Should show progress messages (line 98)
+    assert "Adding batch" in captured.out
+
+    # Should show success message (line 115)
+    assert "✅ Added" in captured.out
+    assert f"Added {len(sample_chunks_with_embeddings)} chunks" in captured.out
+
+    # All chunks should be added
+    assert vector_db.count() == len(sample_chunks_with_embeddings)
+
+
+def test_search_with_multiple_metadata_filters(vector_db, sample_chunks_with_embeddings):
+    """Test search with multiple metadata filters (line 138)."""
+    # Add chunks
+    vector_db.add_chunks(sample_chunks_with_embeddings, show_progress=False)
+
+    # Search with multiple filters (should trigger $and conversion on line 138)
+    query_embedding = [0.11] * 1536
+
+    results = vector_db.search(
+        query_embedding,
+        n_results=5,
+        where={
+            "cancer_type": "Breast Cancer",
+            "article_id": "breast-cancer"
+        }
+    )
+
+    # Should return results matching both filters
+    assert len(results) > 0
+    for result in results:
+        assert result.chunk.cancer_type == "Breast Cancer"
+        assert result.chunk.article_id == "breast-cancer"
+
+
+def test_search_by_text_not_implemented(vector_db):
+    """Test that search_by_text raises NotImplementedError (line 202)."""
+    with pytest.raises(NotImplementedError) as exc_info:
+        vector_db.search_by_text("test query", n_results=5)
+
+    # Verify the error message
+    assert "search_by_text requires an embedding generator" in str(exc_info.value)
+
+
+def test_get_stats_empty_database(vector_db):
+    """Test get_stats on empty database (lines 288-289)."""
+    # Get stats on empty database
+    stats = vector_db.get_stats()
+
+    # Should handle empty database gracefully
+    assert stats['total_chunks'] == 0
+    assert stats['unique_articles_sample'] == 0  # Line 288
+    assert stats['unique_sections_sample'] == 0  # Line 289
+    assert stats['collection_name'] == "test-collection"
+    assert 'distance_metric' in stats
+    assert 'persist_directory' in stats

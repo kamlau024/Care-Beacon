@@ -109,6 +109,23 @@ def test_answer_generator_initialization(answer_generator):
     assert answer_generator.prompts is not None
 
 
+def test_answer_generator_initialization_with_default_config(mock_retrieval_engine, mock_llm_client):
+    """Test that answer generator initializes with default config loaded from file."""
+    # Don't provide a config - should load from get_config()
+    generator = AnswerGenerator(
+        retrieval_engine=mock_retrieval_engine,
+        llm_client=mock_llm_client,
+        # No config parameter - will trigger _load_config() (lines 56-61)
+    )
+
+    # Verify it initialized with a config loaded from file
+    assert generator.config is not None
+    assert isinstance(generator.config, GenerationConfig)
+    assert generator.config.model is not None
+    assert generator.config.max_tokens > 0
+    assert generator.config.temperature >= 0
+
+
 def test_generate_answer_basic(answer_generator):
     """Test basic answer generation."""
     question = "What are symptoms of breast cancer?"
@@ -273,3 +290,200 @@ def test_no_context_found(answer_generator, mock_retrieval_engine):
     assert answer is not None
     assert len(answer.citations) == 0
     assert answer.cost == 0.0  # No LLM call made
+
+
+def test_load_prompts_file_missing(mock_retrieval_engine, mock_llm_client):
+    """Test prompt loading when config/prompts.yaml doesn't exist."""
+    config = GenerationConfig(
+        model="gpt-4o-mini",
+        max_tokens=1000,
+        temperature=0.1,
+    )
+
+    # Mock Path.exists to return False (file doesn't exist)
+    with patch('pathlib.Path.exists', return_value=False):
+        generator = AnswerGenerator(
+            retrieval_engine=mock_retrieval_engine,
+            llm_client=mock_llm_client,
+            config=config,
+        )
+
+        # Should have default prompts
+        assert "system_prompt" in generator.prompts
+        assert "qa_prompt_template" in generator.prompts
+        assert generator.prompts["system_prompt"] == "You are a helpful medical information assistant."
+
+
+def test_cache_hit_statistics_tracking(mock_retrieval_engine, mock_llm_client):
+    """Test that cache hits properly track cost savings."""
+    config = GenerationConfig(
+        model="gpt-4o-mini",
+        max_tokens=1000,
+        temperature=0.1,
+    )
+
+    # Create mock cache with a cached answer
+    mock_cache = Mock()
+    cached_answer = GeneratedAnswer(
+        query="What are symptoms?",
+        answer="Cached answer about symptoms.",
+        citations=[],
+        context_used=RetrievedContext(
+            query=Query(text="test", max_results=5),
+            results=[],
+            total_chunks=0,
+            retrieval_time_ms=0.0,
+        ),
+        model="gpt-4o-mini",
+        tokens_used={"input": 100, "output": 50, "total": 150},
+        cost=0.0005,  # This is the cost we saved
+        generation_time_ms=500.0,
+    )
+
+    mock_cache.get.return_value = cached_answer
+    mock_cache.stats = Mock()
+    mock_cache.stats.total_cost_saved = 0.0
+    mock_cache.stats.total_time_saved_ms = 0.0
+    mock_cache.get_stats.return_value = {
+        "cache_hits": 1,
+        "cache_misses": 0,
+        "total_cost_saved": 0.0005,
+    }
+
+    generator = AnswerGenerator(
+        retrieval_engine=mock_retrieval_engine,
+        llm_client=mock_llm_client,
+        config=config,
+        cache=mock_cache,
+    )
+
+    # Generate answer (should hit cache)
+    answer = generator.generate_answer("What are symptoms?")
+
+    # Verify cache was checked
+    mock_cache.get.assert_called_once()
+
+    # Verify we got the cached answer back
+    assert answer.answer == "Cached answer about symptoms."
+
+    # Verify cost savings were tracked (lines 181-182)
+    assert mock_cache.stats.total_cost_saved >= 0.0005
+    assert mock_cache.stats.total_time_saved_ms >= 500
+
+
+def test_generate_answer_without_citations_requirement(mock_retrieval_engine, mock_llm_client):
+    """Test answer generation with require_citations=False."""
+    config = GenerationConfig(
+        model="gpt-4o-mini",
+        max_tokens=1000,
+        temperature=0.1,
+        max_context_chunks=5,
+        require_citations=False,  # Citations not required
+        include_disclaimer=True,
+    )
+
+    generator = AnswerGenerator(
+        retrieval_engine=mock_retrieval_engine,
+        llm_client=mock_llm_client,
+        config=config,
+    )
+
+    question = "What are symptoms of breast cancer?"
+    answer = generator.generate_answer(question)
+
+    # Verify LLM was called
+    mock_llm_client.generate.assert_called_once()
+
+    # Get the call arguments
+    call_kwargs = mock_llm_client.generate.call_args.kwargs
+
+    # When require_citations is False, should use basic qa_prompt_template (line 227)
+    # The user_prompt should be formatted with the basic template
+    assert "user_prompt" in call_kwargs
+    assert question in call_kwargs["user_prompt"]
+
+    # Answer should still be generated
+    assert answer is not None
+    assert len(answer.answer) > 0
+
+
+def test_get_config_dict_method(answer_generator):
+    """Test the get_config_dict method (line 317)."""
+    config_dict = answer_generator.get_config_dict()
+
+    # Verify it returns a dictionary with expected keys
+    assert isinstance(config_dict, dict)
+    assert "model" in config_dict
+    assert "max_tokens" in config_dict
+    assert "temperature" in config_dict
+    assert "max_context_chunks" in config_dict
+    assert "require_citations" in config_dict
+    assert "include_disclaimer" in config_dict
+
+    # Verify values match the config
+    assert config_dict["model"] == answer_generator.config.model
+    assert config_dict["max_tokens"] == answer_generator.config.max_tokens
+    assert config_dict["temperature"] == answer_generator.config.temperature
+
+
+def test_cache_miss_then_store(mock_retrieval_engine, mock_llm_client):
+    """Test cache miss scenario with subsequent storage."""
+    config = GenerationConfig(
+        model="gpt-4o-mini",
+        max_tokens=1000,
+        temperature=0.1,
+    )
+
+    # Create mock cache that returns None (cache miss)
+    mock_cache = Mock()
+    mock_cache.get.return_value = None
+    mock_cache.get_stats.return_value = {
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "total_cost_saved": 0.0,
+    }
+
+    generator = AnswerGenerator(
+        retrieval_engine=mock_retrieval_engine,
+        llm_client=mock_llm_client,
+        config=config,
+        cache=mock_cache,
+    )
+
+    # Generate answer (cache miss)
+    question = "What are symptoms?"
+    answer = generator.generate_answer(question)
+
+    # Verify cache.get was called
+    mock_cache.get.assert_called_once()
+
+    # Verify cache.set was called to store the result
+    mock_cache.set.assert_called_once()
+
+    # Verify the answer was generated
+    assert answer is not None
+    assert len(answer.answer) > 0
+
+
+def test_get_stats_with_cost_calculation(answer_generator):
+    """Test get_stats with comprehensive cost calculations."""
+    # Generate an answer to accumulate stats
+    answer_generator.generate_answer("What are symptoms?")
+
+    # Get stats
+    stats = answer_generator.get_stats()
+
+    # Verify all required keys are present
+    assert "llm" in stats
+    assert "retrieval" in stats
+    assert "cache" in stats
+    assert "total_cost" in stats
+    assert "total_cost_saved" in stats
+    assert "total_cost_without_cache" in stats
+    assert "cost_reduction_percent" in stats
+
+    # Verify calculations are reasonable
+    assert stats["total_cost"] >= 0
+    assert stats["total_cost_saved"] >= 0
+    assert stats["cost_reduction_percent"] >= 0
+    assert stats["cost_reduction_percent"] <= 100

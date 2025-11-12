@@ -20,6 +20,35 @@ class MarkdownParser:
         self.list_item_pattern = re.compile(r'^\s*[\*\-\+]\s+(.+)$')
         self.blockquote_pattern = re.compile(r'^\s*>\s+(.+)$')
 
+        # Source detection patterns
+        self.source_mappings = {
+            'bc-cancer': 'BC Cancer',
+            'bccancer': 'BC Cancer',
+            'canadian-cancer-society': 'Canadian Cancer Society',
+            'cancer.ca': 'Canadian Cancer Society',
+        }
+
+    def _detect_source_from_path(self, file_path: Path) -> str:
+        """Detect the source organization from the file path.
+
+        Args:
+            file_path: Path to the markdown file
+
+        Returns:
+            Source name (e.g., "BC Cancer", "Canadian Cancer Society")
+            Defaults to "BC Cancer" if no pattern matches
+        """
+        # Convert path to lowercase string for matching
+        path_str = str(file_path).lower()
+
+        # Check each pattern
+        for pattern, source_name in self.source_mappings.items():
+            if pattern in path_str:
+                return source_name
+
+        # Default to BC Cancer
+        return "BC Cancer"
+
     def parse_file(self, file_path: str | Path) -> Article:
         """Parse a markdown file and return an Article object.
 
@@ -76,6 +105,9 @@ class MarkdownParser:
         content = post.content
         sections = self._parse_sections(content)
 
+        # Detect source from file path
+        source = self._detect_source_from_path(file_path)
+
         # Create article
         article = Article(
             title=title,
@@ -83,7 +115,8 @@ class MarkdownParser:
             date_scraped=date_scraped,
             breadcrumbs=breadcrumbs,
             images=images,
-            sections=sections
+            sections=sections,
+            source=source
         )
 
         return article

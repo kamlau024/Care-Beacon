@@ -357,3 +357,282 @@ def test_cache_is_healthy(redis_cache, mock_redis_client):
     # Simulate failure
     mock_redis_client.ping.side_effect = RedisConnectionError("Connection lost")
     assert redis_cache.is_healthy() is False
+
+
+def test_redis_url_parsing():
+    """Test Redis URL parsing from REDIS_URL environment variable."""
+    redis_url = "redis://user:password@myhost:6380/2"
+
+    with patch.dict('os.environ', {'REDIS_URL': redis_url}):
+        with patch('redis.Redis') as mock_redis:
+            mock_client = MagicMock()
+            mock_client.ping.return_value = True
+            mock_redis.return_value = mock_client
+
+            cache = RedisCache()
+
+            # Verify URL was parsed correctly
+            assert cache.config.host == "myhost"
+            assert cache.config.port == 6380
+            assert cache.config.db == 2
+            assert cache.config.password == "password"
+
+
+def test_redis_url_parsing_minimal():
+    """Test Redis URL parsing with minimal URL (no password, default port/db)."""
+    redis_url = "redis://localhost"
+
+    with patch.dict('os.environ', {'REDIS_URL': redis_url}):
+        with patch('redis.Redis') as mock_redis:
+            mock_client = MagicMock()
+            mock_client.ping.return_value = True
+            mock_redis.return_value = mock_client
+
+            cache = RedisCache()
+
+            # Should use defaults
+            assert cache.config.host == "localhost"
+            assert cache.config.port == 6379
+            assert cache.config.db == 0
+            assert cache.config.password is None
+
+
+def test_cache_get_redis_error(redis_cache, mock_redis_client):
+    """Test cache get with Redis error."""
+    from redis.exceptions import RedisError
+
+    mock_redis_client.get.side_effect = RedisError("Redis error")
+
+    result = redis_cache.get("What are symptoms?")
+
+    # Should return None and increment error count
+    assert result is None
+    assert redis_cache.stats.cache_errors == 1
+
+
+def test_cache_get_json_decode_error(redis_cache, mock_redis_client):
+    """Test cache get with invalid JSON data."""
+    # Return invalid JSON
+    mock_redis_client.get.return_value = "invalid json {"
+
+    result = redis_cache.get("What are symptoms?")
+
+    # Should return None and increment error count
+    assert result is None
+    assert redis_cache.stats.cache_errors == 1
+
+
+def test_cache_set_when_disabled():
+    """Test that set() returns early when cache is disabled."""
+    config = CacheConfig(enabled=False)
+
+    with patch('redis.Redis') as mock_redis:
+        cache = RedisCache(config=config)
+
+        # Create a test answer
+        citation = Citation(
+            chunk_id="test_001",
+            article_title="Test",
+            section="Test",
+            url="https://example.com",
+            paragraph_index=0,
+            text_excerpt="Test",
+        )
+
+        answer = GeneratedAnswer(
+            query="Test",
+            answer="Test answer",
+            citations=[citation],
+            context_used=None,
+            model="gpt-4o-mini",
+            tokens_used={"input": 100, "output": 50, "total": 150},
+            cost=0.0002,
+            generation_time_ms=500.0,
+        )
+
+        # Should not raise error, just return
+        cache.set("Test question", answer)
+
+        # Redis should never be called
+        assert not mock_redis.called
+
+
+def test_cache_set_redis_error(redis_cache, mock_redis_client):
+    """Test cache set with Redis error."""
+    from redis.exceptions import RedisError
+
+    mock_redis_client.setex.side_effect = RedisError("Redis error")
+
+    citation = Citation(
+        chunk_id="test_001",
+        article_title="Test",
+        section="Test",
+        url="https://example.com",
+        paragraph_index=0,
+        text_excerpt="Test",
+    )
+
+    answer = GeneratedAnswer(
+        query="Test",
+        answer="Test answer",
+        citations=[citation],
+        context_used=None,
+        model="gpt-4o-mini",
+        tokens_used={"input": 100, "output": 50, "total": 150},
+        cost=0.0002,
+        generation_time_ms=500.0,
+    )
+
+    # Should not raise error
+    redis_cache.set("Test question", answer)
+
+    # Should increment error count
+    assert redis_cache.stats.cache_errors == 1
+
+
+def test_cache_set_type_error(redis_cache, mock_redis_client):
+    """Test cache set with TypeError during serialization."""
+    # Create answer with un-serializable data
+    mock_redis_client.setex.side_effect = TypeError("Cannot serialize")
+
+    citation = Citation(
+        chunk_id="test_001",
+        article_title="Test",
+        section="Test",
+        url="https://example.com",
+        paragraph_index=0,
+        text_excerpt="Test",
+    )
+
+    answer = GeneratedAnswer(
+        query="Test",
+        answer="Test answer",
+        citations=[citation],
+        context_used=None,
+        model="gpt-4o-mini",
+        tokens_used={"input": 100, "output": 50, "total": 150},
+        cost=0.0002,
+        generation_time_ms=500.0,
+    )
+
+    # Should not raise error
+    redis_cache.set("Test question", answer)
+
+    # Should increment error count
+    assert redis_cache.stats.cache_errors == 1
+
+
+def test_cache_invalidate_when_disabled():
+    """Test that invalidate() returns early when cache is disabled."""
+    config = CacheConfig(enabled=False)
+
+    with patch('redis.Redis') as mock_redis:
+        cache = RedisCache(config=config)
+
+        # Should not raise error, just return
+        cache.invalidate("Test question")
+
+        # Redis should never be called
+        assert not mock_redis.called
+
+
+def test_cache_invalidate_redis_error(redis_cache, mock_redis_client):
+    """Test cache invalidate with Redis error."""
+    from redis.exceptions import RedisError
+
+    mock_redis_client.delete.side_effect = RedisError("Redis error")
+
+    # Should not raise error, just print warning
+    redis_cache.invalidate("Test question")
+
+    # Verify delete was attempted
+    assert mock_redis_client.delete.called
+
+
+def test_cache_clear_all_when_disabled():
+    """Test that clear_all() returns early when cache is disabled."""
+    config = CacheConfig(enabled=False)
+
+    with patch('redis.Redis') as mock_redis:
+        cache = RedisCache(config=config)
+
+        # Should not raise error, just return
+        cache.clear_all()
+
+        # Redis should never be called
+        assert not mock_redis.called
+
+
+def test_cache_clear_all_no_keys(redis_cache, mock_redis_client, capsys):
+    """Test clear_all when no keys exist."""
+    # Return empty list
+    mock_redis_client.keys.return_value = []
+
+    redis_cache.clear_all()
+
+    # Should print info message
+    captured = capsys.readouterr()
+    assert "No cached entries to clear" in captured.out
+
+    # Delete should not be called
+    assert not mock_redis_client.delete.called
+
+
+def test_cache_clear_all_redis_error(redis_cache, mock_redis_client):
+    """Test clear_all with Redis error."""
+    from redis.exceptions import RedisError
+
+    mock_redis_client.keys.side_effect = RedisError("Redis error")
+
+    # Should not raise error, just print warning
+    redis_cache.clear_all()
+
+    # Verify keys was attempted
+    assert mock_redis_client.keys.called
+
+
+def test_cache_get_stats_redis_error(redis_cache, mock_redis_client):
+    """Test get_stats with Redis error when fetching info."""
+    from redis.exceptions import RedisError
+
+    # Make info() raise error
+    mock_redis_client.info.side_effect = RedisError("Redis error")
+
+    # Should still return stats, just without Redis info
+    stats = redis_cache.get_stats()
+
+    assert "enabled" in stats
+    assert stats["enabled"] is True
+    # Redis-specific stats should not be present
+    assert "redis_total_commands" not in stats or stats["redis_total_commands"] == 0
+
+
+def test_cache_reset_stats(redis_cache):
+    """Test resetting cache statistics."""
+    # Set some stats
+    redis_cache.stats.total_queries = 100
+    redis_cache.stats.cache_hits = 75
+    redis_cache.stats.cache_misses = 25
+    redis_cache.stats.cache_errors = 5
+    redis_cache.stats.total_cost_saved = 1.5
+
+    # Reset
+    redis_cache.reset_stats()
+
+    # Verify all stats are reset
+    assert redis_cache.stats.total_queries == 0
+    assert redis_cache.stats.cache_hits == 0
+    assert redis_cache.stats.cache_misses == 0
+    assert redis_cache.stats.cache_errors == 0
+    assert redis_cache.stats.total_cost_saved == 0.0
+
+
+def test_cache_is_healthy_when_disabled():
+    """Test is_healthy returns False when cache is disabled."""
+    config = CacheConfig(enabled=False)
+
+    with patch('redis.Redis'):
+        cache = RedisCache(config=config)
+
+        # Should return False immediately
+        assert cache.is_healthy() is False

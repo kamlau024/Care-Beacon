@@ -177,6 +177,88 @@ def test_retrieve_with_min_similarity(retrieval_engine):
         assert result.similarity_score >= 0.7
 
 
+def test_retrieve_with_source_filter_bc_cancer(retrieval_engine):
+    """Test retrieval filtered by BC Cancer source."""
+    context = retrieval_engine.retrieve_text(
+        "cancer treatment",
+        filters={"source": "BC Cancer"},
+        max_results=5,
+    )
+
+    assert context is not None
+    assert len(context.results) > 0
+
+    # All results should be from BC Cancer
+    for result in context.results:
+        assert result.chunk.source == "BC Cancer"
+
+
+def test_retrieve_with_source_filter_canadian_cancer_society(retrieval_engine):
+    """Test retrieval filtered by Canadian Cancer Society source."""
+    context = retrieval_engine.retrieve_text(
+        "cancer treatment",
+        filters={"source": "Canadian Cancer Society"},
+        max_results=5,
+    )
+
+    assert context is not None
+    # Note: Results might be empty if no Canadian Cancer Society data in test DB
+    # This is expected - test verifies the filter works without error
+
+
+def test_retrieve_without_source_filter_returns_mixed(retrieval_engine):
+    """Test retrieval without source filter can return mixed sources."""
+    context = retrieval_engine.retrieve_text(
+        "cancer treatment",
+        max_results=10,
+    )
+
+    assert context is not None
+    assert len(context.results) > 0
+
+    # Collect unique sources from results
+    sources = set(result.chunk.source for result in context.results)
+
+    # Should have at least one source (BC Cancer from test data)
+    assert len(sources) >= 1
+    assert "BC Cancer" in sources
+
+
+def test_retrieve_with_combined_source_and_cancer_type_filters(retrieval_engine):
+    """Test retrieval with both source and cancer_type filters."""
+    context = retrieval_engine.retrieve_text(
+        "symptoms",
+        filters={
+            "source": "BC Cancer",
+            "cancer_type": "Breast Cancer"
+        },
+        max_results=5,
+    )
+
+    assert context is not None
+
+    # Verify results match both filters
+    for result in context.results:
+        assert result.chunk.source == "BC Cancer"
+        if result.chunk.cancer_type:  # Skip if None
+            assert result.chunk.cancer_type == "Breast Cancer"
+
+
+def test_retrieved_context_preserves_source_metadata(retrieval_engine):
+    """Test that RetrievedContext preserves source metadata."""
+    context = retrieval_engine.retrieve_text("cancer", max_results=5)
+
+    assert context is not None
+    assert len(context.results) > 0
+
+    # Verify each result has source information
+    for result in context.results:
+        assert hasattr(result.chunk, 'source')
+        assert result.chunk.source is not None
+        assert isinstance(result.chunk.source, str)
+        assert len(result.chunk.source) > 0
+
+
 def test_get_similar_chunks(retrieval_engine):
     """Test finding similar chunks."""
     similar = retrieval_engine.get_similar_chunks("article_0_p000", max_results=3)
@@ -319,3 +401,72 @@ def test_retrieval_config_to_dict():
     assert config_dict["rerank_results"] is True
     assert config_dict["include_metadata"] is True
     assert config_dict["cache_embeddings"] is False
+
+
+def test_retrieval_engine_initialization_with_default_config(mock_embedding_generator, mock_vector_db):
+    """Test that retrieval engine initializes with default config loaded from file (lines 56-59)."""
+    # Don't provide a config - should load from get_config()
+    engine = RetrievalEngine(
+        embedding_generator=mock_embedding_generator,
+        vector_db=mock_vector_db,
+        # No config parameter - will trigger _load_config() (lines 56-59)
+    )
+
+    # Verify it initialized with a config loaded from file
+    assert engine.config is not None
+    assert isinstance(engine.config, RetrievalConfig)
+    assert engine.config.default_max_results > 0
+    assert engine.config.default_min_similarity >= 0
+    assert isinstance(engine.config.rerank_results, bool)
+    assert isinstance(engine.config.include_metadata, bool)
+    assert isinstance(engine.config.cache_embeddings, bool)
+
+
+def test_get_similar_chunks_nonexistent_chunk(retrieval_engine, mock_vector_db):
+    """Test get_similar_chunks when chunk doesn't exist (line 199)."""
+    # Mock get_chunk to return None (chunk doesn't exist)
+    mock_vector_db.get_chunk.return_value = None
+
+    similar = retrieval_engine.get_similar_chunks("nonexistent_chunk_id", max_results=5)
+
+    # Should return empty list
+    assert similar == []
+
+
+def test_get_similar_chunks_chunk_without_embedding(retrieval_engine, mock_vector_db):
+    """Test get_similar_chunks when chunk has no embedding (line 199)."""
+    # Create a chunk without embedding
+    chunk_no_embedding = Chunk(
+        chunk_id="no_embedding_chunk",
+        text="Test chunk without embedding",
+        article_id="test",
+        article_title="Test Article",
+        url="https://example.com",
+        breadcrumbs=["Test"],
+        section="Test Section",
+        paragraph_index=0,
+        total_paragraphs=10,
+        embedding=None,  # No embedding
+    )
+
+    # Mock get_chunk to return chunk without embedding
+    mock_vector_db.get_chunk.return_value = chunk_no_embedding
+
+    similar = retrieval_engine.get_similar_chunks("no_embedding_chunk", max_results=5)
+
+    # Should return empty list
+    assert similar == []
+
+
+def test_retrieved_context_get_by_article(retrieval_engine):
+    """Test RetrievedContext.get_by_article method (line 84)."""
+    # Get a context with multiple articles
+    context = retrieval_engine.retrieve_text("test query", max_results=10)
+
+    # Filter by specific article using get_by_article method (line 84)
+    filtered_results = context.get_by_article("article_0")
+
+    # Should only return results from article_0
+    assert len(filtered_results) > 0
+    for result in filtered_results:
+        assert result.chunk.article_id == "article_0"
