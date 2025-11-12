@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 from datetime import datetime
 from typing import Dict, Any
 from contextlib import asynccontextmanager
@@ -392,6 +393,78 @@ async def get_stats():
         )
 
 
+@app.get("/api/v1/vector-db/stats", tags=["Monitoring"])
+async def get_vector_db_stats():
+    """Get vector database statistics.
+
+    Returns:
+        Vector database statistics including source breakdown
+    """
+    try:
+        from src.storage.vector_db import VectorDatabase
+
+        vector_db = VectorDatabase()
+        collection = vector_db.collection
+
+        # Count total unique documents (articles)
+        all_results = collection.get(include=["metadatas"])
+        unique_articles = set()
+        if all_results and all_results.get("metadatas"):
+            for metadata in all_results.get("metadatas", []):
+                article_id = metadata.get("article_id", "")
+                if article_id:
+                    unique_articles.add(article_id)
+
+        total_chunks = vector_db.count()
+
+        # Get breakdown by source
+        sources = []
+
+        # BC Cancer
+        bc_results = collection.get(where={"source": "BC Cancer"}, include=["metadatas"])
+        bc_count = len(bc_results.get("ids", [])) if bc_results else 0
+        bc_articles = set()
+        if bc_results and bc_results.get("metadatas"):
+            for metadata in bc_results.get("metadatas", []):
+                article_id = metadata.get("article_id", "")
+                if article_id:
+                    bc_articles.add(article_id)
+
+        sources.append({
+            "name": "BC Cancer",
+            "chunks": bc_count,
+            "articles": len(bc_articles)
+        })
+
+        # Canadian Cancer Society
+        ccs_results = collection.get(where={"source": "Canadian Cancer Society"}, include=["metadatas"])
+        ccs_count = len(ccs_results.get("ids", [])) if ccs_results else 0
+        ccs_articles = set()
+        if ccs_results and ccs_results.get("metadatas"):
+            for metadata in ccs_results.get("metadatas", []):
+                article_id = metadata.get("article_id", "")
+                if article_id:
+                    ccs_articles.add(article_id)
+
+        sources.append({
+            "name": "Canadian Cancer Society",
+            "chunks": ccs_count,
+            "articles": len(ccs_articles)
+        })
+
+        return {
+            "total_documents": len(unique_articles),
+            "total_chunks": total_chunks,
+            "sources": sources
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve vector DB statistics: {str(e)}",
+        )
+
+
 @app.post("/api/v1/cache/clear", tags=["Administration"])
 async def clear_cache():
     """Clear the Redis cache.
@@ -443,6 +516,182 @@ async def reset_stats():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reset statistics: {str(e)}",
         )
+
+
+@app.post("/api/v1/admin/ingest", tags=["Administration"])
+async def trigger_ingestion(force: bool = False):
+    """Trigger article ingestion on-demand.
+
+    Args:
+        force: If True, clears existing database before ingestion
+
+    Returns:
+        Status and progress information
+
+    Note:
+        This endpoint should be protected with authentication in production.
+        Ingestion can take 5-10 minutes and will block this request.
+        Use for manual re-ingestion after adding new articles.
+    """
+    try:
+        import subprocess
+        from pathlib import Path
+
+        # Get project root
+        project_root = Path(__file__).parent.parent.parent
+        script_path = project_root / "scripts" / "ingest_all_articles_low_memory.py"
+
+        if not script_path.exists():
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Ingestion script not found: {script_path}"
+            )
+
+        # Prepare environment
+        env = os.environ.copy()
+        if force:
+            env["FORCE_CLEAR_DB"] = "true"
+
+        start_time = time.time()
+
+        # Run ingestion script
+        result = subprocess.run(
+            [sys.executable, str(script_path)],
+            cwd=str(project_root),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=900  # 15 minute timeout
+        )
+
+        elapsed_time = time.time() - start_time
+
+        if result.returncode == 0:
+            # Parse output for stats
+            output_lines = result.stdout.split('\n')
+            stats = {}
+            for line in output_lines:
+                if "Total articles processed:" in line:
+                    stats["articles_processed"] = line.split(":")[-1].strip()
+                elif "Total chunks created:" in line:
+                    stats["chunks_created"] = line.split(":")[-1].strip()
+                elif "Total cost:" in line:
+                    stats["cost"] = line.split(":")[-1].strip()
+
+            return {
+                "message": "Ingestion completed successfully",
+                "status": "success",
+                "elapsed_seconds": round(elapsed_time, 2),
+                "stats": stats,
+                "timestamp": datetime.now().isoformat(),
+                "stdout": result.stdout[-2000:] if len(result.stdout) > 2000 else result.stdout  # Last 2000 chars
+            }
+        else:
+            return {
+                "message": "Ingestion failed",
+                "status": "error",
+                "elapsed_seconds": round(elapsed_time, 2),
+                "error": result.stderr,
+                "timestamp": datetime.now().isoformat()
+            }
+
+    except subprocess.TimeoutExpired:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Ingestion timed out after 15 minutes"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to trigger ingestion: {str(e)}"
+        )
+
+
+@app.get("/api/v1/admin/ingest/stream", tags=["Administration"])
+async def stream_ingestion(force: bool = False):
+    """Stream real-time ingestion progress using Server-Sent Events.
+
+    Args:
+        force: If True, clears existing database before ingestion
+
+    Returns:
+        Server-Sent Events stream with real-time progress
+
+    Note:
+        This endpoint should be protected with authentication in production.
+        Use EventSource API on the client to consume the stream.
+    """
+    import subprocess
+    import asyncio
+    from pathlib import Path
+    from fastapi.responses import StreamingResponse
+
+    async def event_generator():
+        """Generate SSE events from ingestion output."""
+        try:
+            # Get project root
+            project_root = Path(__file__).parent.parent.parent
+            script_path = project_root / "scripts" / "ingest_all_articles_low_memory.py"
+
+            if not script_path.exists():
+                yield f"data: {json.dumps({'type': 'error', 'message': 'Ingestion script not found'})}\n\n"
+                return
+
+            # Prepare environment
+            env = os.environ.copy()
+            if force:
+                env["FORCE_CLEAR_DB"] = "true"
+
+            # Start subprocess with line-buffered output
+            process = subprocess.Popen(
+                [sys.executable, str(script_path)],
+                cwd=str(project_root),
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,  # Line buffered
+                universal_newlines=True
+            )
+
+            start_time = time.time()
+
+            # Send start event
+            yield f"data: {json.dumps({'type': 'start', 'timestamp': datetime.now().isoformat()})}\n\n"
+
+            # Stream output line by line
+            try:
+                for line in process.stdout:
+                    line = line.rstrip()
+                    if line:
+                        yield f"data: {json.dumps({'type': 'log', 'message': line})}\n\n"
+                        await asyncio.sleep(0)  # Allow other tasks to run
+
+                # Wait for process to complete
+                return_code = process.wait(timeout=900)
+                elapsed_time = time.time() - start_time
+
+                if return_code == 0:
+                    yield f"data: {json.dumps({'type': 'complete', 'elapsed_seconds': round(elapsed_time, 2), 'timestamp': datetime.now().isoformat()})}\n\n"
+                else:
+                    yield f"data: {json.dumps({'type': 'error', 'message': 'Ingestion failed', 'return_code': return_code, 'elapsed_seconds': round(elapsed_time, 2)})}\n\n"
+
+            except subprocess.TimeoutExpired:
+                process.kill()
+                yield f"data: {json.dumps({'type': 'error', 'message': 'Ingestion timed out after 15 minutes'})}\n\n"
+
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # Disable nginx buffering
+        }
+    )
 
 
 @app.get(

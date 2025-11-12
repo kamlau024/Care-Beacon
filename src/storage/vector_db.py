@@ -45,6 +45,22 @@ class VectorDatabase:
             metadata={"hnsw:space": self.distance_metric}
         )
 
+    def _ensure_collection_valid(self) -> None:
+        """Ensure the collection reference is still valid.
+
+        If the collection was deleted/recreated (e.g., during ingestion),
+        refresh the collection reference. This prevents stale collection errors.
+        """
+        try:
+            # Try to access the collection to see if it's still valid
+            self.collection.count()
+        except (ValueError, Exception):
+            # Collection no longer exists or is invalid, refresh it
+            self.collection = self.client.get_or_create_collection(
+                name=self.collection_name,
+                metadata={"hnsw:space": self.distance_metric}
+            )
+
     def add_chunk(self, chunk: Chunk) -> None:
         """Add a single chunk to the database.
 
@@ -132,6 +148,9 @@ class VectorDatabase:
         Returns:
             List of RetrievalResult objects
         """
+        # Ensure collection is still valid
+        self._ensure_collection_valid()
+
         # Convert where clause to ChromaDB format if multiple conditions
         if where and len(where) > 1:
             # ChromaDB requires $and operator for multiple conditions
@@ -263,6 +282,7 @@ class VectorDatabase:
         Returns:
             Number of chunks
         """
+        self._ensure_collection_valid()
         return self.collection.count()
 
     def get_stats(self) -> Dict[str, Any]:

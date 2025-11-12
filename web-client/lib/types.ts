@@ -99,3 +99,27 @@ export interface QuestionRequest {
   max_results?: number
   min_similarity?: number
 }
+
+export interface VectorDBStats {
+  total_documents: number
+  total_chunks: number
+  sources: {
+    name: string
+    chunks: number
+    articles: number
+  }[]
+}
+
+export interface IngestionResponse {
+  message: string
+  status: "success" | "error"
+  elapsed_seconds: number
+  stats?: {
+    articles_processed?: string
+    chunks_created?: string
+    cost?: string
+  }
+  error?: string
+  timestamp: string
+  stdout?: string
+}

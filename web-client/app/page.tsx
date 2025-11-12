@@ -13,6 +13,8 @@ import { SearchInterface } from "@/components/search-interface"
 import { StatsDashboard } from "@/components/stats-dashboard"
 import { HealthCheck } from "@/components/health-check"
 import { AdminControls } from "@/components/admin-controls"
+import { VectorDBDisplay } from "@/components/vector-db-display"
+import { IngestionControl } from "@/components/ingestion-control"
 import type { QuestionResponse } from "@/lib/types"
 
 type Page = "search" | "stats" | "admin"
@@ -105,6 +107,13 @@ export default function Home() {
 
           {currentPage === "admin" && (
             <div className="space-y-6">
+              {/* Vector DB and Ingestion - Full Width */}
+              <div className="grid gap-6 lg:grid-cols-2">
+                <VectorDBDisplay />
+                <IngestionControl />
+              </div>
+
+              {/* System Controls - Two Columns */}
               <div className="grid gap-6 lg:grid-cols-2">
                 <AdminControls />
                 <HealthCheck />

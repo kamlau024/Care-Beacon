@@ -3,6 +3,8 @@ import type {
   QuestionResponse,
   HealthResponse,
   StatsResponse,
+  VectorDBStats,
+  IngestionResponse,
 } from "./types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
@@ -69,6 +71,23 @@ export const api = {
       method: "POST",
     })
     return handleResponse<{ message: string }>(response)
+  },
+
+  // Get vector database statistics
+  async getVectorDBStats(): Promise<VectorDBStats> {
+    const response = await fetch(`${API_BASE_URL}/api/v1/vector-db/stats`)
+    return handleResponse<VectorDBStats>(response)
+  },
+
+  // Trigger ingestion
+  async triggerIngestion(force: boolean = false): Promise<IngestionResponse> {
+    const url = `${API_BASE_URL}/api/v1/admin/ingest${force ? "?force=true" : ""}`
+    const response = await fetch(url, {
+      method: "POST",
+      // Long timeout for ingestion (15 minutes)
+      signal: AbortSignal.timeout(900000),
+    })
+    return handleResponse<IngestionResponse>(response)
   },
 }
 
