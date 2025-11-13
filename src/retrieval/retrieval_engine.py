@@ -11,6 +11,7 @@ from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import VectorDatabase
 from src.retrieval.models import Query, RetrievedContext, RetrievalConfig
 from src.storage.models import RetrievalResult
+from src.retrieval.reranker import LLMReranker
 from src.config_loader import get_config
 
 
@@ -35,6 +36,7 @@ class RetrievalEngine:
         embedding_generator: Optional[EmbeddingGenerator] = None,
         vector_db: Optional[VectorDatabase] = None,
         config: Optional[RetrievalConfig] = None,
+        reranker: Optional[LLMReranker] = None,
     ):
         """Initialize the retrieval engine.
 
@@ -42,10 +44,19 @@ class RetrievalEngine:
             embedding_generator: Optional EmbeddingGenerator instance
             vector_db: Optional VectorDatabase instance
             config: Optional retrieval configuration
+            reranker: Optional LLMReranker instance for re-ranking results
         """
         self.embedding_generator = embedding_generator or EmbeddingGenerator()
         self.vector_db = vector_db or VectorDatabase()
         self.config = config or self._load_config()
+        self.reranker = reranker or (LLMReranker() if self.config.rerank_results else None)
+
+        # Log initialization
+        from loguru import logger
+        if self.reranker:
+            logger.info("✅ RetrievalEngine initialized with LLM re-ranking ENABLED")
+        else:
+            logger.info("ℹ️  RetrievalEngine initialized with re-ranking DISABLED")
 
     def _load_config(self) -> RetrievalConfig:
         """Load retrieval configuration from config file.
@@ -85,15 +96,33 @@ class RetrievalEngine:
         query_embedding = self.embedding_generator.embed_text(query.text)
 
         # Search vector database
+        # Retrieve more results if re-ranking is enabled (retrieve 2x, re-rank to top-k)
+        from loguru import logger
+        initial_n_results = query.max_results * 2 if self.reranker else query.max_results
+        logger.info(f"🔍 Searching vector DB: fetching {initial_n_results} results (reranker={'enabled' if self.reranker else 'disabled'})")
+
         results = self.vector_db.search(
             query_embedding=query_embedding,
-            n_results=query.max_results,
+            n_results=initial_n_results,
             where=query.filters,
         )
+        logger.info(f"📊 Vector search returned {len(results)} results")
 
         # Filter by minimum similarity if specified
         if query.min_similarity > 0.0:
+            before_filter = len(results)
             results = [r for r in results if r.similarity_score >= query.min_similarity]
+            logger.info(f"🔽 Filtered by min_similarity={query.min_similarity}: {before_filter} → {len(results)} results")
+
+        # Re-rank results using LLM if enabled
+        if self.reranker and len(results) > 0:
+            logger.info(f"🎯 Calling reranker with {len(results)} results, target top_k={query.max_results}")
+            results = self.reranker.rerank(
+                query=query.text,
+                results=results,
+                top_k=query.max_results
+            )
+            logger.info(f"✅ Re-ranking returned {len(results)} results")
 
         # Calculate retrieval time
         retrieval_time = (time.time() - start_time) * 1000  # Convert to milliseconds

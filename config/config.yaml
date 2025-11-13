@@ -26,7 +26,7 @@ retrieval:
   min_similarity_threshold: 0.0  # Minimum similarity score (0-1), 0.0 = no filtering
   max_chunks_per_article: 3  # Diversity: max chunks from same article
   enable_metadata_filtering: true
-  rerank_results: false  # Future: rerank with cross-encoder
+  rerank_results: true  # LLM-based re-ranking for better relevance
   include_metadata: true  # Include full metadata in results
   cache_query_embeddings: true  # Cache embeddings for repeated queries
 

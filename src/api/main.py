@@ -306,11 +306,9 @@ async def ask_question(request: Request, question_request: QuestionRequest):
         # Generate answer
         start_time = time.time()
 
-        # When using min_similarity filtering, increase max_results to return all qualifying sources
-        # Otherwise, the hard limit of 5 would prevent users from seeing all relevant results
+        # Use the requested max_results directly
+        # Re-ranking will automatically fetch more results (2x) for better quality
         max_results = question_request.max_results
-        if question_request.min_similarity and question_request.min_similarity > 0:
-            max_results = 50  # Fetch more results when filtering by similarity
 
         answer = generator.generate_answer(
             question=question_request.question,
