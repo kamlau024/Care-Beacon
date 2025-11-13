@@ -137,6 +137,15 @@ def get_answer_generator() -> AnswerGenerator:
     return _answer_generator
 
 
+def reset_answer_generator() -> None:
+    """Reset the answer generator singleton.
+
+    Call this after database ingestion to force recreation with fresh collection references.
+    """
+    global _answer_generator
+    _answer_generator = None
+
+
 # Simple in-memory rate limiting (for production, use Redis-based rate limiter)
 _rate_limit_cache: Dict[str, list] = {}
 RATE_LIMIT_WINDOW = 60  # seconds
@@ -565,6 +574,9 @@ async def trigger_ingestion(force: bool = False):
         elapsed_time = time.time() - start_time
 
         if result.returncode == 0:
+            # Reset answer generator to pick up new collection reference
+            reset_answer_generator()
+
             # Parse output for stats
             output_lines = result.stdout.split('\n')
             stats = {}
@@ -670,6 +682,8 @@ async def stream_ingestion(force: bool = False):
                 elapsed_time = time.time() - start_time
 
                 if return_code == 0:
+                    # Reset answer generator to pick up new collection reference
+                    reset_answer_generator()
                     yield f"data: {json.dumps({'type': 'complete', 'elapsed_seconds': round(elapsed_time, 2), 'timestamp': datetime.now().isoformat()})}\n\n"
                 else:
                     yield f"data: {json.dumps({'type': 'error', 'message': 'Ingestion failed', 'return_code': return_code, 'elapsed_seconds': round(elapsed_time, 2)})}\n\n"
