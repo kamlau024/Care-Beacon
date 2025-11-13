@@ -10,7 +10,7 @@ embeddings:
   provider: "openai"  # openai or cohere
   model: "text-embedding-3-small"  # or text-embedding-3-large
   dimensions: 1536  # 1536 for small, 3072 for large
-  batch_size: 100  # Number of texts to embed in one API call
+  batch_size: 50  # Number of texts to embed in one API call (reduced from 100 for low-memory environments)
   max_retries: 3
   retry_delay: 1.0  # seconds
 

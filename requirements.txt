@@ -23,6 +23,7 @@ pydantic-settings==2.5.0  # Settings management
 python-dotenv==1.0.1  # Environment variable management
 tqdm==4.66.1  # Progress bars
 loguru==0.7.2  # Better logging
+psutil==5.9.8  # System and process utilities for memory monitoring
 
 # Data Processing
 numpy==1.26.4  # Numerical operations

@@ -6,6 +6,7 @@ Optimized for Render.com free tier deployment.
 
 import sys
 import gc
+import psutil
 from pathlib import Path
 from typing import List, Tuple
 import time
@@ -20,8 +21,9 @@ from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import VectorDatabase
 from src.storage.models import Article, Chunk
 
-# Memory-efficient batch size (process 50 articles at a time)
-BATCH_SIZE = 50
+# Memory-efficient batch size for Render free tier (512MB)
+# Process fewer articles at a time to avoid OOM
+BATCH_SIZE = 10  # Reduced from 50 to 10 for ultra-low memory
 
 
 def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
@@ -32,6 +34,12 @@ def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str
             articles.append((md_file, source_name))
     articles.sort(key=lambda x: x[0])
     return articles
+
+
+def get_memory_usage():
+    """Get current memory usage in MB."""
+    process = psutil.Process()
+    return process.memory_info().rss / 1024 / 1024  # Convert to MB
 
 
 def process_batch(
@@ -50,7 +58,8 @@ def process_batch(
     """
     print(f"\n{'='*70}")
     print(f"Batch {batch_num}/{total_batches} ({len(article_paths_batch)} articles)")
-    print(f"{'='*70}\n")
+    print(f"{'='*70}")
+    print(f"💾 Memory: {get_memory_usage():.1f} MB\n")
 
     # Step 1: Parse articles
     print(f"[1/4] Parsing {len(article_paths_batch)} articles...")
@@ -68,6 +77,7 @@ def process_batch(
         return 0, 0, 0
 
     print(f"  ✅ Parsed {len(articles)} articles")
+    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
 
     # Step 2: Chunk articles
     print(f"\n[2/4] Chunking articles...")
@@ -77,30 +87,34 @@ def process_batch(
         all_chunks.extend(chunks)
 
     print(f"  ✅ Created {len(all_chunks)} chunks")
+    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
 
     # Clear articles from memory
     del articles
     gc.collect()
 
-    # Step 3: Generate embeddings
+    # Step 3: Generate embeddings (in smaller batches for low memory)
     print(f"\n[3/4] Generating embeddings...")
     embedded_chunks = generator.embed_chunks(all_chunks, show_progress=False)
     print(f"  ✅ Generated {len(embedded_chunks)} embeddings")
+    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
 
     # Clear unembedded chunks from memory
     del all_chunks
     gc.collect()
 
-    # Step 4: Store in database
+    # Step 4: Store in database (smaller batches for low memory)
     print(f"\n[4/4] Storing in database...")
-    db.add_chunks(embedded_chunks, batch_size=100, show_progress=False)
+    db.add_chunks(embedded_chunks, batch_size=50, show_progress=False)  # Reduced from 100 to 50
     print(f"  ✅ Stored {len(embedded_chunks)} chunks")
+    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
 
     chunks_stored = len(embedded_chunks)
 
     # Clear embedded chunks from memory
     del embedded_chunks
     gc.collect()
+    print(f"  💾 Memory after cleanup: {get_memory_usage():.1f} MB")
 
     return len(article_paths_batch), len(all_chunks) if 'all_chunks' in locals() else chunks_stored, chunks_stored
 
