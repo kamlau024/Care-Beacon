@@ -193,6 +193,12 @@ class AnswerGenerator:
             filters=filters,
         )
 
+        # Debug logging: show what chunks were retrieved
+        from loguru import logger
+        logger.info(f"📚 Retrieved {len(context.results)} chunks for query: {question[:50]}...")
+        for i, result in enumerate(context.results[:10], 1):  # Log top 10
+            logger.info(f"  [{i}] Score: {result.similarity_score:.3f} | Section: {result.chunk.section[:40]} | Article: {result.chunk.article_title[:40]}")
+
         # Check if we have any results
         if not context.results:
             # No context found

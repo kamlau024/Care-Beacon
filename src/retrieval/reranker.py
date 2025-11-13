@@ -114,6 +114,8 @@ Consider:
 1. Does the chunk directly answer what is being asked?
 2. Is the context appropriate (e.g., "normal levels" vs "disease staging")?
 3. Is the information specific and actionable?
+4. For questions asking "how is X diagnosed/treated/staged?" or "what are the symptoms/tests/types?",
+   ALL chunks describing individual tests/symptoms/types should score highly (0.8-1.0) for completeness
 
 Respond ONLY with scores in this exact format:
 [0]: 0.X
