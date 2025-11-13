@@ -134,10 +134,9 @@ class RetrievalEngine:
                 results = [r for r in results if r.similarity_score >= query.min_similarity]
                 logger.info(f"🔽 Post-rerank filter (min_similarity={query.min_similarity}): {before_filter} → {len(results)} results")
 
-            # Finally, limit to requested max_results after filtering
-            if len(results) > query.max_results:
-                logger.info(f"🔽 Limiting to top {query.max_results} results (from {len(results)})")
-                results = results[:query.max_results]
+            # When re-ranking is enabled, return ALL results that pass threshold (no limit)
+            # This ensures completeness - if 6 chunks are relevant, return all 6
+            logger.info(f"✅ Returning all {len(results)} results that passed threshold (no limit applied)")
         else:
             # No re-ranking, apply filter directly to vector scores
             if query.min_similarity > 0.0:
