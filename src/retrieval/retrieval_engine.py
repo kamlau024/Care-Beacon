@@ -108,14 +108,18 @@ class RetrievalEngine:
         )
         logger.info(f"📊 Vector search returned {len(results)} results")
 
-        # Filter by minimum similarity if specified
-        if query.min_similarity > 0.0:
-            before_filter = len(results)
-            results = [r for r in results if r.similarity_score >= query.min_similarity]
-            logger.info(f"🔽 Filtered by min_similarity={query.min_similarity}: {before_filter} → {len(results)} results")
-
-        # Re-rank results using LLM if enabled
+        # When re-ranking is enabled, skip or loosen pre-filter
+        # Re-ranked scores are more accurate than raw vector similarity
         if self.reranker and len(results) > 0:
+            # Apply loose pre-filter to keep more candidates for re-ranking
+            # Use min_similarity / 2 or minimum 0.3 to keep reasonable candidates
+            pre_filter_threshold = max(0.3, query.min_similarity / 2) if query.min_similarity > 0.0 else 0.0
+            if pre_filter_threshold > 0.0:
+                before_filter = len(results)
+                results = [r for r in results if r.similarity_score >= pre_filter_threshold]
+                logger.info(f"🔽 Pre-filter for re-ranking (threshold={pre_filter_threshold:.2f}): {before_filter} → {len(results)} results")
+
+            # Re-rank using LLM
             logger.info(f"🎯 Calling reranker with {len(results)} results, target top_k={query.max_results}")
             results = self.reranker.rerank(
                 query=query.text,
@@ -123,6 +127,18 @@ class RetrievalEngine:
                 top_k=query.max_results
             )
             logger.info(f"✅ Re-ranking returned {len(results)} results")
+
+            # Apply strict filter AFTER re-ranking (on re-ranked scores)
+            if query.min_similarity > 0.0:
+                before_filter = len(results)
+                results = [r for r in results if r.similarity_score >= query.min_similarity]
+                logger.info(f"🔽 Post-rerank filter (min_similarity={query.min_similarity}): {before_filter} → {len(results)} results")
+        else:
+            # No re-ranking, apply filter directly to vector scores
+            if query.min_similarity > 0.0:
+                before_filter = len(results)
+                results = [r for r in results if r.similarity_score >= query.min_similarity]
+                logger.info(f"🔽 Filtered by min_similarity={query.min_similarity}: {before_filter} → {len(results)} results")
 
         # Calculate retrieval time
         retrieval_time = (time.time() - start_time) * 1000  # Convert to milliseconds
