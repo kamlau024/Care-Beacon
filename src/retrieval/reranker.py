@@ -41,9 +41,9 @@ class LLMReranker:
             logger.info("No results to re-rank")
             return results
 
-        # If we have fewer results than top_k, no need to re-rank
-        if len(results) <= top_k:
-            logger.info(f"Only {len(results)} results, no re-ranking needed (top_k={top_k})")
+        # If we have only 1 result, no need to re-rank
+        if len(results) <= 1:
+            logger.info(f"Only {len(results)} result, no re-ranking needed")
             return results
 
         # Create prompt for LLM to score relevance

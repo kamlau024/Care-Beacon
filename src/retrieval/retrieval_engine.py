@@ -96,9 +96,9 @@ class RetrievalEngine:
         query_embedding = self.embedding_generator.embed_text(query.text)
 
         # Search vector database
-        # Retrieve more results if re-ranking is enabled (retrieve 2x, re-rank to top-k)
+        # Retrieve more results if re-ranking is enabled (retrieve 6x to ensure completeness)
         from loguru import logger
-        initial_n_results = query.max_results * 2 if self.reranker else query.max_results
+        initial_n_results = query.max_results * 6 if self.reranker else query.max_results
         logger.info(f"🔍 Searching vector DB: fetching {initial_n_results} results (reranker={'enabled' if self.reranker else 'disabled'})")
 
         results = self.vector_db.search(
@@ -119,12 +119,12 @@ class RetrievalEngine:
                 results = [r for r in results if r.similarity_score >= pre_filter_threshold]
                 logger.info(f"🔽 Pre-filter for re-ranking (threshold={pre_filter_threshold:.2f}): {before_filter} → {len(results)} results")
 
-            # Re-rank using LLM
-            logger.info(f"🎯 Calling reranker with {len(results)} results, target top_k={query.max_results}")
+            # Re-rank using LLM - re-rank ALL candidates, don't limit yet
+            logger.info(f"🎯 Calling reranker with {len(results)} results, will re-rank all candidates")
             results = self.reranker.rerank(
                 query=query.text,
                 results=results,
-                top_k=query.max_results
+                top_k=len(results)  # Re-rank all candidates, filter will select best ones
             )
             logger.info(f"✅ Re-ranking returned {len(results)} results")
 
@@ -133,6 +133,11 @@ class RetrievalEngine:
                 before_filter = len(results)
                 results = [r for r in results if r.similarity_score >= query.min_similarity]
                 logger.info(f"🔽 Post-rerank filter (min_similarity={query.min_similarity}): {before_filter} → {len(results)} results")
+
+            # Finally, limit to requested max_results after filtering
+            if len(results) > query.max_results:
+                logger.info(f"🔽 Limiting to top {query.max_results} results (from {len(results)})")
+                results = results[:query.max_results]
         else:
             # No re-ranking, apply filter directly to vector scores
             if query.min_similarity > 0.0:
