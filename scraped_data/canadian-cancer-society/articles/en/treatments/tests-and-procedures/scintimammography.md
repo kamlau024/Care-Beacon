@@ -1,10 +1,11 @@
 ---
 title: "Scintimammography"
-url: https://cancer.ca/en/treatments/tests-and-procedures/scintimammography
-date_scraped: 2025-11-09T20:47:37.861527
+url: https://cancer.ca/en/treatments/tests-and-procedures/scintimammography#main-content
+date_scraped: 2025-11-12T23:46:23.568772
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Scintimammography#Main Content
   - Scintimammography
 ---
 

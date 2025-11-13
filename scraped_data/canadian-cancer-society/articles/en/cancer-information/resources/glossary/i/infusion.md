@@ -1,13 +1,14 @@
 ---
 title: "infusion"
-url: https://cancer.ca/en/cancer-information/resources/glossary/i/infusion
-date_scraped: 2025-11-09T20:28:45.029717
+url: https://cancer.ca/en/cancer-information/resources/glossary/i/infusion#main-content
+date_scraped: 2025-11-12T22:54:07.229075
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - I
-  - Infusion
+  - Infusion#Main Content
+  - infusion
 ---
 
 # infusion

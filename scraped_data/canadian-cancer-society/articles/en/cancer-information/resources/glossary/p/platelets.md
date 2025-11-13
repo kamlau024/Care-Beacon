@@ -1,13 +1,14 @@
 ---
 title: "platelets"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/platelets
-date_scraped: 2025-11-09T20:19:56.194975
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/platelets#main-content
+date_scraped: 2025-11-13T07:03:36.684159
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Platelets
+  - Platelets#Main Content
+  - platelets
 ---
 
 # platelets

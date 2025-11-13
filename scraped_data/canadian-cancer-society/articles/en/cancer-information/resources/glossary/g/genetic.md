@@ -1,13 +1,14 @@
 ---
 title: "genetic"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/genetic
-date_scraped: 2025-11-09T20:19:21.599065
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/genetic#main-content
+date_scraped: 2025-11-13T03:12:49.983922
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Genetic
+  - Genetic#Main Content
+  - genetic
 ---
 
 # genetic

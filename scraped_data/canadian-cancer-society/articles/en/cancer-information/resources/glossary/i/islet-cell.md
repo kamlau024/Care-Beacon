@@ -1,13 +1,14 @@
 ---
 title: "islet cell"
-url: https://cancer.ca/en/cancer-information/resources/glossary/i/islet-cell
-date_scraped: 2025-11-09T20:08:34.152836
+url: https://cancer.ca/en/cancer-information/resources/glossary/i/islet-cell#main-content
+date_scraped: 2025-11-12T22:14:47.082826
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - I
-  - Islet Cell
+  - Islet Cell#Main Content
+  - islet cell
 ---
 
 # islet cell

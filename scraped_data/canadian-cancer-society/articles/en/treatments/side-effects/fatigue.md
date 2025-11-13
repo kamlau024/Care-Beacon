@@ -1,10 +1,11 @@
 ---
 title: "Fatigue"
-url: https://cancer.ca/en/treatments/side-effects/fatigue
-date_scraped: 2025-11-09T20:51:10.376754
+url: https://cancer.ca/en/treatments/side-effects/fatigue#0
+date_scraped: 2025-11-13T07:23:43.058931
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Fatigue#0
   - Fatigue
 images:
   - src: https://img.youtube.com/vi/jVqW3_1Uc1A/0.jpg

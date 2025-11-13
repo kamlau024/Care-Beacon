@@ -1,13 +1,13 @@
 ---
 title: "human T-cell leukemia/lymphoma virus type 1 (HTLV-1)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-tcell-leukemia-lymphoma-virus-type-1-htlv1
-date_scraped: 2025-11-09T20:15:30.912344
+url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-tcell-leukemia-lymphoma-virus-type-1-htlv1#main-content
+date_scraped: 2025-11-13T05:50:12.059960
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - H
-  - Human Tcell Leukemia Lymphoma Virus Type 1 Htlv1
+  - Human Tcell Leukemia Lymphoma Virus Type 1 Htlv1#Main Content
   - human T-cell leukemia/lymphoma virus type 1 (HTLV-1)
 ---
 

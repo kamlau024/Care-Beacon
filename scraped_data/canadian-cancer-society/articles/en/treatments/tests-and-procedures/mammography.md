@@ -1,10 +1,11 @@
 ---
 title: "Mammography"
-url: https://cancer.ca/en/treatments/tests-and-procedures/mammography
-date_scraped: 2025-11-09T20:48:09.680737
+url: https://cancer.ca/en/treatments/tests-and-procedures/mammography#main-content
+date_scraped: 2025-11-13T00:49:43.349773
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Mammography#Main Content
   - Mammography
 images:
   - src: https://cdn.cancer.ca/-/media/cams/tests-and-procedures/4729cb10-fb54-11ee-97b9-0242db05fc4f-en.png?h=307&iar=0&mw=543&w=334&rev=52c7517e54e54178ac558b1b4468fa4f&hash=47CE65E2CD5C6688AF1EFDD9257E3919

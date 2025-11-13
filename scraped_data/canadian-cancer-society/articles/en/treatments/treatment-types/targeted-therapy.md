@@ -1,7 +1,7 @@
 ---
 title: "Targeted therapy"
 url: https://cancer.ca/en/treatments/treatment-types/targeted-therapy
-date_scraped: 2025-11-09T20:50:09.175713
+date_scraped: 2025-11-13T06:50:17.143382
 breadcrumbs:
   - Treatments
   - Treatment Types

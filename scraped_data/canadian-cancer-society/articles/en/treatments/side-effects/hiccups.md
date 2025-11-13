@@ -1,7 +1,7 @@
 ---
 title: "Hiccups"
 url: https://cancer.ca/en/treatments/side-effects/hiccups
-date_scraped: 2025-11-09T20:52:05.651109
+date_scraped: 2025-11-12T21:49:25.548730
 breadcrumbs:
   - Treatments
   - Side Effects

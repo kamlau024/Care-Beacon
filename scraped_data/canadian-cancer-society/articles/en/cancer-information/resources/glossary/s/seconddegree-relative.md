@@ -1,13 +1,13 @@
 ---
 title: "second-degree relative"
-url: https://cancer.ca/en/cancer-information/resources/glossary/s/seconddegree-relative
-date_scraped: 2025-11-09T20:32:07.916409
+url: https://cancer.ca/en/cancer-information/resources/glossary/s/seconddegree-relative#main-content
+date_scraped: 2025-11-12T23:54:45.532009
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - S
-  - Seconddegree Relative
+  - Seconddegree Relative#Main Content
   - second-degree relative
 ---
 

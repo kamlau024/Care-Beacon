@@ -1,10 +1,11 @@
 ---
 title: "Endoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/endoscopy
-date_scraped: 2025-11-09T20:47:25.902357
+url: https://cancer.ca/en/treatments/tests-and-procedures/endoscopy#main-content
+date_scraped: 2025-11-12T23:53:37.200737
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Endoscopy#Main Content
   - Endoscopy
 ---
 

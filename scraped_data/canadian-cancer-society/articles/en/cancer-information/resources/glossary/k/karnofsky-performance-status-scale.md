@@ -1,13 +1,14 @@
 ---
 title: "Karnofsky performance status scale"
-url: https://cancer.ca/en/cancer-information/resources/glossary/k/karnofsky-performance-status-scale
-date_scraped: 2025-11-09T20:27:51.865624
+url: https://cancer.ca/en/cancer-information/resources/glossary/k/karnofsky-performance-status-scale#main-content
+date_scraped: 2025-11-12T22:09:55.901442
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - K
-  - Karnofsky Performance Status Scale
+  - Karnofsky Performance Status Scale#Main Content
+  - Karnofsky performance status scale
 ---
 
 # Karnofsky performance status scale

@@ -1,19 +1,18 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/resources/glossary/s/screening",
-  "title": "screening",
-  "date_scraped": "2025-11-09T20:21:36.954740",
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/breast/screening",
+  "title": "Screening for breast cancer",
+  "date_scraped": "2025-11-13T02:05:21.081603",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Resources",
-    "Glossary",
-    "S",
+    "Cancer Types",
+    "Breast",
     "Screening"
   ],
   "sidebar_links": [],
   "related_articles": [],
   "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/s/screening.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/breast/screening.md"
 }

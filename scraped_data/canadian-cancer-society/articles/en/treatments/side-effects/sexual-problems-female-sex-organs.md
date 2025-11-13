@@ -1,11 +1,11 @@
 ---
 title: "Sexual problems – female sex organs"
-url: https://cancer.ca/en/treatments/side-effects/sexual-problems-female-sex-organs
-date_scraped: 2025-11-09T20:51:57.631882
+url: https://cancer.ca/en/treatments/side-effects/sexual-problems-female-sex-organs#main-content
+date_scraped: 2025-11-13T02:06:55.701137
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Sexual Problems Female Sex Organs
+  - Sexual Problems Female Sex Organs#Main Content
   - Sexual problems - female sex organs
 ---
 

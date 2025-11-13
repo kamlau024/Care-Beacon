@@ -1,13 +1,14 @@
 ---
 title: "endocrine system"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/endocrine-system
-date_scraped: 2025-11-09T20:21:58.651459
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/endocrine-system#main-content
+date_scraped: 2025-11-12T22:14:12.238624
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Endocrine System
+  - Endocrine System#Main Content
+  - endocrine system
 ---
 
 # endocrine system

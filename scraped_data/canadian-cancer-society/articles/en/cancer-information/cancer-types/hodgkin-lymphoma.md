@@ -1,11 +1,12 @@
 ---
 title: "Hodgkin lymphoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/hodgkin-lymphoma
-date_scraped: 2025-11-09T20:42:24.839332
+url: https://cancer.ca/en/cancer-information/cancer-types/hodgkin-lymphoma#main-content
+date_scraped: 2025-11-13T05:35:25.768252
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Hodgkin Lymphoma
+  - Hodgkin Lymphoma#Main Content
+  - Hodgkin lymphoma
 ---
 
 # Hodgkin lymphoma

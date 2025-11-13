@@ -1,13 +1,14 @@
 ---
 title: "lymph"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymph
-date_scraped: 2025-11-09T20:21:54.034449
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymph#main-content
+date_scraped: 2025-11-12T22:17:53.529601
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lymph
+  - Lymph#Main Content
+  - lymph
 ---
 
 # lymph

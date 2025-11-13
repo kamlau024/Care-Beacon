@@ -1,11 +1,12 @@
 ---
 title: "Connect with our online community"
-url: https://cancer.ca/en/living-with-cancer/how-we-can-help/connect-with-our-online-community
-date_scraped: 2025-11-09T20:39:58.272602
+url: https://cancer.ca/en/living-with-cancer/how-we-can-help/connect-with-our-online-community#main-content
+date_scraped: 2025-11-13T08:25:13.572112
 breadcrumbs:
   - Living With Cancer
   - How We Can Help
-  - Connect With Our Online Community
+  - Connect With Our Online Community#Main Content
+  - Connect with our online community
 images:
   - src: https://cdn.cancer.ca/-/media/images/research/research/research_cancerstats_header_1920x695.jpg?rev=8d989fc4d2b14d4fa09a8d5ef2452edd&cx=0.5&cy=0.5&cw=575&ch=425&hash=0C46FD8131EFC77C94EF2CB6B6F3CACE
     alt: "a woman sits at her kitchen table working on her laptop"

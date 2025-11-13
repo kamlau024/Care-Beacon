@@ -1,13 +1,14 @@
 ---
 title: "ovary"
-url: https://cancer.ca/en/cancer-information/resources/glossary/o/ovary
-date_scraped: 2025-11-09T20:20:31.681182
+url: https://cancer.ca/en/cancer-information/resources/glossary/o/ovary#main-content
+date_scraped: 2025-11-13T01:02:58.923841
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - O
-  - Ovary
+  - Ovary#Main Content
+  - ovary
 ---
 
 # ovary

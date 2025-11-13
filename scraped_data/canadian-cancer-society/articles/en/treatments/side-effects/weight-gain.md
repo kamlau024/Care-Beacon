@@ -1,11 +1,12 @@
 ---
 title: "Weight gain"
-url: https://cancer.ca/en/treatments/side-effects/weight-gain
-date_scraped: 2025-11-09T20:51:37.483396
+url: https://cancer.ca/en/treatments/side-effects/weight-gain#main-content
+date_scraped: 2025-11-13T06:55:41.809246
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Weight Gain
+  - Weight Gain#Main Content
+  - Weight gain
 ---
 
 # Weight gain

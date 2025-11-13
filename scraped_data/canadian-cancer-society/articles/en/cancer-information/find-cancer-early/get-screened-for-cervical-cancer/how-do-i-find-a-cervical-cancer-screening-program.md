@@ -1,12 +1,13 @@
 ---
 title: "How do I find a cervical cancer screening program?"
-url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-cervical-cancer/how-do-i-find-a-cervical-cancer-screening-program
-date_scraped: 2025-11-09T20:03:32.659678
+url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-cervical-cancer/how-do-i-find-a-cervical-cancer-screening-program#main-content
+date_scraped: 2025-11-12T21:25:31.022733
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early
   - Get Screened For Cervical Cancer
-  - How Do I Find A Cervical Cancer Screening Program
+  - How Do I Find A Cervical Cancer Screening Program#Main Content
+  - How do I find a cervical cancer screening program
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-a-screening-program/alberta.jpg?rev=6ba0b15f17c4474f82d92084e950126a&cx=0.5&cy=0.5&cw=900&ch=486&hash=63B748C2733DE9B369781B8A94018169
     alt: "Landscape of Moraine Lake, Banff National Park"

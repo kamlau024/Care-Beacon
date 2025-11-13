@@ -1,11 +1,12 @@
 ---
 title: "Sleep problems"
-url: https://cancer.ca/en/treatments/side-effects/sleep-problems
-date_scraped: 2025-11-09T20:51:52.428735
+url: https://cancer.ca/en/treatments/side-effects/sleep-problems#ci_sleep_problems_89_5939_00
+date_scraped: 2025-11-13T00:55:08.948441
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Sleep Problems
+  - Sleep Problems#Ci_Sleep_Problems_89_5939_00
+  - Sleep problems
 ---
 
 # Sleep problems

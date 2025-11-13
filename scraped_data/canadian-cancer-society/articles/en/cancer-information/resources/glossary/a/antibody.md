@@ -1,13 +1,14 @@
 ---
 title: "antibody"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/antibody
-date_scraped: 2025-11-09T20:10:46.781109
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/antibody#main-content
+date_scraped: 2025-11-12T22:04:48.832587
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Antibody
+  - Antibody#Main Content
+  - antibody
 ---
 
 # antibody

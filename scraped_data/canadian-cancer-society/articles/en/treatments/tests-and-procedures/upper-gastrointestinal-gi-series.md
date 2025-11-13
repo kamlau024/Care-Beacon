@@ -1,11 +1,11 @@
 ---
 title: "Upper gastrointestinal (GI) series"
-url: https://cancer.ca/en/treatments/tests-and-procedures/upper-gastrointestinal-gi-series
-date_scraped: 2025-11-09T20:49:06.003708
+url: https://cancer.ca/en/treatments/tests-and-procedures/upper-gastrointestinal-gi-series#main-content
+date_scraped: 2025-11-13T00:05:09.902628
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Upper Gastrointestinal Gi Series
+  - Upper Gastrointestinal Gi Series#Main Content
   - Upper gastrointestinal (GI) series
 ---
 

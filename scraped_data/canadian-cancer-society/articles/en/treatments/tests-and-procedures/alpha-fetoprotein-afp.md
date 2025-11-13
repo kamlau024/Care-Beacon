@@ -1,11 +1,11 @@
 ---
 title: "Alpha-fetoprotein (AFP) test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/alpha-fetoprotein-afp
-date_scraped: 2025-11-09T20:49:46.119198
+url: https://cancer.ca/en/treatments/tests-and-procedures/alpha-fetoprotein-afp#0
+date_scraped: 2025-11-13T05:58:54.369169
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Alpha Fetoprotein Afp
+  - Alpha Fetoprotein Afp#0
   - Alpha-fetoprotein (AFP)
 ---
 

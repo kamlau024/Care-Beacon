@@ -1,13 +1,14 @@
 ---
 title: "estrogen"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/estrogen
-date_scraped: 2025-11-09T20:09:33.038920
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/estrogen#main-content
+date_scraped: 2025-11-12T22:03:09.211894
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Estrogen
+  - Estrogen#Main Content
+  - estrogen
 ---
 
 # estrogen

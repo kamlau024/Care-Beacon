@@ -1,11 +1,12 @@
 ---
 title: "Female reproductive system problems"
-url: https://cancer.ca/en/treatments/side-effects/female-reproductive-system-problems
-date_scraped: 2025-11-09T20:51:37.003257
+url: https://cancer.ca/en/treatments/side-effects/female-reproductive-system-problems#main-content
+date_scraped: 2025-11-13T00:54:54.019749
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Female Reproductive System Problems
+  - Female Reproductive System Problems#Main Content
+  - Female reproductive system problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/childhood-cancer/cdc83ad0-b64d-11ea-bc3d-0242df4d59be-en.png?h=250&iar=0&mw=543&w=367&rev=82d2b7b6715a4d17989b7cbd8eb5d65b&hash=5421D73817730980848C14C91B62918C
     alt: "Diagram of the female reproductive system"

@@ -1,11 +1,12 @@
 ---
 title: "Cell and tissue studies"
-url: https://cancer.ca/en/treatments/tests-and-procedures/cell-and-tissue-studies
-date_scraped: 2025-11-09T20:49:15.566865
+url: https://cancer.ca/en/treatments/tests-and-procedures/cell-and-tissue-studies#ci_cell_and_tissue_studies_89_4007_00
+date_scraped: 2025-11-13T02:22:10.353877
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Cell And Tissue Studies
+  - Cell And Tissue Studies#Ci_Cell_And_Tissue_Studies_89_4007_00
+  - Cell and tissue studies
 ---
 
 # Cell and tissue studies

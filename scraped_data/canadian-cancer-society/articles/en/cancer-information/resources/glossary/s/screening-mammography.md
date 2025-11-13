@@ -1,13 +1,14 @@
 ---
 title: "screening mammography"
-url: https://cancer.ca/en/cancer-information/resources/glossary/s/screening-mammography
-date_scraped: 2025-11-09T20:14:17.528733
+url: https://cancer.ca/en/cancer-information/resources/glossary/s/screening-mammography#main-content
+date_scraped: 2025-11-12T23:38:29.521264
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - S
-  - Screening Mammography
+  - Screening Mammography#Main Content
+  - screening mammography
 ---
 
 # screening mammography

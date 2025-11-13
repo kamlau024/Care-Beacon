@@ -1,7 +1,7 @@
 ---
 title: "post-menopause"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/postmenopause
-date_scraped: 2025-11-09T20:21:39.742315
+date_scraped: 2025-11-13T01:59:55.946539
 breadcrumbs:
   - Cancer Information
   - Resources

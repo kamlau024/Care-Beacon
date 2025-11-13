@@ -1,13 +1,13 @@
 ---
 title: "granulocyte colony-stimulating factor (G-CSF)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocyte-colonystimulating-factor-gcsf
-date_scraped: 2025-11-09T20:06:57.765245
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocyte-colonystimulating-factor-gcsf#main-content
+date_scraped: 2025-11-13T06:37:03.026981
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Granulocyte Colonystimulating Factor Gcsf
+  - Granulocyte Colonystimulating Factor Gcsf#Main Content
   - granulocyte colony-stimulating factor (G-CSF)
 ---
 

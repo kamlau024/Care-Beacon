@@ -1,10 +1,11 @@
 ---
 title: "Angiography"
-url: https://cancer.ca/en/treatments/tests-and-procedures/angiography
-date_scraped: 2025-11-09T20:48:29.901317
+url: https://cancer.ca/en/treatments/tests-and-procedures/angiography#main-content
+date_scraped: 2025-11-13T00:35:35.079100
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Angiography#Main Content
   - Angiography
 ---
 

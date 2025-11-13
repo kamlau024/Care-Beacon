@@ -1,11 +1,11 @@
 ---
 title: "Childhood bone cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/bone-childhood
-date_scraped: 2025-11-09T20:41:39.365390
+url: https://cancer.ca/en/cancer-information/cancer-types/bone-childhood#main-content
+date_scraped: 2025-11-13T00:23:33.716857
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Bone Childhood
+  - Bone Childhood#Main Content
   - Bone - childhood
 ---
 

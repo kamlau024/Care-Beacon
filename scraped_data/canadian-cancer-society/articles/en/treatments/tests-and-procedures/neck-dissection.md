@@ -1,11 +1,12 @@
 ---
 title: "Neck dissection"
-url: https://cancer.ca/en/treatments/tests-and-procedures/neck-dissection
-date_scraped: 2025-11-09T20:47:35.373932
+url: https://cancer.ca/en/treatments/tests-and-procedures/neck-dissection#main-content
+date_scraped: 2025-11-13T02:21:34.494165
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Neck Dissection
+  - Neck Dissection#Main Content
+  - Neck dissection
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/9b7d20a0-b64c-11ea-bc3d-0242df4d59be-en.png?h=281&iar=0&mw=543&w=144&rev=f11a22fdef3949788257c8b14617a8c2&hash=06B150288E9C3566229BFEF135AB67D7
     alt: "Diagram of the levels of cervical lymph nodes"

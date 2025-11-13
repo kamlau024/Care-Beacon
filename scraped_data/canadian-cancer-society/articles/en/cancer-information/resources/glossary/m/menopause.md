@@ -1,13 +1,14 @@
 ---
 title: "menopause"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/menopause
-date_scraped: 2025-11-09T20:16:56.596543
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/menopause#main-content
+date_scraped: 2025-11-12T22:02:48.904521
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Menopause
+  - Menopause#Main Content
+  - menopause
 ---
 
 # menopause

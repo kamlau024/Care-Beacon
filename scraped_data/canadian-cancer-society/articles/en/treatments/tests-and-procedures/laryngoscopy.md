@@ -1,10 +1,11 @@
 ---
 title: "Laryngoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/laryngoscopy
-date_scraped: 2025-11-09T20:47:46.337212
+url: https://cancer.ca/en/treatments/tests-and-procedures/laryngoscopy#main-content
+date_scraped: 2025-11-13T04:06:40.693756
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Laryngoscopy#Main Content
   - Laryngoscopy
 ---
 

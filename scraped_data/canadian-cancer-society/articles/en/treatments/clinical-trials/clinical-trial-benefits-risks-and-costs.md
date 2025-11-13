@@ -1,11 +1,11 @@
 ---
 title: "Clinical trial benefits, risks and costs"
-url: https://cancer.ca/en/treatments/clinical-trials/clinical-trial-benefits-risks-and-costs
-date_scraped: 2025-11-09T20:50:34.567617
+url: https://cancer.ca/en/treatments/clinical-trials/clinical-trial-benefits-risks-and-costs#0
+date_scraped: 2025-11-12T22:06:57.969173
 breadcrumbs:
   - Treatments
   - Clinical Trials
-  - Clinical Trial Benefits Risks And Costs
+  - Clinical Trial Benefits Risks And Costs#0
   - Clinical trial benefits, risks and costs
 ---
 

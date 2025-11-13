@@ -1,7 +1,7 @@
 ---
 title: "digestive system"
 url: https://cancer.ca/en/cancer-information/resources/glossary/d/digestive-system
-date_scraped: 2025-11-09T20:11:50.732973
+date_scraped: 2025-11-13T02:21:28.029629
 breadcrumbs:
   - Cancer Information
   - Resources

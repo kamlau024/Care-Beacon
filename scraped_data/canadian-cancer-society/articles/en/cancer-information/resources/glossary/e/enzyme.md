@@ -1,13 +1,14 @@
 ---
 title: "enzyme"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/enzyme
-date_scraped: 2025-11-09T20:23:49.638286
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/enzyme#0
+date_scraped: 2025-11-13T04:58:38.403940
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Enzyme
+  - Enzyme#0
+  - enzyme
 ---
 
 # enzyme

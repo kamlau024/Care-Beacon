@@ -1,11 +1,12 @@
 ---
 title: "Clinical breast exam (CBE)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/clinical-breast-exam
-date_scraped: 2025-11-09T20:49:09.730518
+url: https://cancer.ca/en/treatments/tests-and-procedures/clinical-breast-exam#main-content
+date_scraped: 2025-11-12T23:30:47.855334
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Clinical Breast Exam
+  - Clinical Breast Exam#Main Content
+  - Clinical breast exam
 ---
 
 # Clinical breast exam (CBE)

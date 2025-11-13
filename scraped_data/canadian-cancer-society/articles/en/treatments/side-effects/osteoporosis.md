@@ -1,10 +1,11 @@
 ---
 title: "Osteoporosis"
-url: https://cancer.ca/en/treatments/side-effects/osteoporosis
-date_scraped: 2025-11-09T20:52:20.983863
+url: https://cancer.ca/en/treatments/side-effects/osteoporosis#ci_osteoporosis_89_6009_00
+date_scraped: 2025-11-13T07:23:06.241686
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Osteoporosis#Ci_Osteoporosis_89_6009_00
   - Osteoporosis
 ---
 

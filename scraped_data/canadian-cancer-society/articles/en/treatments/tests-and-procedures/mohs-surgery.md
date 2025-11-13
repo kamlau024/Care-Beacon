@@ -1,11 +1,12 @@
 ---
 title: "Mohs surgery"
-url: https://cancer.ca/en/treatments/tests-and-procedures/mohs-surgery
-date_scraped: 2025-11-09T20:48:47.068623
+url: https://cancer.ca/en/treatments/tests-and-procedures/mohs-surgery#main-content
+date_scraped: 2025-11-12T22:18:52.555058
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Mohs Surgery
+  - Mohs Surgery#Main Content
+  - Mohs surgery
 ---
 
 # Mohs surgery

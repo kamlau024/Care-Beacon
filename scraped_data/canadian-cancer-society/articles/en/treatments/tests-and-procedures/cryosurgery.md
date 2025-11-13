@@ -1,10 +1,11 @@
 ---
 title: "Cryosurgery"
-url: https://cancer.ca/en/treatments/tests-and-procedures/cryosurgery
-date_scraped: 2025-11-09T20:47:47.500834
+url: https://cancer.ca/en/treatments/tests-and-procedures/cryosurgery#ci_cryosurgery_89_3666_00
+date_scraped: 2025-11-13T02:20:26.459188
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Cryosurgery#Ci_Cryosurgery_89_3666_00
   - Cryosurgery
 ---
 

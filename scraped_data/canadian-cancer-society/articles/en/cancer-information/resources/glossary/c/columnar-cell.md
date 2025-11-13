@@ -1,13 +1,14 @@
 ---
 title: "columnar cell"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/columnar-cell
-date_scraped: 2025-11-09T20:35:33.728146
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/columnar-cell#main-content
+date_scraped: 2025-11-12T23:33:45.235206
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Columnar Cell
+  - Columnar Cell#Main Content
+  - columnar cell
 ---
 
 # columnar cell

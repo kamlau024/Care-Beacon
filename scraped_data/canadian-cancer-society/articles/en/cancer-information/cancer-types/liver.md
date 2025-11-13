@@ -1,10 +1,11 @@
 ---
 title: "Liver cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/liver
-date_scraped: 2025-11-09T20:41:36.094221
+url: https://cancer.ca/en/cancer-information/cancer-types/liver#main-content
+date_scraped: 2025-11-13T05:52:19.750802
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Liver#Main Content
   - Liver
 ---
 

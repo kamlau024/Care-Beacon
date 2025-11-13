@@ -1,11 +1,11 @@
 ---
 title: "Human chorionic gonadotropin (hCG or b-hCG)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/human-chorionic-gonadotropin-hcg-or-b-hcg
-date_scraped: 2025-11-09T20:49:02.281142
+url: https://cancer.ca/en/treatments/tests-and-procedures/human-chorionic-gonadotropin-hcg-or-b-hcg#main-content
+date_scraped: 2025-11-13T05:58:36.088009
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Human Chorionic Gonadotropin Hcg Or B Hcg
+  - Human Chorionic Gonadotropin Hcg Or B Hcg#Main Content
   - Human chorionic gonadotropin (hCG or b-hCG)
 ---
 

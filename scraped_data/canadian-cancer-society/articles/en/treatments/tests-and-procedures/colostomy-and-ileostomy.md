@@ -1,11 +1,12 @@
 ---
 title: "Colostomy and ileostomy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/colostomy-and-ileostomy
-date_scraped: 2025-11-09T20:49:13.432265
+url: https://cancer.ca/en/treatments/tests-and-procedures/colostomy-and-ileostomy#main-content
+date_scraped: 2025-11-12T22:21:27.768913
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Colostomy And Ileostomy
+  - Colostomy And Ileostomy#Main Content
+  - Colostomy and ileostomy
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6f813390-c9ea-11ea-8e8b-0242df4d59be-en.png?h=411&iar=0&mw=543&w=543&rev=e2f963f473c24bc09e6bf193e5e76c32&hash=FE064C6EFBDCFE49910B362BF6CA8B7D
     alt: "Diagram of colostomy sites"

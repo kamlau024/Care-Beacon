@@ -1,13 +1,14 @@
 ---
 title: "medical oncologist"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/medical-oncologist
-date_scraped: 2025-11-09T20:26:09.670612
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/medical-oncologist#main-content
+date_scraped: 2025-11-12T22:20:55.560886
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Medical Oncologist
+  - Medical Oncologist#Main Content
+  - medical oncologist
 ---
 
 # medical oncologist

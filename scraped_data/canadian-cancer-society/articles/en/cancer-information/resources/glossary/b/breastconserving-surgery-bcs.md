@@ -1,13 +1,13 @@
 ---
 title: "breast-conserving surgery (BCS)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/breastconserving-surgery-bcs
-date_scraped: 2025-11-09T20:08:28.566482
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/breastconserving-surgery-bcs#main-content
+date_scraped: 2025-11-12T23:38:56.251000
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Breastconserving Surgery Bcs
+  - Breastconserving Surgery Bcs#Main Content
   - breast-conserving surgery (BCS)
 ---
 

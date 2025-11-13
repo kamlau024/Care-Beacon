@@ -1,11 +1,11 @@
 ---
 title: "Move more, sit less"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/move-more-sit-less
-date_scraped: 2025-11-09T01:57:06.097507
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/move-more-sit-less#main-content
+date_scraped: 2025-11-13T08:23:38.386798
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Move More Sit Less
+  - Move More Sit Less#Main Content
   - Move more, sit less
 images:
   - src: https://img.youtube.com/vi/26Tf_65yY1c/0.jpg

@@ -1,14 +1,15 @@
 ---
 title: "Gastrointestinal stromal tumours (GISTs)"
-url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma/what-is-soft-tissue-sarcoma/types-of-soft-tissue-sarcoma/gists
-date_scraped: 2025-11-09T20:41:56.044145
+url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma/what-is-soft-tissue-sarcoma/types-of-soft-tissue-sarcoma/gists#main-content
+date_scraped: 2025-11-12T23:53:28.502749
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Soft Tissue Sarcoma
   - What Is Soft Tissue Sarcoma
   - Types Of Soft Tissue Sarcoma
-  - Gists
+  - Gists#Main Content
+  - GISTs
 ---
 
 # Gastrointestinal stromal tumours (GISTs)

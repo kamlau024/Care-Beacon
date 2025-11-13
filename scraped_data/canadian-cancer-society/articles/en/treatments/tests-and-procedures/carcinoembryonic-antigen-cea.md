@@ -1,11 +1,11 @@
 ---
 title: "Carcinoembryonic antigen (CEA)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/carcinoembryonic-antigen-cea
-date_scraped: 2025-11-09T20:48:39.125186
+url: https://cancer.ca/en/treatments/tests-and-procedures/carcinoembryonic-antigen-cea#main-content
+date_scraped: 2025-11-13T01:34:03.372346
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Carcinoembryonic Antigen Cea
+  - Carcinoembryonic Antigen Cea#Main Content
   - Carcinoembryonic antigen (CEA)
 ---
 

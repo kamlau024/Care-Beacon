@@ -1,13 +1,13 @@
 ---
 title: "fine needle aspiration (FNA) biopsy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/f/fine-needle-aspiration-fna-biopsy
-date_scraped: 2025-11-09T20:18:47.612494
+url: https://cancer.ca/en/cancer-information/resources/glossary/f/fine-needle-aspiration-fna-biopsy#main-content
+date_scraped: 2025-11-12T22:13:15.664342
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - F
-  - Fine Needle Aspiration Fna Biopsy
+  - Fine Needle Aspiration Fna Biopsy#Main Content
   - fine needle aspiration (FNA) biopsy
 ---
 

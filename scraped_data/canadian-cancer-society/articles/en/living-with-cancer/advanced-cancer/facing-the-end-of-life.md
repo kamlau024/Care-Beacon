@@ -1,11 +1,12 @@
 ---
 title: "Facing the end of life"
-url: https://cancer.ca/en/living-with-cancer/advanced-cancer/facing-the-end-of-life
-date_scraped: 2025-11-09T20:46:02.930165
+url: https://cancer.ca/en/living-with-cancer/advanced-cancer/facing-the-end-of-life#main-content
+date_scraped: 2025-11-13T05:02:30.013283
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer
-  - Facing The End Of Life
+  - Facing The End Of Life#Main Content
+  - Facing the end of life
 ---
 
 # Facing the end of life

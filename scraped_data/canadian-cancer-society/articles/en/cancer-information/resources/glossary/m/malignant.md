@@ -1,13 +1,14 @@
 ---
 title: "malignant"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/malignant
-date_scraped: 2025-11-09T20:24:01.588427
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/malignant#main-content
+date_scraped: 2025-11-12T22:37:38.081738
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Malignant
+  - Malignant#Main Content
+  - malignant
 ---
 
 # malignant

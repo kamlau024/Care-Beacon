@@ -1,11 +1,12 @@
 ---
 title: "Hormone receptor status test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/hormone-receptor-status-test
-date_scraped: 2025-11-09T20:48:35.853298
+url: https://cancer.ca/en/treatments/tests-and-procedures/hormone-receptor-status-test#main-content
+date_scraped: 2025-11-12T22:58:20.867034
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Hormone Receptor Status Test
+  - Hormone Receptor Status Test#Main Content
+  - Hormone receptor status test
 ---
 
 # Hormone receptor status test

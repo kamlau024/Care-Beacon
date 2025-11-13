@@ -1,10 +1,11 @@
 ---
 title: "Thoracentesis"
-url: https://cancer.ca/en/treatments/tests-and-procedures/thoracentesis
-date_scraped: 2025-11-09T20:48:14.873764
+url: https://cancer.ca/en/treatments/tests-and-procedures/thoracentesis#main-content
+date_scraped: 2025-11-13T02:09:38.225606
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Thoracentesis#Main Content
   - Thoracentesis
 ---
 

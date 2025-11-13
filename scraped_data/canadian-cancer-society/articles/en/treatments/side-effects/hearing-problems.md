@@ -1,11 +1,12 @@
 ---
 title: "Hearing problems"
-url: https://cancer.ca/en/treatments/side-effects/hearing-problems
-date_scraped: 2025-11-09T20:52:12.130024
+url: https://cancer.ca/en/treatments/side-effects/hearing-problems#main-content
+date_scraped: 2025-11-12T22:16:36.290561
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Hearing Problems
+  - Hearing Problems#Main Content
+  - Hearing problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6797e960-8139-11eb-9067-024252c36d27-en.png?h=387&iar=0&mw=543&w=543&rev=35043456cf1740388d466697a46b62cd&hash=E9A1250BC47FF1F01E3291FF5A2B89C6
     alt: "Diagram of the ear"

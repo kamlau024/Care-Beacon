@@ -1,11 +1,12 @@
 ---
 title: "Urinary incontinence"
-url: https://cancer.ca/en/treatments/side-effects/urinary-incontinence
-date_scraped: 2025-11-09T20:52:26.997949
+url: https://cancer.ca/en/treatments/side-effects/urinary-incontinence#ci_urinary_incontinence_89_4459_00
+date_scraped: 2025-11-13T01:59:49.936305
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Urinary Incontinence
+  - Urinary Incontinence#Ci_Urinary_Incontinence_89_4459_00
+  - Urinary incontinence
 ---
 
 # Urinary incontinence

@@ -1,11 +1,11 @@
 ---
 title: "Echocardiogram (Echo)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/echocardiogram-echo
-date_scraped: 2025-11-09T20:48:07.858716
+url: https://cancer.ca/en/treatments/tests-and-procedures/echocardiogram-echo#main-content
+date_scraped: 2025-11-13T06:06:59.398539
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Echocardiogram Echo
+  - Echocardiogram Echo#Main Content
   - Echocardiogram (Echo)
 ---
 

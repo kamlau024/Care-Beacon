@@ -1,13 +1,14 @@
 ---
 title: "brachytherapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/brachytherapy
-date_scraped: 2025-11-09T20:04:40.505324
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/brachytherapy#main-content
+date_scraped: 2025-11-13T06:11:34.608204
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Brachytherapy
+  - Brachytherapy#Main Content
+  - brachytherapy
 ---
 
 # brachytherapy

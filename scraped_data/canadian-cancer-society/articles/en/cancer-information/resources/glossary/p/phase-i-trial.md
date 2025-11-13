@@ -1,13 +1,14 @@
 ---
 title: "phase I trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-i-trial
-date_scraped: 2025-11-09T20:24:42.987910
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-i-trial#main-content
+date_scraped: 2025-11-12T22:08:49.743664
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Phase I Trial
+  - Phase I Trial#Main Content
+  - phase I trial
 ---
 
 # phase I trial

@@ -1,11 +1,11 @@
 ---
 title: "Digital rectal exam (DRE)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/digital-rectal-exam-dre
-date_scraped: 2025-11-09T20:49:43.249970
+url: https://cancer.ca/en/treatments/tests-and-procedures/digital-rectal-exam-dre#main-content
+date_scraped: 2025-11-13T01:45:14.184479
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Digital Rectal Exam Dre
+  - Digital Rectal Exam Dre#Main Content
   - Digital rectal exam (DRE)
 ---
 

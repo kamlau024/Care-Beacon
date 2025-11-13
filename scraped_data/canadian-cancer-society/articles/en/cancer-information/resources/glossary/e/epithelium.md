@@ -1,13 +1,14 @@
 ---
 title: "epithelium"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/epithelium
-date_scraped: 2025-11-09T20:11:55.934617
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/epithelium#main-content
+date_scraped: 2025-11-13T02:23:19.618808
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Epithelium
+  - Epithelium#Main Content
+  - epithelium
 ---
 
 # epithelium

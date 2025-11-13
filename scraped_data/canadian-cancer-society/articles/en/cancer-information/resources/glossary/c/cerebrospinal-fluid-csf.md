@@ -1,7 +1,7 @@
 ---
 title: "cerebrospinal fluid (CSF)"
 url: https://cancer.ca/en/cancer-information/resources/glossary/c/cerebrospinal-fluid-csf
-date_scraped: 2025-11-09T20:37:16.804387
+date_scraped: 2025-11-13T01:07:24.730301
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,13 +1,14 @@
 ---
 title: "genetics"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/genetics
-date_scraped: 2025-11-09T20:28:38.143480
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/genetics#main-content
+date_scraped: 2025-11-13T06:23:24.095616
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Genetics
+  - Genetics#Main Content
+  - genetics
 ---
 
 # genetics

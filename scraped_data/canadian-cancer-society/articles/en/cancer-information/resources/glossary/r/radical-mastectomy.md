@@ -1,13 +1,14 @@
 ---
 title: "radical mastectomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/radical-mastectomy
-date_scraped: 2025-11-09T20:32:38.400847
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/radical-mastectomy#main-content
+date_scraped: 2025-11-12T23:38:51.088493
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Radical Mastectomy
+  - Radical Mastectomy#Main Content
+  - radical mastectomy
 ---
 
 # radical mastectomy

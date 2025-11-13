@@ -1,11 +1,11 @@
 ---
 title: "Speech-language problems"
-url: https://cancer.ca/en/treatments/side-effects/speech-language-problems
-date_scraped: 2025-11-09T20:51:21.646286
+url: https://cancer.ca/en/treatments/side-effects/speech-language-problems#main-content
+date_scraped: 2025-11-12T23:27:34.957356
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Speech Language Problems
+  - Speech Language Problems#Main Content
   - Speech-language problems
 ---
 

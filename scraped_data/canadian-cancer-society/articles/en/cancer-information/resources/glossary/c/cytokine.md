@@ -1,13 +1,14 @@
 ---
 title: "cytokine"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/cytokine
-date_scraped: 2025-11-09T20:23:33.446369
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/cytokine#main-content
+date_scraped: 2025-11-13T06:48:37.293180
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Cytokine
+  - Cytokine#Main Content
+  - cytokine
 ---
 
 # cytokine

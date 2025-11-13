@@ -1,7 +1,7 @@
 ---
 title: "nuclear scan"
 url: https://cancer.ca/en/cancer-information/resources/glossary/n/nuclear-scan
-date_scraped: 2025-11-09T20:06:25.194883
+date_scraped: 2025-11-13T00:53:16.794900
 breadcrumbs:
   - Cancer Information
   - Resources

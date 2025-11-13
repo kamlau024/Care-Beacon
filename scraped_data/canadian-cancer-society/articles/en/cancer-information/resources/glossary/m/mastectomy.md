@@ -1,13 +1,14 @@
 ---
 title: "mastectomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/mastectomy
-date_scraped: 2025-11-09T20:08:25.806427
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/mastectomy#main-content
+date_scraped: 2025-11-12T23:41:53.306058
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Mastectomy
+  - Mastectomy#Main Content
+  - mastectomy
 ---
 
 # mastectomy

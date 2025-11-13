@@ -1,11 +1,12 @@
 ---
 title: "Barium enema"
-url: https://cancer.ca/en/treatments/tests-and-procedures/barium-enema
-date_scraped: 2025-11-09T20:48:04.516543
+url: https://cancer.ca/en/treatments/tests-and-procedures/barium-enema#main-content
+date_scraped: 2025-11-13T01:24:30.622160
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Barium Enema
+  - Barium Enema#Main Content
+  - Barium enema
 ---
 
 # Barium enema

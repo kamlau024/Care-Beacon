@@ -1,11 +1,11 @@
 ---
 title: "How cancer starts, grows and spreads"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/how-cancer-starts-grows-and-spreads
-date_scraped: 2025-11-08T22:47:22.727194
+url: https://cancer.ca/en/cancer-information/what-is-cancer/how-cancer-starts-grows-and-spreads#main-content
+date_scraped: 2025-11-13T05:49:12.570446
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - How Cancer Starts Grows And Spreads
+  - How Cancer Starts Grows And Spreads#Main Content
   - What is cancer?
   - How cancer starts, grows and spreads
 images:
@@ -27,29 +27,9 @@ To watch this video, you must accept the use of targeting cookies. Please accept
 
 Play video ![YouTube video poster](https://img.youtube.com/vi/HAnmCZeb4Z8/0.jpg)
 
-Our bodies are made up of trillions of cells grouped to form tissues and organs.
+Our bodies are made up of trillions of cells grouped to form tissues and organs. Genes inside the nucleus of each cell tell it when to grow, work, divide and die. Normally, our cells follow these instructions and we stay healthy.
 
-Genes
-
-Close
-
-gene
-
-The basic biological unit of heredity passed from parents to a child. Genes are pieces of [DNA](https://cancer.ca/en/cancer-information/resources/glossary/d/deoxyribonucleic-acid-dna) and determine a particular characteristic of an individual.
-
-inside the nucleus of each cell tell it when to grow, work, divide and die. Normally, our cells follow these instructions and we stay healthy.
-
-But when there is a change in our
-
-DNA
-
-Close
-
-deoxyribonucleic acid (DNA)
-
-The molecules inside the cell that program genetic information. DNA determines the structure, function and behaviour of a cell.
-
-or damage to it, a gene can mutate. Mutated genes don’t work properly because the instructions in their DNA get mixed up. This can cause cells that should be resting to divide and grow out of control, which can lead to cancer.
+But when there is a change in our DNA or damage to it, a gene can mutate. Mutated genes don’t work properly because the instructions in their DNA get mixed up. This can cause cells that should be resting to divide and grow out of control, which can lead to cancer.
 
 ## How cancer starts
 
@@ -126,6 +106,14 @@ References
 
   * U.S. National Library of Medicine. _PubMed Health: How Do Cancer Cells Grow and Spread?_. 2013\. <https://www.ncbi.nlm.nih.gov/pubmedhealth/PMH0072594/>.
 
-Was this content helpful?
+* * *
 
-1 - Lowest rating2 - Low rating3 - Neutral rating4 - High rating5 - Highest rating
+**Genes:**
+
+The basic biological unit of heredity passed from parents to a child. Genes are pieces of DNA and determine a particular characteristic of an individual.
+
+
+
+**DNA:**
+
+The molecules inside the cell that program genetic information. DNA determines the structure, function and behaviour of a cell.

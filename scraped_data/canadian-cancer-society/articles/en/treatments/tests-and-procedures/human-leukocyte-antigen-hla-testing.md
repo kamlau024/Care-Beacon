@@ -1,11 +1,11 @@
 ---
 title: "Human leukocyte antigen (HLA) testing"
-url: https://cancer.ca/en/treatments/tests-and-procedures/human-leukocyte-antigen-hla-testing
-date_scraped: 2025-11-09T20:48:06.319072
+url: https://cancer.ca/en/treatments/tests-and-procedures/human-leukocyte-antigen-hla-testing#main-content
+date_scraped: 2025-11-13T06:49:00.207047
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Human Leukocyte Antigen Hla Testing
+  - Human Leukocyte Antigen Hla Testing#Main Content
   - Human leukocyte antigen (HLA) testing
 ---
 

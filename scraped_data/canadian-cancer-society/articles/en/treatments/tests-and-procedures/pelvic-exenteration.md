@@ -1,11 +1,12 @@
 ---
 title: "Pelvic exenteration"
-url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-exenteration
-date_scraped: 2025-11-09T20:49:44.687558
+url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-exenteration#ci_pelvic_exenteration_89_8058_00
+date_scraped: 2025-11-13T02:03:20.238159
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Pelvic Exenteration
+  - Pelvic Exenteration#Ci_Pelvic_Exenteration_89_8058_00
+  - Pelvic exenteration
 ---
 
 # Pelvic exenteration

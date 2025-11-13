@@ -1,13 +1,14 @@
 ---
 title: "extralymphatic"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/extralymphatic
-date_scraped: 2025-11-09T20:37:10.527670
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/extralymphatic#main-content
+date_scraped: 2025-11-12T23:10:18.203059
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Extralymphatic
+  - Extralymphatic#Main Content
+  - extralymphatic
 ---
 
 # extralymphatic

@@ -1,13 +1,14 @@
 ---
 title: "premenopause"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/premenopause
-date_scraped: 2025-11-09T20:06:26.444028
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/premenopause#main-content
+date_scraped: 2025-11-13T02:00:09.247027
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Premenopause
+  - Premenopause#Main Content
+  - premenopause
 ---
 
 # premenopause

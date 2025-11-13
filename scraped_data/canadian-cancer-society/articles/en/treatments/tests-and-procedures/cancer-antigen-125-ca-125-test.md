@@ -1,11 +1,11 @@
 ---
 title: "Cancer antigen 125 (CA125) test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/cancer-antigen-125-ca-125-test
-date_scraped: 2025-11-09T20:48:40.418500
+url: https://cancer.ca/en/treatments/tests-and-procedures/cancer-antigen-125-ca-125-test#main-content
+date_scraped: 2025-11-12T23:57:52.857311
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Cancer Antigen 125 Ca 125 Test
+  - Cancer Antigen 125 Ca 125 Test#Main Content
   - Cancer antigen 125 (CA 125) test
 ---
 

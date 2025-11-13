@@ -1,11 +1,12 @@
 ---
 title: "Find prostate cancer"
-url: https://cancer.ca/en/cancer-information/find-cancer-early/find-prostate-cancer
-date_scraped: 2025-11-09T20:04:24.772631
+url: https://cancer.ca/en/cancer-information/find-cancer-early/find-prostate-cancer#main-content
+date_scraped: 2025-11-13T08:16:35.813658
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early
-  - Find Prostate Cancer
+  - Find Prostate Cancer#Main Content
+  - Find prostate cancer
 images:
   - src: https://img.youtube.com/vi/sEIHj07vdRo/0.jpg
     alt: "YouTube video poster"

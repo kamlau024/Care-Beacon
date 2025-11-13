@@ -1,13 +1,13 @@
 ---
 title: "cuboidal cell"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/cuboidal-cells
-date_scraped: 2025-11-09T20:13:51.220026
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/cuboidal-cells#main-content
+date_scraped: 2025-11-12T23:33:52.975163
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Cuboidal Cells
+  - Cuboidal Cells#Main Content
   - cuboidal cell
 ---
 

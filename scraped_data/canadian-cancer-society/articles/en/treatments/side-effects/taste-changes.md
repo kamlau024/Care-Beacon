@@ -1,11 +1,12 @@
 ---
 title: "Taste changes"
-url: https://cancer.ca/en/treatments/side-effects/taste-changes
-date_scraped: 2025-11-09T20:47:13.334330
+url: https://cancer.ca/en/treatments/side-effects/taste-changes#main-content
+date_scraped: 2025-11-13T07:22:36.861734
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Taste Changes
+  - Taste Changes#Main Content
+  - Taste changes
 ---
 
 # Taste changes

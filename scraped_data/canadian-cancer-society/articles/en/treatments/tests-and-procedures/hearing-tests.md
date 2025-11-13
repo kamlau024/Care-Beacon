@@ -1,11 +1,12 @@
 ---
 title: "Hearing tests"
-url: https://cancer.ca/en/treatments/tests-and-procedures/hearing-tests
-date_scraped: 2025-11-09T20:47:57.048674
+url: https://cancer.ca/en/treatments/tests-and-procedures/hearing-tests#0
+date_scraped: 2025-11-12T22:16:54.233637
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Hearing Tests
+  - Hearing Tests#0
+  - Hearing tests
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/95287dd0-b64c-11ea-bc3d-0242df4d59be-en.png?h=419&iar=0&mw=543&w=543&rev=b6a80a33a8764122a141c488ffe7273e&hash=2B03192AAD7EA334B4E2C51AFD18DE91
     alt: "Diagram of the ear"

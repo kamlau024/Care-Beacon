@@ -1,7 +1,7 @@
 ---
 title: "antigen"
 url: https://cancer.ca/en/cancer-information/resources/glossary/a/antigen
-date_scraped: 2025-11-09T20:05:11.082415
+date_scraped: 2025-11-13T07:08:28.427852
 breadcrumbs:
   - Cancer Information
   - Resources

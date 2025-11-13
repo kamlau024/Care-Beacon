@@ -1,13 +1,13 @@
 ---
 title: "body mass index (BMI)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/body-mass-index-bmi
-date_scraped: 2025-11-09T20:17:43.313147
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/body-mass-index-bmi#main-content
+date_scraped: 2025-11-12T22:52:30.060283
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Body Mass Index Bmi
+  - Body Mass Index Bmi#Main Content
   - body mass index (BMI)
 ---
 

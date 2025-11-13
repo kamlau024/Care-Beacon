@@ -1,13 +1,14 @@
 ---
 title: "duodenum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/d/duodenum
-date_scraped: 2025-11-09T20:24:34.577370
+url: https://cancer.ca/en/cancer-information/resources/glossary/d/duodenum#main-content
+date_scraped: 2025-11-13T00:10:31.496408
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - D
-  - Duodenum
+  - Duodenum#Main Content
+  - duodenum
 ---
 
 # duodenum

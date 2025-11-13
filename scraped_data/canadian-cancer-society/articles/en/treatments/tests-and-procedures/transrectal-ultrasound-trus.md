@@ -1,11 +1,11 @@
 ---
 title: "Transrectal ultrasound (TRUS)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/transrectal-ultrasound-trus
-date_scraped: 2025-11-09T20:48:58.050151
+url: https://cancer.ca/en/treatments/tests-and-procedures/transrectal-ultrasound-trus#main-content
+date_scraped: 2025-11-13T01:44:18.268049
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Transrectal Ultrasound Trus
+  - Transrectal Ultrasound Trus#Main Content
   - Transrectal ultrasound (TRUS)
 ---
 

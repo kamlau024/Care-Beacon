@@ -1,13 +1,14 @@
 ---
 title: "lymph node"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymph-node
-date_scraped: 2025-11-09T20:34:49.884945
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymph-node#main-content
+date_scraped: 2025-11-13T07:12:59.400781
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lymph Node
+  - Lymph Node#Main Content
+  - lymph node
 ---
 
 # lymph node

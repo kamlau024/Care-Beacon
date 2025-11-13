@@ -1,13 +1,14 @@
 ---
 title: "reproductive system"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/reproductive-system
-date_scraped: 2025-11-09T20:37:54.136719
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/reproductive-system#main-content
+date_scraped: 2025-11-12T22:02:32.068966
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Reproductive System
+  - Reproductive System#Main Content
+  - reproductive system
 ---
 
 # reproductive system

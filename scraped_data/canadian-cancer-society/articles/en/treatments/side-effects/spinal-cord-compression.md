@@ -1,11 +1,12 @@
 ---
 title: "Spinal cord compression"
-url: https://cancer.ca/en/treatments/side-effects/spinal-cord-compression
-date_scraped: 2025-11-09T20:52:08.096695
+url: https://cancer.ca/en/treatments/side-effects/spinal-cord-compression#main-content
+date_scraped: 2025-11-12T22:31:41.284503
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Spinal Cord Compression
+  - Spinal Cord Compression#Main Content
+  - Spinal cord compression
 ---
 
 # Spinal cord compression

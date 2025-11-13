@@ -1,13 +1,14 @@
 ---
 title: "Myelodysplastic syndromes"
-url: https://cancer.ca/en/cancer-information/cancer-types/leukemia/what-is-leukemia/myelodysplastic-syndromes
-date_scraped: 2025-11-09T20:43:00.945755
+url: https://cancer.ca/en/cancer-information/cancer-types/leukemia/what-is-leukemia/myelodysplastic-syndromes#main-content
+date_scraped: 2025-11-13T06:25:29.714490
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Leukemia
   - What Is Leukemia
-  - Myelodysplastic Syndromes
+  - Myelodysplastic Syndromes#Main Content
+  - Myelodysplastic syndromes
 ---
 
 # Myelodysplastic syndromes

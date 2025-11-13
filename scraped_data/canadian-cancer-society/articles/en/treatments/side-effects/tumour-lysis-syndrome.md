@@ -1,11 +1,12 @@
 ---
 title: "Tumour lysis syndrome"
-url: https://cancer.ca/en/treatments/side-effects/tumour-lysis-syndrome
-date_scraped: 2025-11-09T20:50:53.225877
+url: https://cancer.ca/en/treatments/side-effects/tumour-lysis-syndrome#main-content
+date_scraped: 2025-11-12T22:11:54.189516
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Tumour Lysis Syndrome
+  - Tumour Lysis Syndrome#Main Content
+  - Tumour lysis syndrome
 ---
 
 # Tumour lysis syndrome

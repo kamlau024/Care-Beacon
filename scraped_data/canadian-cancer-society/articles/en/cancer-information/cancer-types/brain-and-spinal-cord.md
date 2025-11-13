@@ -1,11 +1,12 @@
 ---
 title: "Brain and spinal tumours"
-url: https://cancer.ca/en/cancer-information/cancer-types/brain-and-spinal-cord
-date_scraped: 2025-11-09T20:41:22.638226
+url: https://cancer.ca/en/cancer-information/cancer-types/brain-and-spinal-cord#0
+date_scraped: 2025-11-13T05:56:18.028054
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Brain And Spinal Cord
+  - Brain And Spinal Cord#0
+  - Brain and spinal cord
 ---
 
 # Brain and spinal tumours

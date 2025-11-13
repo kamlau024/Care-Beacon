@@ -1,11 +1,12 @@
 ---
 title: "Second cancers"
-url: https://cancer.ca/en/treatments/side-effects/second-cancers
-date_scraped: 2025-11-09T20:51:44.282867
+url: https://cancer.ca/en/treatments/side-effects/second-cancers#main-content
+date_scraped: 2025-11-13T00:55:05.895206
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Second Cancers
+  - Second Cancers#Main Content
+  - Second cancers
 ---
 
 # Second cancers

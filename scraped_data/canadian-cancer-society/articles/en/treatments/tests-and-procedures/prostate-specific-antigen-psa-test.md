@@ -1,7 +1,7 @@
 ---
 title: "Prostate-specific antigen (PSA) test"
 url: https://cancer.ca/en/treatments/tests-and-procedures/prostate-specific-antigen-psa-test
-date_scraped: 2025-11-09T20:48:21.583365
+date_scraped: 2025-11-13T11:49:40.780738
 breadcrumbs:
   - Treatments
   - Tests And Procedures

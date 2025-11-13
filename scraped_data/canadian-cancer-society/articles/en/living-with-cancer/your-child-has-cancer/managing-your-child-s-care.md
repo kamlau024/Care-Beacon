@@ -1,7 +1,7 @@
 ---
 title: "Managing your child’s care"
 url: https://cancer.ca/en/living-with-cancer/your-child-has-cancer/managing-your-child-s-care
-date_scraped: 2025-11-09T20:46:28.714585
+date_scraped: 2025-11-13T07:42:27.587863
 breadcrumbs:
   - Living With Cancer
   - Your Child Has Cancer

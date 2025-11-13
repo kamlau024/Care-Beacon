@@ -1,13 +1,13 @@
 ---
 title: "deoxyribonucleic acid (DNA)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/d/deoxyribonucleic-acid-dna
-date_scraped: 2025-11-09T20:31:28.938500
+url: https://cancer.ca/en/cancer-information/resources/glossary/d/deoxyribonucleic-acid-dna#main-content
+date_scraped: 2025-11-13T07:29:19.535180
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - D
-  - Deoxyribonucleic Acid Dna
+  - Deoxyribonucleic Acid Dna#Main Content
   - deoxyribonucleic acid (DNA)
 ---
 

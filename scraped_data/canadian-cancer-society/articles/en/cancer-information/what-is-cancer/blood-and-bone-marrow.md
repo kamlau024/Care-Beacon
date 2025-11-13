@@ -1,12 +1,13 @@
 ---
 title: "The blood and bone marrow"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/blood-and-bone-marrow
-date_scraped: 2025-11-09T20:40:39.130525
+url: https://cancer.ca/en/cancer-information/what-is-cancer/blood-and-bone-marrow#main-content
+date_scraped: 2025-11-13T06:27:43.336351
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - Blood And Bone Marrow
+  - Blood And Bone Marrow#Main Content
   - What is cancer?
+  - Blood and bone marrow
 images:
   - src: https://cdn.cancer.ca/-/media/cams/cancer-101/30845b30-c9dc-11ea-8e8b-0242df4d59be-en.png?h=476&iar=0&mw=543&w=543&rev=e84b84df0acd486193c1eaacd9ceadfd&hash=4159452A07C743AAE627AD9E1E1E01A7
     alt: "Diagram of blood cell development"

@@ -1,11 +1,12 @@
 ---
 title: "Core biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/core-biopsy
-date_scraped: 2025-11-09T20:48:04.854011
+url: https://cancer.ca/en/treatments/tests-and-procedures/core-biopsy#ci_core_biopsy_89_3960_00
+date_scraped: 2025-11-12T21:26:02.488575
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Core Biopsy
+  - Core Biopsy#Ci_Core_Biopsy_89_3960_00
+  - Core biopsy
 ---
 
 # Core biopsy

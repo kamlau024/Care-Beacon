@@ -1,11 +1,12 @@
 ---
 title: "Nausea and vomiting"
-url: https://cancer.ca/en/treatments/side-effects/nausea-and-vomiting
-date_scraped: 2025-11-09T20:52:14.498469
+url: https://cancer.ca/en/treatments/side-effects/nausea-and-vomiting#main-content
+date_scraped: 2025-11-13T07:27:06.674541
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Nausea And Vomiting
+  - Nausea And Vomiting#Main Content
+  - Nausea and vomiting
 ---
 
 # Nausea and vomiting

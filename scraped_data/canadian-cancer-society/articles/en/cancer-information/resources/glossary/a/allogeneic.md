@@ -1,13 +1,14 @@
 ---
 title: "allogeneic"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/allogeneic
-date_scraped: 2025-11-09T20:31:48.962870
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/allogeneic#main-content
+date_scraped: 2025-11-12T22:42:15.560903
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Allogeneic
+  - Allogeneic#Main Content
+  - allogeneic
 ---
 
 # allogeneic

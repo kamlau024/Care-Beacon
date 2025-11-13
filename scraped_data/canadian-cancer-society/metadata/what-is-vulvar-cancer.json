@@ -1,0 +1,29 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/vulvar/what-is-vulvar-cancer",
+  "title": "What is vulvar cancer?",
+  "date_scraped": "2025-11-13T02:00:42.305372",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Vulvar",
+    "What Is Vulvar Cancer"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/system-graphic/d3277a80-c20c-11ee-99f9-0242ca65d1d4-en.png?h=275&iar=0&mw=543&w=543&rev=4502544295e74fc3ab307efb7e8146f4&hash=B058E55712BFF5EA8397EBBD7E442850",
+      "alt": "",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/vulvar/07bcb060-c9ed-11ea-8e8b-0242df4d59be-en.png?h=327&iar=0&mw=543&w=543&rev=983ba80f64d34ea780fd0bee26cd0d64&hash=969F6B74252F8F00CED415753541A5AB",
+      "alt": "",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/vulvar/what-is-vulvar-cancer.md"
+}

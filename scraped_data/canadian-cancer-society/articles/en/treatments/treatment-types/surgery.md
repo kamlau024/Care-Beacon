@@ -1,7 +1,7 @@
 ---
 title: "Surgery for cancer"
 url: https://cancer.ca/en/treatments/treatment-types/surgery
-date_scraped: 2025-11-09T20:50:16.382325
+date_scraped: 2025-11-13T06:51:12.884056
 breadcrumbs:
   - Treatments
   - Treatment Types

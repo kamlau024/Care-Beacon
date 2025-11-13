@@ -1,7 +1,7 @@
 ---
 title: "renal pelvis"
 url: https://cancer.ca/en/cancer-information/resources/glossary/r/renal-pelvis
-date_scraped: 2025-11-09T20:08:55.572681
+date_scraped: 2025-11-13T04:55:47.671557
 breadcrumbs:
   - Cancer Information
   - Resources

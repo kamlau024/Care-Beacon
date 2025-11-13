@@ -1,11 +1,12 @@
 ---
 title: "Skin problems"
-url: https://cancer.ca/en/treatments/side-effects/skin-problems
-date_scraped: 2025-11-09T20:51:30.284443
+url: https://cancer.ca/en/treatments/side-effects/skin-problems#ci_skin_problems_89_11013_00
+date_scraped: 2025-11-13T06:34:00.558378
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Skin Problems
+  - Skin Problems#Ci_Skin_Problems_89_11013_00
+  - Skin problems
 ---
 
 # Skin problems

@@ -1,12 +1,13 @@
 ---
 title: "The immune system"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/immune-system
-date_scraped: 2025-11-09T20:40:47.563757
+url: https://cancer.ca/en/cancer-information/what-is-cancer/immune-system#main-content
+date_scraped: 2025-11-13T07:14:28.742353
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - Immune System
+  - Immune System#Main Content
   - What is cancer?
+  - Immune system
 images:
   - src: https://cdn.cancer.ca/-/media/cams/cancer-101/2ee180a0-c9dc-11ea-8e8b-0242df4d59be-en.png?h=291&iar=0&mw=543&w=363&rev=6839eded862c440d81d6da9388cf3220&hash=A0561025D400BE931D42863636908D5D
 ---

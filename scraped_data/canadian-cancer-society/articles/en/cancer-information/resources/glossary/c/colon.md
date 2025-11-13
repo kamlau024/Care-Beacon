@@ -1,13 +1,14 @@
 ---
 title: "colon"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/colon
-date_scraped: 2025-11-09T20:25:44.282988
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/colon#main-content
+date_scraped: 2025-11-12T22:22:12.412921
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Colon
+  - Colon#Main Content
+  - colon
 ---
 
 # colon

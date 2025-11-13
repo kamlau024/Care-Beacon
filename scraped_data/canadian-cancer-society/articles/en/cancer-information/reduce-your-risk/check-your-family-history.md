@@ -1,11 +1,12 @@
 ---
 title: "Check your family history"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/check-your-family-history
-date_scraped: 2025-11-09T20:05:01.860536
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/check-your-family-history#main-content
+date_scraped: 2025-11-13T08:20:42.621937
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Check Your Family History
+  - Check Your Family History#Main Content
+  - Check your family history
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/check-your-family-history/family_history.jpg?rev=90b6da8f4709486eaf6eaf72b4e63f4a&cx=0.5&cy=0.5&cw=575&ch=452&hash=269521EFAFD73331034539232C32DDF1
     alt: "A multi-generational family sitting together on a couch"

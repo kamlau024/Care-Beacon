@@ -1,11 +1,12 @@
 ---
 title: "Male reproductive system problems"
-url: https://cancer.ca/en/treatments/side-effects/male-reproductive-system-problems
-date_scraped: 2025-11-09T20:51:04.822957
+url: https://cancer.ca/en/treatments/side-effects/male-reproductive-system-problems#male_reproductive_system_problems_2_11455_en
+date_scraped: 2025-11-13T00:54:46.319257
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Male Reproductive System Problems
+  - Male Reproductive System Problems#Male_Reproductive_System_Problems_2_11455_En
+  - Male reproductive system problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/childhood-cancer/ce70fdf0-b64d-11ea-bc3d-0242df4d59be-en.png?h=368&iar=0&mw=543&w=543&rev=592f44bb7edd475a9960682be478ecbd&hash=C6C42AD83DCD1DE624E522ED4D9431F5
     alt: "Diagram of the male reproductive system"

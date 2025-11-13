@@ -1,13 +1,13 @@
 ---
 title: "peripheral nervous system (PNS)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/peripheral-nervous-system-pns
-date_scraped: 2025-11-09T20:14:44.326932
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/peripheral-nervous-system-pns#main-content
+date_scraped: 2025-11-13T03:10:25.812098
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Peripheral Nervous System Pns
+  - Peripheral Nervous System Pns#Main Content
   - peripheral nervous system (PNS)
 ---
 

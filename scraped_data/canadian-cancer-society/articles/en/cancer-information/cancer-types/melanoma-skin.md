@@ -1,11 +1,11 @@
 ---
 title: "Melanoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/melanoma-skin
-date_scraped: 2025-11-09T20:42:55.813891
+url: https://cancer.ca/en/cancer-information/cancer-types/melanoma-skin#main-content
+date_scraped: 2025-11-13T00:32:58.566015
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Melanoma Skin
+  - Melanoma Skin#Main Content
   - Melanoma (skin)
 ---
 

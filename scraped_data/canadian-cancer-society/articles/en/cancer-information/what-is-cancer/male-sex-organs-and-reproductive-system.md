@@ -1,7 +1,7 @@
 ---
 title: "Male sex organs and reproductive system"
 url: https://cancer.ca/en/cancer-information/what-is-cancer/male-sex-organs-and-reproductive-system
-date_scraped: 2025-11-09T20:40:18.109689
+date_scraped: 2025-11-13T11:49:19.181243
 breadcrumbs:
   - Cancer Information
   - What Is Cancer

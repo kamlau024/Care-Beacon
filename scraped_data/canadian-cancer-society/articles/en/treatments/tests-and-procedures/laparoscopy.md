@@ -1,10 +1,11 @@
 ---
 title: "Laparoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/laparoscopy
-date_scraped: 2025-11-09T20:48:56.189595
+url: https://cancer.ca/en/treatments/tests-and-procedures/laparoscopy#main-content
+date_scraped: 2025-11-13T00:44:02.045302
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Laparoscopy#Main Content
   - Laparoscopy
 ---
 

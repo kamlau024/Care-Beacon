@@ -1,11 +1,12 @@
 ---
 title: "HER2 status test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/her2-status-test
-date_scraped: 2025-11-09T20:49:16.833974
+url: https://cancer.ca/en/treatments/tests-and-procedures/her2-status-test#main-content
+date_scraped: 2025-11-12T22:58:04.281559
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Her2 Status Test
+  - Her2 Status Test#Main Content
+  - HER2 status test
 ---
 
 # HER2 status test

@@ -1,7 +1,7 @@
 ---
 title: "Chemotherapy"
 url: https://cancer.ca/en/treatments/treatment-types/chemotherapy
-date_scraped: 2025-11-09T20:50:14.737687
+date_scraped: 2025-11-13T06:50:46.365998
 breadcrumbs:
   - Treatments
   - Treatment Types

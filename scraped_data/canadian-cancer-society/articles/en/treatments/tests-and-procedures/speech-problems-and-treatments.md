@@ -1,11 +1,12 @@
 ---
 title: "Speech problems and treatments"
-url: https://cancer.ca/en/treatments/tests-and-procedures/speech-problems-and-treatments
-date_scraped: 2025-11-09T20:47:52.627716
+url: https://cancer.ca/en/treatments/tests-and-procedures/speech-problems-and-treatments#main-content
+date_scraped: 2025-11-13T04:02:22.065847
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Speech Problems And Treatments
+  - Speech Problems And Treatments#Main Content
+  - Speech problems and treatments
 ---
 
 # Speech problems and treatments

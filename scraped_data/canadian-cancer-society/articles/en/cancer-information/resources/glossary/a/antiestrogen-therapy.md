@@ -1,13 +1,13 @@
 ---
 title: "anti-estrogen therapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/antiestrogen-therapy
-date_scraped: 2025-11-09T20:35:37.840043
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/antiestrogen-therapy#main-content
+date_scraped: 2025-11-12T23:44:32.161239
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Antiestrogen Therapy
+  - Antiestrogen Therapy#Main Content
   - anti-estrogen therapy
 ---
 

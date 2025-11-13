@@ -1,11 +1,12 @@
 ---
 title: "Liver problems"
-url: https://cancer.ca/en/treatments/side-effects/liver-problems
-date_scraped: 2025-11-09T20:52:16.699126
+url: https://cancer.ca/en/treatments/side-effects/liver-problems#main-content
+date_scraped: 2025-11-12T22:11:29.746942
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Liver Problems
+  - Liver Problems#Main Content
+  - Liver problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/c6835f10-c9ea-11ea-8e8b-0242df4d59be-en.png?h=259&iar=0&mw=543&w=543&rev=0a2378c2aed24f4aa7009c7667907626&hash=5D1519F5C908AE659DB74767766CE9D4
     alt: "Diagram of the location of the liver"

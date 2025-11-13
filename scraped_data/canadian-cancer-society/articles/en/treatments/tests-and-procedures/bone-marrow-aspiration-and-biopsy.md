@@ -1,11 +1,12 @@
 ---
 title: "Bone marrow aspiration and biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/bone-marrow-aspiration-and-biopsy
-date_scraped: 2025-11-09T20:48:28.700253
+url: https://cancer.ca/en/treatments/tests-and-procedures/bone-marrow-aspiration-and-biopsy#main-content
+date_scraped: 2025-11-12T22:02:12.836024
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Bone Marrow Aspiration And Biopsy
+  - Bone Marrow Aspiration And Biopsy#Main Content
+  - Bone marrow aspiration and biopsy
 ---
 
 # Bone marrow aspiration and biopsy

@@ -1,11 +1,11 @@
 ---
 title: "Electrocardiogram (ECG)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/electrocardiogram-ecg
-date_scraped: 2025-11-09T20:48:13.725339
+url: https://cancer.ca/en/treatments/tests-and-procedures/electrocardiogram-ecg#0
+date_scraped: 2025-11-13T06:04:18.733112
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Electrocardiogram Ecg
+  - Electrocardiogram Ecg#0
   - Electrocardiogram (ECG)
 ---
 

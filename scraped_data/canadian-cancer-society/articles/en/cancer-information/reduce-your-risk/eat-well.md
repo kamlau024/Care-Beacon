@@ -1,11 +1,12 @@
 ---
 title: "Eat well"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/eat-well
-date_scraped: 2025-11-09T20:39:29.025376
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/eat-well#main-content
+date_scraped: 2025-11-13T08:22:15.410095
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Eat Well
+  - Eat Well#Main Content
+  - Eat well
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-slipt-image-description.jpg?rev=5e6b55c5f6f94238ae74fadeaf0eb486&cx=0.5&cy=0.5&cw=575&ch=452&hash=437D1F27B964D350CFB4F63F32FABAC0
     alt: "Plate of colourful vegetables and fruit"

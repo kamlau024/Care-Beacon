@@ -1,13 +1,14 @@
 ---
 title: "neuroendocrine system"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/neuroendocrine-system
-date_scraped: 2025-11-09T20:30:02.492764
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/neuroendocrine-system#main-content
+date_scraped: 2025-11-13T03:58:56.945763
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Neuroendocrine System
+  - Neuroendocrine System#Main Content
+  - neuroendocrine system
 ---
 
 # neuroendocrine system

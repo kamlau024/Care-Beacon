@@ -1,11 +1,12 @@
 ---
 title: "Wire localization"
-url: https://cancer.ca/en/treatments/tests-and-procedures/wire-localization
-date_scraped: 2025-11-09T20:49:35.106970
+url: https://cancer.ca/en/treatments/tests-and-procedures/wire-localization#main-content
+date_scraped: 2025-11-12T23:30:55.724987
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Wire Localization
+  - Wire Localization#Main Content
+  - Wire localization
 ---
 
 # Wire localization

@@ -1,11 +1,11 @@
 ---
 title: "Sentinel lymph node biopsy (SLNB)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/sentinel-lymph-node-biopsy-slnb
-date_scraped: 2025-11-09T20:47:42.419069
+url: https://cancer.ca/en/treatments/tests-and-procedures/sentinel-lymph-node-biopsy-slnb#main-content
+date_scraped: 2025-11-13T02:25:14.542827
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Sentinel Lymph Node Biopsy Slnb
+  - Sentinel Lymph Node Biopsy Slnb#Main Content
   - Sentinel lymph node biopsy (SLNB)
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Swallowing problems"
 url: https://cancer.ca/en/treatments/side-effects/swallowing-problems
-date_scraped: 2025-11-09T20:51:12.272654
+date_scraped: 2025-11-12T21:49:26.768898
 breadcrumbs:
   - Treatments
   - Side Effects

@@ -1,11 +1,12 @@
 ---
 title: "Inguinal lymph node dissection"
-url: https://cancer.ca/en/treatments/tests-and-procedures/inguinal-lymph-node-dissection
-date_scraped: 2025-11-09T20:49:30.867217
+url: https://cancer.ca/en/treatments/tests-and-procedures/inguinal-lymph-node-dissection#main-content
+date_scraped: 2025-11-13T02:21:31.439709
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Inguinal Lymph Node Dissection
+  - Inguinal Lymph Node Dissection#Main Content
+  - Inguinal lymph node dissection
 ---
 
 # Inguinal lymph node dissection

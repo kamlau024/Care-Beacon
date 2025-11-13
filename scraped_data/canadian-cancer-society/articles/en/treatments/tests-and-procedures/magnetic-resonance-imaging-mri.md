@@ -1,11 +1,11 @@
 ---
 title: "Magnetic resonance imaging (MRI)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/magnetic-resonance-imaging-mri
-date_scraped: 2025-11-09T20:49:38.228584
+url: https://cancer.ca/en/treatments/tests-and-procedures/magnetic-resonance-imaging-mri#main-content
+date_scraped: 2025-11-12T22:10:49.906161
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Magnetic Resonance Imaging Mri
+  - Magnetic Resonance Imaging Mri#Main Content
   - Magnetic resonance imaging (MRI)
 ---
 

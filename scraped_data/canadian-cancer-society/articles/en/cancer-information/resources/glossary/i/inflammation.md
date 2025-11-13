@@ -1,7 +1,7 @@
 ---
 title: "inflammation"
 url: https://cancer.ca/en/cancer-information/resources/glossary/i/inflammation
-date_scraped: 2025-11-09T20:15:35.177356
+date_scraped: 2025-11-12T23:28:57.439204
 breadcrumbs:
   - Cancer Information
   - Resources

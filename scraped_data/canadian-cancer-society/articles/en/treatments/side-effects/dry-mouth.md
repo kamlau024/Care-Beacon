@@ -1,7 +1,7 @@
 ---
 title: "Dry mouth"
 url: https://cancer.ca/en/treatments/side-effects/dry-mouth
-date_scraped: 2025-11-09T20:47:14.865922
+date_scraped: 2025-11-12T21:49:55.296011
 breadcrumbs:
   - Treatments
   - Side Effects

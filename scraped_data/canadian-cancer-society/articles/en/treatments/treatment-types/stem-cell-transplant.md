@@ -1,11 +1,12 @@
 ---
 title: "Stem cell transplant"
-url: https://cancer.ca/en/treatments/treatment-types/stem-cell-transplant
-date_scraped: 2025-11-09T20:50:06.881469
+url: https://cancer.ca/en/treatments/treatment-types/stem-cell-transplant#main-content
+date_scraped: 2025-11-13T06:53:06.413322
 breadcrumbs:
   - Treatments
   - Treatment Types
-  - Stem Cell Transplant
+  - Stem Cell Transplant#Main Content
+  - Stem cell transplant
 ---
 
 # Stem cell transplant

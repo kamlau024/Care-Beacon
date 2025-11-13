@@ -1,0 +1,29 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/prostate/statistics",
+  "title": "Prostate cancer statistics",
+  "date_scraped": "2025-11-13T11:49:16.530488",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Prostate",
+    "Statistics"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/prostate/a4655920-0ef0-11ef-97b9-0242db05fc4f-en.png?h=447&iar=0&mw=543&w=543&rev=75eeaad601bb4013a44ca58fda24db26&hash=FABE95CCDA39B0DF97610059386AA6DB",
+      "alt": "Diagram of the percentage of estimated new prostate cancer cases in men in 2024",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/prostate/a468b480-0ef0-11ef-97b9-0242db05fc4f-en.png?h=447&iar=0&mw=543&w=543&rev=6d14cea434c54410ad200a94875dba96&hash=81B91986C380189CE4C837DE82856B08",
+      "alt": "Diagram of the percentage of estimated prostate cancer deaths in men in 2024",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/prostate/statistics.md"
+}

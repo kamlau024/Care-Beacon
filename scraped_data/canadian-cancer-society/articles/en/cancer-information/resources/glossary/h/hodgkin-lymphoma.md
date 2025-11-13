@@ -1,7 +1,7 @@
 ---
 title: "Hodgkin lymphoma"
 url: https://cancer.ca/en/cancer-information/resources/glossary/h/hodgkin-lymphoma
-date_scraped: 2025-11-09T20:34:29.157465
+date_scraped: 2025-11-13T07:06:35.876733
 breadcrumbs:
   - Cancer Information
   - Resources

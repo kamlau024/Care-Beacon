@@ -1,10 +1,11 @@
 ---
 title: "Anesthesia"
-url: https://cancer.ca/en/treatments/tests-and-procedures/anesthesia
-date_scraped: 2025-11-09T20:49:03.775802
+url: https://cancer.ca/en/treatments/tests-and-procedures/anesthesia#main-content
+date_scraped: 2025-11-13T07:37:17.170693
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Anesthesia#Main Content
   - Anesthesia
 ---
 

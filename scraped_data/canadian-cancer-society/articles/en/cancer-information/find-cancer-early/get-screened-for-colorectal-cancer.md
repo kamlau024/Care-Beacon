@@ -1,11 +1,12 @@
 ---
 title: "Get screened for colorectal cancer"
-url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-colorectal-cancer
-date_scraped: 2025-11-09T01:55:19.284643
+url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-colorectal-cancer#main-content
+date_scraped: 2025-11-13T08:18:13.143371
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early
-  - Get Screened For Colorectal Cancer
+  - Get Screened For Colorectal Cancer#Main Content
+  - Get screened for colorectal cancer
 images:
   - src: https://img.youtube.com/vi/K30VUKN2sbw/0.jpg
     alt: "YouTube video poster"

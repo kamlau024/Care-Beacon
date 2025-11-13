@@ -1,11 +1,12 @@
 ---
 title: "Choosing care and treatment for advanced cancer"
-url: https://cancer.ca/en/living-with-cancer/advanced-cancer/choosing-care-and-treatment-for-advanced-cancer
-date_scraped: 2025-11-09T20:46:08.725333
+url: https://cancer.ca/en/living-with-cancer/advanced-cancer/choosing-care-and-treatment-for-advanced-cancer#main-content
+date_scraped: 2025-11-13T05:02:01.951079
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer
-  - Choosing Care And Treatment For Advanced Cancer
+  - Choosing Care And Treatment For Advanced Cancer#Main Content
+  - Choosing care and treatment for advanced cancer
 ---
 
 # Choosing care and treatment for advanced cancer

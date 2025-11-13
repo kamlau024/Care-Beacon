@@ -1,13 +1,13 @@
 ---
 title: "red blood cell (RBC)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/red-blood-cell-rbc
-date_scraped: 2025-11-09T20:35:58.688833
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/red-blood-cell-rbc#main-content
+date_scraped: 2025-11-13T07:03:21.514082
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Red Blood Cell Rbc
+  - Red Blood Cell Rbc#Main Content
   - red blood cell (RBC)
 ---
 

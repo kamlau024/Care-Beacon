@@ -1,7 +1,7 @@
 ---
 title: "Screening for cancer"
 url: https://cancer.ca/en/cancer-information/find-cancer-early/screening-for-cancer
-date_scraped: 2025-11-09T20:04:28.664861
+date_scraped: 2025-11-13T08:14:01.355920
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early

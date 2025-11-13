@@ -1,11 +1,12 @@
 ---
 title: "Living well"
-url: https://cancer.ca/en/living-with-cancer/advanced-cancer/living-well-and-finding-meaning
-date_scraped: 2025-11-09T20:46:05.003545
+url: https://cancer.ca/en/living-with-cancer/advanced-cancer/living-well-and-finding-meaning#main-content
+date_scraped: 2025-11-13T05:02:23.227502
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer
-  - Living Well And Finding Meaning
+  - Living Well And Finding Meaning#Main Content
+  - Living well and finding meaning
 ---
 
 # Living well

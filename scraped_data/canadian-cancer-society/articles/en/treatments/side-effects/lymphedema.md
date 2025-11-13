@@ -1,10 +1,11 @@
 ---
 title: "Lymphedema"
-url: https://cancer.ca/en/treatments/side-effects/lymphedema
-date_scraped: 2025-11-09T20:51:03.047719
+url: https://cancer.ca/en/treatments/side-effects/lymphedema#main-content
+date_scraped: 2025-11-13T02:21:58.892494
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Lymphedema#Main Content
   - Lymphedema
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/a4c560f0-b64c-11ea-bc3d-0242df4d59be-en.png?h=451&iar=0&mw=543&w=543&rev=ef1d79f2103741609eeff9683f3d1a2c&hash=CCA6A0F90A5256A594A34C1EEB7823C8

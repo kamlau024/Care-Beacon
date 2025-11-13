@@ -1,11 +1,12 @@
 ---
 title: "Working with your healthcare team"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/working-with-your-healthcare-team
-date_scraped: 2025-11-09T00:14:06.212744
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/working-with-your-healthcare-team#ci_working_with_your_healthcare_team_102_11499_00
+date_scraped: 2025-11-12T21:50:45.000140
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Working With Your Healthcare Team
+  - Working With Your Healthcare Team#Ci_Working_With_Your_Healthcare_Team_102_11499_00
+  - Working with your healthcare team
 images:
   - src: https://img.youtube.com/vi/oy0q5S0Xhlc/0.jpg
     alt: "YouTube video poster"
@@ -90,7 +91,3 @@ When making decisions about your healthcare, you may want to talk to another doc
 It is natural to have many questions after a cancer diagnosis. Finding the right answers to your questions is important. These answers will help you make decisions that are right for you.
 
 [ Learn more on Questions to ask](https://cancer.ca/en/living-with-cancer/coping-with-changes/working-with-your-healthcare-team/questions-to-ask)
-
-Was this content helpful?
-
-1 - Lowest rating2 - Low rating3 - Neutral rating4 - High rating5 - Highest rating

@@ -1,13 +1,14 @@
 ---
 title: "hypopharynx"
-url: https://cancer.ca/en/cancer-information/resources/glossary/h/hypopharynx
-date_scraped: 2025-11-09T20:24:50.982315
+url: https://cancer.ca/en/cancer-information/resources/glossary/h/hypopharynx#main-content
+date_scraped: 2025-11-13T00:05:28.187078
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - H
-  - Hypopharynx
+  - Hypopharynx#Main Content
+  - hypopharynx
 ---
 
 # hypopharynx

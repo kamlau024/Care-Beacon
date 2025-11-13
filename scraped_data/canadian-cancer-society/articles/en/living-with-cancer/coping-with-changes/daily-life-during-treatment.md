@@ -1,11 +1,12 @@
 ---
 title: "Daily life during treatment"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/daily-life-during-treatment
-date_scraped: 2025-11-09T20:45:03.471260
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/daily-life-during-treatment#main-content
+date_scraped: 2025-11-12T21:47:53.018659
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Daily Life During Treatment
+  - Daily Life During Treatment#Main Content
+  - Daily life during treatment
 ---
 
 # Daily life during treatment

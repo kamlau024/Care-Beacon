@@ -1,13 +1,14 @@
 ---
 title: "pleura"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pleura
-date_scraped: 2025-11-09T20:37:18.019843
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pleura#main-content
+date_scraped: 2025-11-13T02:10:09.234892
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pleura
+  - Pleura#Main Content
+  - pleura
 ---
 
 # pleura

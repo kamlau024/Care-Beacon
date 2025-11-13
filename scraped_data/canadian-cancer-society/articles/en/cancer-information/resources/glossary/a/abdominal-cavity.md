@@ -1,13 +1,14 @@
 ---
 title: "abdominal cavity"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/abdominal-cavity
-date_scraped: 2025-11-09T20:25:58.901434
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/abdominal-cavity#main-content
+date_scraped: 2025-11-12T23:35:21.876729
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Abdominal Cavity
+  - Abdominal Cavity#Main Content
+  - abdominal cavity
 ---
 
 # abdominal cavity

@@ -1,13 +1,14 @@
 ---
 title: "B cell"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/b-cell
-date_scraped: 2025-11-09T20:14:54.508527
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/b-cell#main-content
+date_scraped: 2025-11-12T23:05:19.462109
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - B Cell
+  - B Cell#Main Content
+  - B cell
 ---
 
 # B cell

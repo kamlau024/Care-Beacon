@@ -1,11 +1,12 @@
 ---
 title: "MIBG scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/mibg-scan
-date_scraped: 2025-11-09T20:48:46.581339
+url: https://cancer.ca/en/treatments/tests-and-procedures/mibg-scan#main-content
+date_scraped: 2025-11-12T23:28:45.285126
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Mibg Scan
+  - Mibg Scan#Main Content
+  - MIBG scan
 ---
 
 # MIBG scan

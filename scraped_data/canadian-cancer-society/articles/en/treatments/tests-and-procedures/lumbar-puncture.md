@@ -1,11 +1,12 @@
 ---
 title: "Lumbar puncture"
-url: https://cancer.ca/en/treatments/tests-and-procedures/lumbar-puncture
-date_scraped: 2025-11-09T20:47:43.571916
+url: https://cancer.ca/en/treatments/tests-and-procedures/lumbar-puncture#main-content
+date_scraped: 2025-11-13T04:58:32.395414
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Lumbar Puncture
+  - Lumbar Puncture#Main Content
+  - Lumbar puncture
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/8c3671d0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=224&iar=0&mw=543&w=296&rev=b479bc855e8449f49516f3aed1f157ec&hash=334E36579153F082B94B2DD481A07A7E
     alt: "Graphic of lumbar puncture"

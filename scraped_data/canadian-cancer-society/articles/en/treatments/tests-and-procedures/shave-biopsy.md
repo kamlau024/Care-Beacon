@@ -1,11 +1,12 @@
 ---
 title: "Shave biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/shave-biopsy
-date_scraped: 2025-11-09T20:48:59.377820
+url: https://cancer.ca/en/treatments/tests-and-procedures/shave-biopsy#main-content
+date_scraped: 2025-11-13T02:45:32.150389
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Shave Biopsy
+  - Shave Biopsy#Main Content
+  - Shave biopsy
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/9e9e82e0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=299&iar=0&mw=543&w=259&rev=8d10e7edc2a341228516d28a2f119ee2&hash=E0E4F120A3738FA7E5214785AE805276
     alt: "Diagram of a punch biopsy"

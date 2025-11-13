@@ -1,13 +1,13 @@
 ---
 title: "central nervous system (CNS)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/central-nervous-system-cns
-date_scraped: 2025-11-09T20:11:04.782195
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/central-nervous-system-cns#main-content
+date_scraped: 2025-11-13T03:10:32.823530
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Central Nervous System Cns
+  - Central Nervous System Cns#Main Content
   - central nervous system (CNS)
 ---
 

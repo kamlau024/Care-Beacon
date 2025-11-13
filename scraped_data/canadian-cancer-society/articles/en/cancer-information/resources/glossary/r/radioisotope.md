@@ -1,13 +1,14 @@
 ---
 title: "radioisotope"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/radioisotope
-date_scraped: 2025-11-09T20:24:43.741066
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/radioisotope#main-content
+date_scraped: 2025-11-12T22:11:34.319485
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Radioisotope
+  - Radioisotope#Main Content
+  - radioisotope
 ---
 
 # radioisotope

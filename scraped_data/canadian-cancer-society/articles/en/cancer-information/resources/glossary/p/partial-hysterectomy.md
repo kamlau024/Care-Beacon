@@ -1,13 +1,14 @@
 ---
 title: "partial hysterectomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/partial-hysterectomy
-date_scraped: 2025-11-09T20:15:34.782798
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/partial-hysterectomy#main-content
+date_scraped: 2025-11-13T00:46:27.438654
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Partial Hysterectomy
+  - Partial Hysterectomy#Main Content
+  - partial hysterectomy
 ---
 
 # partial hysterectomy

@@ -1,11 +1,12 @@
 ---
 title: "Peripheral nerve damage (peripheral neuropathy)"
-url: https://cancer.ca/en/treatments/side-effects/peripheral-nerve-damage
-date_scraped: 2025-11-09T20:52:23.863416
+url: https://cancer.ca/en/treatments/side-effects/peripheral-nerve-damage#main-content
+date_scraped: 2025-11-13T02:07:33.946854
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Peripheral Nerve Damage
+  - Peripheral Nerve Damage#Main Content
+  - Peripheral nerve damage
 ---
 
 # Peripheral nerve damage (peripheral neuropathy)

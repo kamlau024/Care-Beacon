@@ -1,11 +1,12 @@
 ---
 title: "Weight loss"
-url: https://cancer.ca/en/treatments/side-effects/weight-loss
-date_scraped: 2025-11-09T20:51:46.003203
+url: https://cancer.ca/en/treatments/side-effects/weight-loss#main-content
+date_scraped: 2025-11-13T02:25:48.370196
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Weight Loss
+  - Weight Loss#Main Content
+  - Weight loss
 ---
 
 # Weight loss

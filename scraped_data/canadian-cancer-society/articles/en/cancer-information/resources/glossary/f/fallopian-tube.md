@@ -1,13 +1,14 @@
 ---
 title: "fallopian tube"
-url: https://cancer.ca/en/cancer-information/resources/glossary/f/fallopian-tube
-date_scraped: 2025-11-09T20:14:52.451061
+url: https://cancer.ca/en/cancer-information/resources/glossary/f/fallopian-tube#main-content
+date_scraped: 2025-11-12T23:57:25.805931
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - F
-  - Fallopian Tube
+  - Fallopian Tube#Main Content
+  - fallopian tube
 ---
 
 # fallopian tube

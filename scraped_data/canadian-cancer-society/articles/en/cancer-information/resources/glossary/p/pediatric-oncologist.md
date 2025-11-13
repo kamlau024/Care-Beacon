@@ -1,13 +1,14 @@
 ---
 title: "pediatric oncologist"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pediatric-oncologist
-date_scraped: 2025-11-09T20:14:03.032623
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pediatric-oncologist#main-content
+date_scraped: 2025-11-12T22:21:13.192202
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pediatric Oncologist
+  - Pediatric Oncologist#Main Content
+  - pediatric oncologist
 ---
 
 # pediatric oncologist

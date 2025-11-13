@@ -1,7 +1,7 @@
 ---
 title: "parathyroid gland"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/parathyroid-gland
-date_scraped: 2025-11-09T20:32:43.225159
+date_scraped: 2025-11-13T01:02:43.937113
 breadcrumbs:
   - Cancer Information
   - Resources

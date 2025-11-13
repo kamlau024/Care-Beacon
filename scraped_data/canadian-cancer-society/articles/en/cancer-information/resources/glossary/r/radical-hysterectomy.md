@@ -1,13 +1,14 @@
 ---
 title: "radical hysterectomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/radical-hysterectomy
-date_scraped: 2025-11-09T20:05:47.817204
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/radical-hysterectomy#main-content
+date_scraped: 2025-11-13T00:45:26.593413
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Radical Hysterectomy
+  - Radical Hysterectomy#Main Content
+  - radical hysterectomy
 ---
 
 # radical hysterectomy

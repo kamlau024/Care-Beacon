@@ -1,7 +1,7 @@
 ---
 title: "Small intestine cancer"
 url: https://cancer.ca/en/cancer-information/cancer-types/small-intestine
-date_scraped: 2025-11-09T20:42:18.157369
+date_scraped: 2025-11-12T21:24:04.309101
 breadcrumbs:
   - Cancer Information
   - Cancer Types

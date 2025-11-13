@@ -1,11 +1,12 @@
 ---
 title: "After treatment ends"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/after-treatment-ends
-date_scraped: 2025-11-09T20:45:39.732839
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/after-treatment-ends#ci_after_treatment_ends_102_11520_00
+date_scraped: 2025-11-13T05:41:20.620326
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - After Treatment Ends
+  - After Treatment Ends#Ci_After_Treatment_Ends_102_11520_00
+  - After treatment ends
 ---
 
 # After treatment ends

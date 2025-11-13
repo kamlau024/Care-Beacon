@@ -1,11 +1,12 @@
 ---
 title: "Radiofrequency ablation"
-url: https://cancer.ca/en/treatments/tests-and-procedures/radiofrequency-ablation
-date_scraped: 2025-11-09T20:49:36.604965
+url: https://cancer.ca/en/treatments/tests-and-procedures/radiofrequency-ablation#main-content
+date_scraped: 2025-11-13T01:09:47.025994
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Radiofrequency Ablation
+  - Radiofrequency Ablation#Main Content
+  - Radiofrequency ablation
 ---
 
 # Radiofrequency ablation

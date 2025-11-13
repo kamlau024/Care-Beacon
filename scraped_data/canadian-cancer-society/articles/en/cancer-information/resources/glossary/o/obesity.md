@@ -1,13 +1,14 @@
 ---
 title: "obesity"
-url: https://cancer.ca/en/cancer-information/resources/glossary/o/obesity
-date_scraped: 2025-11-09T20:14:40.972814
+url: https://cancer.ca/en/cancer-information/resources/glossary/o/obesity#main-content
+date_scraped: 2025-11-12T22:51:19.020265
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - O
-  - Obesity
+  - Obesity#Main Content
+  - obesity
 ---
 
 # obesity

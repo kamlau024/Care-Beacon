@@ -1,10 +1,11 @@
 ---
 title: "Immunizations"
-url: https://cancer.ca/en/treatments/tests-and-procedures/immunizations
-date_scraped: 2025-11-09T20:47:51.489360
+url: https://cancer.ca/en/treatments/tests-and-procedures/immunizations#main-content
+date_scraped: 2025-11-13T07:26:00.025758
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Immunizations#Main Content
   - Immunizations
 ---
 

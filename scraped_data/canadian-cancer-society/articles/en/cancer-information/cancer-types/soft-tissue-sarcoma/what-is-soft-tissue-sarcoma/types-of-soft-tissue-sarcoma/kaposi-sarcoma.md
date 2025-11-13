@@ -1,14 +1,15 @@
 ---
 title: "Kaposi sarcoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma/what-is-soft-tissue-sarcoma/types-of-soft-tissue-sarcoma/kaposi-sarcoma
-date_scraped: 2025-11-09T20:42:44.528707
+url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma/what-is-soft-tissue-sarcoma/types-of-soft-tissue-sarcoma/kaposi-sarcoma#main-content
+date_scraped: 2025-11-13T02:11:28.089415
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Soft Tissue Sarcoma
   - What Is Soft Tissue Sarcoma
   - Types Of Soft Tissue Sarcoma
-  - Kaposi Sarcoma
+  - Kaposi Sarcoma#Main Content
+  - Kaposi sarcoma
 ---
 
 # Kaposi sarcoma

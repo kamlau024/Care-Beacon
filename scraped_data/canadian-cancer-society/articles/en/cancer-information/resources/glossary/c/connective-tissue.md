@@ -1,13 +1,14 @@
 ---
 title: "connective tissue"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/connective-tissue
-date_scraped: 2025-11-09T20:27:41.390136
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/connective-tissue#main-content
+date_scraped: 2025-11-13T02:22:39.260594
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Connective Tissue
+  - Connective Tissue#Main Content
+  - connective tissue
 ---
 
 # connective tissue

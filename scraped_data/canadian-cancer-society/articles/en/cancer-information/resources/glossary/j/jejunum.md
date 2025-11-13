@@ -1,13 +1,14 @@
 ---
 title: "jejunum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/j/jejunum
-date_scraped: 2025-11-09T20:36:13.643583
+url: https://cancer.ca/en/cancer-information/resources/glossary/j/jejunum#main-content
+date_scraped: 2025-11-13T00:10:37.303370
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - J
-  - Jejunum
+  - Jejunum#Main Content
+  - jejunum
 ---
 
 # jejunum

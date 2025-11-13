@@ -1,11 +1,12 @@
 ---
 title: "Eye and vision problems"
-url: https://cancer.ca/en/treatments/side-effects/eye-and-vision-problems
-date_scraped: 2025-11-09T20:51:14.698439
+url: https://cancer.ca/en/treatments/side-effects/eye-and-vision-problems#eye_problems_2_11054_en
+date_scraped: 2025-11-13T00:54:36.362337
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Eye And Vision Problems
+  - Eye And Vision Problems#Eye_Problems_2_11054_En
+  - Eye and vision problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/eye-and-retinoblastoma/8f580d58-4acb-49de-8a73-f968c09d65ff-en.png?h=302&iar=0&mw=543&w=543&rev=2e0ad68291864150aeb1dda1b5184ae3&hash=8DB0956F266D10C39A5B0469537AB9E0
   - src: https://cdn.cancer.ca/-/media/cams/eye-and-retinoblastoma/efad7310-08e7-415a-b878-4e67e3e8b306-en.png?h=310&iar=0&mw=543&w=543&rev=2e30c85e66f641db94f16787cfc3288a&hash=8D1F799D53A99851ABD0F9E064CA5117

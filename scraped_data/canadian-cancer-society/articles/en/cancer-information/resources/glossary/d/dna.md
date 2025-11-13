@@ -1,7 +1,7 @@
 ---
 title: "DNA"
 url: https://cancer.ca/en/cancer-information/resources/glossary/d/dna
-date_scraped: 2025-11-09T20:33:52.007188
+date_scraped: 2025-11-13T05:41:19.255841
 breadcrumbs:
   - Cancer Information
   - Resources

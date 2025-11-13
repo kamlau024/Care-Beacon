@@ -1,7 +1,7 @@
 ---
 title: "white blood cell (WBC)"
 url: https://cancer.ca/en/cancer-information/resources/glossary/w/white-blood-cell-wbc
-date_scraped: 2025-11-09T01:46:49.061987
+date_scraped: 2025-11-13T07:01:42.596881
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,13 +1,14 @@
 ---
 title: "induction therapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/i/induction-therapy
-date_scraped: 2025-11-09T20:04:50.052251
+url: https://cancer.ca/en/cancer-information/resources/glossary/i/induction-therapy#main-content
+date_scraped: 2025-11-12T22:06:37.322634
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - I
-  - Induction Therapy
+  - Induction Therapy#Main Content
+  - induction therapy
 ---
 
 # induction therapy

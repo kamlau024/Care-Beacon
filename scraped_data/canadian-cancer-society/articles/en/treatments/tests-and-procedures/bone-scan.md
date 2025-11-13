@@ -1,11 +1,12 @@
 ---
 title: "Bone scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/bone-scan
-date_scraped: 2025-11-09T20:48:02.632902
+url: https://cancer.ca/en/treatments/tests-and-procedures/bone-scan#main-content
+date_scraped: 2025-11-13T00:53:51.925956
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Bone Scan
+  - Bone Scan#Main Content
+  - Bone scan
 ---
 
 # Bone scan

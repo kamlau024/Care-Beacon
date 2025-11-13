@@ -1,11 +1,12 @@
 ---
 title: "Worrying that cancer will come back"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/worrying-that-cancer-will-come-back
-date_scraped: 2025-11-09T20:45:33.204732
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/worrying-that-cancer-will-come-back#ci_worrying_that_cancer_will_come_back_102_11522_00
+date_scraped: 2025-11-13T00:10:44.995436
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - Worrying That Cancer Will Come Back
+  - Worrying That Cancer Will Come Back#Ci_Worrying_That_Cancer_Will_Come_Back_102_11522_00
+  - Worrying that cancer will come back
 ---
 
 # Worrying that cancer will come back

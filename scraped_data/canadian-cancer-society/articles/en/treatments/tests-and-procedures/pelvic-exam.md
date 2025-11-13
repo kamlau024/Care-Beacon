@@ -1,11 +1,12 @@
 ---
 title: "Pelvic exam"
-url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-exam
-date_scraped: 2025-11-09T20:47:54.635531
+url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-exam#main-content
+date_scraped: 2025-11-13T02:06:37.914764
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Pelvic Exam
+  - Pelvic Exam#Main Content
+  - Pelvic exam
 ---
 
 # Pelvic exam

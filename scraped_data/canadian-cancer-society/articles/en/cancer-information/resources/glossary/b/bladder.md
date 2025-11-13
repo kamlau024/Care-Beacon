@@ -1,13 +1,14 @@
 ---
 title: "bladder"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/bladder
-date_scraped: 2025-11-09T20:10:33.832483
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/bladder#main-content
+date_scraped: 2025-11-12T21:27:13.968278
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Bladder
+  - Bladder#Main Content
+  - bladder
 ---
 
 # bladder

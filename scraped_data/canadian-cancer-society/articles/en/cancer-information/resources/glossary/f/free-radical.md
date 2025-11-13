@@ -1,13 +1,14 @@
 ---
 title: "free radical"
-url: https://cancer.ca/en/cancer-information/resources/glossary/f/free-radical
-date_scraped: 2025-11-09T20:23:55.199468
+url: https://cancer.ca/en/cancer-information/resources/glossary/f/free-radical#0
+date_scraped: 2025-11-13T07:26:38.893627
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - F
-  - Free Radical
+  - Free Radical#0
+  - free radical
 ---
 
 # free radical

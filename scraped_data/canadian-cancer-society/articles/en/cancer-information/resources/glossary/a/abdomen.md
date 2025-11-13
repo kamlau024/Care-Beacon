@@ -1,13 +1,14 @@
 ---
 title: "abdomen"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/abdomen
-date_scraped: 2025-11-09T20:13:34.029721
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/abdomen#main-content
+date_scraped: 2025-11-13T02:10:32.510085
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Abdomen
+  - Abdomen#Main Content
+  - abdomen
 ---
 
 # abdomen

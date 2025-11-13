@@ -1,11 +1,12 @@
 ---
 title: "What are complementary therapies?"
-url: https://cancer.ca/en/treatments/complementary-therapies/what-are-complementary-therapies
-date_scraped: 2025-11-09T20:51:02.471361
+url: https://cancer.ca/en/treatments/complementary-therapies/what-are-complementary-therapies#main-content
+date_scraped: 2025-11-12T21:48:27.148940
 breadcrumbs:
   - Treatments
   - Complementary Therapies
-  - What Are Complementary Therapies
+  - What Are Complementary Therapies#Main Content
+  - What are complementary therapies
 ---
 
 # What are complementary therapies?

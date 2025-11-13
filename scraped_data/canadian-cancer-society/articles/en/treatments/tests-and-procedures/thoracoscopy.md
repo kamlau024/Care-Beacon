@@ -1,10 +1,11 @@
 ---
 title: "Thoracoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/thoracoscopy
-date_scraped: 2025-11-09T20:49:24.430786
+url: https://cancer.ca/en/treatments/tests-and-procedures/thoracoscopy#main-content
+date_scraped: 2025-11-13T01:58:55.994405
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Thoracoscopy#Main Content
   - Thoracoscopy
 ---
 

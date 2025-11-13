@@ -1,11 +1,11 @@
 ---
 title: "Multigated acquisition (MUGA) scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/multigated-acquisition-muga-scan
-date_scraped: 2025-11-09T20:47:29.899047
+url: https://cancer.ca/en/treatments/tests-and-procedures/multigated-acquisition-muga-scan#main-content
+date_scraped: 2025-11-13T06:32:57.589126
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Multigated Acquisition Muga Scan
+  - Multigated Acquisition Muga Scan#Main Content
   - Multigated acquisition (MUGA) scan
 ---
 

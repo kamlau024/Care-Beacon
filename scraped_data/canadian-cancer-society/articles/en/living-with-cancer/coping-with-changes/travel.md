@@ -1,10 +1,11 @@
 ---
 title: "Travel"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/travel
-date_scraped: 2025-11-09T20:44:36.407367
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/travel#ci_travel_and_cancer_102_11511_00
+date_scraped: 2025-11-13T01:35:20.199845
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
+  - Travel#Ci_Travel_And_Cancer_102_11511_00
   - Travel
 ---
 

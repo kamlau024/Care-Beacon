@@ -1,13 +1,14 @@
 ---
 title: "ileum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/i/ileum
-date_scraped: 2025-11-09T20:19:58.296205
+url: https://cancer.ca/en/cancer-information/resources/glossary/i/ileum#main-content
+date_scraped: 2025-11-12T22:22:02.595675
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - I
-  - Ileum
+  - Ileum#Main Content
+  - ileum
 ---
 
 # ileum

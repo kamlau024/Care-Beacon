@@ -1,13 +1,14 @@
 ---
 title: "lumpectomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lumpectomy
-date_scraped: 2025-11-09T20:19:02.901753
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lumpectomy#main-content
+date_scraped: 2025-11-12T23:43:07.085549
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lumpectomy
+  - Lumpectomy#Main Content
+  - lumpectomy
 ---
 
 # lumpectomy

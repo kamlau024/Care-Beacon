@@ -1,7 +1,7 @@
 ---
 title: "Family life"
 url: https://cancer.ca/en/living-with-cancer/coping-with-changes/family-life
-date_scraped: 2025-11-09T20:45:05.913132
+date_scraped: 2025-11-12T21:58:46.720599
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes

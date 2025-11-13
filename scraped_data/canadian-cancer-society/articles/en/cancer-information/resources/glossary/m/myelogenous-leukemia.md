@@ -1,13 +1,14 @@
 ---
 title: "myelogenous leukemia"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/myelogenous-leukemia
-date_scraped: 2025-11-09T20:23:40.522423
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/myelogenous-leukemia#main-content
+date_scraped: 2025-11-13T07:04:16.141986
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Myelogenous Leukemia
+  - Myelogenous Leukemia#Main Content
+  - myelogenous leukemia
 ---
 
 # myelogenous leukemia

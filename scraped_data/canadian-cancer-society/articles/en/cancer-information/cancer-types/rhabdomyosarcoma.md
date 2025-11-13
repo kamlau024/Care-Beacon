@@ -1,10 +1,11 @@
 ---
 title: "Rhabdomyosarcoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/rhabdomyosarcoma
-date_scraped: 2025-11-09T20:41:26.874691
+url: https://cancer.ca/en/cancer-information/cancer-types/rhabdomyosarcoma#ci_fb64159d-d890-4460-a543-7cb463e7a62d
+date_scraped: 2025-11-13T00:36:19.682650
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Rhabdomyosarcoma#Ci_Fb64159D D890 4460 A543 7Cb463E7A62D
   - Rhabdomyosarcoma
 ---
 

@@ -1,11 +1,12 @@
 ---
 title: "Planning for the future"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/planning-for-the-future
-date_scraped: 2025-11-09T20:44:36.032125
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/planning-for-the-future#main-content
+date_scraped: 2025-11-12T21:50:20.329269
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Planning For The Future
+  - Planning For The Future#Main Content
+  - Planning for the future
 ---
 
 # Planning for the future

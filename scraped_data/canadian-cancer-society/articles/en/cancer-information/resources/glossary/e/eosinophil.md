@@ -1,13 +1,14 @@
 ---
 title: "eosinophil"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/eosinophil
-date_scraped: 2025-11-09T20:37:03.524479
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/eosinophil#main-content
+date_scraped: 2025-11-12T22:55:29.316766
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Eosinophil
+  - Eosinophil#Main Content
+  - eosinophil
 ---
 
 # eosinophil

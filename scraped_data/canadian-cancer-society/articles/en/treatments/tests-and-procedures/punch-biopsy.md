@@ -1,11 +1,12 @@
 ---
 title: "Punch biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/punch-biopsy
-date_scraped: 2025-11-09T20:49:00.844960
+url: https://cancer.ca/en/treatments/tests-and-procedures/punch-biopsy#main-content
+date_scraped: 2025-11-13T02:25:19.985103
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Punch Biopsy
+  - Punch Biopsy#Main Content
+  - Punch biopsy
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/98506fc0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=422&iar=0&mw=543&w=255&rev=dfb4fe7e792041ee908b01ef4d33a8e6&hash=7F257964246DD75EE423B4C17F332CDD
     alt: "Diagram of a punch biopsy"

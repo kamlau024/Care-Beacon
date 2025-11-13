@@ -1,10 +1,11 @@
 ---
 title: "Ovarian cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/ovarian
-date_scraped: 2025-11-09T20:42:19.708917
+url: https://cancer.ca/en/cancer-information/cancer-types/ovarian#0
+date_scraped: 2025-11-13T05:56:20.152449
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Ovarian#0
   - Ovarian
 ---
 

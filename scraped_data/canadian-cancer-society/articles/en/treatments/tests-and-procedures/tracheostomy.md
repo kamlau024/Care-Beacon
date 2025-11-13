@@ -1,10 +1,11 @@
 ---
 title: "Tracheostomy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/tracheostomy
-date_scraped: 2025-11-09T20:49:07.769730
+url: https://cancer.ca/en/treatments/tests-and-procedures/tracheostomy#ci_living_with_a_tracheostomy_89_10946_00
+date_scraped: 2025-11-13T04:02:42.306365
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Tracheostomy#Ci_Living_With_A_Tracheostomy_89_10946_00
   - Tracheostomy
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/1cd7c060-b64d-11ea-bc3d-0242df4d59be-en.png?h=377&iar=0&mw=543&w=543&rev=adf3017236cf498cb8dbebe5f0dca81d&hash=561D3C3F0A3D21E5DFB7C60011573851

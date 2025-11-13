@@ -1,11 +1,12 @@
 ---
 title: "Low red blood cell count (anemia)"
-url: https://cancer.ca/en/treatments/side-effects/low-red-blood-cell-count
-date_scraped: 2025-11-09T20:52:07.108547
+url: https://cancer.ca/en/treatments/side-effects/low-red-blood-cell-count#main-content
+date_scraped: 2025-11-13T06:42:37.238043
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Low Red Blood Cell Count
+  - Low Red Blood Cell Count#Main Content
+  - Low red blood cell count
 ---
 
 # Low red blood cell count (anemia)

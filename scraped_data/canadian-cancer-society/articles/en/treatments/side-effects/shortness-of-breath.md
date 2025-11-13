@@ -1,11 +1,12 @@
 ---
 title: "Shortness of breath (dyspnea)"
-url: https://cancer.ca/en/treatments/side-effects/shortness-of-breath
-date_scraped: 2025-11-09T20:51:31.366415
+url: https://cancer.ca/en/treatments/side-effects/shortness-of-breath#main-content
+date_scraped: 2025-11-13T02:09:50.173560
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Shortness Of Breath
+  - Shortness Of Breath#Main Content
+  - Shortness of breath
 ---
 
 # Shortness of breath (dyspnea)

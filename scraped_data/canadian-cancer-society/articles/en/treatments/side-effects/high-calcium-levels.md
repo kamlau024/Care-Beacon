@@ -1,11 +1,12 @@
 ---
 title: "High calcium levels (hypercalcemia)"
-url: https://cancer.ca/en/treatments/side-effects/high-calcium-levels
-date_scraped: 2025-11-09T20:52:17.723135
+url: https://cancer.ca/en/treatments/side-effects/high-calcium-levels#ci_hypercalcemia_89_4462_00
+date_scraped: 2025-11-12T23:27:20.945568
 breadcrumbs:
   - Treatments
   - Side Effects
-  - High Calcium Levels
+  - High Calcium Levels#Ci_Hypercalcemia_89_4462_00
+  - High calcium levels
 ---
 
 # High calcium levels (hypercalcemia)

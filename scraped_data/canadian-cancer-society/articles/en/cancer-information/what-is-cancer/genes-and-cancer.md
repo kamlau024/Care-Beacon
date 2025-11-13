@@ -1,12 +1,13 @@
 ---
 title: "Genes and cancer"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/genes-and-cancer
-date_scraped: 2025-11-09T20:41:06.584760
+url: https://cancer.ca/en/cancer-information/what-is-cancer/genes-and-cancer#main-content
+date_scraped: 2025-11-12T23:34:04.244030
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - Genes And Cancer
+  - Genes And Cancer#Main Content
   - What is cancer?
+  - Genes and cancer
 ---
 
 # Genes and cancer

@@ -1,13 +1,14 @@
 ---
 title: "phase III trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-iii-trial
-date_scraped: 2025-11-09T20:38:29.474536
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-iii-trial#0
+date_scraped: 2025-11-12T22:08:17.866144
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Phase Iii Trial
+  - Phase Iii Trial#0
+  - phase III trial
 ---
 
 # phase III trial

@@ -1,11 +1,12 @@
 ---
 title: "Physical side effects of advanced cancer"
-url: https://cancer.ca/en/living-with-cancer/advanced-cancer/physical-symptoms-of-advanced-cancer
-date_scraped: 2025-11-09T20:46:11.684789
+url: https://cancer.ca/en/living-with-cancer/advanced-cancer/physical-symptoms-of-advanced-cancer#main-content
+date_scraped: 2025-11-13T05:01:52.501917
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer
-  - Physical Symptoms Of Advanced Cancer
+  - Physical Symptoms Of Advanced Cancer#Main Content
+  - Physical symptoms of advanced cancer
 ---
 
 # Physical side effects of advanced cancer

@@ -1,11 +1,12 @@
 ---
 title: "Types and phases of clinical trials"
-url: https://cancer.ca/en/treatments/clinical-trials/types-and-phases-of-clinical-trials
-date_scraped: 2025-11-09T20:50:44.001910
+url: https://cancer.ca/en/treatments/clinical-trials/types-and-phases-of-clinical-trials#main-content
+date_scraped: 2025-11-12T22:09:23.128616
 breadcrumbs:
   - Treatments
   - Clinical Trials
-  - Types And Phases Of Clinical Trials
+  - Types And Phases Of Clinical Trials#Main Content
+  - Types and phases of clinical trials
 ---
 
 # Types and phases of clinical trials

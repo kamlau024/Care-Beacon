@@ -1,11 +1,11 @@
 ---
 title: "Complete blood count (CBC)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/complete-blood-count-cbc
-date_scraped: 2025-11-09T20:49:39.572281
+url: https://cancer.ca/en/treatments/tests-and-procedures/complete-blood-count-cbc#main-content
+date_scraped: 2025-11-13T06:07:52.698983
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Complete Blood Count Cbc
+  - Complete Blood Count Cbc#Main Content
   - Complete blood count (CBC)
 ---
 

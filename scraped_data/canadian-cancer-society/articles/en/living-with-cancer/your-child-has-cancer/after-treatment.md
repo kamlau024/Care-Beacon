@@ -1,11 +1,12 @@
 ---
 title: "After treatment"
-url: https://cancer.ca/en/living-with-cancer/your-child-has-cancer/after-treatment
-date_scraped: 2025-11-09T20:46:20.469277
+url: https://cancer.ca/en/living-with-cancer/your-child-has-cancer/after-treatment#main-content
+date_scraped: 2025-11-12T22:49:19.927790
 breadcrumbs:
   - Living With Cancer
   - Your Child Has Cancer
-  - After Treatment
+  - After Treatment#Main Content
+  - After treatment
 ---
 
 # After treatment

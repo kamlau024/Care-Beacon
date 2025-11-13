@@ -1,11 +1,12 @@
 ---
 title: "Cystoscopy and ureteroscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/cystoscopy-and-ureteroscopy
-date_scraped: 2025-11-09T20:49:29.333029
+url: https://cancer.ca/en/treatments/tests-and-procedures/cystoscopy-and-ureteroscopy#main-content
+date_scraped: 2025-11-13T01:44:26.737898
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Cystoscopy And Ureteroscopy
+  - Cystoscopy And Ureteroscopy#Main Content
+  - Cystoscopy and ureteroscopy
 ---
 
 # Cystoscopy and ureteroscopy

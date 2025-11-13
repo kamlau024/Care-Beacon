@@ -1,7 +1,7 @@
 ---
 title: "Pain"
 url: https://cancer.ca/en/treatments/side-effects/pain
-date_scraped: 2025-11-09T20:51:19.569178
+date_scraped: 2025-11-12T21:49:47.742784
 breadcrumbs:
   - Treatments
   - Side Effects

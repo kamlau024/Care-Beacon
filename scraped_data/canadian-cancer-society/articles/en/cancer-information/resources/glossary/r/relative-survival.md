@@ -1,13 +1,14 @@
 ---
 title: "relative survival"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/relative-survival
-date_scraped: 2025-11-09T20:34:46.215219
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/relative-survival#main-content
+date_scraped: 2025-11-12T22:17:03.647201
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Relative Survival
+  - Relative Survival#Main Content
+  - relative survival
 ---
 
 # relative survival

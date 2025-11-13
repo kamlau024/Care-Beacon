@@ -1,7 +1,7 @@
 ---
 title: "Myths and controversies"
 url: https://cancer.ca/en/cancer-information/reduce-your-risk/myths-and-controversies
-date_scraped: 2025-11-09T20:03:23.108382
+date_scraped: 2025-11-13T07:53:57.223732
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk

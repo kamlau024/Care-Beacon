@@ -1,11 +1,11 @@
 ---
 title: "Intravenous pyelogram (IVP)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/intravenous-pyelogram-ivp
-date_scraped: 2025-11-09T20:48:26.163487
+url: https://cancer.ca/en/treatments/tests-and-procedures/intravenous-pyelogram-ivp#ci_intravenous_pyelogram_ivp_89_7582_00
+date_scraped: 2025-11-13T01:44:27.284677
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Intravenous Pyelogram Ivp
+  - Intravenous Pyelogram Ivp#Ci_Intravenous_Pyelogram_Ivp_89_7582_00
   - Intravenous pyelogram (IVP)
 ---
 

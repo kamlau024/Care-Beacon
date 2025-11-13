@@ -1,11 +1,12 @@
 ---
 title: "Supportive drugs"
-url: https://cancer.ca/en/treatments/treatment-types/supportive-drugs
-date_scraped: 2025-11-09T20:50:03.569359
+url: https://cancer.ca/en/treatments/treatment-types/supportive-drugs#main-content
+date_scraped: 2025-11-13T06:47:06.788657
 breadcrumbs:
   - Treatments
   - Treatment Types
-  - Supportive Drugs
+  - Supportive Drugs#Main Content
+  - Supportive drugs
 ---
 
 # Supportive drugs

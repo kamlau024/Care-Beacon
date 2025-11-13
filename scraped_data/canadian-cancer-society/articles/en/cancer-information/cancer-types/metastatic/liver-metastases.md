@@ -1,12 +1,13 @@
 ---
 title: "Liver metastases"
-url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/liver-metastases
-date_scraped: 2025-11-09T20:42:25.722331
+url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/liver-metastases#main-content
+date_scraped: 2025-11-13T05:51:14.977406
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Metastatic
-  - Liver Metastases
+  - Liver Metastases#Main Content
+  - Liver metastases
 ---
 
 # Liver metastases

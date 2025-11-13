@@ -1,12 +1,13 @@
 ---
 title: "Brain metastases"
-url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/brain-metastases
-date_scraped: 2025-11-09T20:02:49.968069
+url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/brain-metastases#main-content
+date_scraped: 2025-11-13T01:08:23.970823
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Metastatic
-  - Brain Metastases
+  - Brain Metastases#Main Content
+  - Brain metastases
 ---
 
 # Brain metastases

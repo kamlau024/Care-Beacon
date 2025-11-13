@@ -1,11 +1,11 @@
 ---
 title: "Fine needle aspiration (FNA)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/fine-needle-aspiration-fna
-date_scraped: 2025-11-09T20:48:51.243945
+url: https://cancer.ca/en/treatments/tests-and-procedures/fine-needle-aspiration-fna#main-content
+date_scraped: 2025-11-13T07:30:36.147051
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Fine Needle Aspiration Fna
+  - Fine Needle Aspiration Fna#Main Content
   - Fine needle aspiration (FNA)
 ---
 

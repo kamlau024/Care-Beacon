@@ -1,0 +1,24 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/find-cancer-early/screening-for-cancer/what-you-should-know-about-cancer-screening",
+  "title": "What you should know about cancer screening",
+  "date_scraped": "2025-11-13T08:00:48.321258",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Find Cancer Early",
+    "Screening For Cancer",
+    "What You Should Know About Cancer Screening"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/screening-for-cancer/gettyimages-513753539.jpg?rev=a737057335914b249f2858df4182dec8&cx=0.5&cy=0.5&cw=575&ch=452&hash=9A992ADC20DADC651AE29AD5F4B5E878",
+      "alt": "Doctor consulting with patients in a waiting room",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/find-cancer-early/screening-for-cancer/what-you-should-know-about-cancer-screening.md"
+}

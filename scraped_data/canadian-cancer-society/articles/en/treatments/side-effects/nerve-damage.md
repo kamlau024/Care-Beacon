@@ -1,11 +1,12 @@
 ---
 title: "Nerve damage"
-url: https://cancer.ca/en/treatments/side-effects/nerve-damage
-date_scraped: 2025-11-09T20:51:50.930330
+url: https://cancer.ca/en/treatments/side-effects/nerve-damage#main-content
+date_scraped: 2025-11-12T22:38:39.655798
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Nerve Damage
+  - Nerve Damage#Main Content
+  - Nerve damage
 ---
 
 # Nerve damage

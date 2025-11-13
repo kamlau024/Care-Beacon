@@ -1,17 +1,19 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/cancer-types/kidney",
-  "title": "Kidney cancer",
-  "date_scraped": "2025-11-09T20:43:15.188246",
+  "url": "https://cancer.ca/en/cancer-information/resources/glossary/k/kidney",
+  "title": "kidney",
+  "date_scraped": "2025-11-13T06:16:09.364747",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Cancer Types",
+    "Resources",
+    "Glossary",
+    "K",
     "Kidney"
   ],
   "sidebar_links": [],
   "related_articles": [],
   "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/kidney.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/k/kidney.md"
 }

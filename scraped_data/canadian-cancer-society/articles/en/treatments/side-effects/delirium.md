@@ -1,10 +1,11 @@
 ---
 title: "Delirium"
-url: https://cancer.ca/en/treatments/side-effects/delirium
-date_scraped: 2025-11-09T20:51:15.510397
+url: https://cancer.ca/en/treatments/side-effects/delirium#main-content
+date_scraped: 2025-11-12T22:13:31.745507
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Delirium#Main Content
   - Delirium
 ---
 

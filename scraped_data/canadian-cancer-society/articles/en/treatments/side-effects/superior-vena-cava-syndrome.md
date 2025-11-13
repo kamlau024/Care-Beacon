@@ -1,11 +1,12 @@
 ---
 title: "Superior vena cava syndrome"
-url: https://cancer.ca/en/treatments/side-effects/superior-vena-cava-syndrome
-date_scraped: 2025-11-09T20:51:42.731308
+url: https://cancer.ca/en/treatments/side-effects/superior-vena-cava-syndrome#main-content
+date_scraped: 2025-11-12T22:37:32.657755
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Superior Vena Cava Syndrome
+  - Superior Vena Cava Syndrome#Main Content
+  - Superior vena cava syndrome
 ---
 
 # Superior vena cava syndrome

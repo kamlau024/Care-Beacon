@@ -1,7 +1,7 @@
 ---
 title: "benign"
 url: https://cancer.ca/en/cancer-information/resources/glossary/b/benign
-date_scraped: 2025-11-09T20:30:58.427933
+date_scraped: 2025-11-13T03:57:28.521659
 breadcrumbs:
   - Cancer Information
   - Resources

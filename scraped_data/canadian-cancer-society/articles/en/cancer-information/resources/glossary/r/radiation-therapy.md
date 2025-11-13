@@ -1,13 +1,14 @@
 ---
 title: "radiation therapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/radiation-therapy
-date_scraped: 2025-11-09T20:16:24.015339
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/radiation-therapy#main-content
+date_scraped: 2025-11-12T22:11:39.095160
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Radiation Therapy
+  - Radiation Therapy#Main Content
+  - radiation therapy
 ---
 
 # radiation therapy

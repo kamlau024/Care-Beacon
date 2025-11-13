@@ -1,11 +1,11 @@
 ---
 title: "Positron emission tomography (PET) scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/positron-emission-tomography-pet-scan
-date_scraped: 2025-11-09T20:48:37.256907
+url: https://cancer.ca/en/treatments/tests-and-procedures/positron-emission-tomography-pet-scan#main-content
+date_scraped: 2025-11-13T01:44:38.546997
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Positron Emission Tomography Pet Scan
+  - Positron Emission Tomography Pet Scan#Main Content
   - Positron emission tomography (PET) scan
 ---
 

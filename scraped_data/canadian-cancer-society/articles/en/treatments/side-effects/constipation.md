@@ -1,10 +1,11 @@
 ---
 title: "Constipation"
-url: https://cancer.ca/en/treatments/side-effects/constipation
-date_scraped: 2025-11-09T20:51:59.049260
+url: https://cancer.ca/en/treatments/side-effects/constipation#ci_constipation_89_5255_00
+date_scraped: 2025-11-13T07:22:05.073539
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Constipation#Ci_Constipation_89_5255_00
   - Constipation
 ---
 

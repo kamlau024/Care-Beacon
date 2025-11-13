@@ -1,11 +1,12 @@
 ---
 title: "Types of complementary therapies"
-url: https://cancer.ca/en/treatments/complementary-therapies/types-of-complementary-therapies
-date_scraped: 2025-11-09T20:50:50.975422
+url: https://cancer.ca/en/treatments/complementary-therapies/types-of-complementary-therapies#main-content
+date_scraped: 2025-11-12T21:48:42.295087
 breadcrumbs:
   - Treatments
   - Complementary Therapies
-  - Types Of Complementary Therapies
+  - Types Of Complementary Therapies#Main Content
+  - Types of complementary therapies
 ---
 
 # Types of complementary therapies

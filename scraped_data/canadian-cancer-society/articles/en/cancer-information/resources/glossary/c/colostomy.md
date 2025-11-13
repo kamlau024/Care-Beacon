@@ -1,13 +1,14 @@
 ---
 title: "colostomy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/colostomy
-date_scraped: 2025-11-09T20:33:52.299868
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/colostomy#main-content
+date_scraped: 2025-11-13T01:13:34.004798
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Colostomy
+  - Colostomy#Main Content
+  - colostomy
 ---
 
 # colostomy

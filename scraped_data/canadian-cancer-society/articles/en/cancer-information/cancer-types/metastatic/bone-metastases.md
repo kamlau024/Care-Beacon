@@ -1,12 +1,13 @@
 ---
 title: "Bone metastases"
-url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/bone-metastases
-date_scraped: 2025-11-09T20:41:55.141362
+url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/bone-metastases#main-content
+date_scraped: 2025-11-13T01:59:01.883541
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Metastatic
-  - Bone Metastases
+  - Bone Metastases#Main Content
+  - Bone metastases
 ---
 
 # Bone metastases

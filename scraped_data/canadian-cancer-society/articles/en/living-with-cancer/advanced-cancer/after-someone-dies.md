@@ -1,11 +1,12 @@
 ---
 title: "After someone dies"
-url: https://cancer.ca/en/living-with-cancer/advanced-cancer/after-someone-dies
-date_scraped: 2025-11-09T20:44:19.589490
+url: https://cancer.ca/en/living-with-cancer/advanced-cancer/after-someone-dies#main-content
+date_scraped: 2025-11-12T22:13:01.444937
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer
-  - After Someone Dies
+  - After Someone Dies#Main Content
+  - After someone dies
 ---
 
 # After someone dies

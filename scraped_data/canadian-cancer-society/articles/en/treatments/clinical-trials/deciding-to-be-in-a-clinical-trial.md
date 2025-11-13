@@ -1,11 +1,12 @@
 ---
 title: "Deciding to be in a clinical trial"
-url: https://cancer.ca/en/treatments/clinical-trials/deciding-to-be-in-a-clinical-trial
-date_scraped: 2025-11-09T20:50:37.368374
+url: https://cancer.ca/en/treatments/clinical-trials/deciding-to-be-in-a-clinical-trial#main-content
+date_scraped: 2025-11-12T22:08:43.409445
 breadcrumbs:
   - Treatments
   - Clinical Trials
-  - Deciding To Be In A Clinical Trial
+  - Deciding To Be In A Clinical Trial#Main Content
+  - Deciding to be in a clinical trial
 ---
 
 # Deciding to be in a clinical trial

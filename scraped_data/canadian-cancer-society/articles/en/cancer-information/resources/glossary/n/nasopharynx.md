@@ -1,13 +1,14 @@
 ---
 title: "nasopharynx"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/nasopharynx
-date_scraped: 2025-11-09T20:07:28.336550
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/nasopharynx#main-content
+date_scraped: 2025-11-13T00:05:22.771587
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Nasopharynx
+  - Nasopharynx#Main Content
+  - nasopharynx
 ---
 
 # nasopharynx

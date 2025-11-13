@@ -1,7 +1,7 @@
 ---
 title: "anus"
 url: https://cancer.ca/en/cancer-information/resources/glossary/a/anus
-date_scraped: 2025-11-09T20:34:59.900100
+date_scraped: 2025-11-13T01:25:05.499196
 breadcrumbs:
   - Cancer Information
   - Resources

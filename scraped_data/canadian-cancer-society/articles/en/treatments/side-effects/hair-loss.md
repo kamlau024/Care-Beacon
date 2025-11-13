@@ -1,11 +1,12 @@
 ---
 title: "Hair loss"
-url: https://cancer.ca/en/treatments/side-effects/hair-loss
-date_scraped: 2025-11-09T20:52:01.458301
+url: https://cancer.ca/en/treatments/side-effects/hair-loss#ci_hair_loss_89_126_00
+date_scraped: 2025-11-13T06:37:39.279452
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Hair Loss
+  - Hair Loss#Ci_Hair_Loss_89_126_00
+  - Hair loss
 ---
 
 # Hair loss

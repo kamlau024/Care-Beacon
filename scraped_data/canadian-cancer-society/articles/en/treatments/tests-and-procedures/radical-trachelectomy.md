@@ -1,11 +1,12 @@
 ---
 title: "Radical trachelectomy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/radical-trachelectomy
-date_scraped: 2025-11-09T20:48:20.628536
+url: https://cancer.ca/en/treatments/tests-and-procedures/radical-trachelectomy#main-content
+date_scraped: 2025-11-13T01:21:05.315400
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Radical Trachelectomy
+  - Radical Trachelectomy#Main Content
+  - Radical trachelectomy
 ---
 
 # Radical trachelectomy

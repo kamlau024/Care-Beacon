@@ -1,7 +1,7 @@
 ---
 title: "Loss of appetite"
 url: https://cancer.ca/en/treatments/side-effects/loss-of-appetite
-date_scraped: 2025-11-09T20:52:15.952140
+date_scraped: 2025-11-12T21:48:48.448416
 breadcrumbs:
   - Treatments
   - Side Effects

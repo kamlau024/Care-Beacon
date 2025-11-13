@@ -1,13 +1,14 @@
 ---
 title: "salivary gland"
-url: https://cancer.ca/en/cancer-information/resources/glossary/s/salivary-gland
-date_scraped: 2025-11-09T20:27:11.821589
+url: https://cancer.ca/en/cancer-information/resources/glossary/s/salivary-gland#main-content
+date_scraped: 2025-11-13T00:09:51.703863
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - S
-  - Salivary Gland
+  - Salivary Gland#Main Content
+  - salivary gland
 ---
 
 # salivary gland

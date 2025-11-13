@@ -1,13 +1,13 @@
 ---
 title: "human immunodeficiency virus (HIV)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-immunodeficiency-virus-hiv
-date_scraped: 2025-11-09T20:22:26.956551
+url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-immunodeficiency-virus-hiv#main-content
+date_scraped: 2025-11-13T00:36:24.835218
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - H
-  - Human Immunodeficiency Virus Hiv
+  - Human Immunodeficiency Virus Hiv#Main Content
   - human immunodeficiency virus (HIV)
 ---
 

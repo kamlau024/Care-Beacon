@@ -1,10 +1,11 @@
 ---
 title: "Finances"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/finances
-date_scraped: 2025-11-09T20:44:41.398281
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/finances#ci_concerns_about_money_102_11509_00
+date_scraped: 2025-11-13T01:36:11.770111
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
+  - Finances#Ci_Concerns_About_Money_102_11509_00
   - Finances
 ---
 

@@ -1,13 +1,14 @@
 ---
 title: "lymphocytic leukemia"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphocytic-leukemia
-date_scraped: 2025-11-09T20:17:13.701919
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphocytic-leukemia#0
+date_scraped: 2025-11-13T06:59:42.378795
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lymphocytic Leukemia
+  - Lymphocytic Leukemia#0
+  - lymphocytic leukemia
 ---
 
 # lymphocytic leukemia

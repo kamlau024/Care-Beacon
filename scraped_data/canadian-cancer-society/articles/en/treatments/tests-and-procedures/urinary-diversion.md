@@ -1,11 +1,12 @@
 ---
 title: "Urinary diversion"
-url: https://cancer.ca/en/treatments/tests-and-procedures/urinary-diversion
-date_scraped: 2025-11-09T20:48:18.859861
+url: https://cancer.ca/en/treatments/tests-and-procedures/urinary-diversion#main-content
+date_scraped: 2025-11-12T22:20:20.275053
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Urinary Diversion
+  - Urinary Diversion#Main Content
+  - Urinary diversion
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/9fcd65f0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=311&iar=0&mw=543&w=543&rev=8982304b2d534217bf09c8fa8541d5c1&hash=CA692CF0C834593C2F29EF7B63919FB6
     alt: "Diagram of an ileal conduit"

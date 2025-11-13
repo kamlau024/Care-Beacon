@@ -1,11 +1,12 @@
 ---
 title: "Low white blood cell count (neutropenia)"
-url: https://cancer.ca/en/treatments/side-effects/low-white-blood-cell-count
-date_scraped: 2025-11-09T20:51:47.237845
+url: https://cancer.ca/en/treatments/side-effects/low-white-blood-cell-count#0
+date_scraped: 2025-11-13T06:40:56.841012
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Low White Blood Cell Count
+  - Low White Blood Cell Count#0
+  - Low white blood cell count
 ---
 
 # Low white blood cell count (neutropenia)

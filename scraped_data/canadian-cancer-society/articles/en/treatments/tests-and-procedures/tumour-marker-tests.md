@@ -1,11 +1,12 @@
 ---
 title: "Tumour marker tests"
-url: https://cancer.ca/en/treatments/tests-and-procedures/tumour-marker-tests
-date_scraped: 2025-11-09T20:49:14.491109
+url: https://cancer.ca/en/treatments/tests-and-procedures/tumour-marker-tests#main-content
+date_scraped: 2025-11-13T05:57:52.313817
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Tumour Marker Tests
+  - Tumour Marker Tests#Main Content
+  - Tumour marker tests
 ---
 
 # Tumour marker tests

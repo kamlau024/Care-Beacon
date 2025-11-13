@@ -1,10 +1,11 @@
 ---
 title: "Jaundice"
-url: https://cancer.ca/en/treatments/side-effects/jaundice
-date_scraped: 2025-11-09T20:51:25.544556
+url: https://cancer.ca/en/treatments/side-effects/jaundice#main-content
+date_scraped: 2025-11-13T03:12:37.558468
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Jaundice#Main Content
   - Jaundice
 ---
 

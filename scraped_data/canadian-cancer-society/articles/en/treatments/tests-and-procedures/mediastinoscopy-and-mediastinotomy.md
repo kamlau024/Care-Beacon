@@ -1,11 +1,12 @@
 ---
 title: "Mediastinoscopy and mediastinotomy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/mediastinoscopy-and-mediastinotomy
-date_scraped: 2025-11-09T20:48:31.385436
+url: https://cancer.ca/en/treatments/tests-and-procedures/mediastinoscopy-and-mediastinotomy#ci_mediastinoscopy_and_mediastinotomy_89_10562_00
+date_scraped: 2025-11-13T01:58:33.343232
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Mediastinoscopy And Mediastinotomy
+  - Mediastinoscopy And Mediastinotomy#Ci_Mediastinoscopy_And_Mediastinotomy_89_10562_00
+  - Mediastinoscopy and mediastinotomy
 ---
 
 # Mediastinoscopy and mediastinotomy

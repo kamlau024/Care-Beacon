@@ -1,11 +1,12 @@
 ---
 title: "Lymph node dissection"
-url: https://cancer.ca/en/treatments/tests-and-procedures/lymph-node-dissection
-date_scraped: 2025-11-09T20:47:57.960402
+url: https://cancer.ca/en/treatments/tests-and-procedures/lymph-node-dissection#ci_lymph_node_dissection_89_10960_00
+date_scraped: 2025-11-13T02:21:38.699716
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Lymph Node Dissection
+  - Lymph Node Dissection#Ci_Lymph_Node_Dissection_89_10960_00
+  - Lymph node dissection
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/9963dd90-b64c-11ea-bc3d-0242df4d59be-en.png?h=442&iar=0&mw=543&w=438&rev=6259c8a1c6624fb99e2fa665ca80a927&hash=F62E5FC3D5461EAF01FC1F076245AB80
     alt: "Diagram of the lymphatic system"

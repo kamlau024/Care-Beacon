@@ -1,10 +1,11 @@
 ---
 title: "Paracentesis"
-url: https://cancer.ca/en/treatments/tests-and-procedures/paracentesis
-date_scraped: 2025-11-09T20:48:00.443688
+url: https://cancer.ca/en/treatments/tests-and-procedures/paracentesis#ci_paracentesis_89_10567_00
+date_scraped: 2025-11-13T02:09:28.715601
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Paracentesis#Ci_Paracentesis_89_10567_00
   - Paracentesis
 ---
 

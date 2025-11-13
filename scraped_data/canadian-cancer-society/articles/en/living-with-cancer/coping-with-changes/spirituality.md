@@ -1,10 +1,11 @@
 ---
 title: "Spirituality"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/spirituality
-date_scraped: 2025-11-09T20:44:30.370449
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/spirituality#main-content
+date_scraped: 2025-11-12T21:29:04.655243
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
+  - Spirituality#Main Content
   - Spirituality
 ---
 

@@ -1,11 +1,12 @@
 ---
 title: "Surgical biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/surgical-biopsy
-date_scraped: 2025-11-09T20:49:08.293456
+url: https://cancer.ca/en/treatments/tests-and-procedures/surgical-biopsy#main-content
+date_scraped: 2025-11-13T02:25:41.346475
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Surgical Biopsy
+  - Surgical Biopsy#Main Content
+  - Surgical biopsy
 ---
 
 # Surgical biopsy

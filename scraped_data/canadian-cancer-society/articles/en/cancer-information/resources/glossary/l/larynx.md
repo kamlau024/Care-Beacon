@@ -1,13 +1,14 @@
 ---
 title: "larynx"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/larynx
-date_scraped: 2025-11-09T20:22:14.885842
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/larynx#main-content
+date_scraped: 2025-11-12T21:26:46.216260
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Larynx
+  - Larynx#Main Content
+  - larynx
 ---
 
 # larynx

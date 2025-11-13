@@ -1,11 +1,11 @@
 ---
 title: "Computed tomography (CT) scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/computed-tomography-ct-scan
-date_scraped: 2025-11-09T20:49:26.513864
+url: https://cancer.ca/en/treatments/tests-and-procedures/computed-tomography-ct-scan#main-content
+date_scraped: 2025-11-12T21:27:34.797309
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Computed Tomography Ct Scan
+  - Computed Tomography Ct Scan#Main Content
   - Computed tomography (CT) scan
 ---
 

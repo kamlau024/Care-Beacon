@@ -1,11 +1,12 @@
 ---
 title: "Cancer vaccines"
-url: https://cancer.ca/en/treatments/treatment-types/cancer-vaccines
-date_scraped: 2025-11-09T20:47:41.654626
+url: https://cancer.ca/en/treatments/treatment-types/cancer-vaccines#main-content
+date_scraped: 2025-11-13T06:47:38.212164
 breadcrumbs:
   - Treatments
   - Treatment Types
-  - Cancer Vaccines
+  - Cancer Vaccines#Main Content
+  - Cancer vaccines
 ---
 
 # Cancer vaccines

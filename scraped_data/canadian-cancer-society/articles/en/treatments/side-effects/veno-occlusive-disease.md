@@ -1,11 +1,11 @@
 ---
 title: "Veno-occlusive disease (VOD)"
-url: https://cancer.ca/en/treatments/side-effects/veno-occlusive-disease
-date_scraped: 2025-11-09T20:50:57.164501
+url: https://cancer.ca/en/treatments/side-effects/veno-occlusive-disease#main-content
+date_scraped: 2025-11-13T06:38:09.571727
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Veno Occlusive Disease
+  - Veno Occlusive Disease#Main Content
   - Veno-occlusive disease
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: "Coping with a child's cancer"
-url: https://cancer.ca/en/living-with-cancer/your-child-has-cancer/coping-with-a-child-s-cancer
-date_scraped: 2025-11-09T20:46:21.860932
+url: https://cancer.ca/en/living-with-cancer/your-child-has-cancer/coping-with-a-child-s-cancer#main-content
+date_scraped: 2025-11-13T07:42:12.739081
 breadcrumbs:
   - Living With Cancer
   - Your Child Has Cancer
-  - Coping With A Child S Cancer
+  - Coping With A Child S Cancer#Main Content
   - Coping with a child's cancer
 ---
 

@@ -1,11 +1,12 @@
 ---
 title: "Stool test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/stool-test
-date_scraped: 2025-11-09T20:48:25.329138
+url: https://cancer.ca/en/treatments/tests-and-procedures/stool-test#main-content
+date_scraped: 2025-11-13T01:10:51.303629
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Stool Test
+  - Stool Test#Main Content
+  - Stool test
 ---
 
 # Stool test

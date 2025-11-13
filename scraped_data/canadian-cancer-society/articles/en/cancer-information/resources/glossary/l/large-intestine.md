@@ -1,13 +1,14 @@
 ---
 title: "large intestine"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/large-intestine
-date_scraped: 2025-11-09T20:29:53.856343
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/large-intestine#main-content
+date_scraped: 2025-11-13T03:09:34.611052
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Large Intestine
+  - Large Intestine#Main Content
+  - large intestine
 ---
 
 # large intestine

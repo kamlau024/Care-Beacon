@@ -1,11 +1,12 @@
 ---
 title: "Central venous catheter"
-url: https://cancer.ca/en/treatments/tests-and-procedures/central-venous-catheter
-date_scraped: 2025-11-09T20:48:44.908359
+url: https://cancer.ca/en/treatments/tests-and-procedures/central-venous-catheter#0
+date_scraped: 2025-11-13T06:01:37.408165
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Central Venous Catheter
+  - Central Venous Catheter#0
+  - Central venous catheter
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/6e4690b0-c9ea-11ea-8e8b-0242df4d59be-en.png?h=238&iar=0&mw=543&w=378&rev=568e7703d4234fa49b1c7c8aa93ba0e6&hash=AE6865BE4619BE7361EB44D8F6F14336
     alt: "Tunnelled Central Venous Catheter"

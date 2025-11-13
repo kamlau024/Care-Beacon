@@ -1,7 +1,7 @@
 ---
 title: "preventive"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/preventive
-date_scraped: 2025-11-09T20:22:43.456859
+date_scraped: 2025-11-12T23:33:06.058509
 breadcrumbs:
   - Cancer Information
   - Resources

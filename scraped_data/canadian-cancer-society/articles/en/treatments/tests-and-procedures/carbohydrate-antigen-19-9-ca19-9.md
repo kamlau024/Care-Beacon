@@ -1,11 +1,11 @@
 ---
 title: "Carbohydrate antigen 19-9 (CA19-9) test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/carbohydrate-antigen-19-9-ca19-9
-date_scraped: 2025-11-09T20:48:23.223771
+url: https://cancer.ca/en/treatments/tests-and-procedures/carbohydrate-antigen-19-9-ca19-9#ci_carbohydrate_antigen_199_ca199_89_4002_00
+date_scraped: 2025-11-13T01:44:02.419146
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Carbohydrate Antigen 19 9 Ca19 9
+  - Carbohydrate Antigen 19 9 Ca19 9#Ci_Carbohydrate_Antigen_199_Ca199_89_4002_00
   - Carbohydrate antigen 19-9 (CA19-9)
 ---
 

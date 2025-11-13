@@ -1,11 +1,12 @@
 ---
 title: "Low blood cell counts"
-url: https://cancer.ca/en/treatments/side-effects/low-blood-cell-counts
-date_scraped: 2025-11-09T20:51:28.469786
+url: https://cancer.ca/en/treatments/side-effects/low-blood-cell-counts#0
+date_scraped: 2025-11-13T06:41:33.306469
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Low Blood Cell Counts
+  - Low Blood Cell Counts#0
+  - Low blood cell counts
 ---
 
 # Low blood cell counts

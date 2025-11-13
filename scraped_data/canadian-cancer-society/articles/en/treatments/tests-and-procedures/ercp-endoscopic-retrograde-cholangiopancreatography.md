@@ -1,7 +1,7 @@
 ---
 title: "ERCP (endoscopic retrograde cholangiopancreatography)"
 url: https://cancer.ca/en/treatments/tests-and-procedures/ercp-endoscopic-retrograde-cholangiopancreatography
-date_scraped: 2025-11-09T20:47:28.575224
+date_scraped: 2025-11-12T21:46:14.103560
 breadcrumbs:
   - Treatments
   - Tests And Procedures

@@ -1,11 +1,12 @@
 ---
 title: "Be safe at work"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/be-safe-at-work
-date_scraped: 2025-11-09T20:38:52.257242
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/be-safe-at-work#main-content
+date_scraped: 2025-11-13T08:09:44.291609
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Be Safe At Work
+  - Be Safe At Work#Main Content
+  - Be safe at work
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/how-my-health-risk.jpg?rev=26d16ecaa44c4414b14fda55dff32855&cx=0.5&cy=0.5&cw=900&ch=486&hash=E390F59D7739A3FC2C50680413103349
     alt: "Firefighter holding an oxygen mask"

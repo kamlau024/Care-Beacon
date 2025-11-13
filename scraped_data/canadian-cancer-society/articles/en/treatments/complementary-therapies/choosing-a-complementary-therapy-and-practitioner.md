@@ -1,11 +1,12 @@
 ---
 title: "Choosing a complementary therapy and practitioner"
-url: https://cancer.ca/en/treatments/complementary-therapies/choosing-a-complementary-therapy-and-practitioner
-date_scraped: 2025-11-09T20:50:45.098566
+url: https://cancer.ca/en/treatments/complementary-therapies/choosing-a-complementary-therapy-and-practitioner#main-content
+date_scraped: 2025-11-12T21:48:44.047534
 breadcrumbs:
   - Treatments
   - Complementary Therapies
-  - Choosing A Complementary Therapy And Practitioner
+  - Choosing A Complementary Therapy And Practitioner#Main Content
+  - Choosing a complementary therapy and practitioner
 ---
 
 # Choosing a complementary therapy and practitioner

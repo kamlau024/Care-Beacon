@@ -1,11 +1,12 @@
 ---
 title: "Bowel resection"
-url: https://cancer.ca/en/treatments/tests-and-procedures/bowel-resection
-date_scraped: 2025-11-09T20:48:48.532121
+url: https://cancer.ca/en/treatments/tests-and-procedures/bowel-resection#main-content
+date_scraped: 2025-11-12T22:21:57.592029
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Bowel Resection
+  - Bowel Resection#Main Content
+  - Bowel resection
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/8f5714c0-b64c-11ea-bc3d-0242df4d59be-en.png?h=412&iar=0&mw=543&w=543&rev=41619a195fd2403193aabe20c308f070&hash=416A70E232629CBF45B9D858100CA63F
     alt: "Diagram of the small and large intestine"

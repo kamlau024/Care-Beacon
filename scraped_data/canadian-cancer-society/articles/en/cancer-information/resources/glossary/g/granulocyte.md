@@ -1,13 +1,14 @@
 ---
 title: "granulocyte"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocyte
-date_scraped: 2025-11-09T20:22:20.766105
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocyte#main-content
+date_scraped: 2025-11-13T07:02:15.581810
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Granulocyte
+  - Granulocyte#Main Content
+  - granulocyte
 ---
 
 # granulocyte

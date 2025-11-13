@@ -1,11 +1,11 @@
 ---
 title: "Loop electrosurgical excision procedure (LEEP)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/loop-electrosurgical-excision-procedure-leep
-date_scraped: 2025-11-09T20:49:25.924881
+url: https://cancer.ca/en/treatments/tests-and-procedures/loop-electrosurgical-excision-procedure-leep#ci_loop_electrosurgical_excision_procedure_leep_89_8046_00
+date_scraped: 2025-11-13T01:22:11.380437
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Loop Electrosurgical Excision Procedure Leep
+  - Loop Electrosurgical Excision Procedure Leep#Ci_Loop_Electrosurgical_Excision_Procedure_Leep_89_8046_00
   - Loop electrosurgical excision procedure (LEEP)
 ---
 

@@ -1,11 +1,12 @@
 ---
 title: "Lung function tests"
-url: https://cancer.ca/en/treatments/tests-and-procedures/lung-function-tests
-date_scraped: 2025-11-09T20:49:22.713056
+url: https://cancer.ca/en/treatments/tests-and-procedures/lung-function-tests#main-content
+date_scraped: 2025-11-13T06:07:19.627192
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Lung Function Tests
+  - Lung Function Tests#Main Content
+  - Lung function tests
 ---
 
 # Lung function tests

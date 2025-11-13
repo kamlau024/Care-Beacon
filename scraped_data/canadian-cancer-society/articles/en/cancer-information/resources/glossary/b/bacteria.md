@@ -1,13 +1,14 @@
 ---
 title: "bacteria"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/bacteria
-date_scraped: 2025-11-09T20:10:36.796581
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/bacteria#main-content
+date_scraped: 2025-11-12T23:22:11.075746
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Bacteria
+  - Bacteria#Main Content
+  - bacteria
 ---
 
 # bacteria

@@ -1,0 +1,30 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/mesothelioma/what-is-mesothelioma/the-mesothelium",
+  "title": "The mesothelium",
+  "date_scraped": "2025-11-13T01:49:05.360124",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Mesothelioma",
+    "What Is Mesothelioma",
+    "The Mesothelium"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/mesothelioma/977b5c90-b64e-11ea-bc3d-0242df4d59be-en.png?h=305&iar=0&mw=543&w=543&rev=2ba05f2bd19942879bd61a5716bd4ff3&hash=9DBBB727325D0D835F4E3F803E445CD1",
+      "alt": "Diagram of the pleura",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/mesothelioma/001a2640-c9ec-11ea-8e8b-0242df4d59be-en.png?h=333&iar=0&mw=543&w=543&rev=f53af1c753dc4627af0b25822ce5f6ca&hash=03C2AC9FEEA01FC3090BC0A4EEEF01EB",
+      "alt": "Diagram of the peritoneum",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/mesothelioma/what-is-mesothelioma/the-mesothelium.md"
+}

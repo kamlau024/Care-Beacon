@@ -1,10 +1,11 @@
 ---
 title: "Ultrasound"
-url: https://cancer.ca/en/treatments/tests-and-procedures/ultrasound
-date_scraped: 2025-11-09T20:47:47.238390
+url: https://cancer.ca/en/treatments/tests-and-procedures/ultrasound#main-content
+date_scraped: 2025-11-12T21:26:20.689685
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Ultrasound#Main Content
   - Ultrasound
 ---
 

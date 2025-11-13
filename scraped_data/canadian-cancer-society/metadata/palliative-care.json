@@ -1,23 +1,19 @@
 {
-  "url": "https://cancer.ca/en/living-with-cancer/coping-with-changes/palliative-care",
-  "title": "Palliative care",
-  "date_scraped": "2025-11-09T20:44:52.486406",
+  "url": "https://cancer.ca/en/cancer-information/resources/glossary/p/palliative-care",
+  "title": "palliative care",
+  "date_scraped": "2025-11-13T02:22:41.518986",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
-    "Living With Cancer",
-    "Coping With Changes",
+    "Cancer Information",
+    "Resources",
+    "Glossary",
+    "P",
     "Palliative Care"
   ],
   "sidebar_links": [],
   "related_articles": [],
-  "images": [
-    {
-      "src": "https://img.youtube.com/vi/n6VxbQ-A4tQ/0.jpg",
-      "alt": "YouTube video poster",
-      "title": ""
-    }
-  ],
+  "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/living-with-cancer/coping-with-changes/palliative-care.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/p/palliative-care.md"
 }

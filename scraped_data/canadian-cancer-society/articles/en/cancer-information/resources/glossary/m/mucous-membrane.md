@@ -1,7 +1,7 @@
 ---
 title: "mucous membrane"
 url: https://cancer.ca/en/cancer-information/resources/glossary/m/mucous-membrane
-date_scraped: 2025-11-09T20:12:20.614690
+date_scraped: 2025-11-13T02:20:26.129490
 breadcrumbs:
   - Cancer Information
   - Resources

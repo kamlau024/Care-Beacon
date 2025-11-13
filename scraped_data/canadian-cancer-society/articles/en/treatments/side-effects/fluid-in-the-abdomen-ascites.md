@@ -1,11 +1,11 @@
 ---
 title: "Fluid buildup in the abdomen"
-url: https://cancer.ca/en/treatments/side-effects/fluid-in-the-abdomen-ascites
-date_scraped: 2025-11-09T20:52:04.147956
+url: https://cancer.ca/en/treatments/side-effects/fluid-in-the-abdomen-ascites#ci_ascites_89_4483_00
+date_scraped: 2025-11-13T06:56:46.840927
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Fluid In The Abdomen Ascites
+  - Fluid In The Abdomen Ascites#Ci_Ascites_89_4483_00
   - Fluid in the abdomen (ascites)
 ---
 

@@ -1,11 +1,12 @@
 ---
 title: "Bowel obstruction"
-url: https://cancer.ca/en/treatments/side-effects/bowel-obstruction
-date_scraped: 2025-11-09T20:51:11.586252
+url: https://cancer.ca/en/treatments/side-effects/bowel-obstruction#main-content
+date_scraped: 2025-11-12T22:22:09.377374
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Bowel Obstruction
+  - Bowel Obstruction#Main Content
+  - Bowel obstruction
 ---
 
 # Bowel obstruction

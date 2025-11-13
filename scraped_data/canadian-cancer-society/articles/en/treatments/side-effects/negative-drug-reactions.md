@@ -1,11 +1,12 @@
 ---
 title: "Negative drug reactions"
-url: https://cancer.ca/en/treatments/side-effects/negative-drug-reactions
-date_scraped: 2025-11-09T20:50:59.929833
+url: https://cancer.ca/en/treatments/side-effects/negative-drug-reactions#main-content
+date_scraped: 2025-11-12T23:23:31.612508
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Negative Drug Reactions
+  - Negative Drug Reactions#Main Content
+  - Negative drug reactions
 ---
 
 # Negative drug reactions

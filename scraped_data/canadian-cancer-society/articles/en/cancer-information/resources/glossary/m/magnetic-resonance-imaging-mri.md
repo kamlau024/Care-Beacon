@@ -1,13 +1,13 @@
 ---
 title: "magnetic resonance imaging (MRI)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/magnetic-resonance-imaging-mri
-date_scraped: 2025-11-09T20:23:57.510860
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/magnetic-resonance-imaging-mri#main-content
+date_scraped: 2025-11-13T02:22:50.444578
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Magnetic Resonance Imaging Mri
+  - Magnetic Resonance Imaging Mri#Main Content
   - magnetic resonance imaging (MRI)
 ---
 

@@ -1,13 +1,14 @@
 ---
 title: "hypothalamus"
-url: https://cancer.ca/en/cancer-information/resources/glossary/h/hypothalamus
-date_scraped: 2025-11-09T20:30:46.012834
+url: https://cancer.ca/en/cancer-information/resources/glossary/h/hypothalamus#main-content
+date_scraped: 2025-11-13T01:02:53.751308
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - H
-  - Hypothalamus
+  - Hypothalamus#Main Content
+  - hypothalamus
 ---
 
 # hypothalamus

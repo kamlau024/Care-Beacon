@@ -1,11 +1,12 @@
 ---
 title: "Thyroid problems"
-url: https://cancer.ca/en/treatments/side-effects/thyroid-problems
-date_scraped: 2025-11-09T20:51:49.355400
+url: https://cancer.ca/en/treatments/side-effects/thyroid-problems#main-content
+date_scraped: 2025-11-12T23:29:08.993430
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Thyroid Problems
+  - Thyroid Problems#Main Content
+  - Thyroid problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/system-graphic/f7f060a0-2de1-11ec-9319-02420438257f-en.png?h=314&iar=0&mw=543&w=411&rev=0f49041c550d418d94a07997322e1b9a&hash=6D35B825538FEEDBE87A6FBD5CD24FDD
     alt: "Diagram of the endocrine system"

@@ -1,12 +1,13 @@
 ---
 title: "Female sex organs and reproductive system"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/female-sex-organs-and-reproductive-system
-date_scraped: 2025-11-09T20:40:30.378879
+url: https://cancer.ca/en/cancer-information/what-is-cancer/female-sex-organs-and-reproductive-system#0
+date_scraped: 2025-11-13T06:15:35.345449
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - Female Sex Organs And Reproductive System
+  - Female Sex Organs And Reproductive System#0
   - What is cancer?
+  - Female sex organs and reproductive system
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/b93c9f10-6c0b-11eb-955b-024252c36d27-en.png?h=275&iar=0&mw=543&w=543&rev=d92ab53556fd4821a71783236e9703bb&hash=54A8C3BA69ABD3B34FA2BAD1654EEE03
     alt: "Diagram of the female reproductive system"

@@ -1,11 +1,12 @@
 ---
 title: "Get screened for cervical cancer"
-url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-cervical-cancer
-date_scraped: 2025-11-09T20:04:02.570940
+url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-cervical-cancer#main-content
+date_scraped: 2025-11-13T08:18:28.776504
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early
-  - Get Screened For Cervical Cancer
+  - Get Screened For Cervical Cancer#Main Content
+  - Get screened for cervical cancer
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/cervical-cancer-screening/gettyimages-898901908.jpg?rev=360f00fda2a94b688007f11d4172435a&cx=0.5&cy=0.5&cw=900&ch=486&hash=BBD1EC2570F31552F2345C672347B85A
     alt: "Patient reviewing test results with their doctor"

@@ -1,11 +1,11 @@
 ---
 title: "Non-melanoma skin cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/skin-non-melanoma
-date_scraped: 2025-11-09T20:43:12.117922
+url: https://cancer.ca/en/cancer-information/cancer-types/skin-non-melanoma#main-content
+date_scraped: 2025-11-13T06:00:28.649971
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Skin Non Melanoma
+  - Skin Non Melanoma#Main Content
   - Skin - non-melanoma
 ---
 

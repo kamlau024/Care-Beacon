@@ -1,11 +1,12 @@
 ---
 title: "Low platelet count (thrombocytopenia)"
-url: https://cancer.ca/en/treatments/side-effects/low-platelet-count
-date_scraped: 2025-11-09T20:51:18.036037
+url: https://cancer.ca/en/treatments/side-effects/low-platelet-count#0
+date_scraped: 2025-11-13T06:42:04.029002
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Low Platelet Count
+  - Low Platelet Count#0
+  - Low platelet count
 ---
 
 # Low platelet count (thrombocytopenia)

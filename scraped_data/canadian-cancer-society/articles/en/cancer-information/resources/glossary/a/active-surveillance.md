@@ -1,13 +1,14 @@
 ---
 title: "active surveillance"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/active-surveillance
-date_scraped: 2025-11-09T20:13:26.315806
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/active-surveillance#main-content
+date_scraped: 2025-11-12T22:38:44.021013
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Active Surveillance
+  - Active Surveillance#Main Content
+  - active surveillance
 ---
 
 # active surveillance

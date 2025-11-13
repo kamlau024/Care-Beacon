@@ -1,13 +1,14 @@
 ---
 title: "pelvis"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pelvis
-date_scraped: 2025-11-09T20:13:02.459789
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pelvis#main-content
+date_scraped: 2025-11-13T02:10:55.318410
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pelvis
+  - Pelvis#Main Content
+  - pelvis
 ---
 
 # pelvis

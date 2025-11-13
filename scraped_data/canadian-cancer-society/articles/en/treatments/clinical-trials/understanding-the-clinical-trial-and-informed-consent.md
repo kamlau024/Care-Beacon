@@ -1,11 +1,12 @@
 ---
 title: "Understanding the clinical trial and informed consent"
-url: https://cancer.ca/en/treatments/clinical-trials/understanding-the-clinical-trial-and-informed-consent
-date_scraped: 2025-11-09T20:50:37.908060
+url: https://cancer.ca/en/treatments/clinical-trials/understanding-the-clinical-trial-and-informed-consent#main-content
+date_scraped: 2025-11-12T22:09:16.746858
 breadcrumbs:
   - Treatments
   - Clinical Trials
-  - Understanding The Clinical Trial And Informed Consent
+  - Understanding The Clinical Trial And Informed Consent#Main Content
+  - Understanding the clinical trial and informed consent
 ---
 
 # Understanding the clinical trial and informed consent

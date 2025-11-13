@@ -1,13 +1,14 @@
 ---
 title: "monocyte"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/monocyte
-date_scraped: 2025-11-09T20:35:17.464990
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/monocyte#main-content
+date_scraped: 2025-11-13T07:02:22.633358
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Monocyte
+  - Monocyte#Main Content
+  - monocyte
 ---
 
 # monocyte

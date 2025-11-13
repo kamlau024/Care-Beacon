@@ -1,7 +1,7 @@
 ---
 title: "How do I find a lung cancer screening program?"
 url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-lung-cancer/how-do-i-find-a-lung-cancer-screening-program
-date_scraped: 2025-11-09T20:03:28.235159
+date_scraped: 2025-11-13T11:49:29.825849
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early

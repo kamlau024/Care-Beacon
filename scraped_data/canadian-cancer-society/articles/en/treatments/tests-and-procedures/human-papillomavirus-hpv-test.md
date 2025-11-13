@@ -1,11 +1,11 @@
 ---
 title: "Human papillomavirus (HPV) test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/human-papillomavirus-hpv-test
-date_scraped: 2025-11-09T20:48:27.073354
+url: https://cancer.ca/en/treatments/tests-and-procedures/human-papillomavirus-hpv-test#main-content
+date_scraped: 2025-11-13T01:24:13.653439
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Human Papillomavirus Hpv Test
+  - Human Papillomavirus Hpv Test#Main Content
   - Human papillomavirus (HPV) test
 ---
 

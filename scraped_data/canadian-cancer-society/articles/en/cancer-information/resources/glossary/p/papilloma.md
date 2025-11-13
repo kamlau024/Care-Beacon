@@ -1,13 +1,14 @@
 ---
 title: "papilloma"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/papilloma
-date_scraped: 2025-11-09T20:37:20.302962
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/papilloma#main-content
+date_scraped: 2025-11-13T02:10:27.018074
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Papilloma
+  - Papilloma#Main Content
+  - papilloma
 ---
 
 # papilloma

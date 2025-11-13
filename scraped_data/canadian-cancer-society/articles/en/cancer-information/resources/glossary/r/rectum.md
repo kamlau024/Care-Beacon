@@ -1,13 +1,14 @@
 ---
 title: "rectum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/r/rectum
-date_scraped: 2025-11-09T20:10:21.173458
+url: https://cancer.ca/en/cancer-information/resources/glossary/r/rectum#main-content
+date_scraped: 2025-11-13T02:00:15.324007
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - R
-  - Rectum
+  - Rectum#Main Content
+  - rectum
 ---
 
 # rectum

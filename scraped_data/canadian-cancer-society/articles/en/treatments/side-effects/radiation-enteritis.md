@@ -1,11 +1,12 @@
 ---
 title: "Radiation enteritis"
-url: https://cancer.ca/en/treatments/side-effects/radiation-enteritis
-date_scraped: 2025-11-09T20:51:54.794491
+url: https://cancer.ca/en/treatments/side-effects/radiation-enteritis#main-content
+date_scraped: 2025-11-13T00:20:35.730415
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Radiation Enteritis
+  - Radiation Enteritis#Main Content
+  - Radiation enteritis
 ---
 
 # Radiation enteritis

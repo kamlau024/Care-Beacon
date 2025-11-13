@@ -1,13 +1,14 @@
 ---
 title: "phase 0 trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-0-trial
-date_scraped: 2025-11-09T20:17:31.004942
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-0-trial#main-content
+date_scraped: 2025-11-12T22:09:02.168233
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Phase 0 Trial
+  - Phase 0 Trial#Main Content
+  - phase 0 trial
 ---
 
 # phase 0 trial

@@ -1,0 +1,36 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/colorectal/what-is-colorectal-cancer/the-colon-and-rectum#main-content",
+  "title": "The colon and rectum",
+  "date_scraped": "2025-11-13T01:11:58.173175",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Colorectal",
+    "What Is Colorectal Cancer",
+    "The Colon And Rectum#Main Content",
+    "The colon and rectum"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/colorectal/797a7ef0-c9eb-11ea-8e8b-0242df4d59be-en.png?h=447&iar=0&mw=543&w=543&rev=7cdca69ea42c4e97907fa5d32ef3dd15&hash=D385E6D97FB4408F754E11063CBCC44B",
+      "alt": "Diagram of the digestive system",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/colorectal/d58fce90-b64d-11ea-bc3d-0242df4d59be-en.png?h=383&iar=0&mw=543&w=543&rev=836142bc94c2456ebef98713c605c42b&hash=D3BB56D04C0A958F9C38D553033A3F83",
+      "alt": "Diagram of the large intestine",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/colorectal/dc167de0-b64d-11ea-bc3d-0242df4d59be-en.png?h=297&iar=0&mw=543&w=543&rev=d12cd11703d74c5dbda5d2381a8d45bf&hash=DA024CFA0F693C06DD6AB6D3B2AC5BF0",
+      "alt": "Diagram of the layers of the colon and rectum",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/colorectal/what-is-colorectal-cancer/the-colon-and-rectum.md"
+}

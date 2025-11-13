@@ -1,7 +1,7 @@
 ---
 title: "pineal gland"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/pineal-gland
-date_scraped: 2025-11-09T20:36:05.968977
+date_scraped: 2025-11-13T01:02:41.333590
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,11 +1,11 @@
 ---
 title: "Acute lymphoblastic leukemia"
-url: https://cancer.ca/en/cancer-information/cancer-types/acute-lymphoblastic-leukemia-all
-date_scraped: 2025-11-09T20:41:51.131311
+url: https://cancer.ca/en/cancer-information/cancer-types/acute-lymphoblastic-leukemia-all#main-content
+date_scraped: 2025-11-12T22:40:08.763500
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Acute Lymphoblastic Leukemia All
+  - Acute Lymphoblastic Leukemia All#Main Content
   - Acute lymphoblastic leukemia (ALL)
 ---
 

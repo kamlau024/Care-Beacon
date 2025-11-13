@@ -1,11 +1,12 @@
 ---
 title: "Bone and muscle problems"
-url: https://cancer.ca/en/treatments/side-effects/bone-and-muscle-problems
-date_scraped: 2025-11-09T20:51:10.493961
+url: https://cancer.ca/en/treatments/side-effects/bone-and-muscle-problems#main-content
+date_scraped: 2025-11-13T00:55:37.235224
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Bone And Muscle Problems
+  - Bone And Muscle Problems#Main Content
+  - Bone and muscle problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/c1ff3680-c9ea-11ea-8e8b-0242df4d59be-en.png?h=350&iar=0&mw=543&w=543&rev=9fa3749ea51348e9806f4ddf3f60c18f&hash=065CD3F9DCB7867A64A944DD1E892E3A
     alt: "Diagram of the structure of a long bone"

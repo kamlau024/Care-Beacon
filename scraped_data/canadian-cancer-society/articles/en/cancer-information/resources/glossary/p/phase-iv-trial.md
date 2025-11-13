@@ -1,13 +1,14 @@
 ---
 title: "phase IV trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-iv-trial
-date_scraped: 2025-11-09T20:22:53.674442
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-iv-trial#main-content
+date_scraped: 2025-11-12T22:08:38.861180
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Phase Iv Trial
+  - Phase Iv Trial#Main Content
+  - phase IV trial
 ---
 
 # phase IV trial

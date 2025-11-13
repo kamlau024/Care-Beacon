@@ -1,13 +1,14 @@
 ---
 title: "lymphatic system"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphatic-system
-date_scraped: 2025-11-09T20:12:15.526571
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphatic-system#main-content
+date_scraped: 2025-11-13T07:07:16.807102
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lymphatic System
+  - Lymphatic System#Main Content
+  - lymphatic system
 ---
 
 # lymphatic system

@@ -1,11 +1,11 @@
 ---
 title: "X-ray"
-url: https://cancer.ca/en/treatments/tests-and-procedures/x-ray
-date_scraped: 2025-11-09T20:47:24.657796
+url: https://cancer.ca/en/treatments/tests-and-procedures/x-ray#main-content
+date_scraped: 2025-11-13T04:57:58.138044
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - X Ray
+  - X Ray#Main Content
   - X-ray
 ---
 

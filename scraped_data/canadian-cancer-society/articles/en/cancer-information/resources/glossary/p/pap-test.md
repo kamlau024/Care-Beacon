@@ -1,7 +1,7 @@
 ---
 title: "Pap test"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/pap-test
-date_scraped: 2025-11-09T20:36:09.030020
+date_scraped: 2025-11-13T01:33:34.205200
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,11 +1,12 @@
 ---
 title: "Know your environment"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/know-your-environment
-date_scraped: 2025-11-09T20:04:42.742073
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/know-your-environment#main-content
+date_scraped: 2025-11-13T08:10:19.686100
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Know Your Environment
+  - Know Your Environment#Main Content
+  - Know your environment
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/know-your-environment/knowyourenvt_carcinogens_card_1020x555.jpg?rev=dba6354031044faa8253d867ffadab67&cx=0.5&cy=0.5&cw=900&ch=486&hash=98E7E297BAB175D775720CF69A4A5178
     alt: "Aerial view of a city with office towers and other buildings"

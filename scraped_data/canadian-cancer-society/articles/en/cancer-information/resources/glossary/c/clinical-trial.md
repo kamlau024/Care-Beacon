@@ -1,13 +1,14 @@
 ---
 title: "clinical trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/clinical-trial
-date_scraped: 2025-11-09T20:05:09.193061
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/clinical-trial#main-content
+date_scraped: 2025-11-12T22:07:27.153508
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Clinical Trial
+  - Clinical Trial#Main Content
+  - clinical trial
 ---
 
 # clinical trial

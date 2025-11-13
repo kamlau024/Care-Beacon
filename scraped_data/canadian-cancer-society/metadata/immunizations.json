@@ -1,12 +1,13 @@
 {
-  "url": "https://cancer.ca/en/treatments/tests-and-procedures/immunizations",
+  "url": "https://cancer.ca/en/treatments/tests-and-procedures/immunizations#main-content",
   "title": "Immunizations",
-  "date_scraped": "2025-11-09T20:47:51.489360",
+  "date_scraped": "2025-11-13T07:26:00.025758",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Treatments",
     "Tests And Procedures",
+    "Immunizations#Main Content",
     "Immunizations"
   ],
   "sidebar_links": [],

@@ -1,7 +1,7 @@
 ---
 title: "modified radical mastectomy"
 url: https://cancer.ca/en/cancer-information/resources/glossary/m/modified-radical-mastectomy
-date_scraped: 2025-11-09T20:18:15.915465
+date_scraped: 2025-11-12T23:39:32.552225
 breadcrumbs:
   - Cancer Information
   - Resources

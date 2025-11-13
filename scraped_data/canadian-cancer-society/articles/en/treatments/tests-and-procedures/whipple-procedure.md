@@ -1,11 +1,12 @@
 ---
 title: "Whipple procedure"
-url: https://cancer.ca/en/treatments/tests-and-procedures/whipple-procedure
-date_scraped: 2025-11-09T20:48:42.589708
+url: https://cancer.ca/en/treatments/tests-and-procedures/whipple-procedure#main-content
+date_scraped: 2025-11-13T03:55:16.735812
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Whipple Procedure
+  - Whipple Procedure#Main Content
+  - Whipple procedure
 images:
   - src: https://cdn.cancer.ca/-/media/cams/pancreatic/6f83c640-b64f-11ea-bc3d-0242df4d59be-en.png?h=364&iar=0&mw=543&w=543&rev=83416d758a134ed19573354b3e8660a7&hash=B84507395406CB778CBAAF172ADF879D
     alt: "Diagram of Whipple Procedure what is removed"

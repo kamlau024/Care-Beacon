@@ -1,11 +1,12 @@
 ---
 title: "Syndrome of inappropriate antidiuretic hormone (SIADH)"
-url: https://cancer.ca/en/treatments/side-effects/syndrome-of-inappropriate-antidiuretic-hormone
-date_scraped: 2025-11-09T20:52:24.768981
+url: https://cancer.ca/en/treatments/side-effects/syndrome-of-inappropriate-antidiuretic-hormone#main-content
+date_scraped: 2025-11-12T22:13:52.198047
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Syndrome Of Inappropriate Antidiuretic Hormone
+  - Syndrome Of Inappropriate Antidiuretic Hormone#Main Content
+  - Syndrome of inappropriate antidiuretic hormone
 ---
 
 # Syndrome of inappropriate antidiuretic hormone (SIADH)

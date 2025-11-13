@@ -1,11 +1,12 @@
 ---
 title: "Get help to quit smoking"
-url: https://cancer.ca/en/living-with-cancer/how-we-can-help/get-help-to-quit-smoking
-date_scraped: 2025-11-09T20:39:41.803500
+url: https://cancer.ca/en/living-with-cancer/how-we-can-help/get-help-to-quit-smoking#main-content
+date_scraped: 2025-11-13T08:25:32.749862
 breadcrumbs:
   - Living With Cancer
   - How We Can Help
-  - Get Help To Quit Smoking
+  - Get Help To Quit Smoking#Main Content
+  - Get help to quit smoking
 images:
   - src: https://cdn.cancer.ca/-/media/images/living-with-cancer/how-we-can-help/quit-smoking/how-we-can-help-quit-smoking-hero.jpg?rev=a042269d49b549c5a28145e4c24af11b&cx=0.5&cy=0.5&cw=575&ch=425&hash=2E2EAFAE4DD813B931AE55F1BED72586
     alt: "Two men jogging"

@@ -1,13 +1,14 @@
 ---
 title: "AIDS"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/aids
-date_scraped: 2025-11-09T20:05:28.864607
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/aids#main-content
+date_scraped: 2025-11-13T00:36:44.017558
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Aids
+  - Aids#Main Content
+  - AIDS
 ---
 
 # AIDS

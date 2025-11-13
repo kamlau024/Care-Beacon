@@ -1,13 +1,14 @@
 ---
 title: "peritoneum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/peritoneum
-date_scraped: 2025-11-09T20:23:09.235907
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/peritoneum#main-content
+date_scraped: 2025-11-13T02:09:29.824103
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Peritoneum
+  - Peritoneum#Main Content
+  - peritoneum
 ---
 
 # peritoneum

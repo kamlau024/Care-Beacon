@@ -1,11 +1,12 @@
 ---
 title: "Pap test"
-url: https://cancer.ca/en/treatments/tests-and-procedures/pap-test
-date_scraped: 2025-11-09T20:48:12.930472
+url: https://cancer.ca/en/treatments/tests-and-procedures/pap-test#main-content
+date_scraped: 2025-11-13T02:06:53.866214
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Pap Test
+  - Pap Test#Main Content
+  - Pap test
 ---
 
 # Pap test

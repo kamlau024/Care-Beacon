@@ -1,13 +1,14 @@
 ---
 title: "bile duct"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/bile-duct
-date_scraped: 2025-11-09T20:31:25.777827
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/bile-duct#main-content
+date_scraped: 2025-11-12T23:23:21.728297
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Bile Duct
+  - Bile Duct#Main Content
+  - bile duct
 ---
 
 # bile duct

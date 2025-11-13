@@ -1,10 +1,11 @@
 ---
 title: "Urinalysis"
-url: https://cancer.ca/en/treatments/tests-and-procedures/urinalysis
-date_scraped: 2025-11-09T20:47:31.649753
+url: https://cancer.ca/en/treatments/tests-and-procedures/urinalysis#main-content
+date_scraped: 2025-11-13T04:57:31.211846
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Urinalysis#Main Content
   - Urinalysis
 ---
 

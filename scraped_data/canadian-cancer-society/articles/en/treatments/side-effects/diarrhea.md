@@ -1,10 +1,11 @@
 ---
 title: "Diarrhea"
-url: https://cancer.ca/en/treatments/side-effects/diarrhea
-date_scraped: 2025-11-09T20:51:36.318391
+url: https://cancer.ca/en/treatments/side-effects/diarrhea#main-content
+date_scraped: 2025-11-13T07:23:04.535613
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Diarrhea#Main Content
   - Diarrhea
 ---
 

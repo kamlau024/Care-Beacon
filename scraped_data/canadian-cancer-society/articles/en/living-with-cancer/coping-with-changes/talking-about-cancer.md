@@ -1,11 +1,12 @@
 ---
 title: "Talking about cancer"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/talking-about-cancer
-date_scraped: 2025-11-09T20:45:06.584697
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/talking-about-cancer#ci_talking_about_cancer_102_11485_00
+date_scraped: 2025-11-13T01:35:19.330153
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Talking About Cancer
+  - Talking About Cancer#Ci_Talking_About_Cancer_102_11485_00
+  - Talking about cancer
 ---
 
 # Talking about cancer

@@ -1,23 +1,20 @@
 {
-  "url": "https://cancer.ca/en/treatments/treatment-types/hormone-therapy",
-  "title": "Hormone therapy",
-  "date_scraped": "2025-11-09T00:20:17.179093",
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/prostate/treatment/hormone-therapy#main-content",
+  "title": "Hormone therapy for prostate cancer",
+  "date_scraped": "2025-11-13T06:57:33.669955",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
-    "Treatments",
-    "Treatment Types",
-    "Hormone Therapy"
+    "Cancer Information",
+    "Cancer Types",
+    "Prostate",
+    "Treatment",
+    "Hormone Therapy#Main Content",
+    "Hormone therapy"
   ],
   "sidebar_links": [],
   "related_articles": [],
-  "images": [
-    {
-      "src": "https://img.youtube.com/vi/TR-qSrdAmVk/0.jpg",
-      "alt": "YouTube video poster",
-      "title": ""
-    }
-  ],
+  "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/treatments/treatment-types/hormone-therapy.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/prostate/treatment/hormone-therapy.md"
 }

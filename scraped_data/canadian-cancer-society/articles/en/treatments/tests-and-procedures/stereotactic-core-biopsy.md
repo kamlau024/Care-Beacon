@@ -1,11 +1,12 @@
 ---
 title: "Stereotactic core biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/stereotactic-core-biopsy
-date_scraped: 2025-11-09T20:49:32.927621
+url: https://cancer.ca/en/treatments/tests-and-procedures/stereotactic-core-biopsy#main-content
+date_scraped: 2025-11-13T07:31:05.715541
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Stereotactic Core Biopsy
+  - Stereotactic Core Biopsy#Main Content
+  - Stereotactic core biopsy
 ---
 
 # Stereotactic core biopsy

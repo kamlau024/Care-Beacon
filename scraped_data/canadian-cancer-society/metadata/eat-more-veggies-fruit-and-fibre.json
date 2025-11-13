@@ -1,0 +1,35 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/eat-well/eat-more-veggies-fruit-and-fibre#main-content",
+  "title": "Eat more veggies, fruit and fibre",
+  "date_scraped": "2025-11-13T08:22:57.426552",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Eat Well",
+    "Eat More Veggies Fruit And Fibre#Main Content",
+    "Eat more veggies, fruit and fibre"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/prev-2021_vegfruit-en.png?rev=699f0c9ede0c4ed99adc39b0f898373a&cx=0.5&cy=0.5&cw=575&ch=452&hash=9D17ED2F4B643D3533F8B4455D713E87",
+      "alt": "Body showing 14 cancers that eating veggies and fruit may help protect against: mouth, lung, cervical, stomach, etc.",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/prev-2021_fibre-en.png?rev=65c2f0dc9e6c451688c17993bd9c0bb5&cx=0.5&cy=0.5&cw=575&ch=452&hash=998E84F65956FB6624FF851767F9FAAE",
+      "alt": "Body showing that eating lots of fibre and whole grains protects against colorectal cancer",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/eat-well/eat-well-card-eat-more-veggies-3.jpg?rev=467c2d5d41b043a7984ebe80754985ae&cx=0.5&cy=0.5&cw=575&ch=452&hash=4697587ACD15FCF309F745BB88169790",
+      "alt": "Toast with yogurt and berries",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/eat-well/eat-more-veggies-fruit-and-fibre.md"
+}

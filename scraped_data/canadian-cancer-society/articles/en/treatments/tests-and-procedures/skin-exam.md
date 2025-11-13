@@ -1,11 +1,12 @@
 ---
 title: "Skin exam"
-url: https://cancer.ca/en/treatments/tests-and-procedures/skin-exam
-date_scraped: 2025-11-09T20:48:16.622675
+url: https://cancer.ca/en/treatments/tests-and-procedures/skin-exam#main-content
+date_scraped: 2025-11-12T22:12:57.684916
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Skin Exam
+  - Skin Exam#Main Content
+  - Skin exam
 ---
 
 # Skin exam

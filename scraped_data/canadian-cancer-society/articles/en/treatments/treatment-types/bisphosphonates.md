@@ -1,7 +1,7 @@
 ---
 title: "Bisphosphonates"
 url: https://cancer.ca/en/treatments/treatment-types/bisphosphonates
-date_scraped: 2025-11-09T20:50:04.961470
+date_scraped: 2025-11-13T06:49:58.260617
 breadcrumbs:
   - Treatments
   - Treatment Types

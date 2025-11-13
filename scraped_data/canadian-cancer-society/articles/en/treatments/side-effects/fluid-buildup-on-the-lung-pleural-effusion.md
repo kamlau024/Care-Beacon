@@ -1,11 +1,11 @@
 ---
 title: "Fluid buildup on the lungs (pleural effusion)"
-url: https://cancer.ca/en/treatments/side-effects/fluid-buildup-on-the-lung-pleural-effusion
-date_scraped: 2025-11-09T20:51:29.199794
+url: https://cancer.ca/en/treatments/side-effects/fluid-buildup-on-the-lung-pleural-effusion#ci_fluid_buildup_lung_pleural_effusion_00
+date_scraped: 2025-11-13T02:09:18.178460
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Fluid Buildup On The Lung Pleural Effusion
+  - Fluid Buildup On The Lung Pleural Effusion#Ci_Fluid_Buildup_Lung_Pleural_Effusion_00
   - Fluid buildup on the lung (pleural effusion)
 images:
   - src: https://cdn.cancer.ca/-/media/cams/side-effects/39c5e8f0-e2f1-11ec-a3ed-42010af00014-en.png?h=319&iar=0&mw=543&w=543&rev=98895549e54441228c745897ffffb9b1&hash=0736E05B93EE85ADA35AF872355B8C41

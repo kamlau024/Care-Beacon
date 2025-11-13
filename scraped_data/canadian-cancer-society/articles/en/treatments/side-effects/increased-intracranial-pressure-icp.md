@@ -1,11 +1,11 @@
 ---
 title: "Increased intracranial pressure (ICP)"
-url: https://cancer.ca/en/treatments/side-effects/increased-intracranial-pressure-icp
-date_scraped: 2025-11-09T20:52:02.961419
+url: https://cancer.ca/en/treatments/side-effects/increased-intracranial-pressure-icp#main-content
+date_scraped: 2025-11-12T22:29:43.847642
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Increased Intracranial Pressure Icp
+  - Increased Intracranial Pressure Icp#Main Content
   - Increased intracranial pressure (ICP)
 ---
 

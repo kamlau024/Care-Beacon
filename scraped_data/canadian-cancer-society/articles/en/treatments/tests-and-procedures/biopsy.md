@@ -1,10 +1,11 @@
 ---
 title: "Biopsy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/biopsy
-date_scraped: 2025-11-09T20:48:11.875141
+url: https://cancer.ca/en/treatments/tests-and-procedures/biopsy#main-content
+date_scraped: 2025-11-12T21:27:32.779994
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Biopsy#Main Content
   - Biopsy
 ---
 

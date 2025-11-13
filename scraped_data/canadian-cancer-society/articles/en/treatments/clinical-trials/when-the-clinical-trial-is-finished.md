@@ -1,11 +1,12 @@
 ---
 title: "When the clinical trial is finished"
-url: https://cancer.ca/en/treatments/clinical-trials/when-the-clinical-trial-is-finished
-date_scraped: 2025-11-09T20:47:37.456622
+url: https://cancer.ca/en/treatments/clinical-trials/when-the-clinical-trial-is-finished#main-content
+date_scraped: 2025-11-12T22:07:32.650268
 breadcrumbs:
   - Treatments
   - Clinical Trials
-  - When The Clinical Trial Is Finished
+  - When The Clinical Trial Is Finished#Main Content
+  - When the clinical trial is finished
 ---
 
 # When the clinical trial is finished

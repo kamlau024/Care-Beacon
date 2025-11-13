@@ -1,13 +1,14 @@
 ---
 title: "net survival"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/net-survival
-date_scraped: 2025-11-09T20:18:03.279553
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/net-survival#main-content
+date_scraped: 2025-11-12T22:17:31.854926
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Net Survival
+  - Net Survival#Main Content
+  - net survival
 ---
 
 # net survival

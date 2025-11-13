@@ -1,7 +1,7 @@
 ---
 title: "cartilage"
 url: https://cancer.ca/en/cancer-information/resources/glossary/c/cartilage
-date_scraped: 2025-11-09T20:19:19.757475
+date_scraped: 2025-11-13T02:20:20.573146
 breadcrumbs:
   - Cancer Information
   - Resources

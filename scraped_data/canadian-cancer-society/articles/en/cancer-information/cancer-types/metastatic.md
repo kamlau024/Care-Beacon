@@ -1,10 +1,11 @@
 ---
 title: "Metastatic cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/metastatic
-date_scraped: 2025-11-09T20:41:27.758496
+url: https://cancer.ca/en/cancer-information/cancer-types/metastatic#main-content
+date_scraped: 2025-11-13T02:06:21.880452
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Metastatic#Main Content
   - Metastatic
 ---
 

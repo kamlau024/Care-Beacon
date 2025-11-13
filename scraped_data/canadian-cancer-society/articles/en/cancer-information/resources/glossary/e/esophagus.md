@@ -1,7 +1,7 @@
 ---
 title: "esophagus"
 url: https://cancer.ca/en/cancer-information/resources/glossary/e/esophagus
-date_scraped: 2025-11-09T20:33:45.511649
+date_scraped: 2025-11-13T04:20:15.253350
 breadcrumbs:
   - Cancer Information
   - Resources

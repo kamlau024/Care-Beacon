@@ -1,13 +1,14 @@
 ---
 title: "gynecologic oncologist"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/gynecologic-oncologist
-date_scraped: 2025-11-09T20:10:30.271927
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/gynecologic-oncologist#main-content
+date_scraped: 2025-11-12T22:21:09.934443
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Gynecologic Oncologist
+  - Gynecologic Oncologist#Main Content
+  - gynecologic oncologist
 ---
 
 # gynecologic oncologist

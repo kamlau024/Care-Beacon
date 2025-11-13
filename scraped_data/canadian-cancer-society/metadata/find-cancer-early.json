@@ -1,0 +1,67 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/find-cancer-early",
+  "title": "Find cancer early",
+  "date_scraped": "2025-11-13T07:56:46.163861",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Find Cancer Early"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-hero-831857100_16x9.jpg?rev=0bf42d7d67b74e2ca7db6cd015a7eb59&cx=0.5&cy=0.5&cw=575&ch=425&hash=D85E68FCB86DCA2797A3DC54BF534E37",
+      "alt": "Couple smiling as they embrace while walking in a park",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-bodyicon-v2.jpg?rev=ce0908f424a44db7aab1c0a9b6461332&cx=0.5&cy=0.5&cw=900&ch=486&hash=3FC22BC601EF8EE4BAF134EEBF570C06",
+      "alt": "Image of a body",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-prostate.jpg?rev=f858b16c1ee14588a2f7f077813b9ca2&cx=0.5&cy=0.5&cw=900&ch=486&hash=0CC2F50ED01A74BA6C06BBEB0B5EB270",
+      "alt": "Image of the prostate",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/l2-image---screening-for-cancer-2.jpg?rev=2cae6cef21f648968eb127422984c608&cx=0.5&cy=0.5&cw=575&ch=452&hash=D9514DAC9AB7C1834F7EDB39D26C6E13",
+      "alt": "Patient and doctor talking in an examination room",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-breast.jpg?rev=600750fccd3345cd800c027bcb5184b8&cx=0.5&cy=0.5&cw=900&ch=486&hash=A258B88F292654A43C98A1ACDA42B3A1",
+      "alt": "Image of a breast",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-cervical.jpg?rev=f0827c8bc1634d2db6e236044efdd3a0&cx=0.5&cy=0.5&cw=900&ch=486&hash=70BF6A84CFE76B0BD8FB453062385603",
+      "alt": "Image of the cervix",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-colorectal.jpg?rev=1ffd872145a64ce88c8479e8d9d72ddc&cx=0.5&cy=0.5&cw=900&ch=486&hash=4F1F96591DF2829B362998D1E3310102",
+      "alt": "Image of a colon",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/find-cancer-early-l4-icons/prevn-findcancerearly-lung.jpg?rev=4164f5df072648df90a86a0dde059924&cx=0.5&cy=0.5&cw=900&ch=486&hash=953CEC70AEDCB6EF95A0D9A75A99BC95",
+      "alt": "Image of the lungs",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/find-cancer-early/ci_find-cancer-early_screening-programs_split-text.webp?rev=82ccf898f1574f68a30f17813fa52357&cx=0.5&cy=0.5&cw=575&ch=452&hash=66B0E788027073DE14D3C66612C42655",
+      "alt": "Portrait of the three ambassadors for the Let's Dethrone Colon Cancer campaign",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/about-us/our-health-equity-work/2slgbtqi-communities/uc--2slgbtqi1308401972.jpg?rev=dbc02e82b5f546299214f3d79dfc41dc&cx=0.5&cy=0.5&cw=575&ch=452&hash=A8D4C76C3850F192D157AE63243010DD",
+      "alt": "",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/find-cancer-early.md"
+}

@@ -1,0 +1,40 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/be-sun-safe/spotlight-on-sun-safety#sun",
+  "title": "Spotlight on sun safety",
+  "date_scraped": "2025-11-13T08:05:37.720383",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Be Sun Safe",
+    "Spotlight On Sun Safety#Sun",
+    "Spotlight on sun safety"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/howto-makeyourownshade-umbrella.jpg?rev=be2f5af7bf8a4b539465983d02e553c0&cx=0.5&cy=0.5&cw=575&ch=452&hash=F3CA96300B06D00F2E459BFBE9388407",
+      "alt": "Backyard patio with a table, chairs and large umbrella and shrubbery in the background",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/howto-makeyourownshade-tree.jpg?rev=b6657e87ab114f7e9306f614bae32ad6&cx=0.5&cy=0.5&cw=575&ch=452&hash=81B128D027FD628B9557C5ACB2AE971C",
+      "alt": "A large tree producing shade",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/prevn-besunsafe-spotlightonsunsafety-sunscreen101.jpg?rev=ea57c211c1fb4a9da6b12e5109848488&cx=0.5&cy=0.5&cw=575&ch=452&hash=0C8C50EA970901F4E4043E5BCD325958",
+      "alt": "Illustration of a person wearing a sun hat and sunglasses holding a bottle of sunscreen",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-sun-safe/how-do-i-get-enough-vitamind.jpg?rev=1ae0582989304543b97622bd29b04318&cx=0.5&cy=0.5&cw=575&ch=452&hash=5FDD89F6C755FCAB28D1C69524ED050C",
+      "alt": "A family holding hands and walking their dog in the forest",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/be-sun-safe/spotlight-on-sun-safety.md"
+}

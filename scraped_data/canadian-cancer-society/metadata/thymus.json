@@ -1,17 +1,19 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/cancer-types/thymus",
-  "title": "Thymus cancer",
-  "date_scraped": "2025-11-09T20:42:01.186629",
+  "url": "https://cancer.ca/en/cancer-information/resources/glossary/t/thymus",
+  "title": "thymus",
+  "date_scraped": "2025-11-13T07:11:20.490947",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Cancer Types",
+    "Resources",
+    "Glossary",
+    "T",
     "Thymus"
   ],
   "sidebar_links": [],
   "related_articles": [],
   "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/thymus.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/t/thymus.md"
 }

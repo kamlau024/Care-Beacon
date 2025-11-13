@@ -1,11 +1,12 @@
 ---
 title: "Quality of life"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/quality-of-life
-date_scraped: 2025-11-09T20:45:00.118844
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/quality-of-life#ci_quality_of_life_102_11512_00
+date_scraped: 2025-11-13T05:04:02.373793
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Quality Of Life
+  - Quality Of Life#Ci_Quality_Of_Life_102_11512_00
+  - Quality of life
 ---
 
 # Quality of life

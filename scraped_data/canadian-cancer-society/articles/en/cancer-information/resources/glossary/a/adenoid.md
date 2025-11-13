@@ -1,13 +1,14 @@
 ---
 title: "adenoid"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/adenoid
-date_scraped: 2025-11-09T20:23:56.275027
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/adenoid#main-content
+date_scraped: 2025-11-13T07:15:50.214388
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Adenoid
+  - Adenoid#Main Content
+  - adenoid
 ---
 
 # adenoid

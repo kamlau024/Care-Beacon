@@ -1,7 +1,7 @@
 ---
 title: "lymph vessel"
 url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymph-vessel
-date_scraped: 2025-11-09T20:37:06.266347
+date_scraped: 2025-11-13T07:11:54.200225
 breadcrumbs:
   - Cancer Information
   - Resources

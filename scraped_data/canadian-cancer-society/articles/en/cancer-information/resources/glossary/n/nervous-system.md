@@ -1,13 +1,14 @@
 ---
 title: "nervous system"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/nervous-system
-date_scraped: 2025-11-09T20:16:07.565881
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/nervous-system#main-content
+date_scraped: 2025-11-13T03:09:49.848996
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Nervous System
+  - Nervous System#Main Content
+  - nervous system
 ---
 
 # nervous system

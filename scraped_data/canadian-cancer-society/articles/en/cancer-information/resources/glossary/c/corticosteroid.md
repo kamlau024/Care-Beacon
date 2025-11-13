@@ -1,7 +1,7 @@
 ---
 title: "corticosteroid"
 url: https://cancer.ca/en/cancer-information/resources/glossary/c/corticosteroid
-date_scraped: 2025-11-09T20:07:08.236835
+date_scraped: 2025-11-13T03:09:51.469144
 breadcrumbs:
   - Cancer Information
   - Resources

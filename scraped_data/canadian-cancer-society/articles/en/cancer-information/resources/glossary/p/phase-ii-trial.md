@@ -1,13 +1,14 @@
 ---
 title: "phase II trial"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-ii-trial
-date_scraped: 2025-11-09T20:11:52.957489
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/phase-ii-trial#main-content
+date_scraped: 2025-11-12T22:08:17.101400
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Phase Ii Trial
+  - Phase Ii Trial#Main Content
+  - phase II trial
 ---
 
 # phase II trial

@@ -1,11 +1,11 @@
 ---
 title: "Graft-versus-host disease (GVHD)"
-url: https://cancer.ca/en/treatments/side-effects/graft-versus-host-disease-gvhd
-date_scraped: 2025-11-09T20:52:19.381167
+url: https://cancer.ca/en/treatments/side-effects/graft-versus-host-disease-gvhd#ci_graftversushost_disease_gvhd_89_4406_00
+date_scraped: 2025-11-13T06:36:37.420368
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Graft Versus Host Disease Gvhd
+  - Graft Versus Host Disease Gvhd#Ci_Graftversushost_Disease_Gvhd_89_4406_00
   - Graft-versus-host disease (GVHD)
 ---
 

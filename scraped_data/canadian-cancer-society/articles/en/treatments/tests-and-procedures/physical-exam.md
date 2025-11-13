@@ -1,11 +1,12 @@
 ---
 title: "Physical exam"
-url: https://cancer.ca/en/treatments/tests-and-procedures/physical-exam
-date_scraped: 2025-11-09T20:48:55.251853
+url: https://cancer.ca/en/treatments/tests-and-procedures/physical-exam#main-content
+date_scraped: 2025-11-13T02:45:18.599613
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Physical Exam
+  - Physical Exam#Main Content
+  - Physical exam
 ---
 
 # Physical exam

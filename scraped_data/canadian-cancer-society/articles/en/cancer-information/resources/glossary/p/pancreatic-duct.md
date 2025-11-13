@@ -1,13 +1,14 @@
 ---
 title: "pancreatic duct"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pancreatic-duct
-date_scraped: 2025-11-09T20:13:22.451374
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pancreatic-duct#main-content
+date_scraped: 2025-11-13T03:55:29.497057
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pancreatic Duct
+  - Pancreatic Duct#Main Content
+  - pancreatic duct
 ---
 
 # pancreatic duct

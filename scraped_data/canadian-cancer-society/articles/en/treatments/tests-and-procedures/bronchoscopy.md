@@ -1,10 +1,11 @@
 ---
 title: "Bronchoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/bronchoscopy
-date_scraped: 2025-11-09T20:49:41.152692
+url: https://cancer.ca/en/treatments/tests-and-procedures/bronchoscopy#main-content
+date_scraped: 2025-11-12T22:19:26.256779
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Bronchoscopy#Main Content
   - Bronchoscopy
 ---
 

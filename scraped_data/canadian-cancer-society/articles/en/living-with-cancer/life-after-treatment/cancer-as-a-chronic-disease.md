@@ -1,11 +1,12 @@
 ---
 title: "Cancer as a chronic disease"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/cancer-as-a-chronic-disease
-date_scraped: 2025-11-09T20:45:28.110450
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/cancer-as-a-chronic-disease#main-content
+date_scraped: 2025-11-12T22:05:04.693897
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - Cancer As A Chronic Disease
+  - Cancer As A Chronic Disease#Main Content
+  - Cancer as a chronic disease
 ---
 
 # Cancer as a chronic disease

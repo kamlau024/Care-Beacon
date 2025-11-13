@@ -1,13 +1,14 @@
 ---
 title: "chemotherapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/chemotherapy
-date_scraped: 2025-11-09T20:18:49.655183
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/chemotherapy#main-content
+date_scraped: 2025-11-12T22:56:29.149531
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Chemotherapy
+  - Chemotherapy#Main Content
+  - chemotherapy
 ---
 
 # chemotherapy

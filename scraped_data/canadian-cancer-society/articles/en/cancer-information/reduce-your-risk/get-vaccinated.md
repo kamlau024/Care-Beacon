@@ -1,11 +1,12 @@
 ---
 title: "Get vaccinated"
-url: https://cancer.ca/en/cancer-information/reduce-your-risk/get-vaccinated
-date_scraped: 2025-11-09T20:04:51.976756
+url: https://cancer.ca/en/cancer-information/reduce-your-risk/get-vaccinated#main-content
+date_scraped: 2025-11-13T08:19:33.274089
 breadcrumbs:
   - Cancer Information
   - Reduce Your Risk
-  - Get Vaccinated
+  - Get Vaccinated#Main Content
+  - Get vaccinated
 images:
   - src: https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/get-vaccinated/human-papillomavirus-slipt-text-hpv-tests-check-for-high-risk-types-of-hpv.jpg?rev=e1f62d35d1ee42b4a52b9deadddad2ac&cx=0.5&cy=0.5&cw=900&ch=486&hash=BF0D10298C1A53610F99F7E42DFEEF58
     alt: "A patient talking to a doctor"

@@ -1,0 +1,30 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/ovarian/what-is-ovarian-cancer#main-content",
+  "title": "What is ovarian cancer?",
+  "date_scraped": "2025-11-13T00:48:17.223464",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Ovarian",
+    "What Is Ovarian Cancer#Main Content",
+    "What is ovarian cancer"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/system-graphic/d3277a80-c20c-11ee-99f9-0242ca65d1d4-en.png?h=275&iar=0&mw=543&w=543&rev=4502544295e74fc3ab307efb7e8146f4&hash=B058E55712BFF5EA8397EBBD7E442850",
+      "alt": "Diagram of the female reproductive system",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/ovarian/876fb010-c9ec-11ea-8e8b-0242df4d59be-en.png?h=204&iar=0&mw=543&w=397&rev=675e4224823a44b486f5c71feac768c0&hash=FC1CC4C1CB0E44DEF19CE58A6EB9E4E5",
+      "alt": "Diagram of the cross-section of the ovary",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/ovarian/what-is-ovarian-cancer.md"
+}

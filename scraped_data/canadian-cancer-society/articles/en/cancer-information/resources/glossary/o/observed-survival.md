@@ -1,13 +1,14 @@
 ---
 title: "observed survival"
-url: https://cancer.ca/en/cancer-information/resources/glossary/o/observed-survival
-date_scraped: 2025-11-09T20:27:29.546626
+url: https://cancer.ca/en/cancer-information/resources/glossary/o/observed-survival#main-content
+date_scraped: 2025-11-12T22:17:14.047515
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - O
-  - Observed Survival
+  - Observed Survival#Main Content
+  - observed survival
 ---
 
 # observed survival

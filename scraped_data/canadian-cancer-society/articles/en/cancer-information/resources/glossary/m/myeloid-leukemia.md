@@ -1,13 +1,14 @@
 ---
 title: "myeloid leukemia"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/myeloid-leukemia
-date_scraped: 2025-11-09T20:05:41.656466
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/myeloid-leukemia#main-content
+date_scraped: 2025-11-12T23:33:30.827530
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Myeloid Leukemia
+  - Myeloid Leukemia#Main Content
+  - myeloid leukemia
 ---
 
 # myeloid leukemia

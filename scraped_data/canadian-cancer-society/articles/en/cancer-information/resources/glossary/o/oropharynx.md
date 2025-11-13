@@ -1,13 +1,14 @@
 ---
 title: "oropharynx"
-url: https://cancer.ca/en/cancer-information/resources/glossary/o/oropharynx
-date_scraped: 2025-11-09T20:18:21.865504
+url: https://cancer.ca/en/cancer-information/resources/glossary/o/oropharynx#main-content
+date_scraped: 2025-11-13T02:00:29.047246
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - O
-  - Oropharynx
+  - Oropharynx#Main Content
+  - oropharynx
 ---
 
 # oropharynx

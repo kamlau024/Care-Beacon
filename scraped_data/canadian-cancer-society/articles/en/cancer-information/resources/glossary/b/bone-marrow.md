@@ -1,13 +1,14 @@
 ---
 title: "bone marrow"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/bone-marrow
-date_scraped: 2025-11-09T20:35:28.750370
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/bone-marrow#main-content
+date_scraped: 2025-11-13T07:13:38.219420
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Bone Marrow
+  - Bone Marrow#Main Content
+  - bone marrow
 ---
 
 # bone marrow

@@ -1,11 +1,11 @@
 ---
 title: "Tube feeding and intravenous (IV) nutrition"
-url: https://cancer.ca/en/treatments/tests-and-procedures/tube-feeding-and-intravenous-iv-nutrition
-date_scraped: 2025-11-09T20:48:54.160681
+url: https://cancer.ca/en/treatments/tests-and-procedures/tube-feeding-and-intravenous-iv-nutrition#main-content
+date_scraped: 2025-11-13T06:38:10.070246
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Tube Feeding And Intravenous Iv Nutrition
+  - Tube Feeding And Intravenous Iv Nutrition#Main Content
   - Tube feeding and intravenous (IV) nutrition
 ---
 

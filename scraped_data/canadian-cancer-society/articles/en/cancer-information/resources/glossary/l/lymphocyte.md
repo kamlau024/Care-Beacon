@@ -1,13 +1,14 @@
 ---
 title: "lymphocyte"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphocyte
-date_scraped: 2025-11-09T20:09:09.923797
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lymphocyte#main-content
+date_scraped: 2025-11-12T22:30:19.284766
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lymphocyte
+  - Lymphocyte#Main Content
+  - lymphocyte
 ---
 
 # lymphocyte

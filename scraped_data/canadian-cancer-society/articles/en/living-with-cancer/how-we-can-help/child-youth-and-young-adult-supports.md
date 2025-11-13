@@ -1,11 +1,11 @@
 ---
 title: "Child, youth and young adult supports"
-url: https://cancer.ca/en/living-with-cancer/how-we-can-help/child-youth-and-young-adult-supports
-date_scraped: 2025-11-09T20:39:39.957849
+url: https://cancer.ca/en/living-with-cancer/how-we-can-help/child-youth-and-young-adult-supports#main-content
+date_scraped: 2025-11-13T08:25:08.242631
 breadcrumbs:
   - Living With Cancer
   - How We Can Help
-  - Child Youth And Young Adult Supports
+  - Child Youth And Young Adult Supports#Main Content
   - Child, youth and young adult supports
 images:
   - src: https://cdn.cancer.ca/-/media/images/research/research/research_our-impact_header_1920x695.jpg?rev=dd82bdc6f7e348d783eab8b31f516c2a&cx=0.5&cy=0.5&cw=575&ch=425&hash=5AA78A9D02E669DE54C21B17227BC646

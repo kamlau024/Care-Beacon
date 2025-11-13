@@ -1,11 +1,12 @@
 ---
 title: "Heart problems"
-url: https://cancer.ca/en/treatments/side-effects/heart-problems
-date_scraped: 2025-11-09T20:51:34.407960
+url: https://cancer.ca/en/treatments/side-effects/heart-problems#main-content
+date_scraped: 2025-11-12T22:11:23.155988
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Heart Problems
+  - Heart Problems#Main Content
+  - Heart problems
 ---
 
 # Heart problems

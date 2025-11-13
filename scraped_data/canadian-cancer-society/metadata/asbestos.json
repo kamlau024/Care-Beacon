@@ -1,19 +1,35 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/resources/glossary/a/asbestos",
-  "title": "asbestos",
-  "date_scraped": "2025-11-09T20:07:23.420534",
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/be-safe-at-work/asbestos#main-content",
+  "title": "Asbestos",
+  "date_scraped": "2025-11-13T01:52:51.383056",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Resources",
-    "Glossary",
-    "A",
+    "Reduce Your Risk",
+    "Be Safe At Work",
+    "Asbestos#Main Content",
     "Asbestos"
   ],
   "sidebar_links": [],
   "related_articles": [],
-  "images": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/what-is-abestos.jpg?rev=221539a7f6804db988c6c6a68748eaeb&cx=0.5&cy=0.5&cw=575&ch=452&hash=A391DB5A5998BCF60B7F6D289FAF6CAC",
+      "alt": "Caution sign for asbestos",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/maybe-exposedabestos.jpg?rev=375c3a504f384a6a9512777d37c46c19&cx=0.5&cy=0.5&cw=575&ch=452&hash=7219F160E7E2BA25470F33C5A26034A1",
+      "alt": "Worker in protective clothing removing asbestos from an old pipe",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/besafeatwork_asbestosfactsheet_split_1200x720.jpg?rev=5d482421d60c4817ac8ff2d7258e7787&cx=0.5&cy=0.5&cw=575&ch=452&hash=DF693C7D73316B12174A623409D7A5A4",
+      "alt": "Worker in protective gear disposing of asbestos",
+      "title": ""
+    }
+  ],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/a/asbestos.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/be-safe-at-work/asbestos.md"
 }

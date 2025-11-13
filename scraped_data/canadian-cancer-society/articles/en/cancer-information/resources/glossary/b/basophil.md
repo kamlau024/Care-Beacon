@@ -1,13 +1,14 @@
 ---
 title: "basophil"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/basophil
-date_scraped: 2025-11-09T20:26:11.447579
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/basophil#main-content
+date_scraped: 2025-11-12T22:55:40.066418
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Basophil
+  - Basophil#Main Content
+  - basophil
 ---
 
 # basophil

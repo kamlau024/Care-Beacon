@@ -1,13 +1,14 @@
 ---
 title: "contrast medium"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/contrast-medium
-date_scraped: 2025-11-09T20:19:10.641969
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/contrast-medium#main-content
+date_scraped: 2025-11-12T23:31:14.967840
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Contrast Medium
+  - Contrast Medium#Main Content
+  - contrast medium
 ---
 
 # contrast medium

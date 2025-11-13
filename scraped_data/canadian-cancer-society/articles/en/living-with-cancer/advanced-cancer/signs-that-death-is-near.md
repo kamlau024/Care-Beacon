@@ -1,7 +1,7 @@
 ---
 title: "Signs that death is near"
 url: https://cancer.ca/en/living-with-cancer/advanced-cancer/signs-that-death-is-near
-date_scraped: 2025-11-09T20:45:52.150976
+date_scraped: 2025-11-13T04:57:22.002379
 breadcrumbs:
   - Living With Cancer
   - Advanced Cancer

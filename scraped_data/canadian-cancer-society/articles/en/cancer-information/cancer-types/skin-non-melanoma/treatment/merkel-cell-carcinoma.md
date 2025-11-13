@@ -1,14 +1,15 @@
 ---
 title: "Treatments for Merkel cell carcinoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/skin-non-melanoma/treatment/merkel-cell-carcinoma
-date_scraped: 2025-11-09T20:42:10.959622
+url: https://cancer.ca/en/cancer-information/cancer-types/skin-non-melanoma/treatment/merkel-cell-carcinoma#main-content
+date_scraped: 2025-11-13T02:47:37.367984
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Skin Non Melanoma
   - Treatment
-  - Merkel Cell Carcinoma
+  - Merkel Cell Carcinoma#Main Content
   - Skin - non-melanoma
+  - Merkel cell carcinoma
 ---
 
 # Treatments for Merkel cell carcinoma

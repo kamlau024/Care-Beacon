@@ -1,7 +1,7 @@
 ---
 title: "How do I find a colorectal cancer screening program?"
 url: https://cancer.ca/en/cancer-information/find-cancer-early/get-screened-for-colorectal-cancer/how-do-i-find-a-colorectal-cancer-screening-program
-date_scraped: 2025-11-09T20:03:29.313840
+date_scraped: 2025-11-13T11:49:30.147912
 breadcrumbs:
   - Cancer Information
   - Find Cancer Early

@@ -1,11 +1,12 @@
 ---
 title: "Sepsis and septic shock"
-url: https://cancer.ca/en/treatments/side-effects/septic-shock
-date_scraped: 2025-11-09T20:52:10.784340
+url: https://cancer.ca/en/treatments/side-effects/septic-shock#main-content
+date_scraped: 2025-11-13T07:27:57.497706
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Septic Shock
+  - Septic Shock#Main Content
+  - Septic shock
 ---
 
 # Sepsis and septic shock

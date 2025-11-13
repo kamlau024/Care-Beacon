@@ -1,13 +1,14 @@
 ---
 title: "jaundice"
-url: https://cancer.ca/en/cancer-information/resources/glossary/j/jaundice
-date_scraped: 2025-11-09T20:16:47.087255
+url: https://cancer.ca/en/cancer-information/resources/glossary/j/jaundice#main-content
+date_scraped: 2025-11-12T22:34:30.607084
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - J
-  - Jaundice
+  - Jaundice#Main Content
+  - jaundice
 ---
 
 # jaundice

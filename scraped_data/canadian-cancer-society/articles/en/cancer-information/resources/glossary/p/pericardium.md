@@ -1,13 +1,14 @@
 ---
 title: "pericardium"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pericardium
-date_scraped: 2025-11-09T20:24:59.681204
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pericardium#main-content
+date_scraped: 2025-11-13T02:09:14.720230
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pericardium
+  - Pericardium#Main Content
+  - pericardium
 ---
 
 # pericardium

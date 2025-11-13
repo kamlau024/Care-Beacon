@@ -1,13 +1,14 @@
 ---
 title: "autologous"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/autologous
-date_scraped: 2025-11-09T20:35:43.423969
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/autologous#main-content
+date_scraped: 2025-11-12T22:42:10.202494
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Autologous
+  - Autologous#Main Content
+  - autologous
 ---
 
 # autologous

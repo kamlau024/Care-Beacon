@@ -1,13 +1,13 @@
 ---
 title: "non-Hodgkin lymphoma (NHL)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/nonhodgkin-lymphoma-nhl
-date_scraped: 2025-11-09T20:33:16.452629
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/nonhodgkin-lymphoma-nhl#main-content
+date_scraped: 2025-11-13T07:07:48.556868
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Nonhodgkin Lymphoma Nhl
+  - Nonhodgkin Lymphoma Nhl#Main Content
   - non-Hodgkin lymphoma (NHL)
 ---
 

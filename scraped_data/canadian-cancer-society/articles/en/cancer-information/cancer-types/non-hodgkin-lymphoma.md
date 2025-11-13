@@ -1,11 +1,11 @@
 ---
 title: "Non-Hodgkin lymphoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/non-hodgkin-lymphoma
-date_scraped: 2025-11-09T20:42:45.968329
+url: https://cancer.ca/en/cancer-information/cancer-types/non-hodgkin-lymphoma#main-content
+date_scraped: 2025-11-13T00:11:00.570230
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Non Hodgkin Lymphoma
+  - Non Hodgkin Lymphoma#Main Content
   - Non-Hodgkin lymphoma
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: "Follow-up care"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/follow-up-care
-date_scraped: 2025-11-09T20:45:26.260266
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/follow-up-care#main-content
+date_scraped: 2025-11-12T22:05:11.497445
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - Follow Up Care
+  - Follow Up Care#Main Content
   - Follow-up care
 ---
 

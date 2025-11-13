@@ -1,13 +1,13 @@
 ---
 title: "benign prostatic hyperplasia (BPH)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/benign-prostatic-hyperplasia
-date_scraped: 2025-11-09T20:34:55.287766
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/benign-prostatic-hyperplasia#main-content
+date_scraped: 2025-11-13T01:34:20.036225
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Benign Prostatic Hyperplasia
+  - Benign Prostatic Hyperplasia#Main Content
   - benign prostatic hyperplasia (BPH)
 ---
 

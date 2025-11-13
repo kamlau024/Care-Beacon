@@ -1,13 +1,13 @@
 ---
 title: "human papillomavirus (HPV)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-papillomavirus-hpv
-date_scraped: 2025-11-09T20:27:35.136123
+url: https://cancer.ca/en/cancer-information/resources/glossary/h/human-papillomavirus-hpv#main-content
+date_scraped: 2025-11-13T02:10:43.602355
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - H
-  - Human Papillomavirus Hpv
+  - Human Papillomavirus Hpv#Main Content
   - human papillomavirus (HPV)
 ---
 

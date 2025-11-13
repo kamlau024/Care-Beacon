@@ -1,10 +1,11 @@
 ---
 title: "Immunotherapy"
-url: https://cancer.ca/en/treatments/treatment-types/immunotherapy
-date_scraped: 2025-11-09T20:50:11.241488
+url: https://cancer.ca/en/treatments/treatment-types/immunotherapy#0
+date_scraped: 2025-11-13T06:51:46.359910
 breadcrumbs:
   - Treatments
   - Treatment Types
+  - Immunotherapy#0
   - Immunotherapy
 images:
   - src: https://img.youtube.com/vi/TGSS8QuYbYk/0.jpg

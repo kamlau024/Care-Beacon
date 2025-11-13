@@ -1,7 +1,7 @@
 ---
 title: "chromosome"
 url: https://cancer.ca/en/cancer-information/resources/glossary/c/chromosome
-date_scraped: 2025-11-09T20:35:06.122046
+date_scraped: 2025-11-13T06:16:05.944033
 breadcrumbs:
   - Cancer Information
   - Resources

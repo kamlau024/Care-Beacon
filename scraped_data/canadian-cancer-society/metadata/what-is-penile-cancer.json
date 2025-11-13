@@ -1,0 +1,29 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/penile/what-is-penile-cancer",
+  "title": "What is penile cancer?",
+  "date_scraped": "2025-11-13T02:15:54.726153",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Penile",
+    "What Is Penile Cancer"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/penile/784b64e0-b64f-11ea-bc3d-0242df4d59be-en.png?h=356&iar=0&mw=543&w=445&rev=76cc5940f69b40bdad1862a1a06d511f&hash=515F278AD4651FAD3868ACFED8635D06",
+      "alt": "Diagram of the male reproductive system",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/penile/b47d5b40-b64e-11ea-bc3d-0242df4d59be-en.png?h=261&iar=0&mw=543&w=397&rev=fd6324719bc6465d9d9ba122b936f1f5&hash=954BC4BDFBD1CCCC868D487A0E62C476",
+      "alt": "Diagram of the penis",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/penile/what-is-penile-cancer.md"
+}

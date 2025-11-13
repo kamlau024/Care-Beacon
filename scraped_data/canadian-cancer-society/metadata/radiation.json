@@ -1,0 +1,30 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/be-safe-at-work/radiation#main-content",
+  "title": "Radiation",
+  "date_scraped": "2025-11-13T08:08:29.717897",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Be Safe At Work",
+    "Radiation#Main Content",
+    "Radiation"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/reduce-exposure-medicalradiation.jpg?rev=e631ca5b31ca4da498330b4bb1788193&cx=0.5&cy=0.5&cw=575&ch=452&hash=0B80DD39E112181B939901AC665B2490",
+      "alt": "A dosimeter measuring radiation exposure",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/radon-workplace.jpg?rev=4ee7c4515ec54470bcc5a9c7ace72ba8&cx=0.5&cy=0.5&cw=575&ch=452&hash=991624B24F588E21263C8094E23296C6",
+      "alt": "Workers drilling in a mine",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/be-safe-at-work/radiation.md"
+}

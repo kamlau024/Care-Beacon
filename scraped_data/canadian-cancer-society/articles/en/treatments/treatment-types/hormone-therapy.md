@@ -1,11 +1,12 @@
 ---
 title: "Hormone therapy"
-url: https://cancer.ca/en/treatments/treatment-types/hormone-therapy
-date_scraped: 2025-11-09T00:20:17.179093
+url: https://cancer.ca/en/treatments/treatment-types/hormone-therapy#0
+date_scraped: 2025-11-13T06:52:20.370524
 breadcrumbs:
   - Treatments
   - Treatment Types
-  - Hormone Therapy
+  - Hormone Therapy#0
+  - Hormone therapy
 images:
   - src: https://img.youtube.com/vi/TR-qSrdAmVk/0.jpg
     alt: "YouTube video poster"
@@ -27,85 +28,25 @@ Hormone therapy may be used alone as the main treatment or with other treatments
 
 Hormones are chemicals that travel in the blood and control how some cells and organs act and grow. Natural hormones are produced by glands or organs in the body. Artificial or synthetic hormones can be made in a lab.
 
-The
+The ovaries produce the female hormones estrogen and progesterone, which are involved in reproduction.
 
-ovaries
+The testicles produce the male hormone testosterone, which is involved in reproduction.
 
-Close
-
-ovary
-
-One of a pair of small, round organs in the pelvis of females (on each side of the uterus, or womb) that produce germ cells (eggs) and the female sex hormones.
-
-_Ovarian_ means referring to or having to do with the ovaries, as in ovarian cancer.
-
-produce the female hormones estrogen and progesterone, which are involved in reproduction.
-
-The
-
-testicles
-
-Close
-
-testicle
-
-One of a pair of small, egg-shaped organs inside the scrotum (the pouch of skin below the penis) that produce sperm and the male sex hormones.
-
-_Testicular_ means referring to or having to do with the testicles, as in testicular cancer.
-
-Also called testis or testes (plural).
-
-produce the male hormone testosterone, which is involved in reproduction.
-
-The
-
-pituitary gland
-
-Close
-
-pituitary gland
-
-The main [endocrine system](https://cancer.ca/en/cancer-information/resources/glossary/e/endocrine-system) gland at the base of the brain that produces [hormones](https://cancer.ca/en/cancer-information/resources/glossary/h/hormone) to control other glands and many body functions, including growth.
-
-Also called the hypophysis.
-
-produces:
+The pituitary gland produces:
 
   * luteinizing hormone (LH), which stimulates the testicles and ovaries
   * adrenocorticotropic hormone (ACTH), which stimulates the adrenal glands
   * follicle-stimulating hormone (FSH), which stimulates the ovaries and testicles
   * thyroid-stimulating hormone (TSH), which stimulates the thyroid gland
 
-The
-
-adrenal glands
-
-Close
-
-adrenal gland
-
-A small [gland](https://cancer.ca/en/cancer-information/resources/glossary/g/gland) on top of each kidney that produces a variety of hormones involved in different body functions, including metabolism (the chemical processes needed for cell function, growth and reproduction), heart rate, blood pressure and controlling blood sugar levels.
-
-produce:
+The adrenal glands produce:
 
   * glucocorticoids, which lower the body’s immune response
   * mineralocorticoids, which help maintain the water and electrolyte balance in the body
   * estrogen, in small amounts, in post-menopausal women
   * testosterone in men, in small amounts, which is involved in reproduction
 
-The
-
-pancreas
-
-Close
-
-pancreas
-
-The long, tapered organ behind the stomach that makes digestive juices and passes them into the duodenum (the first part of the small intestine) through the pancreatic duct. It also makes hormones (such as [insulin](https://cancer.ca/en/cancer-information/resources/glossary/i/insulin)) that help to regulate how the body stores and uses food.
-
-_Pancreatic_ means referring to or having to do with the pancreas, as in pancreatic cancer.
-
-produces glucagon, which raises the blood sugar level, and insulin, which lowers the blood sugar level.
+The pancreas produces glucagon, which raises the blood sugar level, and insulin, which lowers the blood sugar level.
 
 ## How hormone therapy works
 
@@ -213,6 +154,42 @@ Side effects can occur with any type of treatment, but not everyone has them or 
 
 [ Learn more on Side effects of hormone therapy](https://cancer.ca/en/treatments/treatment-types/hormone-therapy/side-effects-of-hormone-therapy)
 
-Was this content helpful?
+* * *
 
-1 - Lowest rating2 - Low rating3 - Neutral rating4 - High rating5 - Highest rating
+**ovaries:**
+
+One of a pair of small, round organs in the pelvis of females (on each side of the uterus, or womb) that produce germ cells (eggs) and the female sex hormones.
+
+Ovarian means referring to or having to do with the ovaries, as in ovarian cancer.
+
+
+
+**testicles:**
+
+One of a pair of small, egg-shaped organs inside the scrotum (the pouch of skin below the penis) that produce sperm and the male sex hormones.
+
+Testicular means referring to or having to do with the testicles, as in testicular cancer.
+
+Also called testis or testes (plural).
+
+
+
+**pituitary gland:**
+
+The main endocrine system gland at the base of the brain that produces hormones to control other glands and many body functions, including growth.
+
+Also called the hypophysis.
+
+
+
+**adrenal glands:**
+
+A small gland on top of each kidney that produces a variety of hormones involved in different body functions, including metabolism (the chemical processes needed for cell function, growth and reproduction), heart rate, blood pressure and controlling blood sugar levels.
+
+
+
+**pancreas:**
+
+The long, tapered organ behind the stomach that makes digestive juices and passes them into the duodenum (the first part of the small intestine) through the pancreatic duct. It also makes hormones (such as insulin ) that help to regulate how the body stores and uses food.
+
+Pancreatic means referring to or having to do with the pancreas, as in pancreatic cancer.

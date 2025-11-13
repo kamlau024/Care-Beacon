@@ -1,13 +1,13 @@
 ---
 title: "granulocyte-macrophage colony-stimulating factor (GM-CSF)"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocytemacrophage-colonystimulating-factor-gmcsf
-date_scraped: 2025-11-09T20:18:25.061323
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/granulocytemacrophage-colonystimulating-factor-gmcsf#main-content
+date_scraped: 2025-11-13T06:37:32.652428
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Granulocytemacrophage Colonystimulating Factor Gmcsf
+  - Granulocytemacrophage Colonystimulating Factor Gmcsf#Main Content
   - granulocyte-macrophage colony-stimulating factor (GM-CSF)
 ---
 

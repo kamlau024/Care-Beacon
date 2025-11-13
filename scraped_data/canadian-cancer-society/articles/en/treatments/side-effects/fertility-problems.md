@@ -1,11 +1,12 @@
 ---
 title: "Fertility problems"
-url: https://cancer.ca/en/treatments/side-effects/fertility-problems
-date_scraped: 2025-11-09T20:47:10.663944
+url: https://cancer.ca/en/treatments/side-effects/fertility-problems#main-content
+date_scraped: 2025-11-13T06:13:49.941094
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Fertility Problems
+  - Fertility Problems#Main Content
+  - Fertility problems
 ---
 
 # Fertility problems

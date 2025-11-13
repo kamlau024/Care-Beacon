@@ -1,0 +1,31 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/cervical/what-is-cervical-cancer/the-cervix#main-content",
+  "title": "The cervix",
+  "date_scraped": "2025-11-13T01:21:30.514332",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Cervical",
+    "What Is Cervical Cancer",
+    "The Cervix#Main Content",
+    "The cervix"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cervical/66411420-c9eb-11ea-8e8b-0242df4d59be-en.png?h=250&iar=0&mw=543&w=367&rev=82ccd54dca8743829ae3a3c6932a97f5&hash=FBD119632A7E78167C2A7BA9A452A788",
+      "alt": "Female Reproductive System",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/cervical/6657a960-c9eb-11ea-8e8b-0242df4d59be-en.png?h=288&iar=0&mw=543&w=454&rev=bea456553e4341c5b9bf1a407cc44d85&hash=53121949A9370C5663D842A6E223D563",
+      "alt": "Diagram of the cervix",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/cervical/what-is-cervical-cancer/the-cervix.md"
+}

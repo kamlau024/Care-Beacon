@@ -1,11 +1,11 @@
 ---
 title: "Treatment-induced menopause"
-url: https://cancer.ca/en/treatments/side-effects/treatment-induced-menopause
-date_scraped: 2025-11-09T20:52:29.014502
+url: https://cancer.ca/en/treatments/side-effects/treatment-induced-menopause#ci_treatmentinduced_menopause_89_125_00
+date_scraped: 2025-11-13T06:56:18.609696
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Treatment Induced Menopause
+  - Treatment Induced Menopause#Ci_Treatmentinduced_Menopause_89_125_00
   - Treatment-induced menopause
 ---
 

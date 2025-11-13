@@ -1,13 +1,14 @@
 ---
 title: "bronchi"
-url: https://cancer.ca/en/cancer-information/resources/glossary/b/bronchi
-date_scraped: 2025-11-09T20:27:20.747968
+url: https://cancer.ca/en/cancer-information/resources/glossary/b/bronchi#main-content
+date_scraped: 2025-11-12T21:27:04.734050
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - B
-  - Bronchi
+  - Bronchi#Main Content
+  - bronchi
 ---
 
 # bronchi

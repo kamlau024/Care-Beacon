@@ -1,13 +1,14 @@
 ---
 title: "lung"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/lung
-date_scraped: 2025-11-09T20:30:41.378077
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/lung#main-content
+date_scraped: 2025-11-12T21:27:22.761584
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Lung
+  - Lung#Main Content
+  - lung
 ---
 
 # lung

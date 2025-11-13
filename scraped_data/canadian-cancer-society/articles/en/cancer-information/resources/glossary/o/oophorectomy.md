@@ -1,7 +1,7 @@
 ---
 title: "oophorectomy"
 url: https://cancer.ca/en/cancer-information/resources/glossary/o/oophorectomy
-date_scraped: 2025-11-09T20:17:02.555084
+date_scraped: 2025-11-13T00:46:11.241804
 breadcrumbs:
   - Cancer Information
   - Resources

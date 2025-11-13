@@ -1,11 +1,12 @@
 ---
 title: "Bladder problems"
-url: https://cancer.ca/en/treatments/side-effects/bladder-problems
-date_scraped: 2025-11-09T20:51:53.322149
+url: https://cancer.ca/en/treatments/side-effects/bladder-problems#main-content
+date_scraped: 2025-11-13T02:23:26.110408
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Bladder Problems
+  - Bladder Problems#Main Content
+  - Bladder problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/c1c6c160-c9ea-11ea-8e8b-0242df4d59be-en.png?h=289&iar=0&mw=543&w=376&rev=6d58e404d56041789ca3d518635e3775&hash=BA4D4BA9B855CA699FB67E1FC796DC33
     alt: "Diagram of location of the bladder"

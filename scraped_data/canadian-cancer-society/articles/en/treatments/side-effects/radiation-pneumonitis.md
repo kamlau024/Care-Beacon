@@ -1,11 +1,12 @@
 ---
 title: "Radiation pneumonitis"
-url: https://cancer.ca/en/treatments/side-effects/radiation-pneumonitis
-date_scraped: 2025-11-09T20:51:43.111512
+url: https://cancer.ca/en/treatments/side-effects/radiation-pneumonitis#main-content
+date_scraped: 2025-11-12T22:19:03.687176
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Radiation Pneumonitis
+  - Radiation Pneumonitis#Main Content
+  - Radiation pneumonitis
 ---
 
 # Radiation pneumonitis

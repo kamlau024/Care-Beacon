@@ -1,11 +1,12 @@
 ---
 title: "Radiation therapy"
-url: https://cancer.ca/en/treatments/treatment-types/radiation-therapy
-date_scraped: 2025-11-09T20:50:11.898390
+url: https://cancer.ca/en/treatments/treatment-types/radiation-therapy#main-content
+date_scraped: 2025-11-13T06:47:49.284297
 breadcrumbs:
   - Treatments
   - Treatment Types
-  - Radiation Therapy
+  - Radiation Therapy#Main Content
+  - Radiation therapy
 images:
   - src: https://img.youtube.com/vi/UbU5pJvdHTk/0.jpg
     alt: "YouTube video poster"

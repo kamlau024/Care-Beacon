@@ -1,10 +1,11 @@
 ---
 title: "Osteoradionecrosis"
-url: https://cancer.ca/en/treatments/side-effects/osteoradionecrosis
-date_scraped: 2025-11-09T20:50:49.348181
+url: https://cancer.ca/en/treatments/side-effects/osteoradionecrosis#main-content
+date_scraped: 2025-11-13T00:54:56.155002
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Osteoradionecrosis#Main Content
   - Osteoradionecrosis
 ---
 

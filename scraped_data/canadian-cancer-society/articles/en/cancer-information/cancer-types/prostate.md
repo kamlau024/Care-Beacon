@@ -1,7 +1,7 @@
 ---
 title: "Prostate cancer"
 url: https://cancer.ca/en/cancer-information/cancer-types/prostate
-date_scraped: 2025-11-09T20:41:45.275880
+date_scraped: 2025-11-13T11:48:50.302015
 breadcrumbs:
   - Cancer Information
   - Cancer Types

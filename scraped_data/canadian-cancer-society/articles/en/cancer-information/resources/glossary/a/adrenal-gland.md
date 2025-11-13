@@ -1,13 +1,14 @@
 ---
 title: "adrenal gland"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/adrenal-gland
-date_scraped: 2025-11-09T20:05:23.675332
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/adrenal-gland#main-content
+date_scraped: 2025-11-12T21:47:08.439516
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Adrenal Gland
+  - Adrenal Gland#Main Content
+  - adrenal gland
 ---
 
 # adrenal gland

@@ -1,0 +1,35 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/be-safe-at-work/sun-and-uv#main-content",
+  "title": "Sun and UV",
+  "date_scraped": "2025-11-13T08:08:55.186754",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Reduce Your Risk",
+    "Be Safe At Work",
+    "Sun And Uv#Main Content",
+    "Sun and UV"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/besafeatwork_sunanduv_split_1200x720.jpg?rev=e2866827d2f54bac9253502c12a714f0&cx=0.5&cy=0.5&cw=575&ch=452&hash=87D8D2E9E1BABD71488D408AA51C2D67",
+      "alt": "Gardener working outside with plants wearing a large sun hat",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/ssawc-logos-cmyk.jpg?rev=7f1c1d7229374d63a7700380efbd3f5c&cx=0.5&cy=0.5&cw=575&ch=452&hash=605BCEC28C638FB2EE918A6A0F2C872D",
+      "alt": "Sun Safety at Work logo",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/be-safe-at-work/besafeatwork_sunuv_carex_solarradfactsheet_split_1200x720.jpg?rev=ab6ecca643bf47eebcefbdc323ffd992&cx=0.5&cy=0.5&cw=575&ch=452&hash=48C7549FB25B744D8932B27CFE07C7BD",
+      "alt": "Construction worker outside wearing sunglasses, long sleeves and helmet",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/be-safe-at-work/sun-and-uv.md"
+}

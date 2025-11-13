@@ -1,11 +1,12 @@
 ---
 title: "Multiple myeloma"
-url: https://cancer.ca/en/cancer-information/cancer-types/multiple-myeloma
-date_scraped: 2025-11-09T20:42:52.268566
+url: https://cancer.ca/en/cancer-information/cancer-types/multiple-myeloma#main-content
+date_scraped: 2025-11-13T00:23:57.083607
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Multiple Myeloma
+  - Multiple Myeloma#Main Content
+  - Multiple myeloma
 ---
 
 # Multiple myeloma

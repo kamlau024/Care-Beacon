@@ -1,11 +1,12 @@
 ---
 title: "Cognitive problems"
-url: https://cancer.ca/en/treatments/side-effects/cognitive-problems
-date_scraped: 2025-11-09T20:51:56.118766
+url: https://cancer.ca/en/treatments/side-effects/cognitive-problems#main-content
+date_scraped: 2025-11-12T22:30:00.534845
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Cognitive Problems
+  - Cognitive Problems#Main Content
+  - Cognitive problems
 ---
 
 # Cognitive problems

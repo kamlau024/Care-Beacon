@@ -1,11 +1,11 @@
 ---
 title: "Childhood Hodgkin lymphoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/hodgkin-lymphoma-childhood
-date_scraped: 2025-11-09T20:41:30.716290
+url: https://cancer.ca/en/cancer-information/cancer-types/hodgkin-lymphoma-childhood#main-content
+date_scraped: 2025-11-12T23:14:55.736886
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Hodgkin Lymphoma Childhood
+  - Hodgkin Lymphoma Childhood#Main Content
   - Hodgkin lymphoma - childhood
 ---
 

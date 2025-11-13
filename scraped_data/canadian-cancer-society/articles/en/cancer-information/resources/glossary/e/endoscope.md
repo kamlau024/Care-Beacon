@@ -1,13 +1,14 @@
 ---
 title: "endoscope"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/endoscope
-date_scraped: 2025-11-09T20:28:17.176437
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/endoscope#main-content
+date_scraped: 2025-11-12T21:27:43.511019
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Endoscope
+  - Endoscope#Main Content
+  - endoscope
 ---
 
 # endoscope

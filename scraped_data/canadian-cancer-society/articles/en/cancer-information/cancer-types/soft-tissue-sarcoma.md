@@ -1,11 +1,12 @@
 ---
 title: "Soft tissue sarcoma"
-url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma
-date_scraped: 2025-11-09T20:41:59.351392
+url: https://cancer.ca/en/cancer-information/cancer-types/soft-tissue-sarcoma#main-content
+date_scraped: 2025-11-13T00:13:52.688211
 breadcrumbs:
   - Cancer Information
   - Cancer Types
-  - Soft Tissue Sarcoma
+  - Soft Tissue Sarcoma#Main Content
+  - Soft tissue sarcoma
 ---
 
 # Soft tissue sarcoma

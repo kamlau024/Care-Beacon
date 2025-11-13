@@ -1,11 +1,12 @@
 ---
 title: "Your emotions and cancer"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/your-emotions-and-cancer
-date_scraped: 2025-11-09T20:45:12.033340
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/your-emotions-and-cancer#ci_your_emotions_and_cancer_102_11480_00
+date_scraped: 2025-11-12T22:03:47.722660
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Your Emotions And Cancer
+  - Your Emotions And Cancer#Ci_Your_Emotions_And_Cancer_102_11480_00
+  - Your emotions and cancer
 ---
 
 # Your emotions and cancer

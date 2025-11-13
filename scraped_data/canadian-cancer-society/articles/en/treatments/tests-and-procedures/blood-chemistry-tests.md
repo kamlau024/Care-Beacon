@@ -1,7 +1,7 @@
 ---
 title: "Blood chemistry tests"
 url: https://cancer.ca/en/treatments/tests-and-procedures/blood-chemistry-tests
-date_scraped: 2025-11-09T20:48:33.189858
+date_scraped: 2025-11-12T21:45:12.900360
 breadcrumbs:
   - Treatments
   - Tests And Procedures

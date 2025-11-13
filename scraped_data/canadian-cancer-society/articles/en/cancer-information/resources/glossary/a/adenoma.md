@@ -1,13 +1,14 @@
 ---
 title: "adenoma"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/adenoma
-date_scraped: 2025-11-09T20:34:05.597261
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/adenoma#main-content
+date_scraped: 2025-11-12T23:33:26.812174
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Adenoma
+  - Adenoma#Main Content
+  - adenoma
 ---
 
 # adenoma

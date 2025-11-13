@@ -1,11 +1,12 @@
 ---
 title: "Disseminated intravascular coagulation"
-url: https://cancer.ca/en/treatments/side-effects/disseminated-intravascular-coagulation
-date_scraped: 2025-11-09T20:51:06.220018
+url: https://cancer.ca/en/treatments/side-effects/disseminated-intravascular-coagulation#main-content
+date_scraped: 2025-11-12T22:59:21.979042
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Disseminated Intravascular Coagulation
+  - Disseminated Intravascular Coagulation#Main Content
+  - Disseminated intravascular coagulation
 ---
 
 # Disseminated intravascular coagulation

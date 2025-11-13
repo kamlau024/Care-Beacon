@@ -1,13 +1,14 @@
 ---
 title: "vulva"
-url: https://cancer.ca/en/cancer-information/resources/glossary/v/vulva
-date_scraped: 2025-11-09T01:47:07.493595
+url: https://cancer.ca/en/cancer-information/resources/glossary/v/vulva#main-content
+date_scraped: 2025-11-13T01:22:01.906768
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - V
-  - Vulva
+  - Vulva#Main Content
+  - vulva
 ---
 
 # vulva

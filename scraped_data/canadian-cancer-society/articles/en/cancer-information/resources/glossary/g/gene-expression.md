@@ -1,13 +1,14 @@
 ---
 title: "gene expression"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/gene-expression
-date_scraped: 2025-11-09T20:35:35.173777
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/gene-expression#main-content
+date_scraped: 2025-11-12T22:41:01.537866
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Gene Expression
+  - Gene Expression#Main Content
+  - gene expression
 ---
 
 # gene expression

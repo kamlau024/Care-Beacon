@@ -1,11 +1,12 @@
 ---
 title: "Newly diagnosed"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/newly-diagnosed
-date_scraped: 2025-11-08T23:13:08.999174
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/newly-diagnosed#main-content
+date_scraped: 2025-11-12T21:51:20.077352
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Newly Diagnosed
+  - Newly Diagnosed#Main Content
+  - Newly diagnosed
 images:
   - src: https://img.youtube.com/vi/TlWmvCuDY5c/0.jpg
     alt: "YouTube video poster"
@@ -56,10 +57,6 @@ Team members may include your family doctor, oncologists, surgeons, nurses, soci
 Learn more about [working with your healthcare team](https://cancer.ca/en/living-with-cancer/coping-with-changes/working-with-your-healthcare-team#ci_working_with_your_healthcare_team_102_11499_00).
 
 **Learn about your cancer and its treatment.** Understanding more about your cancer and treatment may help you feel more in control while you are waiting for your treatment to start. You might want as much information as possible because it helps reduce your stress. Some treatment centres offer classes or programs that teach you about cancer and how to cope with treatment. Other people find that information makes them feel more anxious. It’s up to you to decide how much information you want to have about your illness and treatment. Let your family, friends and healthcare team know how much or how little information to share with you.
-
-Was this content helpful?
-
-1 - Lowest rating2 - Low rating3 - Neutral rating4 - High rating5 - Highest rating
 
 ## Need more information?
 

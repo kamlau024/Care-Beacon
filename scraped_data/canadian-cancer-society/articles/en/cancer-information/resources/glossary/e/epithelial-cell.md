@@ -1,13 +1,14 @@
 ---
 title: "epithelial cell"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/epithelial-cell
-date_scraped: 2025-11-09T20:18:29.712468
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/epithelial-cell#main-content
+date_scraped: 2025-11-12T22:25:07.858655
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Epithelial Cell
+  - Epithelial Cell#Main Content
+  - epithelial cell
 ---
 
 # epithelial cell

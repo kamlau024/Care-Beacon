@@ -1,13 +1,14 @@
 ---
 title: "metabolism"
-url: https://cancer.ca/en/cancer-information/resources/glossary/m/metabolism
-date_scraped: 2025-11-09T20:35:07.622850
+url: https://cancer.ca/en/cancer-information/resources/glossary/m/metabolism#main-content
+date_scraped: 2025-11-12T21:51:44.221262
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - M
-  - Metabolism
+  - Metabolism#Main Content
+  - metabolism
 ---
 
 # metabolism

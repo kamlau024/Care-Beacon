@@ -1,0 +1,46 @@
+{
+  "url": "https://cancer.ca/en/cancer-information/cancer-types/breast/what-is-breast-cancer/the-breasts#main-content",
+  "title": "The breasts",
+  "date_scraped": "2025-11-12T23:31:31.391830",
+  "date_last_update": null,
+  "date_next_review": null,
+  "breadcrumbs": [
+    "Cancer Information",
+    "Cancer Types",
+    "Breast",
+    "What Is Breast Cancer",
+    "The Breasts#Main Content",
+    "The breasts"
+  ],
+  "sidebar_links": [],
+  "related_articles": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/b614a238-3cd5-4972-a471-ea9e8f3d40d4-en.png?h=253&iar=0&mw=543&w=413&rev=b65c591b1af044b296c8e24eb99a71a9&hash=1607853708EC9F0F9AAF216BD55E7364",
+      "alt": "Diagram of the breasts and nearby areas",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/21d12325-32d6-4ef2-ad4f-cf82ac5396db-en.png?iar=0&mw=543&rev=2a645b94304b455ea30074242679b776&hash=5F0FC7CC04D186E57B508E4A01B5F868",
+      "alt": "Diagram of male breasts and nearby areas",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/9118f390-b64d-11ea-bc3d-0242df4d59be-en.png?h=466&iar=0&mw=543&w=405&rev=eb4e124651fb4a7382bdf85d7794dfd1&hash=C418F6236C7EE915A8330F66B05BA14B",
+      "alt": "Diagram of the breast as seen from the side",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/2017d320-4806-11ee-a42e-0242ca65d1d4-en.png?h=294&iar=0&mw=543&w=510&rev=4882e985b7244a51b282936e0fa35531&hash=C3460E824D25E46CEED1C2F832AF55E2",
+      "alt": "Diagram of lymph nodes around the breast",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/cams/breast/5189fe20-91cb-11ed-9f04-02424b741190-en.png?h=379&iar=0&mw=543&w=356&rev=d7280bc542eb4d0b807d27367d634555&hash=4468897CB1DB556D6F65DD4ACD25BAF2",
+      "alt": "Diagram of axillary lymph nodes",
+      "title": ""
+    }
+  ],
+  "tags": [],
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/breast/what-is-breast-cancer/the-breasts.md"
+}

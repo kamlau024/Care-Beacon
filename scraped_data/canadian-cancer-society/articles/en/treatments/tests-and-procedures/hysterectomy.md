@@ -1,10 +1,11 @@
 ---
 title: "Hysterectomy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/hysterectomy
-date_scraped: 2025-11-09T20:49:28.050513
+url: https://cancer.ca/en/treatments/tests-and-procedures/hysterectomy#main-content
+date_scraped: 2025-11-13T02:07:12.562850
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Hysterectomy#Main Content
   - Hysterectomy
 ---
 

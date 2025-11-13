@@ -1,13 +1,14 @@
 ---
 title: "pituitary gland"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/pituitary-gland
-date_scraped: 2025-11-09T20:06:22.387873
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/pituitary-gland#main-content
+date_scraped: 2025-11-13T03:10:06.164231
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Pituitary Gland
+  - Pituitary Gland#Main Content
+  - pituitary gland
 ---
 
 # pituitary gland

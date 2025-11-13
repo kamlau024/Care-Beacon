@@ -1,11 +1,11 @@
 ---
 title: "Pelvic lymph node dissection (PLND)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-lymph-node-dissection-plnd
-date_scraped: 2025-11-09T20:48:34.660469
+url: https://cancer.ca/en/treatments/tests-and-procedures/pelvic-lymph-node-dissection-plnd#main-content
+date_scraped: 2025-11-13T02:21:41.410371
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Pelvic Lymph Node Dissection Plnd
+  - Pelvic Lymph Node Dissection Plnd#Main Content
   - Pelvic lymph node dissection (PLND)
 ---
 

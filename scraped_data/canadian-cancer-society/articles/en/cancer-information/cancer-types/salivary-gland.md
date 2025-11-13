@@ -1,7 +1,7 @@
 ---
 title: "Salivary gland cancer"
 url: https://cancer.ca/en/cancer-information/cancer-types/salivary-gland
-date_scraped: 2025-11-09T20:42:16.156012
+date_scraped: 2025-11-13T11:48:53.203900
 breadcrumbs:
   - Cancer Information
   - Cancer Types

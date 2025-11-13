@@ -1,7 +1,7 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/resources/cancer-information-videos",
+  "url": "https://cancer.ca/en/cancer-information/resources/cancer-information-videos?tags=533b477ae21041ed977e4b51ee56d0d4%7C3bc6d127f1b34af59843ccb5ea4d2e39%7Ced595b9c936546a6839b33283d2e3e87#main-content",
   "title": "Cancer information videos",
-  "date_scraped": "2025-11-09T20:40:37.001068",
+  "date_scraped": "2025-11-13T11:52:21.847551",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
@@ -13,93 +13,8 @@
   "related_articles": [],
   "images": [
     {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-info-cb-video-grief-loss-living-header-jumbo.png?rev=3ad6661b471c448284ecbb4817a3edbd&cx=0.5&cy=0.5&cw=543&ch=623&hash=8EB7D3C8A54C6FA0B5C174CF6254BC93",
-      "alt": "A person surrounded by people in their support network",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cb_how-cancer-spreads-header-jumbo-b.png?rev=f5484388825647bcb72c9312f152f6fc&cx=0.33&cy=0.76&cw=543&ch=623&hash=95AFF69F7407E29FC5D6A9DFEE1A6C49",
-      "alt": "A doctor explains how cancer can spread through the blood or lymphatic system",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-header-looking-after-yourself-when-youre-a-caregiver.jpg?rev=ef89c42fb7c94b7ab7830f9f6b733751&cx=0.43&cy=0.37&cw=543&ch=623&hash=37EEE7977A4C2013E04DF6A884F1D4A2",
-      "alt": "Man holding groceries outside a home stands arm in arm with his mother, who looks tired",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-header-cancer_metastatic.jpg?rev=ea27a51231ec4819b17a29707bccd0e2&cx=0.5&cy=0.5&cw=543&ch=623&hash=1DF0553E05C6F96ADB19D40E4283ACFE",
-      "alt": "Body outline with drawings on it of lymph nodes, thigh bone, brain, liver and lungs",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-header-basics-of-hormone-therapy.jpg?rev=52d2207f066e4c57bbf30481558a2e60&cx=0.7&cy=0.42&cw=543&ch=623&hash=9966C3F45169B6D752D391F7C8FE9B68",
-      "alt": "Outline of a human body with yellow cells behind it",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/debra-video-header-story-thumb.jpg?rev=c2c554caacd34a669ff73cdc842f2391&cx=0.5&cy=0.5&cw=543&ch=623&hash=6C461766016026CAD090A7BDFEDDE507",
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/understandingadvancedprostatecancer1.jpg?rev=a06aa2d45ab34afbb9731e7cb2efe4f3&cx=0.5&cy=0.5&cw=543&ch=623&hash=AC86DEC783EAC7EF3A5E7C98BB632CBD",
       "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-thumb-card-what-is-acute-leukemia.jpg?rev=a0281a806d9141aeadda5fbd677bde4d&cx=0.5&cy=0.5&cw=543&ch=623&hash=D13F616922DB022ED3698FA57A1009F8",
-      "alt": "Blood sample with a mix of healthy and abnormal cells",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-card-how-to-get-answers.png?rev=451dafda740649248e615d3dc5fd24ae&cx=0.5&cy=0.5&cw=543&ch=623&hash=07A5EE6295EF34FA475795F59EC81630",
-      "alt": "How to get the answers you need",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-card-what-is-radiation-therapy.png?rev=45df9950c75d4856851579a1a8d068a7&cx=0.5&cy=0.5&cw=543&ch=623&hash=56F3BE54E59F71E785A6A0F1AB5E8B8B",
-      "alt": "What is radiation therapy?",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/laura-video-header-story-thumb.jpg?rev=ae831eca186e481ba4a7b28f7c5f4cb0&cx=0.5&cy=0.5&cw=543&ch=623&hash=2A66B15B9DF510181FF13F5283F66A3E",
-      "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/dianne-video-header-story-thumb.jpg?rev=e97c3319e7b544959987fde12c8d130f&cx=0.5&cy=0.5&cw=543&ch=623&hash=F41064F2CBC9BF3C97C6A650C5F01DBA",
-      "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/marell-video-header-story-thumb.jpg?rev=a2903fa467dc45dc8fbf7f0e83289be6&cx=0.5&cy=0.5&cw=543&ch=623&hash=A87D868726C8D8C54101B7EB88A7C486",
-      "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/nadia-video-header-story-thumb.jpg?rev=c3f0b6c578254c69b7b21cb6d623e244&cx=0.5&cy=0.5&cw=543&ch=623&hash=F6041C3A77E1C11C86C9AEE3D758C616",
-      "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/kim-video-header-story-thumb.jpg?rev=5fe5529e365046ea928316c0f813adbd&cx=0.5&cy=0.5&cw=543&ch=623&hash=C3DD235DFAD769E7EFA4ACCE1159A49C",
-      "alt": "",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-thumbnail-palliative-care-is-more-than-end-of-life-care.jpg?rev=288e3bd202134b9284f01e52d3a97d6a&cx=0.5&cy=0.5&cw=543&ch=623&hash=EB2C5583650403AB724762D3CB8CCAE2",
-      "alt": "Woman sitting on a chair explaining Palliative care",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-thumbnail-what-you-need-to-know-about-prostate-cancer.jpg?rev=4ff1e232589a4dcfb4703bbfa19ebb58&cx=0.5&cy=0.5&cw=543&ch=623&hash=13277633789A7CE2A0B1114A5243775D",
-      "alt": "Five men standing up",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/resources/video-thumbnails/cancer-information-video-thumbnail-tests-to-diagnose-and-monitor-prostate-cancer_en.jpg?rev=94c40830fc054fd889052e227cd84c94&cx=0.5&cy=0.5&cw=543&ch=623&hash=9D783D5FFFDCACF168B2CE59123F7BA6",
-      "alt": "A man waiting to get a blood test",
-      "title": ""
-    },
-    {
-      "src": "https://cdn.cancer.ca/-/media/images/get-involved/advocacy/advocacy-wwadp-ei-split.jpg?rev=130de6f9deae4e13a54a0d852ff4ec61&cx=0.5&cy=0.5&cw=543&ch=623&hash=44F864223B98496E956F4556F4D2A58A",
-      "alt": "A woman is sitting in front of a laptop and using a calculator",
       "title": ""
     }
   ],

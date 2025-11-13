@@ -1,19 +1,29 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/resources/glossary/r/radon",
-  "title": "radon",
-  "date_scraped": "2025-11-09T20:09:37.084762",
+  "url": "https://cancer.ca/en/cancer-information/reduce-your-risk/know-your-environment/radon",
+  "title": "Radon",
+  "date_scraped": "2025-11-13T01:52:43.967262",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Resources",
-    "Glossary",
-    "R",
+    "Reduce Your Risk",
+    "Know Your Environment",
     "Radon"
   ],
   "sidebar_links": [],
   "related_articles": [],
-  "images": [],
+  "images": [
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/know-your-environment/gettyimages-984049944.jpg?rev=e9568a5ff187416baeff542eb8b087ed&cx=0.5&cy=0.5&cw=575&ch=452&hash=7BBD0F79841A93A95FB4F126912483C5",
+      "alt": "Underground subway tunnel with lights illuminating it",
+      "title": ""
+    },
+    {
+      "src": "https://cdn.cancer.ca/-/media/images/cancer-information/reduce-your-risk/know-your-environment/gettyimages-908801610.jpg?rev=1616830197d745688b055147c95a8cf3&cx=0.5&cy=0.5&cw=575&ch=452&hash=451EC85F8AF0F27FE2D4ADE071BBBC09",
+      "alt": "Technician installing a radon detector in someone's home ",
+      "title": ""
+    }
+  ],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/r/radon.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/reduce-your-risk/know-your-environment/radon.md"
 }

@@ -1,7 +1,7 @@
 ---
 title: "Treatments for chondrosarcoma"
 url: https://cancer.ca/en/cancer-information/cancer-types/bone/treatment/chondrosarcoma
-date_scraped: 2025-11-09T20:42:12.040141
+date_scraped: 2025-11-12T21:24:03.695513
 breadcrumbs:
   - Cancer Information
   - Cancer Types

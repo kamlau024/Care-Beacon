@@ -1,11 +1,12 @@
 ---
 title: "Sex and intimacy"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/sex-and-intimacy
-date_scraped: 2025-11-09T20:44:31.814807
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/sex-and-intimacy#ci_sex_and_intimacy_102_11513_00
+date_scraped: 2025-11-12T22:19:57.933426
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Sex And Intimacy
+  - Sex And Intimacy#Ci_Sex_And_Intimacy_102_11513_00
+  - Sex and intimacy
 ---
 
 # Sex and intimacy

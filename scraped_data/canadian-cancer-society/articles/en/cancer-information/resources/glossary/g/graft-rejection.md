@@ -1,13 +1,14 @@
 ---
 title: "graft rejection"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/graft-rejection
-date_scraped: 2025-11-09T20:21:56.194131
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/graft-rejection#main-content
+date_scraped: 2025-11-13T06:33:30.604378
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Graft Rejection
+  - Graft Rejection#Main Content
+  - graft rejection
 ---
 
 # graft rejection

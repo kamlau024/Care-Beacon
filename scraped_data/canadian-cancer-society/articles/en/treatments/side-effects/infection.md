@@ -1,10 +1,11 @@
 ---
 title: "Infection"
-url: https://cancer.ca/en/treatments/side-effects/infection
-date_scraped: 2025-11-09T20:52:09.717822
+url: https://cancer.ca/en/treatments/side-effects/infection#main-content
+date_scraped: 2025-11-13T07:30:03.159055
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Infection#Main Content
   - Infection
 ---
 

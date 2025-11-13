@@ -1,11 +1,12 @@
 ---
 title: "Blood transfusion"
-url: https://cancer.ca/en/treatments/tests-and-procedures/blood-transfusion
-date_scraped: 2025-11-09T20:48:49.939781
+url: https://cancer.ca/en/treatments/tests-and-procedures/blood-transfusion#main-content
+date_scraped: 2025-11-13T06:31:50.848062
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Blood Transfusion
+  - Blood Transfusion#Main Content
+  - Blood transfusion
 ---
 
 # Blood transfusion

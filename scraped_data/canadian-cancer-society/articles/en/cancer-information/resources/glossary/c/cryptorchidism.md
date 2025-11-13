@@ -1,7 +1,7 @@
 ---
 title: "cryptorchidism"
 url: https://cancer.ca/en/cancer-information/resources/glossary/c/cryptorchidism
-date_scraped: 2025-11-09T20:32:20.466259
+date_scraped: 2025-11-12T23:36:04.050815
 breadcrumbs:
   - Cancer Information
   - Resources

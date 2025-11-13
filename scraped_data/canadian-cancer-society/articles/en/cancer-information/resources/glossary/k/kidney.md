@@ -1,7 +1,7 @@
 ---
 title: "kidney"
 url: https://cancer.ca/en/cancer-information/resources/glossary/k/kidney
-date_scraped: 2025-11-09T20:08:13.466254
+date_scraped: 2025-11-13T06:16:09.364747
 breadcrumbs:
   - Cancer Information
   - Resources

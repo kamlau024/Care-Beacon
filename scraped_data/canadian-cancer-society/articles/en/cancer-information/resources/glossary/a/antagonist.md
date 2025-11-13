@@ -1,13 +1,14 @@
 ---
 title: "antagonist"
-url: https://cancer.ca/en/cancer-information/resources/glossary/a/antagonist
-date_scraped: 2025-11-09T20:36:32.448108
+url: https://cancer.ca/en/cancer-information/resources/glossary/a/antagonist#main-content
+date_scraped: 2025-11-12T23:41:08.897836
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - A
-  - Antagonist
+  - Antagonist#Main Content
+  - antagonist
 ---
 
 # antagonist

@@ -1,11 +1,11 @@
 ---
 title: "Sexual problems – male sex organs"
-url: https://cancer.ca/en/treatments/side-effects/sexual-problems-male-sex-organs
-date_scraped: 2025-11-09T20:51:01.504223
+url: https://cancer.ca/en/treatments/side-effects/sexual-problems-male-sex-organs#main-content
+date_scraped: 2025-11-13T02:08:02.258186
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Sexual Problems Male Sex Organs
+  - Sexual Problems Male Sex Organs#Main Content
   - Sexual problems - male sex organs
 ---
 

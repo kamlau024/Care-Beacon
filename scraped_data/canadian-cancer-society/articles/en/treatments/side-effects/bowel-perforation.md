@@ -1,11 +1,12 @@
 ---
 title: "Bowel perforation"
-url: https://cancer.ca/en/treatments/side-effects/bowel-perforation
-date_scraped: 2025-11-09T20:52:25.592770
+url: https://cancer.ca/en/treatments/side-effects/bowel-perforation#main-content
+date_scraped: 2025-11-13T01:55:55.998633
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Bowel Perforation
+  - Bowel Perforation#Main Content
+  - Bowel perforation
 ---
 
 # Bowel perforation

@@ -1,10 +1,11 @@
 ---
 title: "Eye cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/eye
-date_scraped: 2025-11-09T20:43:06.523084
+url: https://cancer.ca/en/cancer-information/cancer-types/eye#main-content
+date_scraped: 2025-11-13T00:42:01.828774
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Eye#Main Content
   - Eye
 ---
 

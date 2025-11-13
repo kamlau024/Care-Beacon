@@ -1,7 +1,7 @@
 ---
 title: "pharynx"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/pharynx
-date_scraped: 2025-11-09T20:28:58.830813
+date_scraped: 2025-11-13T04:19:57.845751
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,12 +1,13 @@
 ---
 title: "Lung metastases"
-url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/lung-metastases
-date_scraped: 2025-11-09T20:42:02.682107
+url: https://cancer.ca/en/cancer-information/cancer-types/metastatic/lung-metastases#ci_lung_metastases_28_3926_00
+date_scraped: 2025-11-13T01:58:41.064746
 breadcrumbs:
   - Cancer Information
   - Cancer Types
   - Metastatic
-  - Lung Metastases
+  - Lung Metastases#Ci_Lung_Metastases_28_3926_00
+  - Lung metastases
 ---
 
 # Lung metastases

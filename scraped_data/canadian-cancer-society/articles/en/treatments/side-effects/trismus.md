@@ -1,10 +1,11 @@
 ---
 title: "Trismus"
-url: https://cancer.ca/en/treatments/side-effects/trismus
-date_scraped: 2025-11-09T20:51:22.274695
+url: https://cancer.ca/en/treatments/side-effects/trismus#ci_trismus_89_8340_00
+date_scraped: 2025-11-13T06:52:47.159074
 breadcrumbs:
   - Treatments
   - Side Effects
+  - Trismus#Ci_Trismus_89_8340_00
   - Trismus
 ---
 

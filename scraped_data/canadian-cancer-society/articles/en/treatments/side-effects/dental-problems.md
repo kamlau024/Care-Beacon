@@ -1,11 +1,12 @@
 ---
 title: "Dental problems"
-url: https://cancer.ca/en/treatments/side-effects/dental-problems
-date_scraped: 2025-11-09T20:50:54.535072
+url: https://cancer.ca/en/treatments/side-effects/dental-problems#main-content
+date_scraped: 2025-11-13T00:54:48.004593
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Dental Problems
+  - Dental Problems#Main Content
+  - Dental problems
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/32b093b0-d9d0-11eb-8ce3-42010af00014-en.png?h=296&iar=0&mw=543&w=451&rev=17e41cb7cfd14708a6ca350c959ed14a&hash=1AD7E9E01EFB9830E7E95AED2B73EC93
     alt: "Diagram of the teeth and jaws"

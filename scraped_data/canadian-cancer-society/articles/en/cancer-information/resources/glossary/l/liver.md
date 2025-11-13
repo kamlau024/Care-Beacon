@@ -1,13 +1,14 @@
 ---
 title: "liver"
-url: https://cancer.ca/en/cancer-information/resources/glossary/l/liver
-date_scraped: 2025-11-09T20:09:52.985352
+url: https://cancer.ca/en/cancer-information/resources/glossary/l/liver#main-content
+date_scraped: 2025-11-13T00:09:44.223410
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - L
-  - Liver
+  - Liver#Main Content
+  - liver
 ---
 
 # liver

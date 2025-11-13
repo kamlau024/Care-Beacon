@@ -1,7 +1,7 @@
 ---
 title: "gene"
 url: https://cancer.ca/en/cancer-information/resources/glossary/g/gene
-date_scraped: 2025-11-09T20:10:04.672958
+date_scraped: 2025-11-13T06:21:42.985532
 breadcrumbs:
   - Cancer Information
   - Resources

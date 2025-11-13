@@ -1,10 +1,11 @@
 ---
 title: "Colonoscopy"
-url: https://cancer.ca/en/treatments/tests-and-procedures/colonoscopy
-date_scraped: 2025-11-09T20:49:19.918174
+url: https://cancer.ca/en/treatments/tests-and-procedures/colonoscopy#main-content
+date_scraped: 2025-11-13T01:44:30.864629
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Colonoscopy#Main Content
   - Colonoscopy
 images:
   - src: https://cdn.cancer.ca/-/media/cams/diagnosis-and-treatment/90d661c0-b64c-11ea-bc3d-0242df4d59be-en.png?h=383&iar=0&mw=543&w=543&rev=f84cb14e7b0f4d2c8f530b072283883f&hash=49312F5E5FB6B806EB4C8821DAB02E34

@@ -1,13 +1,13 @@
 ---
 title: "computed tomography (CT) scan"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/computed-tomography-ct-scan
-date_scraped: 2025-11-09T20:17:03.825578
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/computed-tomography-ct-scan#main-content
+date_scraped: 2025-11-12T21:47:02.154776
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Computed Tomography Ct Scan
+  - Computed Tomography Ct Scan#Main Content
   - computed tomography (CT) scan
 ---
 

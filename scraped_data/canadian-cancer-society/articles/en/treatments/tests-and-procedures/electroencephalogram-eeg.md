@@ -1,11 +1,11 @@
 ---
 title: "Electroencephalogram (EEG)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/electroencephalogram-eeg
-date_scraped: 2025-11-09T20:47:27.511111
+url: https://cancer.ca/en/treatments/tests-and-procedures/electroencephalogram-eeg#0
+date_scraped: 2025-11-13T04:53:13.654036
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Electroencephalogram Eeg
+  - Electroencephalogram Eeg#0
   - Electroencephalogram (EEG)
 ---
 

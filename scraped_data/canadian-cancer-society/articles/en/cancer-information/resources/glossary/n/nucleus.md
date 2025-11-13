@@ -1,13 +1,14 @@
 ---
 title: "nucleus"
-url: https://cancer.ca/en/cancer-information/resources/glossary/n/nucleus
-date_scraped: 2025-11-09T20:05:37.715223
+url: https://cancer.ca/en/cancer-information/resources/glossary/n/nucleus#main-content
+date_scraped: 2025-11-12T23:23:34.687069
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - N
-  - Nucleus
+  - Nucleus#Main Content
+  - nucleus
 ---
 
 # nucleus

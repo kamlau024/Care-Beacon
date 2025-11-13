@@ -1,10 +1,11 @@
 ---
 title: "Sedation"
-url: https://cancer.ca/en/treatments/tests-and-procedures/sedation
-date_scraped: 2025-11-09T20:48:52.749492
+url: https://cancer.ca/en/treatments/tests-and-procedures/sedation#0
+date_scraped: 2025-11-13T07:36:55.280435
 breadcrumbs:
   - Treatments
   - Tests And Procedures
+  - Sedation#0
   - Sedation
 ---
 

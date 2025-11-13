@@ -1,7 +1,7 @@
 ---
 title: "basal cell"
 url: https://cancer.ca/en/cancer-information/resources/glossary/b/basal-cell
-date_scraped: 2025-11-09T20:11:09.381007
+date_scraped: 2025-11-13T05:05:53.415597
 breadcrumbs:
   - Cancer Information
   - Resources

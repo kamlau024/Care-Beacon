@@ -1,17 +1,19 @@
 {
-  "url": "https://cancer.ca/en/cancer-information/cancer-types/small-intestine",
-  "title": "Small intestine cancer",
-  "date_scraped": "2025-11-09T20:42:18.157369",
+  "url": "https://cancer.ca/en/cancer-information/resources/glossary/s/small-intestine",
+  "title": "small intestine",
+  "date_scraped": "2025-11-13T04:45:59.317930",
   "date_last_update": null,
   "date_next_review": null,
   "breadcrumbs": [
     "Cancer Information",
-    "Cancer Types",
+    "Resources",
+    "Glossary",
+    "S",
     "Small Intestine"
   ],
   "sidebar_links": [],
   "related_articles": [],
   "images": [],
   "tags": [],
-  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/cancer-types/small-intestine.md"
+  "file_path": "../scraped_data/canadian-cancer-society/articles/en/cancer-information/resources/glossary/s/small-intestine.md"
 }

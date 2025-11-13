@@ -1,11 +1,11 @@
 ---
 title: "Retroperitoneal lymph node dissection (RPLND)"
-url: https://cancer.ca/en/treatments/tests-and-procedures/retroperitoneal-lymph-node-dissection-rplnd
-date_scraped: 2025-11-09T20:47:59.003818
+url: https://cancer.ca/en/treatments/tests-and-procedures/retroperitoneal-lymph-node-dissection-rplnd#main-content
+date_scraped: 2025-11-13T02:21:49.050696
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Retroperitoneal Lymph Node Dissection Rplnd
+  - Retroperitoneal Lymph Node Dissection Rplnd#Main Content
   - Retroperitoneal lymph node dissection (RPLND)
 ---
 

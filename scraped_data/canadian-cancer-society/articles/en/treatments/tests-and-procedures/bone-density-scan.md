@@ -1,11 +1,12 @@
 ---
 title: "Bone density scan"
-url: https://cancer.ca/en/treatments/tests-and-procedures/bone-density-scan
-date_scraped: 2025-11-09T20:49:18.347645
+url: https://cancer.ca/en/treatments/tests-and-procedures/bone-density-scan#main-content
+date_scraped: 2025-11-12T23:27:55.243742
 breadcrumbs:
   - Treatments
   - Tests And Procedures
-  - Bone Density Scan
+  - Bone Density Scan#Main Content
+  - Bone density scan
 ---
 
 # Bone density scan

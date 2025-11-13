@@ -1,13 +1,14 @@
 ---
 title: "cecum"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/cecum
-date_scraped: 2025-11-09T20:28:14.933535
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/cecum#main-content
+date_scraped: 2025-11-13T01:24:51.083237
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Cecum
+  - Cecum#Main Content
+  - cecum
 ---
 
 # cecum

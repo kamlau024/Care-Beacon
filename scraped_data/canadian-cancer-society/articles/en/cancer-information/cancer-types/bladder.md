@@ -1,10 +1,11 @@
 ---
 title: "Bladder cancer"
-url: https://cancer.ca/en/cancer-information/cancer-types/bladder
-date_scraped: 2025-11-09T20:42:50.580241
+url: https://cancer.ca/en/cancer-information/cancer-types/bladder#0
+date_scraped: 2025-11-13T05:53:31.510628
 breadcrumbs:
   - Cancer Information
   - Cancer Types
+  - Bladder#0
   - Bladder
 ---
 

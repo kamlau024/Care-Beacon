@@ -1,10 +1,11 @@
 ---
 title: "Work"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/work
-date_scraped: 2025-11-08T23:27:52.062929
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/work#main-content
+date_scraped: 2025-11-13T01:35:40.127717
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
+  - Work#Main Content
   - Work
 images:
   - src: https://img.youtube.com/vi/F85FDv2tJXU/0.jpg
@@ -72,7 +73,3 @@ You may find it useful to see a financial advisor or planner to discuss financia
 References
 
   * Nitkin P, Parkinson M, & Schultz IZ. _Cancer and Work: A Canadian Perspective_. British Columbia Cancer Agency; 2011.
-
-Was this content helpful?
-
-1 - Lowest rating2 - Low rating3 - Neutral rating4 - High rating5 - Highest rating

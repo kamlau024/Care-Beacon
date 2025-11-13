@@ -1,7 +1,7 @@
 ---
 title: "radiation oncologist"
 url: https://cancer.ca/en/cancer-information/resources/glossary/r/radiation-oncologist
-date_scraped: 2025-11-09T20:25:26.240284
+date_scraped: 2025-11-12T22:20:55.990715
 breadcrumbs:
   - Cancer Information
   - Resources

@@ -1,7 +1,7 @@
 ---
 title: "x-ray"
 url: https://cancer.ca/en/cancer-information/resources/glossary/x/xray
-date_scraped: 2025-11-09T01:46:36.626025
+date_scraped: 2025-11-13T02:22:34.112150
 breadcrumbs:
   - Cancer Information
   - Resources

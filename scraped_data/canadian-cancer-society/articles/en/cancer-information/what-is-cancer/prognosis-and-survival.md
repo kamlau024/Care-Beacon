@@ -1,12 +1,13 @@
 ---
 title: "Prognosis and survival"
-url: https://cancer.ca/en/cancer-information/what-is-cancer/prognosis-and-survival
-date_scraped: 2025-11-09T20:41:03.455380
+url: https://cancer.ca/en/cancer-information/what-is-cancer/prognosis-and-survival#main-content
+date_scraped: 2025-11-13T01:54:07.363711
 breadcrumbs:
   - Cancer Information
   - What Is Cancer
-  - Prognosis And Survival
+  - Prognosis And Survival#Main Content
   - What is cancer?
+  - Prognosis and survival
 ---
 
 # Prognosis and survival

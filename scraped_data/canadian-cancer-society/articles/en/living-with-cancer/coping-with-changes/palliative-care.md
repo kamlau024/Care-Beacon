@@ -1,11 +1,12 @@
 ---
 title: "Palliative care"
-url: https://cancer.ca/en/living-with-cancer/coping-with-changes/palliative-care
-date_scraped: 2025-11-09T20:44:52.486406
+url: https://cancer.ca/en/living-with-cancer/coping-with-changes/palliative-care#main-content
+date_scraped: 2025-11-12T21:47:59.021580
 breadcrumbs:
   - Living With Cancer
   - Coping With Changes
-  - Palliative Care
+  - Palliative Care#Main Content
+  - Palliative care
 images:
   - src: https://img.youtube.com/vi/n6VxbQ-A4tQ/0.jpg
     alt: "YouTube video poster"

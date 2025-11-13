@@ -1,13 +1,14 @@
 ---
 title: "diaphragm"
-url: https://cancer.ca/en/cancer-information/resources/glossary/d/diaphragm
-date_scraped: 2025-11-09T20:28:08.172868
+url: https://cancer.ca/en/cancer-information/resources/glossary/d/diaphragm#main-content
+date_scraped: 2025-11-13T01:46:37.651138
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - D
-  - Diaphragm
+  - Diaphragm#Main Content
+  - diaphragm
 ---
 
 # diaphragm

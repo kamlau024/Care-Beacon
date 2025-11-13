@@ -1,13 +1,14 @@
 ---
 title: "cervix"
-url: https://cancer.ca/en/cancer-information/resources/glossary/c/cervix
-date_scraped: 2025-11-09T20:17:39.178007
+url: https://cancer.ca/en/cancer-information/resources/glossary/c/cervix#main-content
+date_scraped: 2025-11-13T01:22:20.913529
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - C
-  - Cervix
+  - Cervix#Main Content
+  - cervix
 ---
 
 # cervix

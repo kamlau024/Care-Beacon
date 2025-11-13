@@ -1,11 +1,12 @@
 ---
 title: "Keeping track of your treatment history"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/keeping-track-of-your-treatment-history
-date_scraped: 2025-11-09T20:44:21.240332
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/keeping-track-of-your-treatment-history#main-content
+date_scraped: 2025-11-12T22:04:12.275553
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - Keeping Track Of Your Treatment History
+  - Keeping Track Of Your Treatment History#Main Content
+  - Keeping track of your treatment history
 ---
 
 # Keeping track of your treatment history

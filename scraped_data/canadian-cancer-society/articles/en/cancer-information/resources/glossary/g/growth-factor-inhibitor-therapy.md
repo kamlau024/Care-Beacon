@@ -1,13 +1,14 @@
 ---
 title: "growth factor inhibitor therapy"
-url: https://cancer.ca/en/cancer-information/resources/glossary/g/growth-factor-inhibitor-therapy
-date_scraped: 2025-11-09T20:11:11.822718
+url: https://cancer.ca/en/cancer-information/resources/glossary/g/growth-factor-inhibitor-therapy#main-content
+date_scraped: 2025-11-12T22:58:32.473700
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - G
-  - Growth Factor Inhibitor Therapy
+  - Growth Factor Inhibitor Therapy#Main Content
+  - growth factor inhibitor therapy
 ---
 
 # growth factor inhibitor therapy

@@ -1,13 +1,14 @@
 ---
 title: "percutaneous"
-url: https://cancer.ca/en/cancer-information/resources/glossary/p/percutaneous
-date_scraped: 2025-11-09T20:35:03.223225
+url: https://cancer.ca/en/cancer-information/resources/glossary/p/percutaneous#main-content
+date_scraped: 2025-11-12T22:40:56.880273
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - P
-  - Percutaneous
+  - Percutaneous#Main Content
+  - percutaneous
 ---
 
 # percutaneous

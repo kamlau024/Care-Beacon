@@ -1,7 +1,7 @@
 ---
 title: "palliative care"
 url: https://cancer.ca/en/cancer-information/resources/glossary/p/palliative-care
-date_scraped: 2025-11-09T20:36:53.123360
+date_scraped: 2025-11-13T02:22:41.518986
 breadcrumbs:
   - Cancer Information
   - Resources

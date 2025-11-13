@@ -1,11 +1,12 @@
 ---
 title: "Finding your new normal"
-url: https://cancer.ca/en/living-with-cancer/life-after-treatment/finding-your-new-normal
-date_scraped: 2025-11-09T20:45:38.582834
+url: https://cancer.ca/en/living-with-cancer/life-after-treatment/finding-your-new-normal#main-content
+date_scraped: 2025-11-12T22:04:37.573113
 breadcrumbs:
   - Living With Cancer
   - Life After Treatment
-  - Finding Your New Normal
+  - Finding Your New Normal#Main Content
+  - Finding your new normal
 ---
 
 # Finding your new normal

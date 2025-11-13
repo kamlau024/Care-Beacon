@@ -1,13 +1,14 @@
 ---
 title: "diagnostic mammography"
-url: https://cancer.ca/en/cancer-information/resources/glossary/d/diagnostic-mammography
-date_scraped: 2025-11-09T20:17:37.995313
+url: https://cancer.ca/en/cancer-information/resources/glossary/d/diagnostic-mammography#main-content
+date_scraped: 2025-11-12T23:38:35.134696
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - D
-  - Diagnostic Mammography
+  - Diagnostic Mammography#Main Content
+  - diagnostic mammography
 ---
 
 # diagnostic mammography

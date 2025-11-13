@@ -1,13 +1,14 @@
 ---
 title: "electrolyte"
-url: https://cancer.ca/en/cancer-information/resources/glossary/e/electrolyte
-date_scraped: 2025-11-09T20:22:32.913173
+url: https://cancer.ca/en/cancer-information/resources/glossary/e/electrolyte#main-content
+date_scraped: 2025-11-13T02:50:00.089125
 breadcrumbs:
   - Cancer Information
   - Resources
   - Glossary
   - E
-  - Electrolyte
+  - Electrolyte#Main Content
+  - electrolyte
 ---
 
 # electrolyte

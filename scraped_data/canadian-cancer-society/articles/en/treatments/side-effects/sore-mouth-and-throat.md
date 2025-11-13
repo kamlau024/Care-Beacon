@@ -1,11 +1,12 @@
 ---
 title: "Sore mouth and throat"
-url: https://cancer.ca/en/treatments/side-effects/sore-mouth-and-throat
-date_scraped: 2025-11-09T20:51:41.268223
+url: https://cancer.ca/en/treatments/side-effects/sore-mouth-and-throat#main-content
+date_scraped: 2025-11-13T07:17:41.221449
 breadcrumbs:
   - Treatments
   - Side Effects
-  - Sore Mouth And Throat
+  - Sore Mouth And Throat#Main Content
+  - Sore mouth and throat
 ---
 
 # Sore mouth and throat
