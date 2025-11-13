@@ -23,6 +23,7 @@ from src.embeddings.chunking import DocumentChunker
 from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import VectorDatabase
 from src.storage.models import Article, Chunk
+from src.config_loader import get_config
 
 
 def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
@@ -164,8 +165,12 @@ def store_in_database(chunks: List[Chunk], db: VectorDatabase) -> None:
     print(f"Storing {len(chunks)} chunks in vector database...")
     print()
 
+    # Get chunk batch size from config (default 100 for non-low-memory environments)
+    config = get_config()
+    chunk_batch_size = config.get('ingestion.chunk_batch_size', 100)
+
     # Add chunks with progress
-    db.add_chunks(chunks, batch_size=100, show_progress=True)
+    db.add_chunks(chunks, batch_size=chunk_batch_size, show_progress=True)
 
     print()
     print("✅ All chunks stored in database")

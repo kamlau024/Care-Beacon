@@ -20,10 +20,7 @@ from src.embeddings.chunking import DocumentChunker
 from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import VectorDatabase
 from src.storage.models import Article, Chunk
-
-# Memory-efficient batch size for Render free tier (512MB)
-# Process fewer articles at a time to avoid OOM
-BATCH_SIZE = 10  # Reduced from 50 to 10 for ultra-low memory
+from src.config_loader import get_config
 
 
 def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
@@ -105,7 +102,10 @@ def process_batch(
 
     # Step 4: Store in database (smaller batches for low memory)
     print(f"\n[4/4] Storing in database...")
-    db.add_chunks(embedded_chunks, batch_size=50, show_progress=False)  # Reduced from 100 to 50
+    # Get chunk batch size from config
+    config = get_config()
+    chunk_batch_size = config.get('ingestion.chunk_batch_size', 50)
+    db.add_chunks(embedded_chunks, batch_size=chunk_batch_size, show_progress=False)
     print(f"  ✅ Stored {len(embedded_chunks)} chunks")
     print(f"  💾 Memory: {get_memory_usage():.1f} MB")
 
@@ -124,6 +124,16 @@ def main():
     print("="*70)
     print("Care-Beacon Low-Memory Ingestion (Render Free Tier)")
     print("="*70)
+    print()
+
+    # Load configuration
+    config = get_config()
+    article_batch_size = config.get('ingestion.article_batch_size', 10)
+    chunk_batch_size = config.get('ingestion.chunk_batch_size', 50)
+
+    print(f"📋 Configuration:")
+    print(f"   Article batch size: {article_batch_size}")
+    print(f"   Chunk batch size: {chunk_batch_size}")
     print()
 
     # Define source directories
@@ -174,19 +184,19 @@ def main():
 
     # Process in batches
     print("="*70)
-    print(f"Processing in Batches (batch size: {BATCH_SIZE})")
+    print(f"Processing in Batches (batch size: {article_batch_size})")
     print("="*70)
 
-    total_batches = (len(all_article_paths) + BATCH_SIZE - 1) // BATCH_SIZE
+    total_batches = (len(all_article_paths) + article_batch_size - 1) // article_batch_size
     total_articles_processed = 0
     total_chunks_created = 0
     total_chunks_stored = 0
 
     start_time = time.time()
 
-    for i in range(0, len(all_article_paths), BATCH_SIZE):
-        batch = all_article_paths[i:i + BATCH_SIZE]
-        batch_num = (i // BATCH_SIZE) + 1
+    for i in range(0, len(all_article_paths), article_batch_size):
+        batch = all_article_paths[i:i + article_batch_size]
+        batch_num = (i // article_batch_size) + 1
 
         articles_processed, chunks_created, chunks_stored = process_batch(
             batch,

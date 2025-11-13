@@ -52,6 +52,12 @@ class Config:
         if os.getenv("LOG_LEVEL"):
             self._config["logging"]["level"] = os.getenv("LOG_LEVEL")
 
+        # Ingestion batch sizes (for low-memory environments like Render free tier)
+        if os.getenv("INGESTION_ARTICLE_BATCH_SIZE"):
+            self._config.setdefault("ingestion", {})["article_batch_size"] = int(os.getenv("INGESTION_ARTICLE_BATCH_SIZE"))
+        if os.getenv("INGESTION_CHUNK_BATCH_SIZE"):
+            self._config.setdefault("ingestion", {})["chunk_batch_size"] = int(os.getenv("INGESTION_CHUNK_BATCH_SIZE"))
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get a configuration value by dot-notation key.
 
