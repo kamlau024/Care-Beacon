@@ -724,6 +724,7 @@ async def stream_database_download(base_url: str = None):
         If base_url is not provided, uses VECTOR_DB_REMOTE_URL environment variable.
     """
     import asyncio
+    from pathlib import Path
     from fastapi.responses import StreamingResponse
 
     async def event_generator():
