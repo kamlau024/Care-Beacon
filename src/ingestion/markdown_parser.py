@@ -116,7 +116,8 @@ class MarkdownParser:
             breadcrumbs=breadcrumbs,
             images=images,
             sections=sections,
-            source=source
+            source=source,
+            file_path=str(file_path)  # Store file path for unique ID generation
         )
 
         return article

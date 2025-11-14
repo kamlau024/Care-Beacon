@@ -2,13 +2,15 @@
 
 This script processes articles in small batches to avoid running out of memory.
 Optimized for Render.com free tier deployment.
+Includes manifest generation for cloud deployment.
 """
 
 import sys
 import gc
+import json
 import psutil
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 import time
 
 # Add project root to path
@@ -117,6 +119,66 @@ def process_batch(
     print(f"  💾 Memory after cleanup: {get_memory_usage():.1f} MB")
 
     return len(article_paths_batch), len(all_chunks) if 'all_chunks' in locals() else chunks_stored, chunks_stored
+
+
+def create_vector_db_manifest() -> None:
+    """Create manifest file for vector database cloud deployment."""
+    print("\n" + "="*70)
+    print("Creating Vector Database Manifest")
+    print("="*70)
+    print()
+
+    vector_db_path = project_root / "data" / "vector_db"
+    manifest_path = vector_db_path / "vector_db_manifest.json"
+
+    if not vector_db_path.exists():
+        print(f"⚠️  Vector database not found: {vector_db_path}")
+        print("   Skipping manifest creation")
+        return
+
+    # Get all files in vector_db directory
+    files = []
+    for item in vector_db_path.rglob("*"):
+        if item.is_file() and item != manifest_path:  # Exclude the manifest itself
+            rel_path = item.relative_to(vector_db_path)
+            size = item.stat().st_size
+            files.append({
+                "path": str(rel_path).replace("\\", "/"),
+                "size": size
+            })
+
+    if not files:
+        print("⚠️  No files found in vector database")
+        return
+
+    # Calculate total size
+    total_size = sum(f["size"] for f in files)
+
+    print(f"📊 Database Files:")
+    print(f"   Total files: {len(files)}")
+    print(f"   Total size: {total_size:,} bytes ({total_size / 1024 / 1024:.1f} MB)")
+    print()
+
+    # Create manifest
+    manifest = {
+        "version": "1.0",
+        "total_files": len(files),
+        "total_size": total_size,
+        "files": sorted(files, key=lambda x: x["path"])
+    }
+
+    # Write manifest
+    with open(manifest_path, 'w') as f:
+        json.dump(manifest, f, indent=2)
+
+    manifest_size = manifest_path.stat().st_size
+    print(f"✅ Manifest created: {manifest_path}")
+    print(f"   Size: {manifest_size:,} bytes")
+    print()
+    print("📤 Ready for Cloud Upload:")
+    print(f"   Upload entire folder: {vector_db_path}/ → <cloud-url>/vector_db/")
+    print(f"   Includes manifest: vector_db_manifest.json")
+    print()
 
 
 def main():
@@ -245,6 +307,9 @@ def main():
     else:
         print(f"❌ Warning: Database is empty!")
     print()
+
+    # Create manifest for cloud deployment
+    create_vector_db_manifest()
 
 
 if __name__ == "__main__":

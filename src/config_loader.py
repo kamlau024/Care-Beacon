@@ -52,6 +52,10 @@ class Config:
         if os.getenv("LOG_LEVEL"):
             self._config["logging"]["level"] = os.getenv("LOG_LEVEL")
 
+        # Embedding batch size
+        if os.getenv("EMBEDDING_BATCH_SIZE"):
+            self._config.setdefault("embeddings", {})["batch_size"] = int(os.getenv("EMBEDDING_BATCH_SIZE"))
+
         # Ingestion batch sizes (for low-memory environments like Render free tier)
         if os.getenv("INGESTION_ARTICLE_BATCH_SIZE"):
             self._config.setdefault("ingestion", {})["article_batch_size"] = int(os.getenv("INGESTION_ARTICLE_BATCH_SIZE"))

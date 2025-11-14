@@ -42,7 +42,10 @@ secrets.yaml
 credentials.json
 
 # Vector Database
-data/vector_db/
+data/
+data_backup/
+data/vector_db/  # Includes vector_db_manifest.json inside
+vector_db_backup_*/
 *.index
 *.faiss
 chroma_db/
@@ -58,7 +61,7 @@ data/raw_articles/
 data/processed_articles/
 
 # Project-specific: Scraped data and outputs
-# scraped_data/ - Now tracked for Render deployment
+scraped_data/ 
 output/
 data/markdown/
 data/articles/

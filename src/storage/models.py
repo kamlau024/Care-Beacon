@@ -33,12 +33,26 @@ class Article:
     cancer_type: Optional[str] = None
     specialty: Optional[str] = None
     source: str = "BC Cancer"
+    file_path: Optional[str] = None  # Store file path for uniqueness
 
     def __post_init__(self):
-        """Generate article_id from title if not provided."""
+        """Generate article_id from title, source, and file path if not provided."""
         if self.article_id is None:
+            # Create source prefix (lowercase, no spaces)
+            source_prefix = self.source.lower().replace(' ', '-').replace('/', '-')
             # Create slug from title
-            self.article_id = self.title.lower().replace(' ', '-').replace('/', '-')
+            title_slug = self.title.lower().replace(' ', '-').replace('/', '-')
+
+            # If file_path is provided, use it to ensure uniqueness
+            # This handles cases where same title appears in different folders
+            if self.file_path:
+                # Get a hash of the file path to keep ID reasonable length
+                import hashlib
+                path_hash = hashlib.md5(self.file_path.encode()).hexdigest()[:8]
+                self.article_id = f"{source_prefix}_{title_slug}_{path_hash}"
+            else:
+                # Fallback to source + title (for backward compatibility)
+                self.article_id = f"{source_prefix}_{title_slug}"
 
         # Extract cancer type from breadcrumbs if available
         if self.cancer_type is None and len(self.breadcrumbs) >= 3:
