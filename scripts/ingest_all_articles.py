@@ -23,7 +23,7 @@ sys.path.insert(0, str(project_root))
 from src.ingestion.markdown_parser import MarkdownParser
 from src.embeddings.chunking import DocumentChunker
 from src.embeddings.embedding_generator import EmbeddingGenerator
-from src.storage.vector_db import VectorDatabase
+from src.storage.vector_db import create_vector_database
 from src.storage.models import Article, Chunk
 from src.config_loader import get_config
 
@@ -325,7 +325,7 @@ def main():
     parser = MarkdownParser()
     chunker = DocumentChunker()
     generator = EmbeddingGenerator()
-    db = VectorDatabase()
+    db = create_vector_database()
     print("✅ Components initialized")
     print()
 

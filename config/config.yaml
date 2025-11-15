@@ -14,11 +14,17 @@ embeddings:
   max_retries: 3
   retry_delay: 1.0  # seconds
 
-# Vector Database (Chroma)
+# Vector Database
 vector_db:
+  provider: "qdrant"  # Qdrant Cloud vector database
   collection_name: "care-beacon-medical"
-  persist_directory: "data/vector_db"
   distance_metric: "cosine"  # cosine, l2, or ip
+
+  # Qdrant Cloud Configuration
+  # Get credentials from: https://cloud.qdrant.io
+  # Set via environment variables: QDRANT_URL and QDRANT_API_KEY
+  qdrant_url: null  # e.g., "https://xyz-example.qdrant.io"
+  qdrant_api_key: null  # Your Qdrant API key
 
 # Ingestion Configuration (for bulk data loading)
 ingestion:

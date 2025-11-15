@@ -62,6 +62,14 @@ class Config:
         if os.getenv("INGESTION_CHUNK_BATCH_SIZE"):
             self._config.setdefault("ingestion", {})["chunk_batch_size"] = int(os.getenv("INGESTION_CHUNK_BATCH_SIZE"))
 
+        # Vector Database Configuration
+        if os.getenv("VECTOR_DB_PROVIDER"):
+            self._config.setdefault("vector_db", {})["provider"] = os.getenv("VECTOR_DB_PROVIDER")
+        if os.getenv("QDRANT_URL"):
+            self._config.setdefault("vector_db", {})["qdrant_url"] = os.getenv("QDRANT_URL")
+        if os.getenv("QDRANT_API_KEY"):
+            self._config.setdefault("vector_db", {})["qdrant_api_key"] = os.getenv("QDRANT_API_KEY")
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get a configuration value by dot-notation key.
 

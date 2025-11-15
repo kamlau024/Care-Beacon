@@ -1,7 +1,10 @@
-"""Vector database implementation using Chroma."""
+"""Vector database implementation with support for Qdrant.
 
-import chromadb
-from chromadb.config import Settings
+Note: ChromaDB support has been removed. This module now only provides
+a factory function to create Qdrant database instances. The legacy VectorDatabase
+class remains for backwards compatibility but will raise an error if instantiated.
+"""
+
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
@@ -357,3 +360,37 @@ class VectorDatabase:
             chunks.append(chunk)
 
         return chunks
+
+
+def create_vector_database(
+    provider: Optional[str] = None,
+    **kwargs
+) -> 'QdrantVectorDatabase':
+    """Factory function to create the Qdrant vector database instance.
+
+    Args:
+        provider: Database provider (must be "qdrant"). If None, reads from config.
+        **kwargs: Additional arguments to pass to the database constructor
+
+    Returns:
+        QdrantVectorDatabase instance
+
+    Raises:
+        ValueError: If provider is not "qdrant"
+    """
+    config = get_config()
+    provider = provider or config.get('vector_db.provider', 'qdrant')
+
+    if provider == 'chromadb':
+        raise ValueError(
+            "ChromaDB is no longer supported. Please use Qdrant Cloud. "
+            "Set VECTOR_DB_PROVIDER=qdrant in .env and configure QDRANT_URL and QDRANT_API_KEY."
+        )
+    elif provider == 'qdrant':
+        from src.storage.qdrant_db import QdrantVectorDatabase
+        return QdrantVectorDatabase(**kwargs)
+    else:
+        raise ValueError(
+            f"Unsupported vector database provider: {provider}. "
+            f"Only 'qdrant' is supported."
+        )

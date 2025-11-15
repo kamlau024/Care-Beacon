@@ -4,7 +4,7 @@ markdown==3.5.1  # Markdown processing
 pyyaml==6.0.1  # YAML configuration files
 
 # Vector Database
-chromadb==0.4.22  # Vector database for embeddings
+qdrant-client==1.12.1  # Qdrant Cloud vector database
 
 # Embeddings & LLM APIs
 openai==1.54.0  # OpenAI API for embeddings and GPT models

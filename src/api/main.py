@@ -409,61 +409,88 @@ async def get_vector_db_stats():
         Vector database statistics including source breakdown
     """
     try:
-        from src.storage.vector_db import VectorDatabase
+        from src.storage.vector_db import create_vector_database
 
-        vector_db = VectorDatabase()
-        collection = vector_db.collection
+        vector_db = create_vector_database()
 
-        # Count total unique documents (articles)
-        all_results = collection.get(include=["metadatas"])
-        unique_articles = set()
-        if all_results and all_results.get("metadatas"):
-            for metadata in all_results.get("metadatas", []):
-                article_id = metadata.get("article_id", "")
-                if article_id:
-                    unique_articles.add(article_id)
+        # Get stats using the database's get_stats method
+        stats = vector_db.get_stats()
+        total_chunks = stats.get('total_chunks', 0)
 
-        total_chunks = vector_db.count()
-
-        # Get breakdown by source
+        # Get source breakdown by scrolling through all points (Qdrant)
         sources = []
+        unique_articles = set()
+        source_stats = {}  # Track stats per source: {source_name: {articles: set(), chunks: count}}
 
-        # BC Cancer
-        bc_results = collection.get(where={"source": "BC Cancer"}, include=["metadatas"])
-        bc_count = len(bc_results.get("ids", [])) if bc_results else 0
-        bc_articles = set()
-        if bc_results and bc_results.get("metadatas"):
-            for metadata in bc_results.get("metadatas", []):
-                article_id = metadata.get("article_id", "")
-                if article_id:
-                    bc_articles.add(article_id)
+        try:
+            # Scroll through all points to gather statistics
+            offset = None
+            batch_size = 100
 
-        sources.append({
-            "name": "BC Cancer",
-            "chunks": bc_count,
-            "articles": len(bc_articles)
-        })
+            while True:
+                scroll_result = vector_db.client.scroll(
+                    collection_name=vector_db.collection_name,
+                    limit=batch_size,
+                    offset=offset,
+                    with_payload=True,
+                    with_vectors=False
+                )
 
-        # Canadian Cancer Society
-        ccs_results = collection.get(where={"source": "Canadian Cancer Society"}, include=["metadatas"])
-        ccs_count = len(ccs_results.get("ids", [])) if ccs_results else 0
-        ccs_articles = set()
-        if ccs_results and ccs_results.get("metadatas"):
-            for metadata in ccs_results.get("metadatas", []):
-                article_id = metadata.get("article_id", "")
-                if article_id:
-                    ccs_articles.add(article_id)
+                points, next_offset = scroll_result
 
-        sources.append({
-            "name": "Canadian Cancer Society",
-            "chunks": ccs_count,
-            "articles": len(ccs_articles)
-        })
+                if not points:
+                    break
+
+                # Process this batch
+                for point in points:
+                    payload = point.payload
+                    source = payload.get('source', 'Unknown')
+                    article_id = payload.get('article_id', '')
+
+                    # Track unique articles globally
+                    if article_id:
+                        unique_articles.add(article_id)
+
+                    # Track per-source statistics
+                    if source not in source_stats:
+                        source_stats[source] = {
+                            'articles': set(),
+                            'chunks': 0
+                        }
+
+                    source_stats[source]['chunks'] += 1
+                    if article_id:
+                        source_stats[source]['articles'].add(article_id)
+
+                # Check if we've reached the end
+                if next_offset is None:
+                    break
+
+                offset = next_offset
+
+            # Convert source_stats to the output format
+            for source_name, data in source_stats.items():
+                sources.append({
+                    "name": source_name,
+                    "articles": len(data['articles']),
+                    "chunks": data['chunks']
+                })
+
+            # Sort sources by name for consistent ordering
+            sources.sort(key=lambda x: x['name'])
+
+        except Exception as e:
+            # If scrolling fails, fall back to basic stats
+            logger.warning(f"Failed to get source breakdown: {e}")
+            unique_articles = set()
 
         return {
-            "total_documents": len(unique_articles),
+            "total_documents": len(unique_articles) if unique_articles else stats.get('unique_articles_sample', 0),
             "total_chunks": total_chunks,
-            "sources": sources
+            "sources": sources,
+            "collection_name": stats.get('collection_name', ''),
+            "distance_metric": stats.get('distance_metric', ''),
+            "vector_size": stats.get('vector_size', 0)
         }
 
     except Exception as e:

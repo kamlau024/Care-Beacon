@@ -8,7 +8,7 @@ import time
 from typing import List, Dict, Any, Optional
 
 from src.embeddings.embedding_generator import EmbeddingGenerator
-from src.storage.vector_db import VectorDatabase
+from src.storage.vector_db import create_vector_database
 from src.retrieval.models import Query, RetrievedContext, RetrievalConfig
 from src.storage.models import RetrievalResult
 from src.retrieval.reranker import LLMReranker
@@ -34,7 +34,7 @@ class RetrievalEngine:
     def __init__(
         self,
         embedding_generator: Optional[EmbeddingGenerator] = None,
-        vector_db: Optional[VectorDatabase] = None,
+        vector_db: Optional[Any] = None,
         config: Optional[RetrievalConfig] = None,
         reranker: Optional[LLMReranker] = None,
     ):
@@ -42,12 +42,12 @@ class RetrievalEngine:
 
         Args:
             embedding_generator: Optional EmbeddingGenerator instance
-            vector_db: Optional VectorDatabase instance
+            vector_db: Optional Qdrant vector database instance
             config: Optional retrieval configuration
             reranker: Optional LLMReranker instance for re-ranking results
         """
         self.embedding_generator = embedding_generator or EmbeddingGenerator()
-        self.vector_db = vector_db or VectorDatabase()
+        self.vector_db = vector_db or create_vector_database()
         self.config = config or self._load_config()
         self.reranker = reranker or (LLMReranker() if self.config.rerank_results else None)
 

@@ -1,5 +1,5 @@
 services:
-  # API Service - FastAPI + RAG System + ChromaDB
+  # API Service - FastAPI + RAG System + Qdrant Cloud
   api:
     build:
       context: .
@@ -11,8 +11,11 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      # Vector Database Configuration (Qdrant Cloud)
+      - VECTOR_DB_PROVIDER=${VECTOR_DB_PROVIDER:-qdrant}
+      - QDRANT_URL=${QDRANT_URL}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
     volumes:
-      - ./data:/app/data              # Persist ChromaDB data
       - ./logs:/app/logs              # Persist logs
       - ./scraped_data:/app/scraped_data  # Source articles
     depends_on:
@@ -108,8 +111,11 @@ services:
     container_name: care-beacon-ingestion
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Vector Database Configuration (Qdrant Cloud)
+      - VECTOR_DB_PROVIDER=${VECTOR_DB_PROVIDER:-qdrant}
+      - QDRANT_URL=${QDRANT_URL}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
     volumes:
-      - ./data:/app/data              # Share ChromaDB data with API
       - ./scraped_data:/app/scraped_data  # Source articles
       - ./logs:/app/logs
     command: python scripts/ingest_data.py

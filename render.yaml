@@ -13,7 +13,7 @@ projects:
           - type: web
             name: care-beacon-api
             runtime: python
-            plan: starter
+            plan: free
             buildCommand: "chmod +x scripts/render_build.sh && ./scripts/render_build.sh"
             startCommand: "python scripts/start_api.py"
             autoDeploy: true
@@ -31,6 +31,12 @@ projects:
             envVars:
               - key: OPENAI_API_KEY
                 sync: false
+              - key: QDRANT_URL
+                sync: false
+              - key: QDRANT_API_KEY
+                sync: false
+              - key: VECTOR_DB_PROVIDER
+                value: "qdrant"
               - key: REDIS_URL
                 fromService:
                   type: redis
@@ -40,10 +46,6 @@ projects:
                 value: "3.10.19"
               - key: ANONYMIZED_TELEMETRY
                 value: "False"
-            disk:
-              name: vector-db-data
-              mountPath: /opt/render/project/src/data
-              sizeGB: 1
 
           # Next.js Frontend
           - type: web
