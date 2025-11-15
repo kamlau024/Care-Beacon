@@ -14,7 +14,6 @@ import { StatsDashboard } from "@/components/stats-dashboard"
 import { HealthCheck } from "@/components/health-check"
 import { AdminControls } from "@/components/admin-controls"
 import { VectorDBDisplay } from "@/components/vector-db-display"
-import { DatabaseDownload } from "@/components/database-download"
 import type { QuestionResponse } from "@/lib/types"
 
 type Page = "search" | "stats" | "admin"
@@ -111,10 +110,7 @@ export default function Home() {
                 <AdminControls />
                 <HealthCheck />
               </div>
-              <div className="grid gap-6 lg:grid-cols-2">
-                <VectorDBDisplay />
-                <DatabaseDownload />
-              </div>
+              <VectorDBDisplay />
             </div>
           )}
         </div>

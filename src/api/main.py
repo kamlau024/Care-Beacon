@@ -45,7 +45,6 @@ from src.api.models import (
     ErrorResponse,
 )
 from src.api.performance import get_performance_monitor
-from src.api.vectordb_download import VectorDBDownloader
 
 # API Version
 API_VERSION = "2.0.0"
@@ -722,128 +721,6 @@ async def stream_ingestion(force: bool = False):
 
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
-
-    return StreamingResponse(
-        event_generator(),
-        media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no"  # Disable nginx buffering
-        }
-    )
-
-
-@app.get("/api/v1/admin/download-db/stream", tags=["Administration"])
-async def stream_database_download(base_url: str = None):
-    """Stream real-time database download progress using Server-Sent Events.
-
-    Args:
-        base_url: Optional base URL for remote storage (overrides env var)
-
-    Returns:
-        Server-Sent Events stream with real-time progress
-
-    Note:
-        This endpoint should be protected with authentication in production.
-        Use EventSource API on the client to consume the stream.
-
-        If base_url is not provided, uses VECTOR_DB_REMOTE_URL environment variable.
-    """
-    import asyncio
-    from pathlib import Path
-    from fastapi.responses import StreamingResponse
-
-    async def event_generator():
-        """Generate SSE events from download progress."""
-        try:
-            # Check if remote URL is configured
-            remote_url = base_url or os.getenv("VECTOR_DB_REMOTE_URL")
-            if not remote_url:
-                yield f"data: {json.dumps({'type': 'error', 'message': 'VECTOR_DB_REMOTE_URL not configured'})}\n\n"
-                return
-
-            # Send start event
-            yield f"data: {json.dumps({'type': 'start', 'remote_url': remote_url, 'timestamp': datetime.now().isoformat()})}\n\n"
-
-            # Create downloader
-            downloader = VectorDBDownloader(remote_url)
-
-            # Progress callback
-            async def progress_callback(current: int, total: int, message: str):
-                """Send progress updates via SSE."""
-                yield f"data: {json.dumps({'type': 'progress', 'current': current, 'total': total, 'message': message, 'percent': current})}\n\n"
-
-            # Track progress
-            progress_messages = []
-
-            async def tracked_progress(current: int, total: int, message: str):
-                progress_messages.append({'current': current, 'total': total, 'message': message, 'percent': current})
-                event = json.dumps({'type': 'progress', 'current': current, 'total': total, 'message': message, 'percent': current})
-                return event
-
-            # Download database
-            start_time = time.time()
-
-            # Stream progress updates
-            try:
-                # Fetch manifest
-                yield f"data: {json.dumps({'type': 'progress', 'current': 0, 'total': 100, 'message': 'Fetching manifest...', 'percent': 0})}\n\n"
-                await asyncio.sleep(0)
-
-                manifest = await downloader.fetch_manifest()
-
-                message = f"Found {manifest['total_files']} files to download"
-                yield f"data: {json.dumps({'type': 'progress', 'current': 5, 'total': 100, 'message': message, 'percent': 5})}\n\n"
-                await asyncio.sleep(0)
-
-                # Backup existing database
-                yield f"data: {json.dumps({'type': 'progress', 'current': 10, 'total': 100, 'message': 'Backing up existing database...', 'percent': 10})}\n\n"
-                await asyncio.sleep(0)
-
-                backup_path = downloader.backup_existing_database()
-
-                # Download files with progress
-                files = manifest["files"]
-                for i, file_info in enumerate(files):
-                    file_path = file_info["path"]
-                    file_url = f"{remote_url}vector_db/{file_path}"
-                    destination = Path("data/vector_db") / file_path
-
-                    # Calculate progress (10% for setup, 90% for downloads)
-                    progress = int(10 + (i / len(files)) * 90)
-
-                    yield f"data: {json.dumps({'type': 'progress', 'current': progress, 'total': 100, 'message': f'Downloading {i + 1}/{len(files)}: {file_path}', 'percent': progress})}\n\n"
-                    await asyncio.sleep(0)
-
-                    success = await downloader.download_file(file_url, destination)
-
-                    if not success:
-                        raise Exception(f"Failed to download {file_path}")
-
-                elapsed_time = time.time() - start_time
-
-                # Reset answer generator to pick up new database
-                reset_answer_generator()
-
-                # Send completion event
-                yield f"data: {json.dumps({'type': 'complete', 'elapsed_seconds': round(elapsed_time, 2), 'files_downloaded': len(files), 'timestamp': datetime.now().isoformat()})}\n\n"
-
-                # Cleanup old backups
-                downloader.cleanup_old_backups(keep_count=2)
-
-            except Exception as e:
-                # Download failed - restore backup
-                error_msg = str(e)
-                yield f"data: {json.dumps({'type': 'error', 'message': f'Download failed: {error_msg}. Restoring backup...', 'timestamp': datetime.now().isoformat()})}\n\n"
-                await asyncio.sleep(0)
-
-                downloader.restore_backup()
-
-                yield f"data: {json.dumps({'type': 'error', 'message': f'Database download failed: {error_msg}', 'timestamp': datetime.now().isoformat()})}\n\n"
-
-        except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e), 'timestamp': datetime.now().isoformat()})}\n\n"
 
     return StreamingResponse(
         event_generator(),
