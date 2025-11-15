@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Database, RefreshCw, Loader2 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts"
 import { api, ApiError } from "@/lib/api"
 import type { VectorDBStats } from "@/lib/types"
 
@@ -41,13 +41,23 @@ export function VectorDBDisplay() {
     return num.toLocaleString()
   }
 
-  const getSourceBadgeColor = (source: string) => {
+  const getSourceColor = (source: string) => {
     if (source === "BC Cancer") {
-      return "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800"
+      return "hsl(217, 91%, 60%)" // Blue
     } else if (source === "Canadian Cancer Society") {
-      return "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-800"
+      return "hsl(271, 91%, 65%)" // Purple
     }
-    return ""
+    return "hsl(0, 0%, 60%)" // Gray fallback
+  }
+
+  const prepareChartData = (type: "articles" | "chunks") => {
+    if (!stats) return []
+
+    return stats.sources.map((source) => ({
+      name: source.name,
+      value: type === "articles" ? source.articles : source.chunks,
+      fill: getSourceColor(source.name),
+    }))
   }
 
   return (
@@ -94,62 +104,139 @@ export function VectorDBDisplay() {
 
         {/* Stats Display */}
         {stats && (
-          <>
-            {/* Overall Stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg border p-4">
-                <div className="text-2xl font-bold">{formatNumber(stats.total_documents)}</div>
-                <div className="text-xs text-muted-foreground">Total Articles</div>
-              </div>
-              <div className="rounded-lg border p-4">
-                <div className="text-2xl font-bold">{formatNumber(stats.total_chunks)}</div>
-                <div className="text-xs text-muted-foreground">Total Chunks</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Articles Donut Chart */}
+            <div className="flex flex-col items-center">
+              <h4 className="text-sm font-medium mb-4">Articles by Source</h4>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={prepareChartData("articles")}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={2}
+                  >
+                    {prepareChartData("articles").map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                    <Label
+                      content={({ viewBox }) => {
+                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          return (
+                            <text
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                            >
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) - 10}
+                                className="fill-foreground text-3xl font-bold"
+                              >
+                                {formatNumber(stats.total_documents)}
+                              </tspan>
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) + 15}
+                                className="fill-muted-foreground text-sm"
+                              >
+                                Total Articles
+                              </tspan>
+                            </text>
+                          )
+                        }
+                      }}
+                    />
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              {/* Legend */}
+              <div className="mt-4 space-y-2">
+                {stats.sources.map((source) => (
+                  <div key={source.name} className="flex items-center gap-2 text-sm">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: getSourceColor(source.name) }}
+                    />
+                    <span className="text-muted-foreground">
+                      {source.name}: {formatNumber(source.articles)}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Source Breakdown */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Data Sources</h4>
-              {stats.sources.map((source) => (
-                <div
-                  key={source.name}
-                  className="rounded-lg border p-4 space-y-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <Badge
-                      variant="outline"
-                      className={getSourceBadgeColor(source.name)}
-                    >
-                      {source.name}
-                    </Badge>
-                    <div className="text-sm text-muted-foreground">
-                      {((source.chunks / stats.total_chunks) * 100).toFixed(1)}% of total
-                    </div>
+            {/* Chunks Donut Chart */}
+            <div className="flex flex-col items-center">
+              <h4 className="text-sm font-medium mb-4">Chunks by Source</h4>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={prepareChartData("chunks")}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={2}
+                  >
+                    {prepareChartData("chunks").map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                    <Label
+                      content={({ viewBox }) => {
+                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          return (
+                            <text
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                            >
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) - 10}
+                                className="fill-foreground text-3xl font-bold"
+                              >
+                                {formatNumber(stats.total_chunks)}
+                              </tspan>
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) + 15}
+                                className="fill-muted-foreground text-sm"
+                              >
+                                Total Chunks
+                              </tspan>
+                            </text>
+                          )
+                        }
+                      }}
+                    />
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              {/* Legend */}
+              <div className="mt-4 space-y-2">
+                {stats.sources.map((source) => (
+                  <div key={source.name} className="flex items-center gap-2 text-sm">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: getSourceColor(source.name) }}
+                    />
+                    <span className="text-muted-foreground">
+                      {source.name}: {formatNumber(source.chunks)}
+                    </span>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <div className="text-xs text-muted-foreground">Articles</div>
-                      <div className="text-lg font-semibold">
-                        {formatNumber(source.articles)}
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-xs text-muted-foreground">Chunks</div>
-                      <div className="text-lg font-semibold">
-                        {formatNumber(source.chunks)}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Average chunks per article */}
-                  <div className="text-xs text-muted-foreground">
-                    Average: {(source.chunks / source.articles).toFixed(1)} chunks per article
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>
