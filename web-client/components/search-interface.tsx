@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { api, ApiError } from "@/lib/api"
 import type { QuestionResponse, Citation } from "@/lib/types"
+import { SourceBadge } from "@/components/ui/source-badge"
 
 interface SearchInterfaceProps {
   question: string
@@ -82,22 +83,6 @@ function parseCitations(text: string, sources: Citation[]): React.ReactNode[] {
   }
 
   return parts.length > 0 ? parts : [text]
-}
-
-// Helper function to get badge styling based on source
-function getSourceBadgeStyle(source: string): string {
-  if (source === "BC Cancer") {
-    // Blue/cyan theme matching the image
-    return "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
-  } else if (source === "Canadian Cancer Society") {
-    // Green/lime theme matching the image
-    return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
-  } else if (source === "Cleveland Clinic") {
-    // Orange/amber theme for Cleveland Clinic
-    return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800"
-  }
-  // Default fallback
-  return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800"
 }
 
 export function SearchInterface({
@@ -374,9 +359,7 @@ export function SearchInterface({
                             <Badge variant="secondary" className="text-xs">
                               {(source.similarity_score * 100).toFixed(0)}%
                             </Badge>
-                            <Badge className={`text-xs border ${getSourceBadgeStyle(source.source)}`}>
-                              {source.source}
-                            </Badge>
+                            <SourceBadge source={source.source} />
                           </div>
                           <p className="text-xs text-muted-foreground">{source.section}</p>
                           {source.text_excerpt && (

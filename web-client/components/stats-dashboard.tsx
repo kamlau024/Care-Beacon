@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts"
 import { api, ApiError } from "@/lib/api"
 import type { StatsResponse, VectorDBStats } from "@/lib/types"
+import { getSourceChartColor } from "@/lib/source-colors"
 
 export function StatsDashboard() {
   const [stats, setStats] = useState<StatsResponse | null>(null)
@@ -64,24 +65,13 @@ export function StatsDashboard() {
     return num.toLocaleString()
   }
 
-  const getSourceColor = (source: string) => {
-    if (source === "BC Cancer") {
-      return "hsl(217, 91%, 60%)" // Blue
-    } else if (source === "Canadian Cancer Society") {
-      return "hsl(271, 91%, 65%)" // Purple
-    } else if (source === "Cleveland Clinic") {
-      return "hsl(142, 76%, 36%)" // Green
-    }
-    return "hsl(0, 0%, 60%)" // Gray fallback
-  }
-
   const prepareChartData = (type: "articles" | "chunks" | "storage") => {
     if (!vectorStats) return []
 
     return vectorStats.sources.map((source) => ({
       name: source.name,
       value: type === "articles" ? source.articles : type === "chunks" ? source.chunks : source.storage_mb,
-      fill: getSourceColor(source.name),
+      fill: getSourceChartColor(source.name),
     }))
   }
 
@@ -227,7 +217,7 @@ export function StatsDashboard() {
                       <div key={source.name} className="flex items-center gap-2 text-sm">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: getSourceColor(source.name) }}
+                          style={{ backgroundColor: getSourceChartColor(source.name) }}
                         />
                         <span className="text-muted-foreground">
                           {source.name}: {formatNumber(source.articles)}
@@ -293,7 +283,7 @@ export function StatsDashboard() {
                       <div key={source.name} className="flex items-center gap-2 text-sm">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: getSourceColor(source.name) }}
+                          style={{ backgroundColor: getSourceChartColor(source.name) }}
                         />
                         <span className="text-muted-foreground">
                           {source.name}: {formatNumber(source.chunks)}
@@ -360,7 +350,7 @@ export function StatsDashboard() {
                       <div key={source.name} className="flex items-center gap-2 text-sm">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: getSourceColor(source.name) }}
+                          style={{ backgroundColor: getSourceChartColor(source.name) }}
                         />
                         <span className="text-muted-foreground">
                           {source.name}: {formatStorageSize(source.storage_mb)}

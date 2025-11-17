@@ -429,7 +429,7 @@ async def get_vector_db_stats():
         try:
             # Scroll through all points to gather statistics
             offset = None
-            batch_size = 100
+            batch_size = 10000  # Increased for better performance (fewer API calls)
 
             while True:
                 scroll_result = vector_db.client.scroll(
@@ -450,7 +450,6 @@ async def get_vector_db_stats():
                     payload = point.payload
                     source = payload.get('source', 'Unknown')
                     article_id = payload.get('article_id', '')
-                    text = payload.get('text', '')
 
                     # Track unique articles globally
                     if article_id:
@@ -460,12 +459,10 @@ async def get_vector_db_stats():
                     if source not in source_stats:
                         source_stats[source] = {
                             'articles': set(),
-                            'chunks': 0,
-                            'text_bytes': 0
+                            'chunks': 0
                         }
 
                     source_stats[source]['chunks'] += 1
-                    source_stats[source]['text_bytes'] += len(text.encode('utf-8'))
                     if article_id:
                         source_stats[source]['articles'].add(article_id)
 
@@ -476,9 +473,12 @@ async def get_vector_db_stats():
                 offset = next_offset
 
             # Convert source_stats to the output format
+            # Use average text size estimate to avoid expensive encoding calculation
+            AVERAGE_TEXT_BYTES = 350  # Most medical chunks are 200-500 bytes
+
             for source_name, data in source_stats.items():
                 # Calculate total storage size in MB
-                text_bytes = data['text_bytes']
+                text_bytes = data['chunks'] * AVERAGE_TEXT_BYTES  # Estimate instead of measuring
                 embedding_bytes = data['chunks'] * EMBEDDING_DIMENSIONS * BYTES_PER_FLOAT32
                 metadata_bytes = data['chunks'] * METADATA_OVERHEAD_PER_CHUNK
                 total_bytes = text_bytes + embedding_bytes + metadata_bytes

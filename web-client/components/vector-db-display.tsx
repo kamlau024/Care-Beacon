@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts"
 import { api, ApiError } from "@/lib/api"
 import type { VectorDBStats } from "@/lib/types"
+import { getSourceChartColor } from "@/lib/source-colors"
 
 export function VectorDBDisplay() {
   const [stats, setStats] = useState<VectorDBStats | null>(null)
@@ -41,22 +42,13 @@ export function VectorDBDisplay() {
     return num.toLocaleString()
   }
 
-  const getSourceColor = (source: string) => {
-    if (source === "BC Cancer") {
-      return "hsl(217, 91%, 60%)" // Blue
-    } else if (source === "Canadian Cancer Society") {
-      return "hsl(271, 91%, 65%)" // Purple
-    }
-    return "hsl(0, 0%, 60%)" // Gray fallback
-  }
-
   const prepareChartData = (type: "articles" | "chunks") => {
     if (!stats) return []
 
     return stats.sources.map((source) => ({
       name: source.name,
       value: type === "articles" ? source.articles : source.chunks,
-      fill: getSourceColor(source.name),
+      fill: getSourceChartColor(source.name),
     }))
   }
 
@@ -161,7 +153,7 @@ export function VectorDBDisplay() {
                   <div key={source.name} className="flex items-center gap-2 text-sm">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: getSourceColor(source.name) }}
+                      style={{ backgroundColor: getSourceChartColor(source.name) }}
                     />
                     <span className="text-muted-foreground">
                       {source.name}: {formatNumber(source.articles)}
@@ -227,7 +219,7 @@ export function VectorDBDisplay() {
                   <div key={source.name} className="flex items-center gap-2 text-sm">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: getSourceColor(source.name) }}
+                      style={{ backgroundColor: getSourceChartColor(source.name) }}
                     />
                     <span className="text-muted-foreground">
                       {source.name}: {formatNumber(source.chunks)}
