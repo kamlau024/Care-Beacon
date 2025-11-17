@@ -170,6 +170,10 @@ def main(source_filter=None):
         "canadian-cancer-society": {
             "path": "scraped_data/canadian-cancer-society/articles",
             "name": "Canadian Cancer Society"
+        },
+        "cleveland-clinic": {
+            "path": "scraped_data/cleveland-clinic/articles",
+            "name": "Cleveland Clinic"
         }
     }
 
@@ -394,13 +398,16 @@ Examples:
 
   # Ingest only Canadian Cancer Society
   python scripts/ingest_all_articles_to_qdrant.py --source canadian-cancer-society
+
+  # Ingest only Cleveland Clinic
+  python scripts/ingest_all_articles_to_qdrant.py --source cleveland-clinic
         """
     )
 
     parser.add_argument(
         "--source",
         type=str,
-        choices=["bc-cancer", "canadian-cancer-society"],
+        choices=["bc-cancer", "canadian-cancer-society", "cleveland-clinic"],
         help="Ingest only from the specified source (default: all sources)"
     )
 

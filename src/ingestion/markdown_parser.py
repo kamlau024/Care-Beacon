@@ -20,8 +20,9 @@ class MarkdownParser:
         self.list_item_pattern = re.compile(r'^\s*[\*\-\+]\s+(.+)$')
         self.blockquote_pattern = re.compile(r'^\s*>\s+(.+)$')
 
-        # Source detection patterns
+        # Source detection patterns (order matters - more specific patterns first)
         self.source_mappings = {
+            'cleveland-clinic': 'Cleveland Clinic',  # Check this before canadian-cancer-society
             'bc-cancer': 'BC Cancer',
             'bccancer': 'BC Cancer',
             'canadian-cancer-society': 'Canadian Cancer Society',

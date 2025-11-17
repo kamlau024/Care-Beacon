@@ -47,10 +47,11 @@ class QdrantVectorDatabase:
         if not self.api_key:
             raise ValueError("Qdrant API key not configured. Set QDRANT_API_KEY environment variable or in config.")
 
-        # Initialize Qdrant client
+        # Initialize Qdrant client with extended timeout for large batch operations
         self.client = QdrantClient(
             url=self.url,
             api_key=self.api_key,
+            timeout=300,  # 5 minutes timeout for large batch operations
         )
 
         # Map distance metric to Qdrant Distance enum
@@ -177,6 +178,8 @@ class QdrantVectorDatabase:
             batch_size: Number of chunks to add per batch
             show_progress: Whether to show progress updates
         """
+        import time
+
         if not chunks:
             return
 
@@ -204,11 +207,30 @@ class QdrantVectorDatabase:
             # Convert chunks to points
             points = [self._chunk_to_point(chunk) for chunk in batch]
 
-            # Upsert to Qdrant
-            self.client.upsert(
-                collection_name=self.collection_name,
-                points=points
-            )
+            # Upsert to Qdrant with retry logic
+            max_retries = 3
+            retry_delay = 5  # seconds
+
+            for attempt in range(max_retries):
+                try:
+                    self.client.upsert(
+                        collection_name=self.collection_name,
+                        points=points
+                    )
+                    break  # Success, exit retry loop
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        if "timeout" in str(e).lower() or "timed out" in str(e).lower():
+                            wait_time = retry_delay * (2 ** attempt)  # Exponential backoff
+                            print(f"  ⚠️  Timeout error, retrying in {wait_time}s (attempt {attempt + 1}/{max_retries})...")
+                            time.sleep(wait_time)
+                        else:
+                            # Non-timeout error, re-raise immediately
+                            raise
+                    else:
+                        # Final attempt failed, re-raise
+                        print(f"  ❌ Failed after {max_retries} attempts")
+                        raise
 
         if show_progress:
             print(f"✅ Added {len(chunks_with_embeddings)} chunks to database")

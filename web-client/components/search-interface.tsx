@@ -25,6 +25,7 @@ interface SearchInterfaceProps {
 const SOURCES = [
   { id: "bc-cancer", label: "BC Cancer" },
   { id: "canadian-cancer-society", label: "Canadian Cancer Society" },
+  { id: "cleveland-clinic", label: "Cleveland Clinic" },
 ]
 
 // Helper function to parse and linkify citations in the answer
@@ -91,6 +92,9 @@ function getSourceBadgeStyle(source: string): string {
   } else if (source === "Canadian Cancer Society") {
     // Green/lime theme matching the image
     return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
+  } else if (source === "Cleveland Clinic") {
+    // Orange/amber theme for Cleveland Clinic
+    return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800"
   }
   // Default fallback
   return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800"
@@ -106,10 +110,11 @@ export function SearchInterface({
   error,
   setError,
 }: SearchInterfaceProps) {
-  // Source filter state - both sources selected by default
+  // Source filter state - all sources selected by default
   const [selectedSources, setSelectedSources] = useState<string[]>([
     "BC Cancer",
     "Canadian Cancer Society",
+    "Cleveland Clinic",
   ])
 
   // Minimum similarity score state - default to 0.5 (50%)

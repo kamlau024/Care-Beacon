@@ -29,7 +29,7 @@ vector_db:
 # Ingestion Configuration (for bulk data loading)
 ingestion:
   article_batch_size: 10  # Number of articles to process per batch (reduce for low-memory environments)
-  chunk_batch_size: 50    # Number of chunks to add to vector DB per batch (reduce for low-memory environments)
+  chunk_batch_size: 25    # Number of chunks to add to vector DB per batch (reduced for Qdrant Cloud timeout issues)
 
 # Retrieval Configuration
 retrieval:

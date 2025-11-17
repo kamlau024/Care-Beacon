@@ -69,6 +69,8 @@ export function StatsDashboard() {
       return "hsl(217, 91%, 60%)" // Blue
     } else if (source === "Canadian Cancer Society") {
       return "hsl(271, 91%, 65%)" // Purple
+    } else if (source === "Cleveland Clinic") {
+      return "hsl(142, 76%, 36%)" // Green
     }
     return "hsl(0, 0%, 60%)" // Gray fallback
   }
