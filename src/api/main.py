@@ -419,7 +419,12 @@ async def get_vector_db_stats():
         # Get source breakdown by scrolling through all points (Qdrant)
         sources = []
         unique_articles = set()
-        source_stats = {}  # Track stats per source: {source_name: {articles: set(), chunks: count}}
+        source_stats = {}  # Track stats per source: {source_name: {articles: set(), chunks: count, text_bytes: int}}
+
+        # Constants for storage calculation
+        BYTES_PER_FLOAT32 = 4
+        EMBEDDING_DIMENSIONS = stats.get('vector_size', 1536)
+        METADATA_OVERHEAD_PER_CHUNK = 200  # Approximate bytes for metadata (article_id, section, etc.)
 
         try:
             # Scroll through all points to gather statistics
@@ -445,6 +450,7 @@ async def get_vector_db_stats():
                     payload = point.payload
                     source = payload.get('source', 'Unknown')
                     article_id = payload.get('article_id', '')
+                    text = payload.get('text', '')
 
                     # Track unique articles globally
                     if article_id:
@@ -454,10 +460,12 @@ async def get_vector_db_stats():
                     if source not in source_stats:
                         source_stats[source] = {
                             'articles': set(),
-                            'chunks': 0
+                            'chunks': 0,
+                            'text_bytes': 0
                         }
 
                     source_stats[source]['chunks'] += 1
+                    source_stats[source]['text_bytes'] += len(text.encode('utf-8'))
                     if article_id:
                         source_stats[source]['articles'].add(article_id)
 
@@ -469,10 +477,18 @@ async def get_vector_db_stats():
 
             # Convert source_stats to the output format
             for source_name, data in source_stats.items():
+                # Calculate total storage size in MB
+                text_bytes = data['text_bytes']
+                embedding_bytes = data['chunks'] * EMBEDDING_DIMENSIONS * BYTES_PER_FLOAT32
+                metadata_bytes = data['chunks'] * METADATA_OVERHEAD_PER_CHUNK
+                total_bytes = text_bytes + embedding_bytes + metadata_bytes
+                storage_mb = total_bytes / (1024 * 1024)  # Convert to MB
+
                 sources.append({
                     "name": source_name,
                     "articles": len(data['articles']),
-                    "chunks": data['chunks']
+                    "chunks": data['chunks'],
+                    "storage_mb": round(storage_mb, 2)  # Round to 2 decimal places
                 })
 
             # Sort sources by name for consistent ordering

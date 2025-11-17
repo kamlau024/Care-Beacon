@@ -75,14 +75,26 @@ export function StatsDashboard() {
     return "hsl(0, 0%, 60%)" // Gray fallback
   }
 
-  const prepareChartData = (type: "articles" | "chunks") => {
+  const prepareChartData = (type: "articles" | "chunks" | "storage") => {
     if (!vectorStats) return []
 
     return vectorStats.sources.map((source) => ({
       name: source.name,
-      value: type === "articles" ? source.articles : source.chunks,
+      value: type === "articles" ? source.articles : type === "chunks" ? source.chunks : source.storage_mb,
       fill: getSourceColor(source.name),
     }))
+  }
+
+  const formatStorageSize = (mb: number) => {
+    if (mb >= 1024) {
+      return `${(mb / 1024).toFixed(2)} GB`
+    }
+    return `${mb.toFixed(2)} MB`
+  }
+
+  const getTotalStorageMB = () => {
+    if (!vectorStats) return 0
+    return vectorStats.sources.reduce((total, source) => total + source.storage_mb, 0)
   }
 
   if (loading) {
@@ -158,7 +170,7 @@ export function StatsDashboard() {
           {vectorStats && (
             <>
               {/* Donut Charts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Articles Donut Chart */}
                 <div className="flex flex-col items-center">
                   <h4 className="text-sm font-medium mb-4">Articles by Source</h4>
@@ -285,6 +297,73 @@ export function StatsDashboard() {
                         />
                         <span className="text-muted-foreground">
                           {source.name}: {formatNumber(source.chunks)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Storage Size Donut Chart */}
+                <div className="flex flex-col items-center">
+                  <h4 className="text-sm font-medium mb-4">Storage Size by Source</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie
+                        data={prepareChartData("storage")}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={80}
+                        paddingAngle={2}
+                      >
+                        {prepareChartData("storage").map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                        <Label
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              const totalMB = getTotalStorageMB()
+                              return (
+                                <text
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  textAnchor="middle"
+                                  dominantBaseline="middle"
+                                >
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={(viewBox.cy || 0) - 10}
+                                    className="fill-foreground text-3xl font-bold"
+                                  >
+                                    {totalMB >= 1024 ? (totalMB / 1024).toFixed(1) : totalMB.toFixed(0)}
+                                  </tspan>
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={(viewBox.cy || 0) + 15}
+                                    className="fill-muted-foreground text-sm"
+                                  >
+                                    {totalMB >= 1024 ? "GB" : "MB"} Total
+                                  </tspan>
+                                </text>
+                              )
+                            }
+                          }}
+                        />
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Legend */}
+                  <div className="mt-4 space-y-2">
+                    {vectorStats.sources.map((source) => (
+                      <div key={source.name} className="flex items-center gap-2 text-sm">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: getSourceColor(source.name) }}
+                        />
+                        <span className="text-muted-foreground">
+                          {source.name}: {formatStorageSize(source.storage_mb)}
                         </span>
                       </div>
                     ))}

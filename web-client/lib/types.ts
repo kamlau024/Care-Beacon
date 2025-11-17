@@ -107,6 +107,7 @@ export interface VectorDBStats {
     name: string
     chunks: number
     articles: number
+    storage_mb: number
   }[]
 }
 
