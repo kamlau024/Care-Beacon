@@ -6,6 +6,7 @@ information from the vector database based on user queries.
 
 import time
 from typing import List, Dict, Any, Optional
+from loguru import logger
 
 from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import create_vector_database
@@ -52,7 +53,6 @@ class RetrievalEngine:
         self.reranker = reranker or (LLMReranker() if self.config.rerank_results else None)
 
         # Log initialization
-        from loguru import logger
         if self.reranker:
             logger.info("✅ RetrievalEngine initialized with LLM re-ranking ENABLED")
         else:
@@ -97,7 +97,6 @@ class RetrievalEngine:
 
         # Search vector database
         # Retrieve more results if re-ranking is enabled (retrieve 6x to ensure completeness)
-        from loguru import logger
         initial_n_results = query.max_results * 6 if self.reranker else query.max_results
         logger.info(f"🔍 Searching vector DB: fetching {initial_n_results} results (reranker={'enabled' if self.reranker else 'disabled'})")
 
@@ -173,10 +172,14 @@ class RetrievalEngine:
         Returns:
             RetrievedContext with retrieved chunks
         """
+        # Debug: Log what values we're using
+        resolved_min_similarity = min_similarity if min_similarity is not None else self.config.default_min_similarity
+        logger.info(f"🔧 retrieve_text: min_similarity={min_similarity} (passed) → using {resolved_min_similarity} (config default={self.config.default_min_similarity})")
+
         query = Query(
             text=query_text,
             max_results=max_results if max_results is not None else self.config.default_max_results,
-            min_similarity=min_similarity if min_similarity is not None else self.config.default_min_similarity,
+            min_similarity=resolved_min_similarity,
             filters=filters,
         )
 

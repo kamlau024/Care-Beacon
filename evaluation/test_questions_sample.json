@@ -1,0 +1,20 @@
+[
+  {
+    "id": "BC_BRE_BASIC_001",
+    "question": "What is breast cancer?",
+    "ground_truth": "Breast cancer is cancer that starts in the breast tissue. It develops in the lobes, ducts, or fatty tissue of the breast. Breast lumps can be either malignant (cancer) or benign (not cancer), and up to 90% of breast lumps are not cancer.",
+    "cancer_type": "breast",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_BASIC_002",
+    "question": "What are the different parts of breast anatomy?",
+    "ground_truth": "Each breast has 15-20 lobes or sections. The lobes connect to ducts and ducts lead to the nipple. The breast grows in a fatty layer between the skin and underlying muscle on the front of the chest.",
+    "cancer_type": "breast",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  }
+]

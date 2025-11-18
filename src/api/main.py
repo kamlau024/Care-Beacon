@@ -215,6 +215,20 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     """Handle general exceptions."""
+    # Always log the full error to console for debugging
+    import traceback
+    from loguru import logger
+
+    logger.error("=" * 70)
+    logger.error("UNHANDLED EXCEPTION IN API")
+    logger.error("=" * 70)
+    logger.error(f"Exception type: {type(exc).__name__}")
+    logger.error(f"Exception message: {str(exc)}")
+    logger.error(f"Request: {request.method} {request.url}")
+    logger.error("Full traceback:")
+    logger.error(traceback.format_exc())
+    logger.error("=" * 70)
+
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
@@ -361,6 +375,21 @@ async def ask_question(request: Request, question_request: QuestionRequest):
         )
 
     except Exception as e:
+        # Log the full error with traceback
+        import traceback
+        from loguru import logger
+
+        logger.error("=" * 70)
+        logger.error("ERROR IN /api/v1/ask ENDPOINT")
+        logger.error("=" * 70)
+        logger.error(f"Exception type: {type(e).__name__}")
+        logger.error(f"Exception message: {str(e)}")
+        logger.error(f"Question: {question_request.question}")
+        logger.error(f"min_similarity: {question_request.min_similarity}")
+        logger.error("Full traceback:")
+        logger.error(traceback.format_exc())
+        logger.error("=" * 70)
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate answer: {str(e)}",

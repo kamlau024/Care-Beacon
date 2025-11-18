@@ -1,0 +1,326 @@
+[
+  {
+    "id": "BC_BRE_BASIC_001",
+    "question": "What is breast cancer?",
+    "ground_truth": "Breast cancer is cancer that starts in the breast tissue. It develops in the lobes, ducts, or fatty tissue of the breast. Breast lumps can be either malignant (cancer) or benign (not cancer), and up to 90% of breast lumps are not cancer.",
+    "cancer_type": "breast",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_BASIC_002",
+    "question": "What are the different parts of breast anatomy?",
+    "ground_truth": "Each breast has 15-20 lobes or sections. The lobes connect to ducts and ducts lead to the nipple. The breast grows in a fatty layer between the skin and underlying muscle on the front of the chest.",
+    "cancer_type": "breast",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_SYMP_001",
+    "question": "What are the signs and symptoms of breast cancer?",
+    "ground_truth": "Common symptoms include: a mass, lump, or thickening in the breast; changes in breast size; nipple drawing in or sinking; dimpling or puckering of breast skin; changes in breast shape; bloody or watery nipple discharge; redness, scaling or inflammation of the nipple; breast redness, swelling or heat; or a lump under the arm or in the armpit.",
+    "cancer_type": "breast",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_SYMP_002",
+    "question": "Are all breast lumps cancerous?",
+    "ground_truth": "No, not all breast lumps are cancer. Up to 90% (90 out of 100) of breast lumps are not cancer (benign). Many benign lumps may change size during a menstrual cycle and may be caused by normal hormonal cycles.",
+    "cancer_type": "breast",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_SYMP_003",
+    "question": "What are the specific symptoms of male breast cancer?",
+    "ground_truth": "Male breast cancer symptoms are similar to female breast cancer. However, male breast cancers are often diagnosed at later stages because males may ignore lumps in their breast tissue or may not know that lumps can be cancer. Males also have a higher rate of estrogen receptor positive (ER+) cancers.",
+    "cancer_type": "breast",
+    "question_type": "symptoms",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_DIAG_001",
+    "question": "How is breast cancer diagnosed?",
+    "ground_truth": "Breast cancer is diagnosed through several tests: diagnostic mammogram (breast x-ray) with more detailed pictures than screening mammograms; ultrasound to see if a lump is solid or filled with fluid; MRI for more detailed imaging; or biopsy where tissue is removed and examined under a microscope to determine if it's cancerous.",
+    "cancer_type": "breast",
+    "question_type": "diagnosis",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_DIAG_002",
+    "question": "What is the difference between a screening mammogram and a diagnostic mammogram?",
+    "ground_truth": "A diagnostic mammogram is done when a lump is found either by touch or from a screening mammogram. It takes more x-ray pictures than a screening mammogram and provides more detailed images to help determine if the lump is benign (not cancer) or if more tests are needed.",
+    "cancer_type": "breast",
+    "question_type": "diagnosis",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_SCREEN_001",
+    "question": "Why is early detection of breast cancer important?",
+    "ground_truth": "The earlier a breast cancer is found, the better the chance of curing it with treatment. This is why screening and being aware of changes in your breasts is important.",
+    "cancer_type": "breast",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_SCREEN_002",
+    "question": "What should I do if I find a lump in my breast?",
+    "ground_truth": "If you find a lump, you should see a doctor or nurse practitioner right away. Even though up to 90% of breast lumps are not cancer, it's important to get it checked to rule out cancer or get early treatment if needed.",
+    "cancer_type": "breast",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_COMP_001",
+    "question": "What is the difference between benign and malignant breast lumps?",
+    "ground_truth": "Breast lumps are either malignant (cancer) or benign (not cancer). Benign lumps are not cancerous and may change size during a menstrual cycle or be caused by normal hormonal changes. Many benign lumps may get smaller or go away on their own. Malignant lumps are cancerous and require treatment.",
+    "cancer_type": "breast",
+    "question_type": "comparison",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_COMP_002",
+    "question": "How does male breast cancer differ from female breast cancer?",
+    "ground_truth": "Male breast cancer differs from female breast cancer in three main ways: 1) Male breast cancers are often diagnosed at later stages (metastatic) because males may ignore lumps or not know they can get breast cancer, 2) A high rate of male breast cancer cases are estrogen receptor positive (ER+), meaning estrogen helps the cancers grow, and 3) Males who develop breast cancer are more likely to have inherited a gene mutation that raises their breast cancer risk.",
+    "cancer_type": "breast",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_BRE_COMP_003",
+    "question": "Are painful breast lumps more or less likely to be cancer?",
+    "ground_truth": "Painful lumps are less likely to be cancer. However, any lump that is new or stays over time should be examined by a doctor, regardless of whether it's painful or not.",
+    "cancer_type": "breast",
+    "question_type": "comparison",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_BASIC_001",
+    "question": "What is lung cancer?",
+    "ground_truth": "Lung cancer is cancer that starts in the lungs. It is also called pulmonary cancer, bronchial cancer, small cell lung cancer (SCLC), oat cell carcinoma, non-small cell lung cancer (NSCLC), adenocarcinoma of the lung, or squamous cell lung carcinoma. It is the deadliest cancer, causing about 26% of all cancer deaths.",
+    "cancer_type": "lung",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_BASIC_002",
+    "question": "What is the anatomy of the lungs?",
+    "ground_truth": "The lungs are in the chest and wrap around the heart and major blood vessels going to and from the heart and esophagus. The right lung has three lobes (sections) and the left lung has two lobes.",
+    "cancer_type": "lung",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_SYMP_001",
+    "question": "What are the signs and symptoms of lung cancer?",
+    "ground_truth": "There are often no symptoms with early stage lung cancer. More advanced lung cancer may have symptoms including: new, changing, or worsening cough (especially with blood in sputum); change in exercise ability or sudden shortness of breath; wheezing; hoarse voice; repeated pneumonia or bronchitis; fever; weakness; weight loss; chest pain; difficulty swallowing; or enlarged neck lymph nodes.",
+    "cancer_type": "lung",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_SYMP_002",
+    "question": "Why is lung cancer often diagnosed at an advanced stage?",
+    "ground_truth": "Lung cancer is often diagnosed at an advanced stage because there are often no symptoms with early stage lung cancer. Because of this, many people with lung cancer already have advanced disease when they are diagnosed.",
+    "cancer_type": "lung",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_SYMP_003",
+    "question": "Where does advanced lung cancer commonly spread to?",
+    "ground_truth": "Advanced lung cancer often spreads to the brain, liver, bone, and lymph nodes. People with lung cancer may have symptoms from the spread of the cancer before they have symptoms from the lung cancer itself.",
+    "cancer_type": "lung",
+    "question_type": "symptoms",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_DIAG_001",
+    "question": "How is lung cancer diagnosed?",
+    "ground_truth": "Lung cancer is diagnosed through imaging tests (chest X-ray, CT scan, MRI, PET scan) to see the tumor and if cancer has spread. To confirm diagnosis, a pathologist must look at cells under a microscope. Cells can be collected through: sputum sample, thoracentesis (needle into chest for fluid), bronchoscopy (tube down throat), needle biopsy through chest wall, or mediastinoscopy (examining lymph nodes near the windpipe).",
+    "cancer_type": "lung",
+    "question_type": "diagnosis",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_DIAG_002",
+    "question": "What is a bronchoscopy and how is it used to diagnose lung cancer?",
+    "ground_truth": "A bronchoscopy is when a doctor puts a bronchoscope (thin, flexible tube with a light) down your throat to examine your lungs. The bronchoscope can also take small pieces of tissue for a biopsy, which can be called a brushing or a washing. This tissue sample is then examined under a microscope to diagnose lung cancer.",
+    "cancer_type": "lung",
+    "question_type": "diagnosis",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_SCREEN_001",
+    "question": "What is the lung cancer rate in British Columbia compared to the rest of Canada?",
+    "ground_truth": "B.C. has the lowest rate of lung cancer in Canada. B.C. also has the lowest mortality rate (death) from lung cancer.",
+    "cancer_type": "lung",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_SCREEN_002",
+    "question": "What percentage of cancer deaths are caused by lung cancer?",
+    "ground_truth": "Lung cancer causes about 26% (26 out of 100) of all cancer deaths, making it the deadliest cancer.",
+    "cancer_type": "lung",
+    "question_type": "screening",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_COMP_001",
+    "question": "What is the difference between primary and secondary lung cancer?",
+    "ground_truth": "Primary lung cancer is cancer that starts in the lungs. Secondary lung cancer is cancer that starts somewhere else in the body and then spreads (metastasizes) to the lungs. The lungs are a common site for secondary cancer.",
+    "cancer_type": "lung",
+    "question_type": "comparison",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_COMP_002",
+    "question": "What are the different types of lung cancer?",
+    "ground_truth": "Lung cancer has several types including: small cell lung cancer (SCLC), also called oat cell carcinoma; non-small cell lung cancer (NSCLC); adenocarcinoma of the lung; and squamous cell lung carcinoma of the lung. Mesothelioma is also a type of lung cancer.",
+    "cancer_type": "lung",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_LUNG_COMP_003",
+    "question": "What are some rare symptoms of lung cancer?",
+    "ground_truth": "Some rare symptoms of lung cancer include: a sudden urge to quit smoking and clubbing (broadening) of the fingernails.",
+    "cancer_type": "lung",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_BASIC_001",
+    "question": "What is prostate cancer?",
+    "ground_truth": "Prostate cancer is the most common form of cancer in Canadian and American men. The prostate is a gland that produces a milky fluid that makes up a large portion of semen. More than 95% of prostate cancers are adenocarcinomas, which are cancers that start in gland cells.",
+    "cancer_type": "prostate",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_BASIC_002",
+    "question": "Where is the prostate located and what is its function?",
+    "ground_truth": "The prostate is a gland located under the bladder. The urethra (the tube that carries urine from the bladder to the penis) runs through the prostate. The prostate produces a milky fluid that makes up a large portion of semen that men ejaculate.",
+    "cancer_type": "prostate",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_SYMP_001",
+    "question": "What are the signs and symptoms of early-stage prostate cancer?",
+    "ground_truth": "In early-stage prostate cancer, you may have no symptoms. However, as you age, your prostate can get larger for many reasons, which can make it hard to urinate. Symptoms may include: trouble starting or stopping urination, slow urine stream, painful urination or ejaculation, dribbling of urine, need to urinate more than normal, blood in urine or ejaculate, or waking up at night to urinate.",
+    "cancer_type": "prostate",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_SYMP_002",
+    "question": "What are the symptoms of advanced-stage prostate cancer?",
+    "ground_truth": "In advanced-stage prostate cancer, symptoms may include: weight loss, fatigue (extreme tiredness), back pain or sciatica-like pain (sudden shooting pain from lower back down the leg), and swelling in the legs that does not go away.",
+    "cancer_type": "prostate",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_SYMP_003",
+    "question": "Do urinary symptoms always mean you have prostate cancer?",
+    "ground_truth": "No, urinary symptoms do not always mean you have prostate cancer. As you age, your prostate can get larger for many reasons, which can cause difficulty urinating. These symptoms can be signs of prostate cancer, but they can also be caused by other non-cancerous conditions. You should talk to your doctor if you have these symptoms.",
+    "cancer_type": "prostate",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_DIAG_001",
+    "question": "How is prostate cancer diagnosed?",
+    "ground_truth": "Prostate cancer is diagnosed through several tests: Digital Rectal Examination (DRE) where a doctor feels for lumps through the rectum; PSA blood test measuring Prostate Specific Antigen levels (normal is 4-7 ng/mL); Transrectal Ultrasound (TRUS) using sound waves to image the prostate; and Biopsy where a needle takes 10-12 tiny tissue samples from the prostate, which are examined for cancer by a pathologist.",
+    "cancer_type": "prostate",
+    "question_type": "diagnosis",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_DIAG_002",
+    "question": "What is a PSA test and what do the results mean?",
+    "ground_truth": "A PSA blood test measures the amount of Prostate Specific Antigen (PSA) in your blood. Normal levels of PSA are between 4 and 7 ng/mL (nanograms per millilitre). You may need a PSA test if your DRE is suspicious for cancer. If you are over 40 years old, you may want to ask your doctor if they recommend this test.",
+    "cancer_type": "prostate",
+    "question_type": "diagnosis",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_SCREEN_001",
+    "question": "When might you need additional imaging tests for prostate cancer?",
+    "ground_truth": "You may need additional imaging tests like bone scan or CT scan if your PSA is more than 10 ng/mL or if your biopsy shows a high-risk cancer (one that is growing more quickly and is more likely to spread). A bone scan checks if cancer has spread to bones, and a CT scan checks if cancer has spread outside the prostate into tissues or organs.",
+    "cancer_type": "prostate",
+    "question_type": "screening",
+    "difficulty": "intermediate",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_SCREEN_002",
+    "question": "At what age should men consider PSA screening?",
+    "ground_truth": "If you are over 40 years old, you may want to ask your doctor or nurse practitioner if they recommend you get a PSA test. The decision should be made in consultation with your healthcare provider based on your individual risk factors.",
+    "cancer_type": "prostate",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_COMP_001",
+    "question": "What are the risk groups for prostate cancer?",
+    "ground_truth": "Prostate cancer is divided into three risk groups: Low risk (PSA ≤10 ng/mL, Gleason score ≤6, Stage T1 or T2a), Intermediate risk (not low or high risk), and High risk. The risk groups are based on PSA levels, Gleason score (how cancer cells look and act), and stage (how much cancer is in the body and if it has spread).",
+    "cancer_type": "prostate",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_COMP_002",
+    "question": "What is a Gleason score and what does it mean?",
+    "ground_truth": "The Gleason score describes prostate cancer based on how it looks and acts under a microscope. A pathologist gives numbers (1-5) to cell patterns seen in the biopsy, with lower numbers looking more like normal cells and higher numbers looking more like cancer cells. The two most common patterns are added together for the total Gleason score. For example, 3+4=7 is lower risk than 4+3=7 because the most common pattern (first number) is lower grade. Higher scores mean the cancer is higher risk.",
+    "cancer_type": "prostate",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  },
+  {
+    "id": "BC_PROS_COMP_003",
+    "question": "What are the different stages of prostate cancer?",
+    "ground_truth": "Prostate cancer stages include: Stage T1 (doctor cannot feel tumor during exam), Stage T2 (doctor can feel nodule, cancer only in prostate), Stage T3 (tumor has grown through the capsule of the prostate, may have grown into seminal vesicles), and Stage T4 (tumor has grown into nearby organs like bladder, rectum, or pelvic muscles). The stage helps determine treatment and prognosis.",
+    "cancer_type": "prostate",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "BC Cancer"
+  }
+]

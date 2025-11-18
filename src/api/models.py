@@ -40,10 +40,10 @@ class QuestionRequest(BaseModel):
         description="Maximum number of source chunks to use"
     )
     min_similarity: Optional[float] = Field(
-        0.0,
+        default=None,  # Use None so config default (0.7) is used when not specified
         ge=0.0,
         le=1.0,
-        description="Minimum similarity score (0-1) for sources to be included"
+        description="Minimum similarity score (0-1) for sources to be included (uses config default if not specified)"
     )
 
 

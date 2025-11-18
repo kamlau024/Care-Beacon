@@ -41,3 +41,12 @@ flake8==7.0.0  # Linting
 mypy==1.8.0  # Type checking
 ipython==8.21.0  # Interactive Python shell
 jupyter==1.0.0  # Jupyter notebooks
+
+# RAG Evaluation (Phase 2)
+ragas==0.3.9  # RAG evaluation framework (latest)
+datasets==4.4.1  # Hugging Face datasets for ragas
+langchain==1.0.7  # LangChain core
+langchain-openai==1.0.3  # OpenAI integration for LangChain (used by ragas)
+langchain-community==0.4.1  # Community integrations for LangChain
+langchain-text-splitters==1.0.0  # Text splitting utilities
+langgraph==1.0.3  # LangGraph for agent workflows

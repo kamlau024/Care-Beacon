@@ -33,8 +33,8 @@ ingestion:
 
 # Retrieval Configuration
 retrieval:
-  top_k: 10  # Number of chunks to retrieve
-  min_similarity_threshold: 0.0  # Minimum similarity score (0-1), 0.0 = no filtering
+  top_k: 10  # Number of chunks to retrieve (optimal balance of quality vs coverage)
+  min_similarity_threshold: 0.6  # Minimum similarity score (0-1) for re-ranked results (optimal threshold)
   max_chunks_per_article: 20  # Diversity: max chunks from same article (increased from 3 for more comprehensive answers)
   enable_metadata_filtering: true
   rerank_results: true  # LLM-based re-ranking for better relevance
