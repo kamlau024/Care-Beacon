@@ -35,6 +35,9 @@ class Citation:
     source: str = "BC Cancer"
     """Information source (e.g., BC Cancer, Canadian Cancer Society)"""
 
+    full_text: Optional[str] = None
+    """Full chunk text (only populated for evaluation purposes)"""
+
     def to_reference(self) -> str:
         """Format as a readable reference.
 

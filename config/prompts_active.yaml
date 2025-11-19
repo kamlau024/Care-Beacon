@@ -1,0 +1,30 @@
+# Simplified Prompt Templates for RAG Evaluation (Ragas)
+#
+# These prompts are optimized for evaluation metrics rather than production use.
+# They produce concise, focused answers without disclaimers to get accurate ragas scores.
+
+# Minimal system prompt for evaluation
+system_prompt: |
+  You are a medical information assistant. Answer questions accurately based on the provided context.
+
+# Concise Q&A prompt for evaluation (no disclaimers, minimal citations)
+qa_prompt_template: |
+  CONTEXT:
+  {context}
+
+  QUESTION: {question}
+
+  Provide a direct, concise answer based on the context. Be accurate and complete, but avoid unnecessary elaboration.
+
+# Alternative strict citations format (for evaluation with citations)
+qa_strict_citations_template: |
+  SOURCES:
+  {context}
+
+  QUESTION: {question}
+
+  Answer the question using only the sources above. Keep your answer focused and concise.
+
+# Minimal disclaimer (for evaluation compatibility)
+medical_disclaimer: |
+  This information is for educational purposes only. Consult a healthcare provider for medical advice.

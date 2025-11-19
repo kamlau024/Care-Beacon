@@ -28,6 +28,7 @@ psutil==5.9.8  # System and process utilities for memory monitoring
 # Data Processing
 numpy==1.26.4  # Numerical operations
 pandas==2.2.0  # Data manipulation (optional, for analysis)
+rank-bm25==0.2.2  # BM25 ranking algorithm for hybrid search
 
 # Testing
 pytest==8.0.0  # Testing framework

@@ -29,14 +29,14 @@ import pandas as pd
 from tqdm import tqdm
 from dotenv import load_dotenv
 
-# Load environment variables from .env file in evaluation directory
-env_path = Path(__file__).parent / ".env"
+# Load environment variables from project root .env file
+project_root = Path(__file__).parent.parent.parent
+env_path = project_root / ".env"
 if env_path.exists():
     load_dotenv(env_path)
     print(f"Loaded environment variables from {env_path}")
 
 # Add project root to path for imports
-project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 try:
@@ -117,6 +117,7 @@ class RAGEvaluator:
             "question": question,
             "max_results": 5,  # Use default
             # Don't pass min_similarity - use config default (0.7)
+            "include_full_text": True,  # Request full text for ragas evaluation
         }
 
         if source:
@@ -170,7 +171,8 @@ class RAGEvaluator:
             data["answer"].append(response["answer"])
 
             # Extract contexts from sources (retrieved chunks)
-            contexts = [source["text_excerpt"] for source in response.get("sources", [])]
+            # Use full_text if available (for evaluation), otherwise fall back to text_excerpt
+            contexts = [source.get("full_text") or source.get("text_excerpt", "") for source in response.get("sources", [])]
             data["contexts"].append(contexts)
 
             # Add ground truth
@@ -299,10 +301,10 @@ class RAGEvaluator:
             for i, test_q in enumerate(test_questions):
                 if i < len(results_df):  # Only add metadata for successful evaluations
                     metadata_cols.append({
-                        "question_id": test_q["id"],
-                        "cancer_type": test_q["cancer_type"],
-                        "question_type": test_q["question_type"],
-                        "difficulty": test_q["difficulty"],
+                        "question_id": test_q.get("id", f"Q{i+1}"),
+                        "cancer_type": test_q.get("cancer_type", "N/A"),
+                        "question_type": test_q.get("question_type", "N/A"),
+                        "difficulty": test_q.get("difficulty", "N/A"),
                         "expected_source": test_q.get("expected_source", ""),
                     })
 

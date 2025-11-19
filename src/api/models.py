@@ -45,6 +45,10 @@ class QuestionRequest(BaseModel):
         le=1.0,
         description="Minimum similarity score (0-1) for sources to be included (uses config default if not specified)"
     )
+    include_full_text: bool = Field(
+        default=False,
+        description="Include full chunk text in sources (for evaluation purposes, increases response size)"
+    )
 
 
 class CitationResponse(BaseModel):
@@ -71,6 +75,7 @@ class CitationResponse(BaseModel):
     text_excerpt: str = Field(..., description="Excerpt from source text")
     similarity_score: float = Field(..., description="Similarity/confidence score (0-1)")
     source: str = Field(..., description="Information source (e.g., BC Cancer, Canadian Cancer Society)")
+    full_text: Optional[str] = Field(None, description="Full chunk text (only included when include_full_text=True)")
 
 
 class QuestionResponse(BaseModel):

@@ -69,7 +69,7 @@ data/articles/
 
 
 # Evaluation Results
-evaluation/results/
+evaluation/ragas/results/
 *.log
 
 # Jupyter Notebook

@@ -114,11 +114,12 @@ class AnswerGenerator:
 
         return "\n".join(context_parts)
 
-    def _extract_citations(self, context: RetrievedContext) -> List[Citation]:
+    def _extract_citations(self, context: RetrievedContext, include_full_text: bool = False) -> List[Citation]:
         """Extract citations from retrieved context.
 
         Args:
             context: Retrieved context
+            include_full_text: If True, include full chunk text in citations (for evaluation)
 
         Returns:
             List of Citation objects
@@ -137,6 +138,7 @@ class AnswerGenerator:
                 text_excerpt=chunk.text[:100] + "..." if len(chunk.text) > 100 else chunk.text,
                 similarity_score=result.similarity_score,
                 source=chunk.source,
+                full_text=chunk.text if include_full_text else None,
             )
             citations.append(citation)
 
@@ -148,6 +150,7 @@ class AnswerGenerator:
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
         min_similarity: Optional[float] = None,
+        include_full_text: bool = False,
     ) -> GeneratedAnswer:
         """Generate an answer to a medical question.
 
@@ -246,7 +249,7 @@ class AnswerGenerator:
         )
 
         # Step 4: Extract citations
-        citations = self._extract_citations(context)
+        citations = self._extract_citations(context, include_full_text=include_full_text)
 
         # Step 5: Create GeneratedAnswer
         answer = GeneratedAnswer(

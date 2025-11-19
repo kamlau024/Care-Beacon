@@ -1,0 +1,812 @@
+[
+  {
+    "question": "What is tardive dyskinesia and what causes it?",
+    "ground_truth": "Tardive dyskinesia is a movement disorder characterized by repetitive, involuntary movements, often caused by long-term use of antipsychotic medications.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "DSM-5",
+    "source_section": "More about Section II and the types of conditions it covers",
+    "id": "CLEVELAND_CLINIC_001_BASIC_FACTS"
+  },
+  {
+    "question": "What are the key symptoms of neuroleptic malignant syndrome?",
+    "ground_truth": "Key symptoms of neuroleptic malignant syndrome include severe muscle rigidity, high fever, autonomic instability, and altered mental status.",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "DSM-5",
+    "source_section": "More about Section II and the types of conditions it covers",
+    "id": "CLEVELAND_CLINIC_001_SYMPTOMS"
+  },
+  {
+    "question": "How is tardive dyskinesia treated?",
+    "ground_truth": "Treatment for tardive dyskinesia may include reducing or discontinuing the antipsychotic medication, and medications such as valbenazine or deutetrabenazine.",
+    "question_type": "treatment",
+    "difficulty": "advanced",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "DSM-5",
+    "source_section": "More about Section II and the types of conditions it covers",
+    "id": "CLEVELAND_CLINIC_001_TREATMENT"
+  },
+  {
+    "question": "What medical conditions should I inform my care team about before receiving botulinum antitoxin?",
+    "ground_truth": "Asthma or hay fever, diabetes, and any unusual or allergic reactions to botulinum antitoxin, horses, other medications, foods, dyes, or preservatives.",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Botulinum Antitoxin (BAT) Injection",
+    "source_section": "What should I tell my care team before I take this medication?",
+    "id": "CLEVELAND_CLINIC_002_SCREENING"
+  },
+  {
+    "question": "If I am pregnant, should I inform my care team before taking botulinum antitoxin?",
+    "ground_truth": "Yes, you should inform your care team if you are pregnant or trying to get pregnant.",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Botulinum Antitoxin (BAT) Injection",
+    "source_section": "What should I tell my care team before I take this medication?",
+    "id": "CLEVELAND_CLINIC_002_SCREENING"
+  },
+  {
+    "question": "Can breastfeeding affect my eligibility for botulinum antitoxin injection?",
+    "ground_truth": "Yes, you should inform your care team if you are breastfeeding.",
+    "question_type": "screening",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Botulinum Antitoxin (BAT) Injection",
+    "source_section": "What should I tell my care team before I take this medication?",
+    "id": "CLEVELAND_CLINIC_002_SCREENING"
+  },
+  {
+    "question": "What is the only definitive treatment for heel spurs?",
+    "ground_truth": "Surgery is the only way to remove a heel spur.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Heel Spurs",
+    "source_section": "What can I expect if I have heel spurs?",
+    "id": "CLEVELAND_CLINIC_003_TREATMENT"
+  },
+  {
+    "question": "Can treatments ease the pain associated with conditions that cause heel spurs?",
+    "ground_truth": "Yes, there are treatments that can ease the pain of these underlying conditions.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Heel Spurs",
+    "source_section": "What can I expect if I have heel spurs?",
+    "id": "CLEVELAND_CLINIC_003_TREATMENT"
+  },
+  {
+    "question": "Should I consult my healthcare provider about surgical options for my heel spur?",
+    "ground_truth": "Yes, ask your healthcare provider if surgery is an appropriate solution to your heel spur problem.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Heel Spurs",
+    "source_section": "What can I expect if I have heel spurs?",
+    "id": "CLEVELAND_CLINIC_003_TREATMENT"
+  },
+  {
+    "question": "What types of medical conditions can Cleveland Clinic's primary care providers help manage?",
+    "ground_truth": "From sinus infections and high blood pressure to preventive screening.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Heat Cramps",
+    "source_section": "Care at Cleveland Clinic",
+    "id": "CLEVELAND_CLINIC_004_BASIC_FACTS"
+  },
+  {
+    "question": "How does Cleveland Clinic approach the care of heat cramps?",
+    "ground_truth": "Cleveland Clinic\u2019s primary care providers offer lifelong medical care, which includes treatment for heat cramps.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Heat Cramps",
+    "source_section": "Care at Cleveland Clinic",
+    "id": "CLEVELAND_CLINIC_004_TREATMENT"
+  },
+  {
+    "question": "What is emotional dysregulation?",
+    "ground_truth": "Emotional dysregulation refers to difficulties in managing or regulating emotions, impacting how individuals feel and react.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Emotional Dysregulation",
+    "source_section": "What is emotional dysregulation?",
+    "id": "CLEVELAND_CLINIC_005_BASIC_FACTS"
+  },
+  {
+    "question": "Why is learning to manage emotions important during childhood?",
+    "ground_truth": "Learning to manage emotions during childhood is important as it helps individuals develop adaptability and resilience to challenges.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Emotional Dysregulation",
+    "source_section": "What is emotional dysregulation?",
+    "id": "CLEVELAND_CLINIC_005_BASIC_FACTS"
+  },
+  {
+    "question": "How does emotional dysregulation affect a person's ability to learn?",
+    "ground_truth": "Emotional dysregulation can hinder a person's adaptability and resilience, which are key components in the learning process.",
+    "question_type": "basic_facts",
+    "difficulty": "advanced",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Emotional Dysregulation",
+    "source_section": "What is emotional dysregulation?",
+    "id": "CLEVELAND_CLINIC_005_BASIC_FACTS"
+  },
+  {
+    "question": "What are some emotional problems associated with Reactive Attachment Disorder (RAD)?",
+    "ground_truth": "Emotional problems such as depression, anxiety, post-traumatic stress disorder, and anger management issues.",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Reactive Attachment Disorder (RAD)",
+    "source_section": "Are there complications associated with reactive attachment disorder?",
+    "id": "CLEVELAND_CLINIC_006_SYMPTOMS"
+  },
+  {
+    "question": "How might Reactive Attachment Disorder (RAD) affect a child's academic performance?",
+    "ground_truth": "Children with RAD may experience trouble in school, leading to learning and/or behavioral problems.",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Reactive Attachment Disorder (RAD)",
+    "source_section": "Are there complications associated with reactive attachment disorder?",
+    "id": "CLEVELAND_CLINIC_006_SYMPTOMS"
+  },
+  {
+    "question": "What physical complications can arise in children with Reactive Attachment Disorder (RAD)?",
+    "ground_truth": "Delays in developmental milestones and physical growth.",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Reactive Attachment Disorder (RAD)",
+    "source_section": "Are there complications associated with reactive attachment disorder?",
+    "id": "CLEVELAND_CLINIC_006_SYMPTOMS"
+  },
+  {
+    "question": "What types of medications can my provider prescribe to help lower my lipoprotein (a) levels?",
+    "ground_truth": "Statins, PCSK9 inhibitors, and aspirin.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Lipoprotein (a)",
+    "source_section": "What can my provider do to lower my lipoprotein (a) level?",
+    "id": "CLEVELAND_CLINIC_007_TREATMENT"
+  },
+  {
+    "question": "Are PCSK9 inhibitors effective in reducing lipoprotein (a) levels?",
+    "ground_truth": "Yes, PCSK9 inhibitors can help lower lipoprotein (a) levels.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Lipoprotein (a)",
+    "source_section": "What can my provider do to lower my lipoprotein (a) level?",
+    "id": "CLEVELAND_CLINIC_007_TREATMENT"
+  },
+  {
+    "question": "What are some common risk factors for developing left-sided heart failure?",
+    "ground_truth": "Other risk factors for left-sided heart failure include hypertension, coronary artery disease, and previous heart attacks.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Left-Sided Heart Failure",
+    "source_section": "What causes left-sided heart failure?",
+    "id": "CLEVELAND_CLINIC_008_BASIC_FACTS"
+  },
+  {
+    "question": "How does hypertension contribute to left-sided heart failure?",
+    "ground_truth": "Hypertension increases the workload on the heart, leading to thickening of the heart muscle and eventual heart failure.",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Left-Sided Heart Failure",
+    "source_section": "What causes left-sided heart failure?",
+    "id": "CLEVELAND_CLINIC_008_SYMPTOMS"
+  },
+  {
+    "question": "Can previous heart attacks lead to left-sided heart failure? If so, how?",
+    "ground_truth": "Yes, previous heart attacks can damage the heart muscle, reducing its ability to pump blood effectively, which can lead to left-sided heart failure.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Left-Sided Heart Failure",
+    "source_section": "What causes left-sided heart failure?",
+    "id": "CLEVELAND_CLINIC_008_BASIC_FACTS"
+  },
+  {
+    "question": "What is the primary purpose of acetaminophen extended-release tablets?",
+    "ground_truth": "To provide relief from pain and reduce fever.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Acetaminophen Extended-Release Tablets",
+    "source_section": "Acetaminophen Extended-Release Tablets",
+    "id": "CLEVELAND_CLINIC_009_TREATMENT"
+  },
+  {
+    "question": "How does Cleveland Clinic support its mission regarding acetaminophen extended-release tablets?",
+    "ground_truth": "Through advertising on their site.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Acetaminophen Extended-Release Tablets",
+    "source_section": "Acetaminophen Extended-Release Tablets",
+    "id": "CLEVELAND_CLINIC_009_BASIC_FACTS"
+  },
+  {
+    "question": "Does Cleveland Clinic endorse non-Cleveland Clinic products or services related to acetaminophen extended-release tablets?",
+    "ground_truth": "No, they do not endorse non-Cleveland Clinic products or services.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Acetaminophen Extended-Release Tablets",
+    "source_section": "Acetaminophen Extended-Release Tablets",
+    "id": "CLEVELAND_CLINIC_009_BASIC_FACTS"
+  },
+  {
+    "question": "Where should I store Trolamine Salicylate Cream to ensure its effectiveness?",
+    "ground_truth": "Store Trolamine Salicylate Cream at room temperature, away from excess heat and moisture.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Trolamine Salicylate Cream",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_010_TREATMENT"
+  },
+  {
+    "question": "Is it safe to keep Trolamine Salicylate Cream in the bathroom?",
+    "ground_truth": "No, it should be kept away from excess heat and moisture, which are often present in bathrooms.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Trolamine Salicylate Cream",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_010_TREATMENT"
+  },
+  {
+    "question": "What are the ideal storage conditions for medications like Trolamine Salicylate Cream?",
+    "ground_truth": "Medications like Trolamine Salicylate Cream should be stored at room temperature and kept away from excess heat and moisture.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Trolamine Salicylate Cream",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_010_TREATMENT"
+  },
+  {
+    "question": "What type of medications might a provider suggest for managing primary biliary cholangitis?",
+    "ground_truth": "Prescription medications",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Kayser-Fleischer Rings",
+    "source_section": "How are Kayser-Fleischer rings treated?",
+    "id": "CLEVELAND_CLINIC_011_TREATMENT"
+  },
+  {
+    "question": "What dietary modifications may be necessary for babies born with neonatal cholestasis?",
+    "ground_truth": "They may need to eat special formulas.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Kayser-Fleischer Rings",
+    "source_section": "How are Kayser-Fleischer rings treated?",
+    "id": "CLEVELAND_CLINIC_011_TREATMENT"
+  },
+  {
+    "question": "In addition to special formulas, what other treatment may be required for babies with neonatal cholestasis?",
+    "ground_truth": "They may need to take medications.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Kayser-Fleischer Rings",
+    "source_section": "How are Kayser-Fleischer rings treated?",
+    "id": "CLEVELAND_CLINIC_011_TREATMENT"
+  },
+  {
+    "question": "What are some potential complications that can arise from treating trichiasis?",
+    "ground_truth": "Complications that may occur as a result of treating trichiasis include various adverse effects related to the treatment.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Trichiasis",
+    "source_section": "What complications can occur from treating trichiasis?",
+    "id": "CLEVELAND_CLINIC_012_TREATMENT"
+  },
+  {
+    "question": "Can you list any complications that might occur after trichiasis treatment?",
+    "ground_truth": "Complications that may occur as a result of treating trichiasis include various adverse effects related to the treatment.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Trichiasis",
+    "source_section": "What complications can occur from treating trichiasis?",
+    "id": "CLEVELAND_CLINIC_012_TREATMENT"
+  },
+  {
+    "question": "Where should I store Gold Sodium Thiomalate Injection to ensure its effectiveness?",
+    "ground_truth": "This information is not explicitly provided in the summary. For specific storage instructions, consult your doctor, pharmacist, or healthcare provider.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Gold Sodium Thiomalate Injection",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_013_TREATMENT"
+  },
+  {
+    "question": "What should I do if I have questions about Gold Sodium Thiomalate Injection?",
+    "ground_truth": "Talk to your doctor, pharmacist, or health care provider.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Gold Sodium Thiomalate Injection",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_013_BASIC_FACTS"
+  },
+  {
+    "question": "Is the information provided in the summary comprehensive regarding Gold Sodium Thiomalate Injection?",
+    "ground_truth": "No, the sheet is a summary and may not cover all possible information.",
+    "question_type": "comparison",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Gold Sodium Thiomalate Injection",
+    "source_section": "Where should I keep my medication?",
+    "id": "CLEVELAND_CLINIC_013_COMPARISON"
+  },
+  {
+    "question": "What type of surgery may be considered for patients suffering from parosmia?",
+    "ground_truth": "Surgery may be considered for patients suffering from parosmia if their condition is severe and does not improve with other treatments.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Parosmia",
+    "source_section": "Parosmia surgery",
+    "id": "CLEVELAND_CLINIC_014_TREATMENT"
+  },
+  {
+    "question": "Can parosmia be treated with medication, or is surgery the only option?",
+    "ground_truth": "Parosmia can be treated with medication, and surgery is considered only in severe cases that do not respond to other treatments.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Parosmia",
+    "source_section": "Parosmia surgery",
+    "id": "CLEVELAND_CLINIC_014_TREATMENT"
+  },
+  {
+    "question": "What is parosmia and how does it affect a person's sense of smell?",
+    "ground_truth": "Parosmia is a smell disorder where a person experiences a distorted sense of smell, causing familiar scents to be perceived as unpleasant or different.",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Parosmia",
+    "source_section": "Parosmia surgery",
+    "id": "CLEVELAND_CLINIC_014_SYMPTOMS"
+  },
+  {
+    "question": "What type of microbes are typically involved in Auto-Brewery Syndrome?",
+    "ground_truth": "Alcohol-producing bacteria and fungi like Saccharomyces cerevisiae (brewer\u2019s yeast) are typically involved.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Auto-Brewery Syndrome",
+    "source_section": "What is auto-brewery syndrome?",
+    "id": "CLEVELAND_CLINIC_015_BASIC_FACTS"
+  },
+  {
+    "question": "How does normal metabolism interact with ethanol produced in the gut?",
+    "ground_truth": "Normal metabolism usually clears the ethanol produced in the gut before it reaches our bloodstream.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Auto-Brewery Syndrome",
+    "source_section": "What is auto-brewery syndrome?",
+    "id": "CLEVELAND_CLINIC_015_BASIC_FACTS"
+  },
+  {
+    "question": "What role do gut microbes play in the body regarding alcohol production?",
+    "ground_truth": "Gut microbes produce small amounts of ethanol as part of a normal gut microbiome.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Cleveland Clinic",
+    "source_article": "Auto-Brewery Syndrome",
+    "source_section": "What is auto-brewery syndrome?",
+    "id": "CLEVELAND_CLINIC_015_BASIC_FACTS"
+  },
+  {
+    "question": "What is the primary function of mucus in the gastrointestinal tract?",
+    "ground_truth": "Mucus protects and lubricates the lining of the gastrointestinal tract.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "The stomach",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_001_BASIC_FACTS"
+  },
+  {
+    "question": "Which organs and body cavities are protected and lubricated by mucus?",
+    "ground_truth": "Mucus protects and lubricates the lining of the nose, mouth, lungs, vagina, and gastrointestinal tract.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "The stomach",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_001_BASIC_FACTS"
+  },
+  {
+    "question": "How does mucus contribute to the overall health of the digestive system?",
+    "ground_truth": "Mucus protects and lubricates the lining of the gastrointestinal tract, which is essential for maintaining a healthy digestive system.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "The stomach",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_001_BASIC_FACTS"
+  },
+  {
+    "question": "What should you do if you hear about a co-worker's cancer diagnosis through the office grapevine?",
+    "ground_truth": "You could ask the person who told you if the information is public. If it\u2019s not, it\u2019s probably best not to say anything to the person with cancer.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Helping a co-worker with cancer",
+    "source_section": "Privacy and confidentiality",
+    "id": "CANADIAN_CANCER_SOCIETY_002_BASIC_FACTS"
+  },
+  {
+    "question": "If a co-worker's cancer diagnosis is public information, how might you approach them?",
+    "ground_truth": "You might say to your co-worker, in a caring way, 'I heard about your health concerns and I\u2019m thinking about you.'",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Helping a co-worker with cancer",
+    "source_section": "Privacy and confidentiality",
+    "id": "CANADIAN_CANCER_SOCIETY_002_BASIC_FACTS"
+  },
+  {
+    "question": "What is the primary purpose of hormone therapy in treating neuroendocrine cancer?",
+    "ground_truth": "The primary purpose of hormone therapy in treating neuroendocrine cancer is to help manage the symptoms and slow the progression of the disease.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hormone therapy for neuroendocrine cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_003_TREATMENT"
+  },
+  {
+    "question": "Can hormone therapy be used as a standalone treatment for neuroendocrine cancer?",
+    "ground_truth": "Hormone therapy is typically used in conjunction with other treatments rather than as a standalone treatment for neuroendocrine cancer.",
+    "question_type": "treatment",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hormone therapy for neuroendocrine cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_003_TREATMENT"
+  },
+  {
+    "question": "What role does the Neuroendocrine Cancer Virtual Patient Handbook play for patients diagnosed with neuroendocrine cancer?",
+    "ground_truth": "The Neuroendocrine Cancer Virtual Patient Handbook provides valuable information and resources to help patients understand their diagnosis and treatment options.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hormone therapy for neuroendocrine cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_003_BASIC_FACTS"
+  },
+  {
+    "question": "What should you do if you experience side effects after surgery for soft tissue sarcoma?",
+    "ground_truth": "Tell your healthcare team about the side effects as soon as possible.",
+    "question_type": "symptoms",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Surgery for soft tissue sarcoma",
+    "source_section": "Side effects",
+    "id": "CANADIAN_CANCER_SOCIETY_004_SYMPTOMS"
+  },
+  {
+    "question": "Why is it important to inform your healthcare team about side effects from surgery?",
+    "ground_truth": "The sooner you tell them of any problems, the sooner they can suggest ways to help you deal with them.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Surgery for soft tissue sarcoma",
+    "source_section": "Side effects",
+    "id": "CANADIAN_CANCER_SOCIETY_004_TREATMENT"
+  },
+  {
+    "question": "What does it mean when breast cancer is referred to as recurrent?",
+    "ground_truth": "Recurrent breast cancer is breast cancer that has come back after treatment has finished.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Chemotherapy for breast cancer",
+    "source_section": "Chemotherapy for recurrent breast cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_005_BASIC_FACTS"
+  },
+  {
+    "question": "How is recurrent breast cancer typically treated?",
+    "ground_truth": "The article does not specify treatment options for recurrent breast cancer.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Chemotherapy for breast cancer",
+    "source_section": "Chemotherapy for recurrent breast cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_005_TREATMENT"
+  },
+  {
+    "question": "What happens to breast cancer after treatment if it is classified as recurrent?",
+    "ground_truth": "Recurrent breast cancer is breast cancer that has come back after treatment has finished.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Chemotherapy for breast cancer",
+    "source_section": "Chemotherapy for recurrent breast cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_005_BASIC_FACTS"
+  },
+  {
+    "question": "What are the primary treatment options for stage 2 anal cancer according to the Canadian Cancer Society?",
+    "ground_truth": "The primary treatment options for stage 2 anal cancer include a combination of chemotherapy and radiation therapy, and in some cases, surgery may be considered.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Treatments for stage 2 anal cancer",
+    "source_section": "Treatments for stage 2 anal cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_006_TREATMENT"
+  },
+  {
+    "question": "How does stage 2 anal cancer differ from earlier stages in terms of treatment approach?",
+    "ground_truth": "Stage 2 anal cancer typically requires a more aggressive treatment approach, often utilizing a combination of chemotherapy and radiation, whereas earlier stages may be treated with less intensive therapies.",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Treatments for stage 2 anal cancer",
+    "source_section": "Treatments for stage 2 anal cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_006_COMPARISON"
+  },
+  {
+    "question": "What is the primary purpose of the Modified Whipple procedure?",
+    "ground_truth": "To remove tumors in the pancreas and surrounding structures.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Whipple procedure",
+    "source_section": "Modified Whipple procedure",
+    "id": "CANADIAN_CANCER_SOCIETY_007_TREATMENT"
+  },
+  {
+    "question": "What key structures are typically reconstructed during the Modified Whipple procedure?",
+    "ground_truth": "The pancreas, bile duct, and intestines.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Whipple procedure",
+    "source_section": "Modified Whipple procedure",
+    "id": "CANADIAN_CANCER_SOCIETY_007_BASIC_FACTS"
+  },
+  {
+    "question": "How does the Modified Whipple procedure differ from the traditional Whipple procedure?",
+    "ground_truth": "The Modified Whipple procedure may involve a less extensive resection of the pancreas.",
+    "question_type": "comparison",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Whipple procedure",
+    "source_section": "Modified Whipple procedure",
+    "id": "CANADIAN_CANCER_SOCIETY_007_COMPARISON"
+  },
+  {
+    "question": "What type of treatment travels through the bloodstream to reach cells all over the body for melanoma skin cancer?",
+    "ground_truth": "Immunotherapy",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Immunotherapy for melanoma skin cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_008_TREATMENT"
+  },
+  {
+    "question": "How does immunotherapy function in the treatment of melanoma skin cancer?",
+    "ground_truth": "It travels through the bloodstream to reach cells all over the body.",
+    "question_type": "treatment",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Immunotherapy for melanoma skin cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_008_TREATMENT"
+  },
+  {
+    "question": "What type of cancer statistics does Statistics Canada provide regarding childhood leukemia?",
+    "ground_truth": "Number and rates of new cases of primary cancer, by cancer type, age group and sex.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Childhood leukemia statistics",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_009_BASIC_FACTS"
+  },
+  {
+    "question": "Where can I find detailed statistics on childhood leukemia cases in Canada?",
+    "ground_truth": "Statistics Canada provides these statistics, specifically in Table 13-10-0111-01.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Childhood leukemia statistics",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_009_BASIC_FACTS"
+  },
+  {
+    "question": "What is the primary focus of the systematic review by Steger et al. regarding hiccups?",
+    "ground_truth": "The pathogenesis and pharmacological treatment of hiccups.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hiccups",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_010_BASIC_FACTS"
+  },
+  {
+    "question": "What type of publication is the article by Steger, Schneemann, and Fox that discusses hiccups?",
+    "ground_truth": "It is a systematic review published in _Alimentary Pharmacology and Therapeutics_.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hiccups",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_010_BASIC_FACTS"
+  },
+  {
+    "question": "According to the expert review, what are the two main areas of focus for treating hiccups?",
+    "ground_truth": "The pathogenesis and pharmacological treatment.",
+    "question_type": "treatment",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Hiccups",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_010_TREATMENT"
+  },
+  {
+    "question": "What are the potential emotional impacts after the removal of an eye due to cancer?",
+    "ground_truth": "Patients may experience a range of emotional impacts, including grief, anxiety, and changes in self-image.",
+    "question_type": "symptoms",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Supportive care for eye cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_011_SYMPTOMS"
+  },
+  {
+    "question": "What types of supportive care are recommended for patients who have undergone eye removal surgery?",
+    "ground_truth": "Supportive care may include counseling, physical rehabilitation, and the use of prosthetic eyes.",
+    "question_type": "treatment",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Supportive care for eye cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_011_TREATMENT"
+  },
+  {
+    "question": "How can patients cope with vision loss after eye cancer treatment?",
+    "ground_truth": "Patients can cope with vision loss through rehabilitation services, learning adaptive techniques, and using assistive devices.",
+    "question_type": "treatment",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Supportive care for eye cancer",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_011_TREATMENT"
+  },
+  {
+    "question": "How many servings of vegetables and fruit should you aim to eat each day to increase your fibre intake?",
+    "ground_truth": "A variety of vegetables and fruit each day.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Eat more veggies, fruit and fibre",
+    "source_section": "6 ways to get more fibre",
+    "id": "CANADIAN_CANCER_SOCIETY_012_BASIC_FACTS"
+  },
+  {
+    "question": "What is one of the benefits of eating a variety of vegetables and fruit?",
+    "ground_truth": "It helps increase your fibre intake.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Eat more veggies, fruit and fibre",
+    "source_section": "6 ways to get more fibre",
+    "id": "CANADIAN_CANCER_SOCIETY_012_BASIC_FACTS"
+  },
+  {
+    "question": "How is the grade of penile cancer determined?",
+    "ground_truth": "The grade of penile cancer is determined by examining a biopsy sample under a microscope.",
+    "question_type": "diagnosis",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Penile cancer",
+    "source_section": "Grading penile cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_013_DIAGNOSIS"
+  },
+  {
+    "question": "What factors are considered when grading penile cancer cells?",
+    "ground_truth": "Grading penile cancer cells is based on their appearance and behaviour compared to normal cells.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Penile cancer",
+    "source_section": "Grading penile cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_013_BASIC_FACTS"
+  },
+  {
+    "question": "What does a high grade in penile cancer indicate about the cancer cells?",
+    "ground_truth": "A high grade indicates that the cancer cells look and behave more abnormal compared to normal cells.",
+    "question_type": "basic_facts",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "Penile cancer",
+    "source_section": "Grading penile cancer",
+    "id": "CANADIAN_CANCER_SOCIETY_013_BASIC_FACTS"
+  },
+  {
+    "question": "What is the title of the reference used for staging melanoma skin cancer?",
+    "ground_truth": "AJCC Cancer Staging Handbook",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "If melanoma skin cancer spreads",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_014_BASIC_FACTS"
+  },
+  {
+    "question": "Which organization published the AJCC Cancer Staging Handbook in 2010?",
+    "ground_truth": "American Joint Committee on Cancer",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "If melanoma skin cancer spreads",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_014_BASIC_FACTS"
+  },
+  {
+    "question": "In which city was the 7th edition of the AJCC Cancer Staging Handbook published?",
+    "ground_truth": "Chicago",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "If melanoma skin cancer spreads",
+    "source_section": "Expert review and references",
+    "id": "CANADIAN_CANCER_SOCIETY_014_BASIC_FACTS"
+  },
+  {
+    "question": "What does the term 'differentiation' refer to in the context of tumors?",
+    "ground_truth": "Differentiation refers to how different the cancer cells look from normal cells.",
+    "question_type": "basic_facts",
+    "difficulty": "basic",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "grade",
+    "source_section": "Description",
+    "id": "CANADIAN_CANCER_SOCIETY_015_BASIC_FACTS"
+  },
+  {
+    "question": "How do the growth and division rates of cancer cells affect their behavior?",
+    "ground_truth": "The growth and division rates of cancer cells indicate how quickly the cancer cells are growing and dividing, which can affect how likely they are to spread.",
+    "question_type": "basic_facts",
+    "difficulty": "intermediate",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "grade",
+    "source_section": "Description",
+    "id": "CANADIAN_CANCER_SOCIETY_015_BASIC_FACTS"
+  },
+  {
+    "question": "What factors are considered when describing a tumor's characteristics?",
+    "ground_truth": "A tumor's characteristics are described by how differentiated the cancer cells are, how quickly they are growing and dividing, and how likely they are to spread.",
+    "question_type": "basic_facts",
+    "difficulty": "advanced",
+    "expected_source": "Canadian Cancer Society",
+    "source_article": "grade",
+    "source_section": "Description",
+    "id": "CANADIAN_CANCER_SOCIETY_015_BASIC_FACTS"
+  }
+]

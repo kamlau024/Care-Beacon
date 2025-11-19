@@ -338,6 +338,7 @@ async def ask_question(request: Request, question_request: QuestionRequest):
             filters=filters if filters else None,
             max_results=max_results,
             min_similarity=question_request.min_similarity,
+            include_full_text=question_request.include_full_text,
         )
 
         # Check if answer was cached
@@ -354,6 +355,7 @@ async def ask_question(request: Request, question_request: QuestionRequest):
                 text_excerpt=citation.text_excerpt,
                 similarity_score=citation.similarity_score,
                 source=citation.source,
+                full_text=citation.full_text,
             )
             for citation in answer.citations
         ]
