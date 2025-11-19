@@ -67,15 +67,27 @@ class QdrantVectorDatabase:
         # Create collection if it doesn't exist
         self._ensure_collection_exists()
 
-        # Initialize BM25 index for hybrid search
+        # Initialize BM25 index for hybrid search (lazy loading to avoid OOM at startup)
         self.bm25_index: Optional[BM25Index] = None
-        self.enable_hybrid_search = config.get('retrieval.enable_hybrid_search', False)
+        self.bm25_load_attempted: bool = False  # Track if we've tried to load BM25
+
+        # Allow environment variable to override hybrid search (useful for memory-constrained deployments)
+        import os
+        env_hybrid_search = os.getenv('ENABLE_HYBRID_SEARCH', '').lower()
+        if env_hybrid_search in ('false', '0', 'no'):
+            self.enable_hybrid_search = False
+            logger.info("Hybrid search disabled via ENABLE_HYBRID_SEARCH environment variable")
+        elif env_hybrid_search in ('true', '1', 'yes'):
+            self.enable_hybrid_search = True
+        else:
+            self.enable_hybrid_search = config.get('retrieval.enable_hybrid_search', False)
+
         self.hybrid_alpha = config.get('retrieval.hybrid_alpha', 0.7)
         self.bm25_index_path = config.get('retrieval.bm25_index_path', 'data/bm25_index.pkl')
 
-        # Load BM25 index if hybrid search is enabled
-        if self.enable_hybrid_search:
-            self._load_or_build_bm25_index()
+        # NOTE: BM25 index is now loaded lazily on first search to avoid OOM at startup
+        # (especially important for memory-constrained environments like Render free tier)
+        # Set ENABLE_HYBRID_SEARCH=false on Render to disable hybrid search entirely
 
     def _ensure_collection_exists(self) -> None:
         """Ensure the collection exists, create if it doesn't."""
@@ -450,6 +462,16 @@ class QdrantVectorDatabase:
         Returns:
             List of RetrievalResult objects, ranked by hybrid score
         """
+        # Lazy load BM25 index on first search attempt
+        if self.enable_hybrid_search and self.bm25_index is None and not self.bm25_load_attempted:
+            logger.info("Lazy loading BM25 index for first hybrid search...")
+            self.bm25_load_attempted = True
+            try:
+                self._load_or_build_bm25_index()
+            except Exception as e:
+                logger.warning(f"Failed to load BM25 index: {e}. Will use pure vector search.")
+                self.bm25_index = None
+
         if not self.enable_hybrid_search or self.bm25_index is None:
             # Fall back to pure vector search
             logger.debug("Hybrid search disabled or BM25 index not available, using vector search")
