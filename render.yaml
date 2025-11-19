@@ -46,6 +46,8 @@ projects:
                 value: "3.10.19"
               - key: ANONYMIZED_TELEMETRY
                 value: "False"
+              - key: ENABLE_HYBRID_SEARCH
+                value: "false"  # Disable hybrid search on free tier to avoid OOM
 
           # Next.js Frontend
           - type: web

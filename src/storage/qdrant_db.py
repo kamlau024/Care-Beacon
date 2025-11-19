@@ -158,13 +158,17 @@ class QdrantVectorDatabase:
 
         # Build index from existing chunks
         logger.info("Building BM25 index from existing chunks...")
+        logger.warning("⚠️  Building BM25 index synchronously - this may take several minutes and block the current request!")
         try:
             # Get all chunks from Qdrant
             all_chunks = self._get_all_chunks_for_bm25()
             if all_chunks:
+                logger.info(f"Retrieved {len(all_chunks)} chunks, now building BM25 index...")
                 self.bm25_index.build(all_chunks)
+                logger.info("BM25 index built successfully, saving to disk...")
                 # Save for future use
                 self.bm25_index.save(self.bm25_index_path)
+                logger.info(f"✅ BM25 index saved to {self.bm25_index_path}")
             else:
                 logger.warning("No chunks found to build BM25 index")
         except Exception as e:
@@ -180,6 +184,7 @@ class QdrantVectorDatabase:
         chunks = []
         offset = None
         batch_size = 100
+        batch_count = 0
 
         while True:
             # Scroll through chunks
@@ -204,6 +209,10 @@ class QdrantVectorDatabase:
 
                 chunk = Chunk.from_metadata(chunk_id, text, metadata)
                 chunks.append(chunk)
+
+            batch_count += 1
+            if batch_count % 10 == 0:  # Log every 1000 chunks
+                logger.info(f"Retrieved {len(chunks)} chunks so far...")
 
             # Check if we're done
             if next_offset is None:
