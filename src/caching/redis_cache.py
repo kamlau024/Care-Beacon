@@ -363,6 +363,52 @@ class RedisCache:
         """Reset cache statistics."""
         self.stats.reset()
 
+    def get_vector_db_stats(self) -> Optional[Dict[str, Any]]:
+        """Get cached vector database statistics.
+
+        Returns:
+            Cached vector DB statistics if found, None otherwise
+        """
+        if not self.enabled or not self.client:
+            return None
+
+        try:
+            cache_key = f"{self.config.key_prefix}vector_db_stats"
+            cached_data = self.client.get(cache_key)
+
+            if cached_data:
+                # Deserialize and return the stats
+                return json.loads(cached_data)
+            else:
+                return None
+
+        except (RedisError, json.JSONDecodeError) as e:
+            print(f"⚠️  Cache get vector DB stats error: {e}")
+            return None
+
+    def set_vector_db_stats(self, stats: Dict[str, Any], ttl_seconds: Optional[int] = None):
+        """Store vector database statistics in cache.
+
+        Args:
+            stats: Vector database statistics to cache
+            ttl_seconds: Time to live in seconds (defaults to config.ttl_seconds)
+        """
+        if not self.enabled or not self.client:
+            return
+
+        try:
+            cache_key = f"{self.config.key_prefix}vector_db_stats"
+            cached_data = json.dumps(stats)
+
+            # Use provided TTL or default from config
+            ttl = ttl_seconds if ttl_seconds is not None else self.config.ttl_seconds
+
+            # Store with TTL
+            self.client.setex(cache_key, ttl, cached_data)
+
+        except (RedisError, TypeError) as e:
+            print(f"⚠️  Cache set vector DB stats error: {e}")
+
     def is_healthy(self) -> bool:
         """Check if Redis connection is healthy.
 

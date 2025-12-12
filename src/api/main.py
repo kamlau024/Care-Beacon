@@ -439,6 +439,14 @@ async def get_vector_db_stats():
         Vector database statistics including source breakdown
     """
     try:
+        generator = get_answer_generator()
+
+        # Check cache first
+        cached_stats = generator.cache.get_vector_db_stats()
+        if cached_stats is not None:
+            return cached_stats
+
+        # Cache miss - compute stats
         from src.storage.vector_db import create_vector_database
 
         vector_db = create_vector_database()
@@ -530,7 +538,8 @@ async def get_vector_db_stats():
             logger.warning(f"Failed to get source breakdown: {e}")
             unique_articles = set()
 
-        return {
+        # Prepare the response
+        result = {
             "total_documents": len(unique_articles) if unique_articles else stats.get('unique_articles_sample', 0),
             "total_chunks": total_chunks,
             "sources": sources,
@@ -538,6 +547,11 @@ async def get_vector_db_stats():
             "distance_metric": stats.get('distance_metric', ''),
             "vector_size": stats.get('vector_size', 0)
         }
+
+        # Cache the computed stats
+        generator.cache.set_vector_db_stats(result)
+
+        return result
 
     except Exception as e:
         raise HTTPException(
