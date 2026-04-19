@@ -5,6 +5,7 @@ pyyaml==6.0.1  # YAML configuration files
 
 # Vector Database
 qdrant-client==1.12.1  # Qdrant Cloud vector database
+neo4j==5.20.0  # Neo4j Graph Database driver
 
 # Embeddings & LLM APIs
 openai>=1.109.1  # OpenAI API for embeddings and GPT models (required by langchain-openai>=1.109.1)
@@ -29,6 +30,7 @@ psutil==5.9.8  # System and process utilities for memory monitoring
 numpy==1.26.4  # Numerical operations
 pandas==2.2.0  # Data manipulation (optional, for analysis)
 rank-bm25==0.2.2  # BM25 ranking algorithm for hybrid search
+gliner==0.1.7  # Lightweight Named Entity Recognition
 
 # Testing
 pytest==8.0.0  # Testing framework

@@ -43,6 +43,8 @@ def verify_api_key(authorization: Optional[str] = None) -> bool:
     Returns:
         True if valid, False otherwise
     """
+    import hmac
+
     # If no API key is configured, allow all requests (development mode)
     if not MCP_API_KEY:
         return True
@@ -55,7 +57,7 @@ def verify_api_key(authorization: Optional[str] = None) -> bool:
         return False
 
     token = authorization[7:]  # Remove "Bearer " prefix
-    return token == MCP_API_KEY
+    return hmac.compare_digest(token, MCP_API_KEY)
 
 
 async def root(request: Request):

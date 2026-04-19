@@ -33,6 +33,9 @@ class Article:
     cancer_type: Optional[str] = None
     specialty: Optional[str] = None
     source: str = "BC Cancer"
+    journal: Optional[str] = None
+    authors: List[str] = field(default_factory=list)
+    publication_date: Optional[datetime] = None
     file_path: Optional[str] = None  # Store file path for uniqueness
 
     def __post_init__(self):

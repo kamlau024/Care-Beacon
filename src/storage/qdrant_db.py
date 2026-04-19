@@ -704,7 +704,6 @@ class QdrantVectorDatabase:
             'unique_articles_sample': 0,
             'unique_sections_sample': 0,
             'distance_metric': self.distance_metric,
-            'qdrant_url': self.url,
             'vector_size': self.vector_size
         }
 

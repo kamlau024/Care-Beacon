@@ -8,7 +8,7 @@ from typing import Dict, Any
 from contextlib import asynccontextmanager
 import time
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -53,6 +53,28 @@ API_VERSION = "2.0.0"
 config = get_config()
 api_config = config.get("api", {})
 
+# Admin API key for protected endpoints
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "")
+
+
+async def require_admin_api_key(x_api_key: str | None = Header(default=None, alias="X-API-Key")):
+    """Dependency that requires a valid admin API key.
+
+    Raises:
+        HTTPException: If API key is missing or invalid
+    """
+    import hmac
+    if not ADMIN_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin endpoints disabled",
+        )
+    if not x_api_key or not hmac.compare_digest(x_api_key, ADMIN_API_KEY):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid API key",
+        )
+
 
 # Lifespan context manager for startup and shutdown events
 @asynccontextmanager
@@ -82,14 +104,17 @@ async def lifespan(app: FastAPI):
     print(" Cleanup complete")
 
 
+# Disable docs in production
+_is_debug = api_config.get("debug", False)
+
 # Create FastAPI app with lifespan
 app = FastAPI(
     title="Care-Beacon Medical RAG API",
     description="Retrieval-Augmented Generation API for cancer information from BC Cancer",
     version=API_VERSION,
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json",
+    docs_url="/docs" if _is_debug else None,
+    redoc_url="/redoc" if _is_debug else None,
+    openapi_url="/openapi.json" if _is_debug else None,
     lifespan=lifespan,
 )
 
@@ -147,9 +172,29 @@ def reset_answer_generator() -> None:
 
 
 # Simple in-memory rate limiting (for production, use Redis-based rate limiter)
-_rate_limit_cache: Dict[str, list] = {}
+from collections import OrderedDict
+
+_rate_limit_cache: OrderedDict = OrderedDict()
+_RATE_LIMIT_MAX_IPS = 10000  # Max unique IPs to track (prevents memory exhaustion)
 RATE_LIMIT_WINDOW = 60  # seconds
 RATE_LIMIT_MAX_REQUESTS = api_config.get("rate_limit", {}).get("requests_per_minute", 60)
+
+
+def get_client_ip(request: Request) -> str:
+    """Extract real client IP, accounting for reverse proxies.
+
+    Args:
+        request: FastAPI request object
+
+    Returns:
+        Client IP address
+    """
+    # Check X-Forwarded-For header (set by reverse proxies like nginx, Render, etc.)
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if forwarded_for:
+        # Take the first (leftmost) IP — the original client
+        return forwarded_for.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 def check_rate_limit(client_ip: str) -> bool:
@@ -166,13 +211,21 @@ def check_rate_limit(client_ip: str) -> bool:
 
     current_time = time.time()
 
-    # Clean old entries
+    # Clean old entries for this IP
     if client_ip in _rate_limit_cache:
         _rate_limit_cache[client_ip] = [
             timestamp for timestamp in _rate_limit_cache[client_ip]
             if current_time - timestamp < RATE_LIMIT_WINDOW
         ]
-    else:
+        # Remove key entirely if no timestamps remain
+        if not _rate_limit_cache[client_ip]:
+            del _rate_limit_cache[client_ip]
+
+    # Evict oldest IPs if we've hit the cap
+    while len(_rate_limit_cache) >= _RATE_LIMIT_MAX_IPS:
+        _rate_limit_cache.popitem(last=False)
+
+    if client_ip not in _rate_limit_cache:
         _rate_limit_cache[client_ip] = []
 
     # Check limit
@@ -308,7 +361,7 @@ async def ask_question(request: Request, question_request: QuestionRequest):
         HTTPException: If rate limit exceeded or processing fails
     """
     # Rate limiting
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = get_client_ip(request)
     if not check_rate_limit(client_ip):
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
@@ -392,9 +445,12 @@ async def ask_question(request: Request, question_request: QuestionRequest):
         logger.error(traceback.format_exc())
         logger.error("=" * 70)
 
+        detail = "Failed to generate answer"
+        if api_config.get("debug", False):
+            detail += f": {str(e)}"
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to generate answer: {str(e)}",
+            detail=detail,
         )
 
 
@@ -566,9 +622,6 @@ async def clear_cache():
 
     Returns:
         Confirmation message
-
-    Note:
-        This endpoint should be protected with authentication in production
     """
     try:
         generator = get_answer_generator()
@@ -592,9 +645,6 @@ async def reset_stats():
 
     Returns:
         Confirmation message
-
-    Note:
-        This endpoint should be protected with authentication in production
     """
     try:
         generator = get_answer_generator()
@@ -613,7 +663,7 @@ async def reset_stats():
         )
 
 
-@app.post("/api/v1/admin/ingest", tags=["Administration"])
+@app.post("/api/v1/admin/ingest", tags=["Administration"], dependencies=[Depends(require_admin_api_key)])
 async def trigger_ingestion(force: bool = False):
     """Trigger article ingestion on-demand.
 
@@ -622,11 +672,6 @@ async def trigger_ingestion(force: bool = False):
 
     Returns:
         Status and progress information
-
-    Note:
-        This endpoint should be protected with authentication in production.
-        Ingestion can take 5-10 minutes and will block this request.
-        Use for manual re-ingestion after adding new articles.
     """
     try:
         import subprocess
@@ -705,7 +750,7 @@ async def trigger_ingestion(force: bool = False):
         )
 
 
-@app.get("/api/v1/admin/ingest/stream", tags=["Administration"])
+@app.get("/api/v1/admin/ingest/stream", tags=["Administration"], dependencies=[Depends(require_admin_api_key)])
 async def stream_ingestion(force: bool = False):
     """Stream real-time ingestion progress using Server-Sent Events.
 
@@ -714,10 +759,6 @@ async def stream_ingestion(force: bool = False):
 
     Returns:
         Server-Sent Events stream with real-time progress
-
-    Note:
-        This endpoint should be protected with authentication in production.
-        Use EventSource API on the client to consume the stream.
     """
     import subprocess
     import asyncio
@@ -898,9 +939,6 @@ async def reset_performance_metrics():
 
     Returns:
         Confirmation message
-
-    Note:
-        This endpoint should be protected with authentication in production
     """
     try:
         monitor = get_performance_monitor()

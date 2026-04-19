@@ -10,7 +10,7 @@ import frontmatter
 from src.storage.models import Article, ArticleSection
 
 
-class MarkdownParser:
+class MedicalArticleParser:
     """Parser for markdown files with YAML frontmatter."""
 
     def __init__(self):
