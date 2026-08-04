@@ -686,6 +686,7 @@ Vercel Services builds each service from its own `root` directory, so all Python
 - Move: `src/` → `api/src/`, `tests/` → `api/tests/`, `config/` → `api/config/`
 - Move: `scripts/ingest_all_articles_low_memory.py` → `api/scripts/ingest.py`
 - Move: `requirements.txt` → `api/requirements.txt`
+- Fix: `api/scripts/ingest.py` and `api/tests/test_parser.py` — repair the `MarkdownParser` → `MedicalArticleParser` rename from commit `3aadd6a` that left ingestion unable to import
 - Create: `vercel.json`
 - Modify: `.python-version` → `3.12`
 - Delete: `runtime.txt`
@@ -714,14 +715,70 @@ rm -f scripts/ingest_all_articles_low_memory.py.bak
 
 `api/scripts/ingest.py` is the one that production used and the only one retained.
 
-- [ ] **Step 3: Set the Python version**
+- [ ] **Step 3: Repair the parser rename that broke ingestion**
+
+Commit `3aadd6a` renamed `MarkdownParser` to `MedicalArticleParser` in `src/ingestion/markdown_parser.py` without updating its callers. The result is that `api/scripts/ingest.py` — which this plan makes the **only** ingestion entry point, and which Task 13 documents as `make ingest` — raises `ImportError` on import. The same rename is why `tests/test_parser.py` fails collection.
+
+This is a pure rename: `MedicalArticleParser` exposes the identical `parse_file`, `parse_directory` and `get_article_stats` methods the callers already use. Do not change any parser behaviour.
+
+In `api/scripts/ingest.py`, three references (originally lines 20, 46, 209):
+
+```python
+from src.ingestion.markdown_parser import MedicalArticleParser
+```
+```python
+    parser: MedicalArticleParser,
+```
+```python
+    parser = MedicalArticleParser()
+```
+
+The same file also annotates a parameter with `VectorDatabase` (originally line 49) — a name it never imported, and a class Task 3 deleted. Point it at the real type. Add the import:
+
+```python
+from src.storage.qdrant_db import QdrantVectorDatabase
+```
+
+and change the annotation:
+
+```python
+    db: QdrantVectorDatabase,
+```
+
+In `api/tests/test_parser.py`, two references (originally lines 7 and 14):
+
+```python
+from src.ingestion.markdown_parser import MedicalArticleParser, normalize_section_name
+```
+```python
+    return MedicalArticleParser()
+```
+
+Then confirm the ingestion script imports cleanly — this is the check that matters, because nothing else in the suite covers it:
+
+```bash
+cd api && $PY -c "
+import importlib.util, sys
+sys.path.insert(0, '.')
+spec = importlib.util.spec_from_file_location('ing', 'scripts/ingest.py')
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+print('ingest.py imports cleanly')
+"; cd ..
+```
+
+Expected: `ingest.py imports cleanly`. Do not run the script itself — it would re-embed 13,381 articles against the live Qdrant collection and cost real money.
+
+Scope limit: other files under `scripts/` at the repository root reference the same old names and are also broken. They are deliberately **out of scope** and must be left alone.
+
+- [ ] **Step 4: Set the Python version**
 
 ```bash
 echo "3.12" > .python-version
 git rm runtime.txt
 ```
 
-- [ ] **Step 4: Create vercel.json**
+- [ ] **Step 5: Create vercel.json**
 
 ```json
 {
@@ -745,7 +802,7 @@ git rm runtime.txt
 
 The `/api/(.*)` rule must stay first — rewrites are evaluated in order and routing into a service is final.
 
-- [ ] **Step 5: Verify tests still pass from the new root**
+- [ ] **Step 6: Verify tests still pass from the new root**
 
 ```bash
 cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
@@ -753,7 +810,7 @@ cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. Counts must match Task 5 exactly — this task only moves files. The `from src.…` imports resolve because `api/` is now the working directory.
 
-- [ ] **Step 6: Verify config still loads by relative path**
+- [ ] **Step 7: Verify config still loads by relative path**
 
 ```bash
 cd api && python -c "
@@ -766,7 +823,7 @@ print('config resolves from api/')
 
 Expected: `config resolves from api/`.
 
-- [ ] **Step 7: Confirm the bundle boundary**
+- [ ] **Step 8: Confirm the bundle boundary**
 
 ```bash
 ls api/ && echo "---" && ls -d scraped_data data 2>/dev/null
@@ -774,7 +831,7 @@ ls api/ && echo "---" && ls -d scraped_data data 2>/dev/null
 
 Expected: `scraped_data` and `data` are listed at the root, **not** inside `api/`. This is what keeps 214 MB out of the function bundle.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
 git add -A
