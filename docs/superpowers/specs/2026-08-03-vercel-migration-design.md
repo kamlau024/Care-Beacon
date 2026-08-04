@@ -242,12 +242,15 @@ Before production is touched:
 
 ## Risks
 
-**Path rewriting through Services is unverified by execution.** The documentation
-describes controlling the path a service sees, but it is not established whether
-`/api/v1/ask` reaches FastAPI intact or stripped to `/v1/ask`. The design assumes it is
-preserved. If it is stripped, the remedy is a `basePath` setting or a shift in the
-FastAPI route prefixes. This must be settled as the first implementation step rather
-than assumed.
+**Path rewriting through Services — resolved.** This was raised as an open question
+during design and has since been settled from the Services routing documentation: "The
+service receives the original request path. `GET /api/users` reaches `my_backend` as
+`/api/users`, not `/users`." Routing into a service is also final — if no route matches
+inside it, Vercel returns the service's own 404 rather than falling through to the
+remaining top-level rewrites. The existing FastAPI route prefixes therefore need no
+change and no `basePath` is required. The one consequence to respect is that the
+`/api/(.*)` rewrite must be listed before the `/(.*)` catch-all, since rewrites are
+evaluated in order.
 
 **Cold start is unmeasured for this deployment.** There is no Render-style spin-down,
 but a Python function initialises the OpenAI and Qdrant clients on first request.
