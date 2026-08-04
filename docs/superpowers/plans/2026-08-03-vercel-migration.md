@@ -627,10 +627,12 @@ The exception handlers take their own `request: Request`, so the import stays.
 ```python
         "endpoints": {
             "ask": "/api/v1/ask",
-            "health": "/api/health",
+            "health": "/health",
             "stats": "/api/v1/stats",
         }
 ```
+
+The `health` value stays `/health` here. The route does not move to `/api/health` until Task 9, and advertising a path that does not yet exist would be wrong. Task 9's Step 4 updates this entry when it moves the route.
 
 - [ ] **Step 4: Remove the config block**
 
