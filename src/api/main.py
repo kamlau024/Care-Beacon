@@ -43,7 +43,6 @@ from src.api.models import (
     StatsResponse,
     ErrorResponse,
 )
-from src.api.performance import get_performance_monitor
 
 # API Version
 API_VERSION = "2.0.0"
@@ -130,27 +129,6 @@ app.add_middleware(
 )
 
 
-# Performance monitoring middleware
-@app.middleware("http")
-async def performance_middleware(request: Request, call_next):
-    """Track performance metrics for all requests."""
-    start_time = time.time()
-    response = await call_next(request)
-    duration_ms = (time.time() - start_time) * 1000
-
-    # Record metrics (excluding /performance endpoint to avoid recursion)
-    if not request.url.path.startswith("/api/v1/performance"):
-        monitor = get_performance_monitor()
-        monitor.record_request(
-            endpoint=request.url.path,
-            method=request.method,
-            status_code=response.status_code,
-            duration_ms=duration_ms,
-        )
-
-    return response
-
-
 # Initialize answer generator (lazy loaded on first request)
 _answer_generator: AnswerGenerator | None = None
 
@@ -161,72 +139,6 @@ def get_answer_generator() -> AnswerGenerator:
     if _answer_generator is None:
         _answer_generator = AnswerGenerator()
     return _answer_generator
-
-
-# Simple in-memory rate limiting (for production, use Redis-based rate limiter)
-from collections import OrderedDict
-
-_rate_limit_cache: OrderedDict = OrderedDict()
-_RATE_LIMIT_MAX_IPS = 10000  # Max unique IPs to track (prevents memory exhaustion)
-RATE_LIMIT_WINDOW = 60  # seconds
-RATE_LIMIT_MAX_REQUESTS = api_config.get("rate_limit", {}).get("requests_per_minute", 60)
-
-
-def get_client_ip(request: Request) -> str:
-    """Extract real client IP, accounting for reverse proxies.
-
-    Args:
-        request: FastAPI request object
-
-    Returns:
-        Client IP address
-    """
-    # Check X-Forwarded-For header (set by reverse proxies like nginx, Render, etc.)
-    forwarded_for = request.headers.get("x-forwarded-for")
-    if forwarded_for:
-        # Take the first (leftmost) IP — the original client
-        return forwarded_for.split(",")[0].strip()
-    return request.client.host if request.client else "unknown"
-
-
-def check_rate_limit(client_ip: str) -> bool:
-    """Check if client has exceeded rate limit.
-
-    Args:
-        client_ip: Client IP address
-
-    Returns:
-        True if within limit, False if exceeded
-    """
-    if not api_config.get("rate_limit", {}).get("enabled", True):
-        return True
-
-    current_time = time.time()
-
-    # Clean old entries for this IP
-    if client_ip in _rate_limit_cache:
-        _rate_limit_cache[client_ip] = [
-            timestamp for timestamp in _rate_limit_cache[client_ip]
-            if current_time - timestamp < RATE_LIMIT_WINDOW
-        ]
-        # Remove key entirely if no timestamps remain
-        if not _rate_limit_cache[client_ip]:
-            del _rate_limit_cache[client_ip]
-
-    # Evict oldest IPs if we've hit the cap
-    while len(_rate_limit_cache) >= _RATE_LIMIT_MAX_IPS:
-        _rate_limit_cache.popitem(last=False)
-
-    if client_ip not in _rate_limit_cache:
-        _rate_limit_cache[client_ip] = []
-
-    # Check limit
-    if len(_rate_limit_cache[client_ip]) >= RATE_LIMIT_MAX_REQUESTS:
-        return False
-
-    # Add new request
-    _rate_limit_cache[client_ip].append(current_time)
-    return True
 
 
 # Exception handlers
@@ -299,9 +211,6 @@ async def root():
             "ask": "/api/v1/ask",
             "health": "/health",
             "stats": "/api/v1/stats",
-            "performance": "/api/v1/performance",
-            "performance_endpoints": "/api/v1/performance/endpoints",
-            "performance_recent": "/api/v1/performance/recent",
         }
     }
 
@@ -339,27 +248,18 @@ async def health_check():
     summary="Ask a medical question",
     description="Submit a question and receive an AI-generated answer with citations from BC Cancer materials",
 )
-async def ask_question(request: Request, question_request: QuestionRequest):
+async def ask_question(question_request: QuestionRequest):
     """Answer a medical question using RAG.
 
     Args:
-        request: FastAPI request object
         question_request: Question request data
 
     Returns:
         Generated answer with citations
 
     Raises:
-        HTTPException: If rate limit exceeded or processing fails
+        HTTPException: If processing fails
     """
-    # Rate limiting
-    client_ip = get_client_ip(request)
-    if not check_rate_limit(client_ip):
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail=f"Rate limit exceeded. Maximum {RATE_LIMIT_MAX_REQUESTS} requests per minute.",
-        )
-
     try:
         # Get generator
         generator = get_answer_generator()
@@ -661,125 +561,3 @@ async def reset_stats():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reset statistics: {str(e)}",
         )
-
-
-@app.get(
-    "/api/v1/performance",
-    tags=["Monitoring"],
-    summary="Get performance metrics",
-    description="Retrieve comprehensive performance metrics including response times, throughput, and error rates",
-)
-async def get_performance_metrics():
-    """Get performance monitoring metrics.
-
-    Returns:
-        Performance summary with aggregated metrics
-    """
-    try:
-        monitor = get_performance_monitor()
-        summary = monitor.get_summary()
-        percentiles = monitor.get_percentiles()
-
-        return {
-            "summary": summary,
-            "percentiles": percentiles,
-            "timestamp": datetime.now().isoformat(),
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve performance metrics: {str(e)}",
-        )
-
-
-@app.get(
-    "/api/v1/performance/endpoints",
-    tags=["Monitoring"],
-    summary="Get endpoint-specific metrics",
-    description="Retrieve performance metrics broken down by endpoint",
-)
-async def get_endpoint_performance():
-    """Get endpoint-specific performance metrics.
-
-    Returns:
-        Performance metrics for each endpoint
-    """
-    try:
-        monitor = get_performance_monitor()
-        endpoint_metrics = monitor.get_endpoint_metrics()
-
-        return {
-            "endpoints": endpoint_metrics,
-            "timestamp": datetime.now().isoformat(),
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve endpoint metrics: {str(e)}",
-        )
-
-
-@app.get(
-    "/api/v1/performance/recent",
-    tags=["Monitoring"],
-    summary="Get recent requests",
-    description="Retrieve metrics for recent API requests",
-)
-async def get_recent_requests(limit: int = 10):
-    """Get recent request metrics.
-
-    Args:
-        limit: Maximum number of requests to return (default: 10, max: 100)
-
-    Returns:
-        List of recent request metrics
-    """
-    try:
-        # Limit to reasonable range
-        limit = min(max(1, limit), 100)
-
-        monitor = get_performance_monitor()
-        recent = monitor.get_recent_requests(limit=limit)
-
-        return {
-            "requests": recent,
-            "count": len(recent),
-            "timestamp": datetime.now().isoformat(),
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve recent requests: {str(e)}",
-        )
-
-
-@app.post(
-    "/api/v1/performance/reset",
-    tags=["Administration"],
-    summary="Reset performance metrics",
-    description="Clear all performance monitoring data",
-)
-async def reset_performance_metrics():
-    """Reset performance monitoring metrics.
-
-    Returns:
-        Confirmation message
-    """
-    try:
-        monitor = get_performance_monitor()
-        monitor.reset()
-
-        return {
-            "message": "Performance metrics reset successfully",
-            "timestamp": datetime.now().isoformat(),
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to reset performance metrics: {str(e)}",
-        )
-

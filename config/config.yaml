@@ -76,9 +76,6 @@ api:
   debug: false
   cors_origins:
     - "*"  # Allow all origins for development (use specific domains in production)
-  rate_limit:
-    enabled: true
-    requests_per_minute: 60
 
 # Logging Configuration
 logging:
