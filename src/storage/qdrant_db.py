@@ -14,7 +14,6 @@ from qdrant_client.models import (
 )
 
 from src.storage.models import Chunk, RetrievalResult
-from src.storage.bm25_index import BM25Index
 from src.config_loader import get_config
 from loguru import logger
 
@@ -67,28 +66,6 @@ class QdrantVectorDatabase:
         # Create collection if it doesn't exist
         self._ensure_collection_exists()
 
-        # Initialize BM25 index for hybrid search (lazy loading to avoid OOM at startup)
-        self.bm25_index: Optional[BM25Index] = None
-        self.bm25_load_attempted: bool = False  # Track if we've tried to load BM25
-
-        # Allow environment variable to override hybrid search (useful for memory-constrained deployments)
-        import os
-        env_hybrid_search = os.getenv('ENABLE_HYBRID_SEARCH', '').lower()
-        if env_hybrid_search in ('false', '0', 'no'):
-            self.enable_hybrid_search = False
-            logger.info("Hybrid search disabled via ENABLE_HYBRID_SEARCH environment variable")
-        elif env_hybrid_search in ('true', '1', 'yes'):
-            self.enable_hybrid_search = True
-        else:
-            self.enable_hybrid_search = config.get('retrieval.enable_hybrid_search', False)
-
-        self.hybrid_alpha = config.get('retrieval.hybrid_alpha', 0.7)
-        self.bm25_index_path = config.get('retrieval.bm25_index_path', 'data/bm25_index.pkl')
-
-        # NOTE: BM25 index is now loaded lazily on first search to avoid OOM at startup
-        # (especially important for memory-constrained environments like Render free tier)
-        # Set ENABLE_HYBRID_SEARCH=false on Render to disable hybrid search entirely
-
     def _ensure_collection_exists(self) -> None:
         """Ensure the collection exists, create if it doesn't."""
         collection_exists = False
@@ -140,107 +117,6 @@ class QdrantVectorDatabase:
                 if "already exists" not in str(e).lower() and "index with name" not in str(e).lower():
                     # Log warning but don't fail
                     pass
-
-    def _load_or_build_bm25_index(self) -> None:
-        """Load BM25 index from disk or build it from existing chunks."""
-        from pathlib import Path
-
-        self.bm25_index = BM25Index()
-
-        # Try to load existing index
-        if Path(self.bm25_index_path).exists():
-            try:
-                self.bm25_index.load(self.bm25_index_path)
-                logger.info(f"✅ Loaded BM25 index from {self.bm25_index_path}")
-                return
-            except Exception as e:
-                logger.warning(f"Failed to load BM25 index: {e}. Will rebuild from chunks.")
-
-        # Build index from existing chunks
-        logger.info("Building BM25 index from existing chunks...")
-        logger.warning("⚠️  Building BM25 index synchronously - this may take several minutes and block the current request!")
-        try:
-            # Get all chunks from Qdrant
-            all_chunks = self._get_all_chunks_for_bm25()
-            if all_chunks:
-                logger.info(f"Retrieved {len(all_chunks)} chunks, now building BM25 index...")
-                self.bm25_index.build(all_chunks)
-                logger.info("BM25 index built successfully, saving to disk...")
-                # Save for future use
-                self.bm25_index.save(self.bm25_index_path)
-                logger.info(f"✅ BM25 index saved to {self.bm25_index_path}")
-            else:
-                logger.warning("No chunks found to build BM25 index")
-        except Exception as e:
-            logger.error(f"Failed to build BM25 index: {e}")
-            self.bm25_index = None
-
-    def _get_all_chunks_for_bm25(self) -> List[Chunk]:
-        """Retrieve all chunks from Qdrant for BM25 index building.
-
-        Returns:
-            List of all chunks in the database
-        """
-        chunks = []
-        offset = None
-        batch_size = 100
-        batch_count = 0
-
-        while True:
-            # Scroll through chunks
-            scroll_result = self.client.scroll(
-                collection_name=self.collection_name,
-                limit=batch_size,
-                offset=offset,
-                with_payload=True,
-                with_vectors=False  # Don't need vectors for BM25
-            )
-
-            points, next_offset = scroll_result
-
-            if not points:
-                break
-
-            # Convert points to chunks
-            for point in points:
-                chunk_id = point.payload.get('chunk_id', str(point.id))
-                text = point.payload.get('text', '')
-                metadata = {k: v for k, v in point.payload.items() if k not in ['text', 'chunk_id']}
-
-                chunk = Chunk.from_metadata(chunk_id, text, metadata)
-                chunks.append(chunk)
-
-            batch_count += 1
-            if batch_count % 10 == 0:  # Log every 1000 chunks
-                logger.info(f"Retrieved {len(chunks)} chunks so far...")
-
-            # Check if we're done
-            if next_offset is None:
-                break
-
-            offset = next_offset
-
-        return chunks
-
-    def rebuild_bm25_index(self) -> None:
-        """Rebuild the BM25 index from all chunks in the database.
-
-        This should be called after ingesting new data or if the index becomes corrupted.
-        """
-        if not self.enable_hybrid_search:
-            logger.warning("Hybrid search is disabled. Cannot rebuild BM25 index.")
-            return
-
-        logger.info("Rebuilding BM25 index from all chunks...")
-        all_chunks = self._get_all_chunks_for_bm25()
-
-        if all_chunks:
-            self.bm25_index = BM25Index()
-            self.bm25_index.build(all_chunks)
-            self.bm25_index.save(self.bm25_index_path)
-            logger.info(f"✅ BM25 index rebuilt with {len(all_chunks)} chunks")
-        else:
-            logger.warning("No chunks found to rebuild BM25 index")
 
     def _chunk_to_point(self, chunk: Chunk) -> PointStruct:
         """Convert a Chunk to a Qdrant PointStruct.
@@ -442,125 +318,6 @@ class QdrantVectorDatabase:
             retrieval_results.append(retrieval_result)
 
         return retrieval_results
-
-    def hybrid_search(
-        self,
-        query_text: str,
-        query_embedding: List[float],
-        n_results: int = 10,
-        alpha: Optional[float] = None,
-        where: Optional[Dict[str, Any]] = None,
-    ) -> List[RetrievalResult]:
-        """Hybrid search combining vector similarity and BM25 keyword matching.
-
-        This method combines:
-        - Vector search (semantic similarity)
-        - BM25 search (keyword/term matching)
-
-        Scores are combined using Reciprocal Rank Fusion (RRF) and weighted by alpha:
-        - final_score = alpha * vector_score + (1 - alpha) * bm25_score
-
-        Args:
-            query_text: Query text (for BM25)
-            query_embedding: Query vector (for vector search)
-            n_results: Number of results to return
-            alpha: Weight for vector search (0.0 = pure BM25, 1.0 = pure vector)
-                   If None, uses config value (default 0.7)
-            where: Metadata filters (applied to vector search only)
-
-        Returns:
-            List of RetrievalResult objects, ranked by hybrid score
-        """
-        # Lazy load BM25 index on first search attempt
-        if self.enable_hybrid_search and self.bm25_index is None and not self.bm25_load_attempted:
-            logger.info("Lazy loading BM25 index for first hybrid search...")
-            self.bm25_load_attempted = True
-            try:
-                self._load_or_build_bm25_index()
-            except Exception as e:
-                logger.warning(f"Failed to load BM25 index: {e}. Will use pure vector search.")
-                self.bm25_index = None
-
-        if not self.enable_hybrid_search or self.bm25_index is None:
-            # Fall back to pure vector search
-            logger.debug("Hybrid search disabled or BM25 index not available, using vector search")
-            return self.search(query_embedding, n_results, where)
-
-        # Use configured alpha if not provided
-        if alpha is None:
-            alpha = self.hybrid_alpha
-
-        # Get more results from each source to ensure good fusion
-        retrieval_size = n_results * 3
-
-        # 1. Vector search
-        vector_results = self.search(
-            query_embedding=query_embedding,
-            n_results=retrieval_size,
-            where=where
-        )
-
-        # 2. BM25 search
-        bm25_results = self.bm25_index.search(query_text, n_results=retrieval_size)
-
-        # 3. Create lookup for vector results
-        vector_scores = {result.chunk.chunk_id: result.similarity_score for result in vector_results}
-        vector_chunks = {result.chunk.chunk_id: result for result in vector_results}
-
-        # 4. Create lookup for BM25 results
-        bm25_scores = {chunk_id: score for chunk_id, score in bm25_results}
-
-        # 5. Get all unique chunk IDs
-        all_chunk_ids = set(vector_scores.keys()) | set(bm25_scores.keys())
-
-        # 6. Normalize and combine scores
-        # Normalize BM25 scores to 0-1 range
-        max_bm25_score = max(bm25_scores.values()) if bm25_scores else 1.0
-        normalized_bm25 = {
-            chunk_id: score / max_bm25_score
-            for chunk_id, score in bm25_scores.items()
-        } if max_bm25_score > 0 else {}
-
-        # Calculate hybrid scores
-        hybrid_scores = {}
-        for chunk_id in all_chunk_ids:
-            vec_score = vector_scores.get(chunk_id, 0.0)
-            bm25_score = normalized_bm25.get(chunk_id, 0.0)
-
-            # Weighted combination
-            hybrid_score = alpha * vec_score + (1 - alpha) * bm25_score
-            hybrid_scores[chunk_id] = hybrid_score
-
-        # 7. Sort by hybrid score and get top n
-        top_chunk_ids = sorted(hybrid_scores.keys(), key=lambda x: hybrid_scores[x], reverse=True)[:n_results]
-
-        # 8. Create RetrievalResult objects
-        results = []
-        for rank, chunk_id in enumerate(top_chunk_ids, start=1):
-            # Get chunk (prefer from vector results as they have full metadata)
-            if chunk_id in vector_chunks:
-                result = vector_chunks[chunk_id]
-                # Update score and rank
-                result.similarity_score = hybrid_scores[chunk_id]
-                result.rank = rank
-                results.append(result)
-            else:
-                # Chunk only in BM25 results, need to fetch from database
-                chunk = self.get_chunk(chunk_id)
-                if chunk:
-                    result = RetrievalResult(
-                        chunk=chunk,
-                        similarity_score=hybrid_scores[chunk_id],
-                        rank=rank
-                    )
-                    results.append(result)
-
-        logger.debug(
-            f"Hybrid search: {len(vector_results)} vector + {len(bm25_results)} BM25 → "
-            f"{len(results)} fused results (alpha={alpha:.2f})"
-        )
-
-        return results
 
     def search_by_text(
         self,

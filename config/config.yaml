@@ -41,11 +41,6 @@ retrieval:
   include_metadata: true  # Include full metadata in results
   cache_query_embeddings: true  # Cache embeddings for repeated queries
 
-  # Hybrid Search Configuration (Vector + BM25)
-  enable_hybrid_search: true  # Use both vector similarity and BM25 keyword search
-  hybrid_alpha: 0.7  # Weight for vector search (0.0 = pure BM25, 1.0 = pure vector, 0.7 = 70% vector + 30% BM25)
-  bm25_index_path: "data/bm25_index.pkl"  # Path to save/load BM25 index
-
 # LLM Configuration
 llm:
   provider: "openai"  # openai or anthropic

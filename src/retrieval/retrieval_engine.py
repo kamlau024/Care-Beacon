@@ -95,33 +95,19 @@ class RetrievalEngine:
         # Generate query embedding
         query_embedding = self.embedding_generator.embed_text(query.text)
 
-        # Determine search method (hybrid or pure vector)
-        enable_hybrid = self.config.rerank_results if hasattr(self.config, 'rerank_results') else False
-        if hasattr(self.vector_db, 'enable_hybrid_search'):
-            enable_hybrid = self.vector_db.enable_hybrid_search
-        use_hybrid_search = enable_hybrid and hasattr(self.vector_db, 'hybrid_search')
-
-        # Search vector database (or hybrid search)
         # Retrieve more results if re-ranking is enabled (retrieve 6x to ensure completeness)
         initial_n_results = query.max_results * 6 if self.reranker else query.max_results
 
-        if use_hybrid_search:
-            logger.info(f"🔍 Using HYBRID search (vector + BM25): fetching {initial_n_results} results (reranker={'enabled' if self.reranker else 'disabled'})")
-            results = self.vector_db.hybrid_search(
-                query_text=query.text,
-                query_embedding=query_embedding,
-                n_results=initial_n_results,
-                where=query.filters,
-            )
-            logger.info(f"📊 Hybrid search returned {len(results)} results")
-        else:
-            logger.info(f"🔍 Using vector search: fetching {initial_n_results} results (reranker={'enabled' if self.reranker else 'disabled'})")
-            results = self.vector_db.search(
-                query_embedding=query_embedding,
-                n_results=initial_n_results,
-                where=query.filters,
-            )
-            logger.info(f"📊 Vector search returned {len(results)} results")
+        logger.info(
+            f"🔍 Vector search: fetching {initial_n_results} results "
+            f"(reranker={'enabled' if self.reranker else 'disabled'})"
+        )
+        results = self.vector_db.search(
+            query_embedding=query_embedding,
+            n_results=initial_n_results,
+            where=query.filters,
+        )
+        logger.info(f"📊 Vector search returned {len(results)} results")
 
         # When re-ranking is enabled, skip or loosen pre-filter
         # Re-ranked scores are more accurate than raw vector similarity
