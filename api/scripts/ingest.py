@@ -17,12 +17,13 @@ import time
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.ingestion.markdown_parser import MarkdownParser
+from src.ingestion.markdown_parser import MedicalArticleParser
 from src.embeddings.chunking import DocumentChunker
 from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.storage.vector_db import create_vector_database
 from src.storage.models import Article, Chunk
 from src.config_loader import get_config
+from src.storage.qdrant_db import QdrantVectorDatabase
 
 
 def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
@@ -43,10 +44,10 @@ def get_memory_usage():
 
 def process_batch(
     article_paths_batch: List[Tuple[Path, str]],
-    parser: MarkdownParser,
+    parser: MedicalArticleParser,
     chunker: DocumentChunker,
     generator: EmbeddingGenerator,
-    db: VectorDatabase,
+    db: QdrantVectorDatabase,
     batch_num: int,
     total_batches: int,
 ) -> Tuple[int, int, int]:
@@ -206,7 +207,7 @@ def main():
 
     # Initialize components
     print("Initializing components...")
-    parser = MarkdownParser()
+    parser = MedicalArticleParser()
     chunker = DocumentChunker()
     generator = EmbeddingGenerator()
     db = create_vector_database()

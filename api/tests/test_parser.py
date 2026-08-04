@@ -4,14 +4,14 @@ import pytest
 from pathlib import Path
 from datetime import datetime
 
-from src.ingestion.markdown_parser import MarkdownParser, normalize_section_name
+from src.ingestion.markdown_parser import MedicalArticleParser, normalize_section_name
 from src.storage.models import Article, ArticleSection
 
 
 @pytest.fixture
 def parser():
     """Create a parser instance."""
-    return MarkdownParser()
+    return MedicalArticleParser()
 
 
 @pytest.fixture
