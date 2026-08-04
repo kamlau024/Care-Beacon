@@ -21,6 +21,15 @@
 - **The RAG pipeline is not to be modified.** Chunking, the LLM re-ranker, the `min_similarity: 0.6` threshold, prompt templates and citation formatting are out of scope.
 - **`render.yaml` is not deleted until Vercel is verified working** (Task 13). It is the rollback path.
 - **Commit after every task.** Never commit `.env`, `scraped_data/`, or `data/`.
+- **Use the project interpreter, not bare `pytest`.** Plain `pytest` resolves to the anaconda base environment, which has none of this project's dependencies and produces 17 misleading collection errors. Every command in this plan assumes:
+
+  ```bash
+  export PY=/opt/anaconda3/envs/care-beacon/bin/python   # Python 3.10.19
+  ```
+
+  Run tests as `$PY -m pytest`. (The Vercel runtime is 3.12; the local env is still 3.10.19. That mismatch is pre-existing and out of scope — do not attempt to rebuild the conda environment.)
+- **The test suite is NOT green, and was not green before this work started.** ~50 failures/errors exist on the parent commit. The recorded per-file baseline is `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. **The gate for every task is "no NEW failures versus that baseline"** — never "all green". Notable pre-existing breakage: `test_vector_db.py` has 26 `NameError: chromadb is not defined` (Task 3 deletes those tests), `test_retrieval.py` has 18 `Mock has no len()` (Task 2 collapses that branch), `test_hybrid_search.py` hangs (Task 2 deletes it), `test_parser.py` fails collection on a `MarkdownParser`/`MedicalArticleParser` name mismatch. Tasks 2 and 3 should make the count drop sharply; that is expected improvement, not regression.
+- **Any test you newly write must genuinely pass.** The baseline gate excuses inherited breakage only.
 
 ## Path change at Task 6
 
@@ -73,6 +82,7 @@ Neither `src/graph_api/` (Neo4j GraphRAG) nor `mcp/` appears in `render.yaml` or
 - Delete: `mcp/` (entire directory, 661 lines of Python plus READMEs)
 - Delete: `Dockerfile.graph`, `Dockerfile.mcp`, `requirements-mcp.txt`
 - Delete: `scripts/ingest_graph.py`, `scripts/start_mcp_sse.sh`
+- Delete: `scripts/debug_retrieval.py` (95-line ad-hoc debug script; half of it drives a Neo4j instance that stops existing after this task)
 - Modify: `docker-compose.yml` (remove the `mcp-sse`, `neo4j` and `graph-api` service blocks)
 
 **Interfaces:**
@@ -82,7 +92,7 @@ Neither `src/graph_api/` (Neo4j GraphRAG) nor `mcp/` appears in `render.yaml` or
 - [ ] **Step 1: Record the baseline so you can prove you broke nothing**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
 Write down the pass/fail counts. Every later step compares against this number.
@@ -92,17 +102,19 @@ Write down the pass/fail counts. Every later step compares against this number.
 ```bash
 grep -rn "graph_api\|from neo4j\|import neo4j\|from gliner\|import gliner" \
   src/ tests/ scripts/ web-client/ --include="*.py" --include="*.ts" --include="*.tsx" \
-  | grep -v "^src/graph_api/"
+  | grep -v "^src/graph_api/" \
+  | grep -v "^scripts/ingest_graph.py:" \
+  | grep -v "^scripts/debug_retrieval.py:"
 ```
 
-Expected: no output. If anything prints, stop and report it — the deletion is not safe and this plan's assumption was wrong.
+Expected: no output. The two excluded scripts are themselves on this task's delete list — `ingest_graph.py` imports `src.graph_api`, and `debug_retrieval.py` imports `neo4j` directly. Anything else that prints means a file outside the delete list depends on these subsystems: stop and report it, because Task 7 later drops `neo4j` and `gliner` on the strength of this check.
 
 - [ ] **Step 3: Delete the files**
 
 ```bash
 git rm -r src/graph_api mcp
 git rm Dockerfile.graph Dockerfile.mcp requirements-mcp.txt
-git rm scripts/ingest_graph.py scripts/start_mcp_sse.sh
+git rm scripts/ingest_graph.py scripts/start_mcp_sse.sh scripts/debug_retrieval.py
 ```
 
 - [ ] **Step 4: Remove the three dead service blocks from docker-compose.yml**
@@ -124,10 +136,10 @@ Expected: `compose OK`. If Docker is not installed locally, skip this step and n
 - [ ] **Step 6: Run the full suite**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
-Expected: identical pass/fail counts to Step 1.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. Task 1 deletes no test files, so the counts should be identical to Step 1.
 
 - [ ] **Step 7: Commit**
 
@@ -171,7 +183,7 @@ deletion in the working tree; this completes it.)
 - [ ] **Step 2: Run the suite to see exactly what breaks**
 
 ```bash
-pytest -q 2>&1 | tail -20
+$PY -m pytest -q 2>&1 | tail -20
 ```
 
 Expected: FAIL — `ModuleNotFoundError: No module named 'src.storage.bm25_index'`, raised through `src/storage/qdrant_db.py`. This is the failing state that the next steps resolve.
@@ -229,10 +241,10 @@ Expected: `clean`.
 - [ ] **Step 7: Run the suite**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
-Expected: PASS. Total count is lower than Task 1's baseline by the number of tests in `test_hybrid_search.py`; no failures.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. `test_hybrid_search.py` (which HANGS at baseline) and `test_retrieval.py`'s 18 `Mock has no len()` failures should both disappear — that is the expected improvement, not a regression.
 
 - [ ] **Step 8: Commit**
 
@@ -319,7 +331,7 @@ def create_vector_database(
 - [ ] **Step 3: Run the vector_db tests to see which break**
 
 ```bash
-pytest tests/test_vector_db.py -q 2>&1 | tail -20
+$PY -m pytest tests/test_vector_db.py -q 2>&1 | tail -20
 ```
 
 Expected: FAIL — `ImportError: cannot import name 'VectorDatabase'` or `AttributeError` in the tests that construct it.
@@ -343,7 +355,7 @@ def test_create_vector_database_rejects_non_qdrant_provider():
 - [ ] **Step 5: Run the suite**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
 Expected: PASS.
@@ -464,7 +476,7 @@ The existing `test_clear_cache` and `test_reset_stats` tests call these endpoint
 - [ ] **Step 7: Run to verify it fails**
 
 ```bash
-pytest tests/test_api.py -k "api_key or admin_endpoints" -q 2>&1 | tail -10
+$PY -m pytest tests/test_api.py -k "api_key or admin_endpoints" -q 2>&1 | tail -10
 ```
 
 Expected: FAIL — the endpoints return 200 because no dependency guards them.
@@ -518,10 +530,10 @@ Add the dependency to both admin decorators:
 - [ ] **Step 9: Run the suite**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
-Expected: PASS. No test in `tests/test_api.py` covers the ingest endpoints — verified — so the count drops only if you removed something else by accident.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. No baseline test covers the ingest endpoints — verified — so nothing should drop except by accident. Your four new auth tests must PASS.
 
 - [ ] **Step 10: Commit**
 
@@ -563,7 +575,7 @@ git rm src/api/performance.py tests/test_performance.py
 - [ ] **Step 2: Run the suite to see the breakage**
 
 ```bash
-pytest -q 2>&1 | tail -20
+$PY -m pytest -q 2>&1 | tail -20
 ```
 
 Expected: FAIL — `ModuleNotFoundError: No module named 'src.api.performance'` from `src/api/main.py` and `tests/test_api.py`.
@@ -639,7 +651,7 @@ Expected: `clean`.
 - [ ] **Step 7: Run the suite**
 
 ```bash
-pytest -q 2>&1 | tail -5
+$PY -m pytest -q 2>&1 | tail -5
 ```
 
 Expected: PASS.
@@ -728,10 +740,10 @@ The `/api/(.*)` rule must stay first — rewrites are evaluated in order and rou
 - [ ] **Step 5: Verify tests still pass from the new root**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
 ```
 
-Expected: PASS with the same count as Task 5. The `from src.…` imports resolve because `api/` is now the working directory.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. Counts must match Task 5 exactly — this task only moves files. The `from src.…` imports resolve because `api/` is now the working directory.
 
 - [ ] **Step 6: Verify config still loads by relative path**
 
@@ -894,10 +906,10 @@ Expected: `API imports on 8 packages`. A `ModuleNotFoundError` here means a runt
 - [ ] **Step 6: Run the suite in your normal environment**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
 ```
 
-Expected: PASS.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
 
 - [ ] **Step 7: Commit**
 
@@ -1014,7 +1026,7 @@ def test_none_client_is_a_silent_no_op():
 - [ ] **Step 2: Run it to verify it fails**
 
 ```bash
-cd api && pytest tests/test_stats_store.py -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/test_stats_store.py -q 2>&1 | tail -5; cd ..
 ```
 
 Expected: FAIL — `ModuleNotFoundError: No module named 'src.caching.stats_store'`.
@@ -1098,7 +1110,7 @@ class StatsStore:
 - [ ] **Step 4: Run the test to verify it passes**
 
 ```bash
-cd api && pytest tests/test_stats_store.py -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/test_stats_store.py -q 2>&1 | tail -5; cd ..
 ```
 
 Expected: PASS, 5 tests.
@@ -1295,10 +1307,10 @@ def test_llm_client_reports_persisted_totals_not_instance_totals():
 - [ ] **Step 10: Run the full suite**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -10; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -10; cd ..
 ```
 
-Expected: PASS. Tests in `test_llm_client.py`, `test_embeddings.py` and `test_caching.py` construct these classes without a `stats_store`; the `StatsStore(None)` default keeps them passing unchanged. If any fail, the default is not being applied — fix that rather than editing the tests.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. `test_llm_client.py`, `test_embeddings.py` and `test_caching.py` are all fully green at baseline and must STAY green: they construct these classes without a `stats_store`, and the `StatsStore(None)` default must keep them passing unchanged. If any newly fails, the default is not being applied — fix that rather than editing the tests.
 
 - [ ] **Step 11: Commit**
 
@@ -1365,7 +1377,7 @@ def test_old_health_path_is_gone(client):
 - [ ] **Step 2: Run to verify it fails**
 
 ```bash
-cd api && pytest tests/test_api.py -k health -q 2>&1 | tail -10; cd ..
+cd api && $PY -m pytest tests/test_api.py -k health -q 2>&1 | tail -10; cd ..
 ```
 
 Expected: FAIL — `/api/health` returns 404 because the route is still at `/health`.
@@ -1436,7 +1448,7 @@ In `root()`, the `health` entry should read `"/api/health"`. Update `test_root_e
 - [ ] **Step 5: Run to verify it passes**
 
 ```bash
-cd api && pytest tests/test_api.py -k "health or root" -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/test_api.py -k "health or root" -q 2>&1 | tail -5; cd ..
 ```
 
 Expected: PASS.
@@ -1444,10 +1456,10 @@ Expected: PASS.
 - [ ] **Step 6: Run the full suite**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
 ```
 
-Expected: PASS.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
 
 - [ ] **Step 7: Commit**
 
@@ -1537,7 +1549,7 @@ Delete `test_cors_headers` from `api/tests/test_api.py` — with one origin ther
 - [ ] **Step 6: Run the Python suite**
 
 ```bash
-cd api && pytest tests/test_api.py -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/test_api.py -q 2>&1 | tail -5; cd ..
 ```
 
 Expected: PASS.
@@ -1553,10 +1565,10 @@ Expected: both succeed.
 - [ ] **Step 8: Confirm the full suite is green**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
 ```
 
-Expected: PASS.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
 
 - [ ] **Step 9: Commit**
 
@@ -1930,10 +1942,10 @@ Expected: `clean`. Design and plan documents under `docs/superpowers/` legitimat
 - [ ] **Step 9: Run the full suite one last time**
 
 ```bash
-cd api && pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
 ```
 
-Expected: PASS.
+Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
 
 - [ ] **Step 10: Commit**
 
