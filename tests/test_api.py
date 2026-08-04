@@ -423,10 +423,13 @@ def test_get_stats(client, mock_generator):
         assert "cost_reduction_percent" in data
 
 
-def test_clear_cache(client, mock_generator):
+def test_clear_cache(client, mock_generator, monkeypatch):
     """Test cache clearing endpoint."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
     with patch("src.api.main.get_answer_generator", return_value=mock_generator):
-        response = client.post("/api/v1/cache/clear")
+        response = client.post(
+            "/api/v1/cache/clear", headers={"X-API-Key": "secret-key"}
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -437,10 +440,13 @@ def test_clear_cache(client, mock_generator):
         mock_generator.cache.clear_all.assert_called_once()
 
 
-def test_reset_stats(client, mock_generator):
+def test_reset_stats(client, mock_generator, monkeypatch):
     """Test statistics reset endpoint."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
     with patch("src.api.main.get_answer_generator", return_value=mock_generator):
-        response = client.post("/api/v1/stats/reset")
+        response = client.post(
+            "/api/v1/stats/reset", headers={"X-API-Key": "secret-key"}
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -450,6 +456,29 @@ def test_reset_stats(client, mock_generator):
         # Verify reset was called
         mock_generator.llm_client.reset_stats.assert_called_once()
         mock_generator.cache.reset_stats.assert_called_once()
+
+
+def test_clear_cache_requires_api_key(client, mock_generator, monkeypatch):
+    """An unauthenticated caller must not be able to wipe the cache."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    assert client.post("/api/v1/cache/clear").status_code == 403
+
+
+def test_clear_cache_succeeds_with_api_key(client, mock_generator, monkeypatch):
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    response = client.post("/api/v1/cache/clear", headers={"X-API-Key": "secret-key"})
+    assert response.status_code == 200
+
+
+def test_reset_stats_requires_api_key(client, mock_generator, monkeypatch):
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    assert client.post("/api/v1/stats/reset").status_code == 403
+
+
+def test_admin_endpoints_disabled_when_no_key_configured(client, mock_generator, monkeypatch):
+    """An unset ADMIN_API_KEY must close the endpoints, not open them."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "")
+    assert client.post("/api/v1/cache/clear").status_code == 503
 
 
 def test_rate_limiting(client, mock_generator):
@@ -806,14 +835,17 @@ def test_stats_endpoint_exception_handling(client):
         assert "Failed to retrieve statistics" in data["message"]
 
 
-def test_clear_cache_exception_handling(client):
+def test_clear_cache_exception_handling(client, monkeypatch):
     """Test clear cache endpoint exception handling (lines 358-359)."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
     mock_gen = Mock()
     # Make cache.clear_all raise an exception
     mock_gen.cache.clear_all.side_effect = RuntimeError("Cache clear failed")
 
     with patch("src.api.main.get_answer_generator", return_value=mock_gen):
-        response = client.post("/api/v1/cache/clear")
+        response = client.post(
+            "/api/v1/cache/clear", headers={"X-API-Key": "secret-key"}
+        )
 
         # Lines 358-359 - exception is caught and HTTPException is raised
         assert response.status_code == 500
@@ -822,14 +854,17 @@ def test_clear_cache_exception_handling(client):
         assert "Failed to clear cache" in data["message"]
 
 
-def test_reset_stats_exception_handling(client):
+def test_reset_stats_exception_handling(client, monkeypatch):
     """Test reset stats endpoint exception handling (lines 385-386)."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
     mock_gen = Mock()
     # Make reset_stats raise an exception
     mock_gen.llm_client.reset_stats.side_effect = RuntimeError("Reset failed")
 
     with patch("src.api.main.get_answer_generator", return_value=mock_gen):
-        response = client.post("/api/v1/stats/reset")
+        response = client.post(
+            "/api/v1/stats/reset", headers={"X-API-Key": "secret-key"}
+        )
 
         # Lines 385-386 - exception is caught and HTTPException is raised
         assert response.status_code == 500
