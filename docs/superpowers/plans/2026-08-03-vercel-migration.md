@@ -360,12 +360,15 @@ constructing it raised NameError. Removes 350 lines, leaving the factory."
 
 ---
 
-### Task 4: Remove the subprocess-based ingestion endpoints
+### Task 4: Remove the ingestion endpoints and authenticate the admin endpoints
 
 `/api/v1/admin/ingest` and `/api/v1/admin/ingest/stream` spawn a 15-minute `subprocess` running an ingestion script. Vercel Functions cannot do this under any configuration. Ingestion is already run locally.
 
+Those two endpoints are also the only current users of the `require_admin_api_key` guard and the `Depends` import. Rather than leave an unused auth guard sitting in the file for six tasks, this task immediately repoints it at `/api/v1/cache/clear` and `/api/v1/stats/reset` — which have **no authentication at all** today, so anyone who finds the URL can wipe the cache.
+
 **Files:**
-- Modify: `src/api/main.py` — delete lines 666-835 (both endpoints)
+- Modify: `src/api/main.py` — delete lines 666-835 (both endpoints), delete `reset_answer_generator()`, apply the guard to the two admin endpoints
+- Modify: `tests/test_api.py` — add admin auth tests
 - Delete: `web-client/components/ingestion-control.tsx` (318 lines)
 - Modify: `web-client/lib/api.ts` — delete `triggerIngestion`
 - Modify: `web-client/lib/types.ts` — delete `IngestionResponse`
@@ -373,21 +376,31 @@ constructing it raised NameError. Removes 350 lines, leaving the factory."
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: the `api` object exported from `web-client/lib/api.ts` no longer has a `triggerIngestion` method. `reset_answer_generator()` in `src/api/main.py` loses its only caller but is retained — Task 8's tests use it to force a clean singleton.
+- Produces: the `api` object exported from `web-client/lib/api.ts` no longer has a `triggerIngestion` method. `POST /api/v1/cache/clear` and `POST /api/v1/stats/reset` require an `X-API-Key` header matching the `ADMIN_API_KEY` environment variable — 403 without it, 503 when `ADMIN_API_KEY` is unset. `reset_answer_generator()` no longer exists; nothing references it after the ingest endpoints are gone.
 
 - [ ] **Step 1: Delete both endpoint functions**
 
 In `src/api/main.py`, delete from the `@app.post("/api/v1/admin/ingest", ...)` decorator through the end of `stream_ingestion` (the `return StreamingResponse(...)` block and its closing paren) — lines 666-835 inclusive.
 
-- [ ] **Step 2: Remove the unused imports that deletion orphans**
+- [ ] **Step 2: Delete reset_answer_generator and the orphaned json import**
 
-Still in `src/api/main.py`, the `json` import on line 5 was used only by the SSE generator, and `Depends` on line 11 is used only by the ingest endpoints' `dependencies=[...]`. Task 10 re-introduces `Depends` for admin auth, so leave it. Delete the `json` import only if nothing else references it:
+`reset_answer_generator()` (`src/api/main.py:165-171`) had exactly two callers, both inside the endpoints you just deleted. Verify, then remove the function:
+
+```bash
+grep -n "reset_answer_generator" src/api/main.py tests/
+```
+
+Expected: only the `def reset_answer_generator` line. If anything else appears, stop and report it. Then delete the function.
+
+The `json` import on line 5 was used only by the SSE generator. Delete it only if nothing else references it:
 
 ```bash
 grep -n "json\." src/api/main.py
 ```
 
 If there is no output, remove `import json` from line 5. If there is output, leave it.
+
+Keep the `Depends` import and the `require_admin_api_key` function — Step 8 repoints them.
 
 - [ ] **Step 3: Delete the frontend component and its wiring**
 
@@ -418,7 +431,91 @@ cd web-client && npx tsc --noEmit; cd ..
 
 Expected: no errors.
 
-- [ ] **Step 6: Run the suite**
+- [ ] **Step 6: Write the failing test for admin authentication**
+
+Add to `tests/test_api.py`:
+
+```python
+def test_clear_cache_requires_api_key(client, mock_generator, monkeypatch):
+    """An unauthenticated caller must not be able to wipe the cache."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    assert client.post("/api/v1/cache/clear").status_code == 403
+
+
+def test_clear_cache_succeeds_with_api_key(client, mock_generator, monkeypatch):
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    response = client.post("/api/v1/cache/clear", headers={"X-API-Key": "secret-key"})
+    assert response.status_code == 200
+
+
+def test_reset_stats_requires_api_key(client, mock_generator, monkeypatch):
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
+    assert client.post("/api/v1/stats/reset").status_code == 403
+
+
+def test_admin_endpoints_disabled_when_no_key_configured(client, mock_generator, monkeypatch):
+    """An unset ADMIN_API_KEY must close the endpoints, not open them."""
+    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "")
+    assert client.post("/api/v1/cache/clear").status_code == 503
+```
+
+The existing `test_clear_cache` and `test_reset_stats` tests call these endpoints with no header and expect 200. Add `monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")` and `headers={"X-API-Key": "secret-key"}` to both so they still exercise the success path.
+
+- [ ] **Step 7: Run to verify it fails**
+
+```bash
+pytest tests/test_api.py -k "api_key or admin_endpoints" -q 2>&1 | tail -10
+```
+
+Expected: FAIL — the endpoints return 200 because no dependency guards them.
+
+- [ ] **Step 8: Apply the guard**
+
+`require_admin_api_key` already exists at `src/api/main.py:60-76`. Change its body to read the module global at call time rather than closing over the import-time value — otherwise `monkeypatch` cannot reach it:
+
+```python
+async def require_admin_api_key(x_api_key: str | None = Header(default=None, alias="X-API-Key")):
+    """Require a valid admin API key.
+
+    Raises:
+        HTTPException: 503 if no key is configured, 403 if the supplied key is wrong.
+    """
+    import hmac
+
+    configured_key = ADMIN_API_KEY
+    if not configured_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin endpoints disabled",
+        )
+    if not x_api_key or not hmac.compare_digest(x_api_key, configured_key):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid API key",
+        )
+```
+
+Add the dependency to both admin decorators:
+
+```python
+@app.post(
+    "/api/v1/cache/clear",
+    tags=["Administration"],
+    dependencies=[Depends(require_admin_api_key)],
+)
+```
+
+```python
+@app.post(
+    "/api/v1/stats/reset",
+    tags=["Administration"],
+    dependencies=[Depends(require_admin_api_key)],
+)
+```
+
+`Depends` and `Header` are already imported on line 11.
+
+- [ ] **Step 9: Run the suite**
 
 ```bash
 pytest -q 2>&1 | tail -5
@@ -426,14 +523,18 @@ pytest -q 2>&1 | tail -5
 
 Expected: PASS. No test in `tests/test_api.py` covers the ingest endpoints — verified — so the count drops only if you removed something else by accident.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 10: Commit**
 
 ```bash
 git add -A
-git commit -m "refactor: remove subprocess-based ingestion endpoints
+git commit -m "refactor: remove ingestion endpoints, authenticate admin endpoints
 
-Vercel Functions cannot spawn a 15-minute subprocess. Ingestion is run
-locally, which is already how it works in practice."
+Vercel Functions cannot spawn a 15-minute subprocess; ingestion is run
+locally, which is already how it works in practice.
+
+The deleted endpoints were the only users of require_admin_api_key, so
+it is repointed at /cache/clear and /stats/reset — which had no
+authentication at all."
 ```
 
 ---
@@ -451,7 +552,7 @@ The performance monitor and the `_rate_limit_cache` `OrderedDict` are process-gl
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: `src/api/main.py` no longer defines `get_client_ip`, `check_rate_limit`, `_rate_limit_cache`, `RATE_LIMIT_WINDOW`, `RATE_LIMIT_MAX_REQUESTS`, or `performance_middleware`. `ask_question(request: Request, question_request: QuestionRequest)` keeps its signature — `request` is still needed by the exception handlers' logging.
+- Produces: `src/api/main.py` no longer defines `get_client_ip`, `check_rate_limit`, `_rate_limit_cache`, `RATE_LIMIT_WINDOW`, `RATE_LIMIT_MAX_REQUESTS`, or `performance_middleware`. The endpoint signature becomes `ask_question(question_request: QuestionRequest)` — the `request: Request` parameter existed only to feed `get_client_ip`, and the exception handlers receive their own `request`.
 
 - [ ] **Step 1: Delete the module and its dedicated test file**
 
@@ -485,6 +586,20 @@ In `src/api/main.py`:
             detail=f"Rate limit exceeded. Maximum {RATE_LIMIT_MAX_REQUESTS} requests per minute.",
         )
 ```
+
+That guard was the only use of the `request` parameter, so drop it from the signature too:
+
+```python
+async def ask_question(question_request: QuestionRequest):
+```
+
+and remove the `request: FastAPI request object` line from the docstring's `Args:` block. Check whether `Request` is still imported for anything else before removing it from line 11:
+
+```bash
+grep -n "Request" src/api/main.py | grep -v RequestValidationError | grep -v QuestionRequest
+```
+
+The exception handlers take their own `request: Request`, so the import stays.
 
 5. Delete all four `/api/v1/performance*` endpoint functions (lines 838-956)
 6. In the `root()` endpoint, remove the three performance entries from the `endpoints` dict, leaving:
@@ -1347,21 +1462,23 @@ be meaningful. Qdrant failure returns 503."
 
 ---
 
-### Task 10: Same-origin frontend and admin authentication
+### Task 10: Same-origin frontend
 
-Sharing an origin removes CORS, `NEXT_PUBLIC_API_URL` and the Next.js proxy rewrites. `/api/v1/cache/clear` and `/api/v1/stats/reset` currently have no authentication at all.
+Sharing an origin removes CORS, `NEXT_PUBLIC_API_URL` and the Next.js proxy rewrites — all three existed only because the two halves lived at different addresses.
+
+Admin authentication was folded into Task 4, where the guard's previous users were removed; it is not repeated here.
 
 **Files:**
 - Modify: `web-client/lib/api.ts` — `API_BASE_URL` and the health path
 - Modify: `web-client/next.config.js` — remove `rewrites` and `output: 'standalone'`
 - Delete: `web-client/.env.local`
-- Modify: `api/src/api/main.py` — apply `require_admin_api_key`, remove CORS
+- Modify: `api/src/api/main.py` — remove the CORS middleware
 - Modify: `api/config/config.yaml` — remove `cors_origins`
-- Modify: `api/tests/test_api.py` — CORS and admin-endpoint tests
+- Modify: `api/tests/test_api.py` — delete `test_cors_headers`
 
 **Interfaces:**
 - Consumes: the `/api/health` route from Task 9.
-- Produces: every frontend `fetch` is same-origin and relative. `/api/v1/cache/clear` and `/api/v1/stats/reset` require the `X-API-Key` header matching `ADMIN_API_KEY`, returning 403 without it and 503 when `ADMIN_API_KEY` is unset.
+- Produces: every frontend `fetch` is same-origin and relative — no absolute API URL survives anywhere in `web-client/`. The FastAPI app no longer installs `CORSMiddleware`.
 
 - [ ] **Step 1: Point the frontend at its own origin**
 
@@ -1411,95 +1528,13 @@ grep -rn "NEXT_PUBLIC_API_URL\|localhost:8000\|ngrok\|trycloudflare" \
 
 Expected: `clean`.
 
-- [ ] **Step 5: Write the failing test for admin auth**
-
-In `api/tests/test_api.py`, add:
-
-```python
-def test_clear_cache_requires_api_key(client, mock_generator, monkeypatch):
-    """An unauthenticated caller must not be able to wipe the cache."""
-    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
-    assert client.post("/api/v1/cache/clear").status_code == 403
-
-
-def test_clear_cache_succeeds_with_api_key(client, mock_generator, monkeypatch):
-    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
-    response = client.post("/api/v1/cache/clear", headers={"X-API-Key": "secret-key"})
-    assert response.status_code == 200
-
-
-def test_reset_stats_requires_api_key(client, mock_generator, monkeypatch):
-    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
-    assert client.post("/api/v1/stats/reset").status_code == 403
-
-
-def test_admin_endpoints_disabled_when_no_key_configured(client, mock_generator, monkeypatch):
-    """An unset ADMIN_API_KEY must close the endpoints, not open them."""
-    monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "")
-    assert client.post("/api/v1/cache/clear").status_code == 503
-```
-
-- [ ] **Step 6: Run to verify it fails**
-
-```bash
-cd api && pytest tests/test_api.py -k "api_key or admin_endpoints" -q 2>&1 | tail -10; cd ..
-```
-
-Expected: FAIL — the endpoints return 200 because no dependency guards them.
-
-- [ ] **Step 7: Apply the guard**
-
-`require_admin_api_key` already exists at `api/src/api/main.py:60-76`. It reads the module-level `ADMIN_API_KEY`, so change the function body to read it at call time rather than closing over the import-time value — otherwise `monkeypatch` cannot reach it:
-
-```python
-async def require_admin_api_key(x_api_key: str | None = Header(default=None, alias="X-API-Key")):
-    """Require a valid admin API key.
-
-    Raises:
-        HTTPException: 503 if no key is configured, 403 if the supplied key is wrong.
-    """
-    import hmac
-
-    configured_key = ADMIN_API_KEY
-    if not configured_key:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Admin endpoints disabled",
-        )
-    if not x_api_key or not hmac.compare_digest(x_api_key, configured_key):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Invalid API key",
-        )
-```
-
-Add the dependency to both decorators:
-
-```python
-@app.post(
-    "/api/v1/cache/clear",
-    tags=["Administration"],
-    dependencies=[Depends(require_admin_api_key)],
-)
-```
-
-```python
-@app.post(
-    "/api/v1/stats/reset",
-    tags=["Administration"],
-    dependencies=[Depends(require_admin_api_key)],
-)
-```
-
-`Depends` is already imported on line 11.
-
-- [ ] **Step 8: Remove the CORS middleware**
+- [ ] **Step 5: Remove the CORS middleware**
 
 Delete the `cors_origins` lookup and the `app.add_middleware(CORSMiddleware, ...)` block from `api/src/api/main.py`, and remove `from fastapi.middleware.cors import CORSMiddleware` from the imports. In `api/config/config.yaml`, delete the `cors_origins` list under `api:`.
 
 Delete `test_cors_headers` from `api/tests/test_api.py` — with one origin there is no cross-origin request to test.
 
-- [ ] **Step 9: Run to verify it passes**
+- [ ] **Step 6: Run the Python suite**
 
 ```bash
 cd api && pytest tests/test_api.py -q 2>&1 | tail -5; cd ..
@@ -1507,7 +1542,7 @@ cd api && pytest tests/test_api.py -q 2>&1 | tail -5; cd ..
 
 Expected: PASS.
 
-- [ ] **Step 10: Typecheck and build the frontend**
+- [ ] **Step 7: Typecheck and build the frontend**
 
 ```bash
 cd web-client && npx tsc --noEmit && npm run build; cd ..
@@ -1515,7 +1550,7 @@ cd web-client && npx tsc --noEmit && npm run build; cd ..
 
 Expected: both succeed.
 
-- [ ] **Step 11: Run the full suite**
+- [ ] **Step 8: Confirm the full suite is green**
 
 ```bash
 cd api && pytest -q 2>&1 | tail -5; cd ..
@@ -1523,15 +1558,15 @@ cd api && pytest -q 2>&1 | tail -5; cd ..
 
 Expected: PASS.
 
-- [ ] **Step 12: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
 git add -A
-git commit -m "feat: same-origin frontend, authenticated admin endpoints
+git commit -m "feat: serve the frontend same-origin with the API
 
-Sharing an origin removes CORS, NEXT_PUBLIC_API_URL and the Next.js
-proxy rewrites. /cache/clear and /stats/reset now require X-API-Key;
-they were completely unauthenticated."
+The Vercel route table sends /api/* to the Python service, so the client
+uses relative URLs. Removes CORS middleware, NEXT_PUBLIC_API_URL and the
+Next.js proxy rewrites — all three existed only to bridge two origins."
 ```
 
 ---
