@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 from openai import OpenAI
 from openai import RateLimitError, APIError
 
+from src.caching.stats_store import StatsStore
 from src.storage.models import Chunk
 from src.config_loader import get_config
 
@@ -12,12 +13,18 @@ from src.config_loader import get_config
 class EmbeddingGenerator:
     """Generate embeddings for text chunks using OpenAI API."""
 
-    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model: Optional[str] = None,
+        stats_store: Optional["StatsStore"] = None,
+    ):
         """Initialize the embedding generator.
 
         Args:
             api_key: OpenAI API key (if None, loads from config)
             model: Embedding model to use (if None, loads from config)
+            stats_store: Optional shared StatsStore for cross-instance counters
         """
         config = get_config()
 
@@ -41,6 +48,7 @@ class EmbeddingGenerator:
         self.cost_per_1k_tokens = config.get('cost_tracking.embedding_cost_per_1k', 0.00002)
         self.total_tokens_used = 0
         self.total_cost = 0.0
+        self.stats_store = stats_store or StatsStore(None)
 
     def embed_text(self, text: str) -> List[float]:
         """Generate embedding for a single text.
@@ -66,8 +74,11 @@ class EmbeddingGenerator:
 
                 # Track usage
                 tokens_used = response.usage.total_tokens
+                cost = (tokens_used / 1000.0) * self.cost_per_1k_tokens
                 self.total_tokens_used += tokens_used
-                self.total_cost += (tokens_used / 1000.0) * self.cost_per_1k_tokens
+                self.total_cost += cost
+                self.stats_store.incr("embed_tokens", tokens_used)
+                self.stats_store.incr_float("embed_cost", cost)
 
                 return embedding
 
@@ -128,8 +139,11 @@ class EmbeddingGenerator:
 
                 # Track usage
                 tokens_used = response.usage.total_tokens
+                cost = (tokens_used / 1000.0) * self.cost_per_1k_tokens
                 self.total_tokens_used += tokens_used
-                self.total_cost += (tokens_used / 1000.0) * self.cost_per_1k_tokens
+                self.total_cost += cost
+                self.stats_store.incr("embed_tokens", tokens_used)
+                self.stats_store.incr_float("embed_cost", cost)
 
                 return embeddings
 
@@ -199,11 +213,15 @@ class EmbeddingGenerator:
         Returns:
             Dictionary with statistics
         """
+        persisted = self.stats_store.get_all()
+        tokens = int(persisted.get("embed_tokens", self.total_tokens_used))
+        cost = persisted.get("embed_cost", self.total_cost)
+
         return {
             'model': self.model,
             'dimensions': self.dimensions,
-            'total_tokens_used': self.total_tokens_used,
-            'total_cost': self.total_cost,
+            'total_tokens_used': tokens,
+            'total_cost': cost,
             'cost_per_1k_tokens': self.cost_per_1k_tokens,
             'batch_size': self.batch_size
         }
@@ -212,3 +230,4 @@ class EmbeddingGenerator:
         """Reset usage statistics."""
         self.total_tokens_used = 0
         self.total_cost = 0.0
+        self.stats_store.reset()

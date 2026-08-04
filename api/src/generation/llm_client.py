@@ -5,6 +5,7 @@ from typing import Dict, Any, Optional, List
 from openai import OpenAI
 import os
 
+from src.caching.stats_store import StatsStore
 from src.config_loader import get_config
 
 
@@ -23,6 +24,7 @@ class LLMClient:
         provider: Optional[str] = None,
         model: Optional[str] = None,
         api_key: Optional[str] = None,
+        stats_store: Optional["StatsStore"] = None,
     ):
         """Initialize LLM client.
 
@@ -30,6 +32,7 @@ class LLMClient:
             provider: LLM provider ("openai" or "anthropic")
             model: Model name (e.g., "gpt-4o-mini")
             api_key: API key (if None, loads from environment)
+            stats_store: Optional shared StatsStore for cross-instance counters
         """
         config = get_config()
         llm_config = config.get("llm", {})
@@ -51,6 +54,7 @@ class LLMClient:
         self.total_output_tokens = 0
         self.total_cost = 0.0
         self.call_count = 0
+        self.stats_store = stats_store or StatsStore(None)
 
         # Initialize client
         if self.provider == "openai":
@@ -103,6 +107,7 @@ class LLMClient:
 
         # Update tracking
         self.call_count += 1
+        self.stats_store.incr("llm_calls")
 
         return {
             **result,
@@ -162,6 +167,9 @@ class LLMClient:
                 self.total_input_tokens += input_tokens
                 self.total_output_tokens += output_tokens
                 self.total_cost += cost
+                self.stats_store.incr("llm_input_tokens", input_tokens)
+                self.stats_store.incr("llm_output_tokens", output_tokens)
+                self.stats_store.incr_float("llm_cost", cost)
 
                 return {
                     "answer": answer,
@@ -188,22 +196,28 @@ class LLMClient:
         Returns:
             Dictionary with statistics
         """
+        persisted = self.stats_store.get_all()
+        calls = int(persisted.get("llm_calls", self.call_count))
+        input_tokens = int(persisted.get("llm_input_tokens", self.total_input_tokens))
+        output_tokens = int(persisted.get("llm_output_tokens", self.total_output_tokens))
+        total_cost = persisted.get("llm_cost", self.total_cost)
+
         return {
             "provider": self.provider,
             "model": self.model,
-            "total_calls": self.call_count,
-            "total_input_tokens": self.total_input_tokens,
-            "total_output_tokens": self.total_output_tokens,
-            "total_tokens": self.total_input_tokens + self.total_output_tokens,
-            "total_cost": self.total_cost,
+            "total_calls": calls,
+            "total_input_tokens": input_tokens,
+            "total_output_tokens": output_tokens,
+            "total_tokens": input_tokens + output_tokens,
+            "total_cost": total_cost,
             "avg_input_tokens_per_call": (
-                self.total_input_tokens / self.call_count if self.call_count > 0 else 0
+                input_tokens / calls if calls > 0 else 0
             ),
             "avg_output_tokens_per_call": (
-                self.total_output_tokens / self.call_count if self.call_count > 0 else 0
+                output_tokens / calls if calls > 0 else 0
             ),
             "avg_cost_per_call": (
-                self.total_cost / self.call_count if self.call_count > 0 else 0
+                total_cost / calls if calls > 0 else 0
             ),
         }
 
@@ -213,3 +227,4 @@ class LLMClient:
         self.total_output_tokens = 0
         self.total_cost = 0.0
         self.call_count = 0
+        self.stats_store.reset()

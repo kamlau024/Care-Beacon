@@ -9,6 +9,7 @@ import redis
 from redis.exceptions import RedisError, ConnectionError
 
 from src.caching.models import CacheConfig, CacheStats
+from src.caching.stats_store import StatsStore
 from src.generation.models import GeneratedAnswer
 from src.config_loader import get_config
 
@@ -52,6 +53,9 @@ class RedisCache:
         else:
             self.enabled = False
             self.client = None
+
+        # Cumulative counters shared across instances
+        self.stats_store = StatsStore(self.client, self.config.key_prefix)
 
     def _load_config(self) -> CacheConfig:
         """Load cache configuration.
@@ -153,6 +157,7 @@ class RedisCache:
             return None
 
         self.stats.total_queries += 1
+        self.stats_store.incr("cache_queries")
 
         try:
             cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
@@ -161,6 +166,7 @@ class RedisCache:
             if cached_data:
                 # Cache hit!
                 self.stats.cache_hits += 1
+                self.stats_store.incr("cache_hits")
 
                 # Deserialize
                 answer_dict = json.loads(cached_data)
@@ -172,10 +178,12 @@ class RedisCache:
             else:
                 # Cache miss
                 self.stats.cache_misses += 1
+                self.stats_store.incr("cache_misses")
                 return None
 
         except (RedisError, json.JSONDecodeError) as e:
             self.stats.cache_errors += 1
+            self.stats_store.incr("cache_errors")
             print(f"⚠️  Cache get error: {e}")
             return None
 
@@ -215,6 +223,7 @@ class RedisCache:
 
         except (RedisError, TypeError) as e:
             self.stats.cache_errors += 1
+            self.stats_store.incr("cache_errors")
             print(f"⚠️  Cache set error: {e}")
 
     def _serialize_answer(self, answer: GeneratedAnswer) -> Dict[str, Any]:
@@ -344,6 +353,20 @@ class RedisCache:
             Dictionary with cache statistics
         """
         stats_dict = self.stats.to_dict()
+        persisted = self.stats_store.get_all()
+        if persisted:
+            queries = persisted.get("cache_queries", 0.0)
+            hits = persisted.get("cache_hits", 0.0)
+            stats_dict.update({
+                "total_queries": int(queries),
+                "cache_hits": int(hits),
+                "cache_misses": int(persisted.get("cache_misses", 0.0)),
+                "cache_errors": int(persisted.get("cache_errors", 0.0)),
+                "hit_rate": (hits / queries) if queries else 0.0,
+                "miss_rate": (persisted.get("cache_misses", 0.0) / queries) if queries else 0.0,
+                "total_cost_saved": persisted.get("cache_cost_saved", 0.0),
+                "total_time_saved_ms": persisted.get("cache_time_saved_ms", 0.0),
+            })
         stats_dict["enabled"] = self.enabled
         stats_dict["config"] = self.config.to_dict()
 
@@ -360,8 +383,9 @@ class RedisCache:
         return stats_dict
 
     def reset_stats(self):
-        """Reset cache statistics."""
+        """Reset cache statistics, in-process and persisted."""
         self.stats.reset()
+        self.stats_store.reset()
 
     def get_vector_db_stats(self) -> Optional[Dict[str, Any]]:
         """Get cached vector database statistics.

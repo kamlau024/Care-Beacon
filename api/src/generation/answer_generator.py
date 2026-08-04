@@ -10,6 +10,7 @@ from src.retrieval.models import Query, RetrievedContext
 from src.generation.llm_client import LLMClient
 from src.generation.models import GeneratedAnswer, Citation, GenerationConfig
 from src.caching.redis_cache import RedisCache
+from src.embeddings.embedding_generator import EmbeddingGenerator
 from src.config_loader import get_config
 
 
@@ -39,10 +40,13 @@ class AnswerGenerator:
             config: Optional generation configuration
             cache: Optional RedisCache instance
         """
-        self.retrieval_engine = retrieval_engine or RetrievalEngine()
-        self.llm_client = llm_client or LLMClient()
-        self.config = config or self._load_config()
+        # Cache first: it owns the StatsStore that the other components share.
         self.cache = cache or RedisCache()
+        self.llm_client = llm_client or LLMClient(stats_store=self.cache.stats_store)
+        self.retrieval_engine = retrieval_engine or RetrievalEngine(
+            embedding_generator=EmbeddingGenerator(stats_store=self.cache.stats_store),
+        )
+        self.config = config or self._load_config()
 
         # Load prompts
         self.prompts = self._load_prompts()
@@ -183,6 +187,8 @@ class AnswerGenerator:
 
             self.cache.stats.total_cost_saved += saved_cost
             self.cache.stats.total_time_saved_ms += saved_time_ms
+            self.cache.stats_store.incr_float("cache_cost_saved", saved_cost)
+            self.cache.stats_store.incr_float("cache_time_saved_ms", saved_time_ms)
 
             return cached_answer
 
