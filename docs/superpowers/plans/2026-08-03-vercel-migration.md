@@ -27,7 +27,15 @@
   export PY=/opt/anaconda3/envs/care-beacon/bin/python   # Python 3.10.19
   ```
 
-  Run tests as `$PY -m pytest`. (The Vercel runtime is 3.12; the local env is still 3.10.19. That mismatch is pre-existing and out of scope — do not attempt to rebuild the conda environment.)
+  (The Vercel runtime is 3.12; the local env is still 3.10.19. That mismatch is pre-existing and out of scope — do not attempt to rebuild the conda environment.)
+- **Always run the suite scoped, with `--continue-on-collection-errors`:**
+
+  ```bash
+  $PY -m pytest tests/ -q --continue-on-collection-errors     # from api/ after Task 6
+  ```
+
+  Both parts are load-bearing. `scripts/` and `evaluation/` contain `test_*.py` files that are standalone utilities rather than suite members; unscoped pytest collects them and aborts. And `tests/test_parser.py` fails collection outright — without the flag, that one error interrupts the entire run and **no results are reported at all**.
+- **AGGREGATE BASELINE: `24 failed, 205 passed, 26 errors`** (measured at `fd3cfb8`). This is the number to beat, never to regress.
 - **The test suite is NOT green, and was not green before this work started.** ~50 failures/errors exist on the parent commit. The recorded per-file baseline is `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. **The gate for every task is "no NEW failures versus that baseline"** — never "all green". Notable pre-existing breakage: `test_vector_db.py` has 26 `NameError: chromadb is not defined` (Task 3 deletes those tests), `test_retrieval.py` has 18 `Mock has no len()` (Task 2 collapses that branch), `test_hybrid_search.py` hangs (Task 2 deletes it), `test_parser.py` fails collection on a `MarkdownParser`/`MedicalArticleParser` name mismatch. Tasks 2 and 3 should make the count drop sharply; that is expected improvement, not regression.
 - **Any test you newly write must genuinely pass.** The baseline gate excuses inherited breakage only.
 
@@ -92,7 +100,7 @@ Neither `src/graph_api/` (Neo4j GraphRAG) nor `mcp/` appears in `render.yaml` or
 - [ ] **Step 1: Record the baseline so you can prove you broke nothing**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Write down the pass/fail counts. Every later step compares against this number.
@@ -136,7 +144,7 @@ Expected: `compose OK`. If Docker is not installed locally, skip this step and n
 - [ ] **Step 6: Run the full suite**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. Task 1 deletes no test files, so the counts should be identical to Step 1.
@@ -183,7 +191,7 @@ deletion in the working tree; this completes it.)
 - [ ] **Step 2: Run the suite to see exactly what breaks**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -20
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -20
 ```
 
 Expected: FAIL — `ModuleNotFoundError: No module named 'src.storage.bm25_index'`, raised through `src/storage/qdrant_db.py`. This is the failing state that the next steps resolve.
@@ -241,7 +249,7 @@ Expected: `clean`.
 - [ ] **Step 7: Run the suite**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. `test_hybrid_search.py` (which HANGS at baseline) and `test_retrieval.py`'s 18 `Mock has no len()` failures should both disappear — that is the expected improvement, not a regression.
@@ -355,7 +363,7 @@ def test_create_vector_database_rejects_non_qdrant_provider():
 - [ ] **Step 5: Run the suite**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Expected: PASS.
@@ -530,7 +538,7 @@ Add the dependency to both admin decorators:
 - [ ] **Step 9: Run the suite**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. No baseline test covers the ingest endpoints — verified — so nothing should drop except by accident. Your four new auth tests must PASS.
@@ -575,7 +583,7 @@ git rm src/api/performance.py tests/test_performance.py
 - [ ] **Step 2: Run the suite to see the breakage**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -20
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -20
 ```
 
 Expected: FAIL — `ModuleNotFoundError: No module named 'src.api.performance'` from `src/api/main.py` and `tests/test_api.py`.
@@ -651,7 +659,7 @@ Expected: `clean`.
 - [ ] **Step 7: Run the suite**
 
 ```bash
-$PY -m pytest -q 2>&1 | tail -5
+$PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5
 ```
 
 Expected: PASS.
@@ -740,7 +748,7 @@ The `/api/(.*)` rule must stay first — rewrites are evaluated in order and rou
 - [ ] **Step 5: Verify tests still pass from the new root**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. Counts must match Task 5 exactly — this task only moves files. The `from src.…` imports resolve because `api/` is now the working directory.
@@ -906,7 +914,7 @@ Expected: `API imports on 8 packages`. A `ModuleNotFoundError` here means a runt
 - [ ] **Step 6: Run the suite in your normal environment**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
@@ -1307,7 +1315,7 @@ def test_llm_client_reports_persisted_totals_not_instance_totals():
 - [ ] **Step 10: Run the full suite**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -10; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -10; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints. `test_llm_client.py`, `test_embeddings.py` and `test_caching.py` are all fully green at baseline and must STAY green: they construct these classes without a `stats_store`, and the `StatsStore(None)` default must keep them passing unchanged. If any newly fails, the default is not being applied — fix that rather than editing the tests.
@@ -1456,7 +1464,7 @@ Expected: PASS.
 - [ ] **Step 6: Run the full suite**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
@@ -1565,7 +1573,7 @@ Expected: both succeed.
 - [ ] **Step 8: Confirm the full suite is green**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
@@ -1942,7 +1950,7 @@ Expected: `clean`. Design and plan documents under `docs/superpowers/` legitimat
 - [ ] **Step 9: Run the full suite one last time**
 
 ```bash
-cd api && $PY -m pytest -q 2>&1 | tail -5; cd ..
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors 2>&1 | tail -5; cd ..
 ```
 
 Expected: no NEW failures versus `.superpowers/sdd/2026-08-03-vercel-migration/test-baseline.md`. The suite is NOT green — see Global Constraints.
