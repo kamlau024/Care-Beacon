@@ -369,6 +369,23 @@ Main configuration is in `config/config.yaml`. Key settings:
 - **Cache**: Redis settings, TTL
 - **Costs**: API cost tracking
 
+## Keepalive
+
+Qdrant Cloud reclaims idle free-tier clusters after roughly a week of inactivity.
+`.github/workflows/keepalive.yml` issues a daily request to `/api/health`, which
+performs a real Qdrant collection read — a 200 proves the cluster answered.
+
+**Setup:** add a repository variable `SITE_URL` (Settings → Secrets and variables →
+Actions → Variables) set to the deployed origin, e.g. `https://care-beacon.vercel.app`.
+
+**Two things to know:**
+
+1. GitHub disables scheduled workflows in a repository with no commits for 60 days.
+   If the repo goes quiet, the pings stop silently. The workflow also declares
+   `workflow_dispatch`, so it can be run by hand from the Actions tab.
+2. A failed ping shows up as a red run in the Actions tab. Check there first if the
+   vector database appears empty.
+
 ## Data Source
 
 - **Source**: BC Cancer (bccancer.bc.ca)
