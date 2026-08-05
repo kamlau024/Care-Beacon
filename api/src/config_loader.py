@@ -7,11 +7,17 @@ from typing import Any, Dict
 import yaml
 from dotenv import load_dotenv
 
+# Anchor to this module's location (api/src/config_loader.py -> api/config/)
+# rather than the process working directory. The Vercel runtime's CWD is not
+# guaranteed to be the service root, and a CWD-relative default silently
+# raises FileNotFoundError as soon as the process is launched from elsewhere.
+_DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "config.yaml"
+
 
 class Config:
     """Configuration manager for the application."""
 
-    def __init__(self, config_path: str = "config/config.yaml"):
+    def __init__(self, config_path: str | Path = _DEFAULT_CONFIG_PATH):
         """Initialize configuration.
 
         Args:
@@ -118,7 +124,7 @@ class Config:
 _config_instance: Config | None = None
 
 
-def get_config(config_path: str = "config/config.yaml") -> Config:
+def get_config(config_path: str | Path = _DEFAULT_CONFIG_PATH) -> Config:
     """Get the global configuration instance.
 
     Args:

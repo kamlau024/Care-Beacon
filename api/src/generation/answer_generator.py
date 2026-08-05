@@ -31,6 +31,7 @@ class AnswerGenerator:
         llm_client: Optional[LLMClient] = None,
         config: Optional[GenerationConfig] = None,
         cache: Optional[RedisCache] = None,
+        prompts_path: Optional[Path] = None,
     ):
         """Initialize answer generator.
 
@@ -39,6 +40,8 @@ class AnswerGenerator:
             llm_client: Optional LLMClient instance
             config: Optional generation configuration
             cache: Optional RedisCache instance
+            prompts_path: Optional explicit path to prompts.yaml. Defaults to
+                the config directory alongside this package.
         """
         # Cache first: it owns the StatsStore that the other components share.
         self.cache = cache or RedisCache()
@@ -49,7 +52,7 @@ class AnswerGenerator:
         self.config = config or self._load_config()
 
         # Load prompts
-        self.prompts = self._load_prompts()
+        self.prompts = self._load_prompts(prompts_path)
 
     def _load_config(self) -> GenerationConfig:
         """Load generation configuration.
@@ -77,20 +80,34 @@ class AnswerGenerator:
             timeout=llm_config.get("timeout", 30),
         )
 
-    def _load_prompts(self) -> Dict[str, str]:
+    def _load_prompts(self, prompts_path: Optional[Path] = None) -> Dict[str, str]:
         """Load prompt templates from config file.
+
+        Args:
+            prompts_path: Optional explicit path to prompts.yaml. Defaults to
+                the config directory alongside this package
+                (api/config/prompts.yaml), resolved from this module's
+                location rather than the process working directory.
 
         Returns:
             Dictionary of prompt templates
+
+        Raises:
+            FileNotFoundError: If the prompts file is missing. A medical RAG
+                system must never silently fall back to an un-cited,
+                un-disclaimered stub prompt -- failing loudly at startup is
+                the safe behaviour here.
         """
-        prompts_path = Path("config/prompts.yaml")
+        if prompts_path is None:
+            prompts_path = Path(__file__).resolve().parents[2] / "config" / "prompts.yaml"
+        else:
+            prompts_path = Path(prompts_path)
 
         if not prompts_path.exists():
-            # Return default prompts if file doesn't exist
-            return {
-                "system_prompt": "You are a helpful medical information assistant.",
-                "qa_prompt_template": "Context:\n{context}\n\nQuestion: {question}\n\nAnswer:",
-            }
+            raise FileNotFoundError(
+                f"Prompt templates missing: {prompts_path}. Refusing to fall back to an "
+                "un-cited, un-disclaimered default prompt for a medical RAG system."
+            )
 
         with open(prompts_path, "r") as f:
             return yaml.safe_load(f)

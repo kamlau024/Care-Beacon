@@ -292,26 +292,48 @@ def test_no_context_found(answer_generator, mock_retrieval_engine):
     assert answer.cost == 0.0  # No LLM call made
 
 
-def test_load_prompts_file_missing(mock_retrieval_engine, mock_llm_client):
-    """Test prompt loading when config/prompts.yaml doesn't exist."""
+def test_load_prompts_file_missing_raises(mock_retrieval_engine, mock_llm_client, tmp_path):
+    """Test prompt loading when prompts.yaml doesn't exist.
+
+    A missing prompts file must raise rather than silently fall back to a
+    stub prompt: the stub has no citation instruction and no medical
+    disclaimer, which is unacceptable for a patient-facing medical system.
+    """
     config = GenerationConfig(
         model="gpt-4o-mini",
         max_tokens=1000,
         temperature=0.1,
     )
 
-    # Mock Path.exists to return False (file doesn't exist)
-    with patch('pathlib.Path.exists', return_value=False):
-        generator = AnswerGenerator(
+    missing_prompts_path = tmp_path / "does_not_exist.yaml"
+
+    with pytest.raises(FileNotFoundError, match="Prompt templates missing"):
+        AnswerGenerator(
             retrieval_engine=mock_retrieval_engine,
             llm_client=mock_llm_client,
             config=config,
+            prompts_path=missing_prompts_path,
         )
 
-        # Should have default prompts
-        assert "system_prompt" in generator.prompts
-        assert "qa_prompt_template" in generator.prompts
-        assert generator.prompts["system_prompt"] == "You are a helpful medical information assistant."
+
+def test_load_prompts_default_path_anchored_to_module(mock_retrieval_engine, mock_llm_client):
+    """The default prompts path must be anchored to the package location
+    (api/config/prompts.yaml), not the process working directory, so it
+    resolves correctly regardless of CWD."""
+    config = GenerationConfig(
+        model="gpt-4o-mini",
+        max_tokens=1000,
+        temperature=0.1,
+    )
+
+    generator = AnswerGenerator(
+        retrieval_engine=mock_retrieval_engine,
+        llm_client=mock_llm_client,
+        config=config,
+    )
+
+    assert "system_prompt" in generator.prompts
+    assert "qa_prompt_template" in generator.prompts
 
 
 def test_cache_hit_statistics_tracking(mock_retrieval_engine, mock_llm_client):
