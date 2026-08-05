@@ -7,10 +7,11 @@ from typing import Dict, Any
 from contextlib import asynccontextmanager
 import time
 
-from fastapi import FastAPI, HTTPException, Request, status, Depends, Header
+from fastapi import FastAPI, HTTPException, Request, Response, status, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from loguru import logger
 
 # Disable ChromaDB telemetry before importing our modules
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
@@ -35,6 +36,7 @@ sys.stderr = FilteredStderr(sys.stderr)
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
 from src.config_loader import get_config
+from src.storage.vector_db import create_vector_database
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
@@ -206,35 +208,46 @@ async def root():
         "version": API_VERSION,
         "description": "Retrieval-Augmented Generation API for cancer information",
         "docs": "/docs",
-        "health": "/health",
+        "health": "/api/health",
         "endpoints": {
             "ask": "/api/v1/ask",
-            "health": "/health",
+            "health": "/api/health",
             "stats": "/api/v1/stats",
         }
     }
 
 
-@app.get("/health", response_model=HealthResponse, tags=["Monitoring"])
-async def health_check():
-    """Health check endpoint.
+@app.get("/api/health", response_model=HealthResponse, tags=["Monitoring"])
+async def health_check(response: Response):
+    """Health check that performs a real Qdrant read.
+
+    A 200 from this endpoint proves the vector database is reachable, which is what
+    makes it valid as the scheduled keepalive target. A cluster that has been
+    reclaimed must fail this check rather than be masked as healthy.
 
     Returns:
-        Health status of API and dependent services
+        Health status of the API and its dependent services.
     """
-    generator = get_answer_generator()
+    try:
+        vector_db = create_vector_database()
+        vector_db.client.get_collection(collection_name=vector_db.collection_name)
+        vector_db_healthy = True
+    except Exception as e:
+        logger.warning(f"Health check: Qdrant unreachable: {e}")
+        vector_db_healthy = False
 
-    # Check service health
+    generator = get_answer_generator()
     services = {
-        "vector_db": True,  # Would need actual health check
+        "vector_db": vector_db_healthy,
         "redis_cache": generator.cache.is_healthy(),
-        "llm_client": True,  # Would need actual health check
+        "llm_client": True,
     }
 
-    overall_status = "healthy" if all(services.values()) else "degraded"
+    if not vector_db_healthy:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
     return HealthResponse(
-        status=overall_status,
+        status="healthy" if vector_db_healthy else "degraded",
         version=API_VERSION,
         timestamp=datetime.now(),
         services=services,

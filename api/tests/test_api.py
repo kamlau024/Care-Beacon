@@ -88,22 +88,41 @@ def test_root_endpoint(client):
     assert "Care-Beacon" in data["name"]
     assert data["endpoints"] == {
         "ask": "/api/v1/ask",
-        "health": "/health",
+        "health": "/api/health",
         "stats": "/api/v1/stats",
     }
 
 
-def test_health_check(client, mock_generator):
-    """Test health check endpoint."""
-    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
-        response = client.get("/health")
+def test_health_check_reports_qdrant_reachable(client, mock_generator):
+    """A 200 must mean Qdrant answered, since the keepalive relies on it."""
+    from unittest.mock import MagicMock, patch
 
-        assert response.status_code == 200
-        data = response.json()
-        assert data["status"] == "healthy"
-        assert "version" in data
-        assert "services" in data
-        assert data["services"]["redis_cache"] is True
+    with patch("src.api.main.create_vector_database") as mock_factory:
+        mock_factory.return_value.client.get_collection = MagicMock(return_value=object())
+        response = client.get("/api/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "healthy"
+    assert body["services"]["vector_db"] is True
+
+
+def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator):
+    """A dead cluster must fail the check, not be masked as healthy."""
+    from unittest.mock import patch
+
+    with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")):
+        response = client.get("/api/health")
+
+    assert response.status_code == 503
+    body = response.json()
+    assert body["status"] == "degraded"
+    assert body["services"]["vector_db"] is False
+
+
+def test_old_health_path_is_gone(client):
+    """The route moved under /api/ so one rewrite covers the whole backend."""
+    assert client.get("/health").status_code == 404
 
 
 def test_ask_question_success(client, mock_generator):
