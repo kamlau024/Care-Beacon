@@ -1,6 +1,7 @@
 """Tests for the Redis-backed statistics store."""
 
 import pytest
+from redis.exceptions import RedisError
 
 from src.caching.stats_store import StatsStore
 
@@ -24,6 +25,38 @@ class FakeRedis:
 
     def delete(self, name):
         self.data.pop(name, None)
+
+
+class ExplodingRedis:
+    """Redis stand-in whose every command raises, simulating an outage mid-call.
+
+    This is the fake that actually exercises the `except RedisError` branches —
+    FakeRedis above never fails, so it cannot prove the no-raise guarantee.
+    """
+
+    def hincrby(self, name, key, amount):
+        raise RedisError("connection lost")
+
+    def hincrbyfloat(self, name, key, amount):
+        raise RedisError("connection lost")
+
+    def hgetall(self, name):
+        raise RedisError("connection lost")
+
+    def delete(self, name):
+        raise RedisError("connection lost")
+
+
+class MalformedValueRedis:
+    """Redis stand-in whose hash contains a non-numeric value.
+
+    Nothing in this codebase writes non-numeric values today, but get_all()'s
+    contract is "never raise", so a corrupted/foreign value must degrade
+    gracefully rather than blow up with an uncaught ValueError.
+    """
+
+    def hgetall(self, name):
+        return {"llm_cost": "not-a-number"}
 
 
 def test_counters_accumulate_across_separate_instances():
@@ -58,11 +91,38 @@ def test_reset_clears_every_field():
 
 
 def test_none_client_is_a_silent_no_op():
-    """Redis down must degrade to zeros, never raise into the request path."""
+    """StatsStore(None) takes the early-return branch on every method and never raises.
+
+    This only covers "no client configured" (client is None). It says nothing
+    about Redis raising mid-call on a configured client — that's covered by
+    test_exploding_redis_is_silent_and_degrades_to_empty below.
+    """
     store = StatsStore(None)
     store.incr("llm_calls", 1)
     store.incr_float("llm_cost", 1.5)
     store.reset()
+    assert store.get_all() == {}
+
+
+def test_exploding_redis_is_silent_and_degrades_to_empty():
+    """Redis down must degrade to zeros, never raise into the request path.
+
+    Unlike the None-client case above, this drives a configured client whose
+    every command raises RedisError mid-call — the actual outage scenario the
+    `except RedisError` branches exist for.
+    """
+    store = StatsStore(ExplodingRedis())
+
+    store.incr("llm_calls", 1)
+    store.incr_float("llm_cost", 1.5)
+    store.reset()
+
+    assert store.get_all() == {}
+
+
+def test_malformed_value_in_hash_does_not_raise():
+    """A non-numeric hash value must degrade to empty stats, not raise ValueError."""
+    store = StatsStore(MalformedValueRedis())
     assert store.get_all() == {}
 
 

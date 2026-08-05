@@ -49,15 +49,16 @@ class StatsStore:
         """Read every counter.
 
         Returns:
-            Field name to value. Empty when Redis is unavailable.
+            Field name to value. Empty when Redis is unavailable, or when a
+            stored value can't be parsed as a number.
         """
         if self.client is None:
             return {}
         try:
             raw = self.client.hgetall(self.key)
-        except RedisError:
+            return {k: float(v) for k, v in raw.items()}
+        except (RedisError, ValueError):
             return {}
-        return {k: float(v) for k, v in raw.items()}
 
     def reset(self) -> None:
         """Delete every counter."""
