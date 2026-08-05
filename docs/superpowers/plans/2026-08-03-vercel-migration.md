@@ -1413,10 +1413,15 @@ def test_health_check_reports_qdrant_reachable(client, mock_generator):
     """A 200 must mean Qdrant answered, since the keepalive relies on it."""
     from unittest.mock import MagicMock, patch
 
-    with patch("src.api.main.create_vector_database") as mock_factory:
+    # get_answer_generator MUST be patched too: health_check() calls it, and an
+    # unpatched call constructs a real AnswerGenerator -> RetrievalEngine ->
+    # QdrantVectorDatabase chain that dials the live cluster over the network.
+    with patch("src.api.main.create_vector_database") as mock_factory, \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
         mock_factory.return_value.client.get_collection = MagicMock(return_value=object())
         response = client.get("/api/health")
 
+    mock_factory.return_value.client.get_collection.assert_called_once()
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "healthy"
@@ -1427,7 +1432,8 @@ def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator
     """A dead cluster must fail the check, not be masked as healthy."""
     from unittest.mock import patch
 
-    with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")):
+    with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")), \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
         response = client.get("/api/health")
 
     assert response.status_code == 503
