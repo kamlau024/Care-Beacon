@@ -33,15 +33,28 @@ class RedisCache:
         # Initialize Redis client
         if self.config.enabled:
             try:
-                self.client = redis.Redis(
-                    host=self.config.host,
-                    port=self.config.port,
-                    db=self.config.db,
-                    password=self.config.password,
-                    socket_timeout=self.config.timeout,
-                    socket_connect_timeout=self.config.timeout,
-                    decode_responses=True,  # Automatically decode to strings
-                )
+                if self.config.url:
+                    # A full connection URL was supplied (e.g. REDIS_URL). Hand it
+                    # to from_url() unmodified so the scheme is honoured -- Upstash
+                    # (used in production) is rediss:// (TLS) only, and
+                    # reassembling host/port/password by hand silently drops that.
+                    self.client = redis.Redis.from_url(
+                        self.config.url,
+                        socket_timeout=self.config.timeout,
+                        socket_connect_timeout=self.config.timeout,
+                        decode_responses=True,  # Automatically decode to strings
+                    )
+                else:
+                    # No URL: connect with discrete host/port (local development).
+                    self.client = redis.Redis(
+                        host=self.config.host,
+                        port=self.config.port,
+                        db=self.config.db,
+                        password=self.config.password,
+                        socket_timeout=self.config.timeout,
+                        socket_connect_timeout=self.config.timeout,
+                        decode_responses=True,  # Automatically decode to strings
+                    )
                 # Test connection
                 self.client.ping()
                 self.enabled = True
@@ -69,10 +82,13 @@ class RedisCache:
         config = get_config()
         cache_config = config.get("cache", {})
 
-        # Check for REDIS_URL first (used by Render, Heroku, etc.)
+        # Check for REDIS_URL first (used by Upstash, Render, Heroku, etc.)
         redis_url = os.getenv("REDIS_URL")
         if redis_url:
-            # Parse Redis URL (format: redis://[user:password@]host:port[/db])
+            # Parse the URL for the informational host/port/db/password fields
+            # below (used for local visibility/logging). The connection itself
+            # is opened from the raw URL (see __init__) so the scheme -- notably
+            # rediss:// for TLS-only providers like Upstash -- is never lost.
             from urllib.parse import urlparse
             parsed = urlparse(redis_url)
             host = parsed.hostname or "localhost"
@@ -96,6 +112,7 @@ class RedisCache:
             key_prefix=cache_config.get("key_prefix", "care_beacon:"),
             max_retries=cache_config.get("max_retries", 3),
             timeout=cache_config.get("timeout", 5),
+            url=redis_url,
         )
 
     def _generate_cache_key(

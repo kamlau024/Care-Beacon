@@ -378,6 +378,51 @@ def test_redis_url_parsing():
             assert cache.config.password == "password"
 
 
+def test_redis_url_tls_uses_from_url_and_preserves_scheme():
+    """rediss:// URLs (Upstash, TLS-only) must be handed whole to
+    redis.Redis.from_url so the scheme is honoured, instead of being
+    reassembled from parsed host/port/password with a plaintext connection.
+    """
+    import redis as redis_module
+
+    redis_url = "rediss://user:password@myhost.upstash.io:6380/2"
+
+    with patch.dict('os.environ', {'REDIS_URL': redis_url}):
+        # Let the real from_url() build the connection pool (no network I/O
+        # happens here) so we can inspect its TLS configuration; only the
+        # ping() that RedisCache.__init__ uses to test connectivity is mocked
+        # to avoid touching a real socket.
+        with patch.object(redis_module.Redis, 'ping', return_value=True):
+            cache = RedisCache()
+
+    assert cache.enabled is True
+
+    # The scheme must not be discarded: from_url() on a rediss:// URL selects
+    # an SSL-capable connection class, proving TLS was actually configured.
+    assert cache.client.connection_pool.connection_class is redis_module.SSLConnection
+
+    connection_kwargs = cache.client.connection_pool.connection_kwargs
+    assert connection_kwargs.get('host') == 'myhost.upstash.io'
+    assert connection_kwargs.get('port') == 6380
+    assert connection_kwargs.get('password') == 'password'
+    assert connection_kwargs.get('db') == 2
+
+
+def test_redis_url_plain_scheme_uses_plaintext_connection():
+    """A plain redis:// URL (local dev) must still work and must not be
+    upgraded to TLS."""
+    import redis as redis_module
+
+    redis_url = "redis://localhost:6379/0"
+
+    with patch.dict('os.environ', {'REDIS_URL': redis_url}):
+        with patch.object(redis_module.Redis, 'ping', return_value=True):
+            cache = RedisCache()
+
+    assert cache.enabled is True
+    assert cache.client.connection_pool.connection_class is redis_module.Connection
+
+
 def test_redis_url_parsing_minimal():
     """Test Redis URL parsing with minimal URL (no password, default port/db)."""
     redis_url = "redis://localhost"

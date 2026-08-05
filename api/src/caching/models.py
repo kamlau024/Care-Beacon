@@ -19,6 +19,12 @@ class CacheConfig:
         key_prefix: Prefix for all cache keys
         max_retries: Maximum retry attempts for Redis operations
         timeout: Operation timeout in seconds
+        url: Full Redis connection URL (e.g. from REDIS_URL). When set, this is
+            handed directly to redis.Redis.from_url() so the scheme (redis:// vs
+            the TLS-only rediss:// used by Upstash) is honoured. The parsed
+            host/port/db/password fields above are kept for local development
+            and informational purposes but are not used to open the connection
+            when a URL is present.
     """
     enabled: bool = True
     host: str = "localhost"
@@ -29,6 +35,7 @@ class CacheConfig:
     key_prefix: str = "care_beacon:"
     max_retries: int = 3
     timeout: int = 5
+    url: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary.
