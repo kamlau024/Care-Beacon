@@ -6,7 +6,8 @@ import type {
   VectorDBStats,
 } from "./types"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Same-origin: the Vercel route table sends /api/* to the Python service.
+const API_BASE_URL = ""
 
 class ApiError extends Error {
   constructor(
@@ -34,7 +35,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 export const api = {
   // Health check
   async getHealth(): Promise<HealthResponse> {
-    const response = await fetch(`${API_BASE_URL}/health`)
+    const response = await fetch(`${API_BASE_URL}/api/health`)
     return handleResponse<HealthResponse>(response)
   },
 

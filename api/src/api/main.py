@@ -8,7 +8,6 @@ from contextlib import asynccontextmanager
 import time
 
 from fastapi import FastAPI, HTTPException, Request, Response, status, Depends, Header
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from loguru import logger
@@ -119,17 +118,6 @@ app = FastAPI(
     openapi_url="/openapi.json" if _is_debug else None,
     lifespan=lifespan,
 )
-
-# CORS Configuration
-cors_origins = api_config.get("cors_origins", ["http://localhost:3000"])
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=False,  # Must be False when using "*" for origins
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 # Initialize answer generator (lazy loaded on first request)
 _answer_generator: AnswerGenerator | None = None

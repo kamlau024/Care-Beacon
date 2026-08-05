@@ -508,15 +508,6 @@ def test_admin_endpoints_disabled_when_no_key_configured(client, mock_generator,
     assert client.post("/api/v1/cache/clear").status_code == 503
 
 
-def test_cors_headers(client):
-    """Test CORS headers are present."""
-    response = client.get("/", headers={"Origin": "http://localhost:3000"})
-
-    assert response.status_code == 200
-    # CORS headers should be present
-    assert "access-control-allow-origin" in response.headers
-
-
 def test_openapi_docs_available(client):
     """Test that OpenAPI documentation is available."""
     response = client.get("/docs")
