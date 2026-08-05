@@ -13,9 +13,15 @@ from pathlib import Path
 from typing import List, Tuple, Dict
 import time
 
-# Add project root to path
-project_root = Path(__file__).parent.parent
+# Add the api/ service root to path so `src.*` imports resolve.
+project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
+
+# scraped_data/ lives at the repository root -- one level above api/ -- kept
+# outside the api/ service directory on purpose so its ~214MB stays out of
+# the Vercel bundle. This script now lives at api/scripts/, so reaching the
+# repo root needs one extra parent beyond project_root.
+repo_root = Path(__file__).resolve().parents[2]
 
 from src.ingestion.markdown_parser import MedicalArticleParser
 from src.embeddings.chunking import DocumentChunker
@@ -229,7 +235,7 @@ def main():
 
     all_article_paths = []
     for source_dir, source_name in SOURCES.items():
-        articles_dir = project_root / "scraped_data" / source_dir / "articles"
+        articles_dir = repo_root / "scraped_data" / source_dir / "articles"
 
         if not articles_dir.exists():
             print(f"⚠️  Directory not found: {articles_dir}")
