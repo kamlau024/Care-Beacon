@@ -6,12 +6,21 @@
     },
     "api": {
       "root": "api/",
-      "entrypoint": "src.api.main:app",
-      "excludeFiles": "{tests/**,scripts/**,**/test_*.py}"
+      "entrypoint": "src.api.main:app"
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": { "service": "api" } },
-    { "source": "/(.*)", "destination": { "service": "web" } }
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "api"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
   ]
 }
