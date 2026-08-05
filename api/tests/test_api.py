@@ -450,6 +450,105 @@ def test_get_stats(client, mock_generator):
         assert "cost_reduction_percent" in data
 
 
+def test_vector_db_stats_cache_hit_short_circuits(client, mock_generator):
+    """A cache hit must return the cached payload without touching Qdrant.
+
+    This is the expensive endpoint that otherwise scrolls the entire
+    collection -- the cache-hit path existing and actually short-circuiting
+    is what keeps repeated Statistics page loads cheap.
+    """
+    cached_payload = {
+        "total_documents": 500,
+        "total_chunks": 5000,
+        "sources": [
+            {"name": "bc-cancer", "articles": 500, "chunks": 5000, "storage_mb": 12.3}
+        ],
+        "collection_name": "care-beacon-medical",
+        "distance_metric": "cosine",
+        "vector_size": 1536,
+    }
+    mock_generator.cache.get_vector_db_stats.return_value = cached_payload
+
+    with patch("src.api.main.create_vector_database") as mock_factory, \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        response = client.get("/api/v1/vector-db/stats")
+
+    assert response.status_code == 200
+    assert response.json() == cached_payload
+    # The cache must short-circuit before Qdrant is ever constructed/touched.
+    assert not mock_factory.called
+
+
+def test_vector_db_stats_cache_miss_computes_and_caches(client, mock_generator):
+    """A cache miss must scroll Qdrant to completion, assemble the per-source
+    breakdown, and cache the computed result for next time."""
+    mock_generator.cache.get_vector_db_stats.return_value = None
+
+    mock_vector_db = MagicMock()
+    mock_vector_db.get_stats.return_value = {
+        "collection_name": "care-beacon-medical",
+        "total_chunks": 3,
+        "distance_metric": "cosine",
+        "vector_size": 1536,
+        "unique_articles_sample": 2,
+    }
+    mock_vector_db.collection_name = "care-beacon-medical"
+
+    def make_point(source, article_id):
+        point = MagicMock()
+        point.payload = {"source": source, "article_id": article_id}
+        return point
+
+    page1 = [make_point("bc-cancer", "a1"), make_point("bc-cancer", "a1")]
+    page2 = [make_point("canadian-cancer-society", "a2")]
+
+    # First page reports a next_offset (more to fetch); second page's
+    # next_offset is None, which is what must terminate the pagination loop.
+    mock_vector_db.client.scroll.side_effect = [
+        (page1, "offset-1"),
+        (page2, None),
+    ]
+
+    with patch("src.api.main.create_vector_database", return_value=mock_vector_db), \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        response = client.get("/api/v1/vector-db/stats")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total_chunks"] == 3
+    assert body["total_documents"] == 2  # unique article_ids: a1, a2
+
+    # Pagination must have stopped as soon as next_offset came back None,
+    # not looped forever or under-consumed the mocked pages.
+    assert mock_vector_db.client.scroll.call_count == 2
+
+    source_names = {s["name"] for s in body["sources"]}
+    assert source_names == {"bc-cancer", "canadian-cancer-society"}
+
+    bc_source = next(s for s in body["sources"] if s["name"] == "bc-cancer")
+    assert bc_source["chunks"] == 2
+    assert bc_source["articles"] == 1
+
+    # The freshly computed result must be cached so the next load is cheap.
+    mock_generator.cache.set_vector_db_stats.assert_called_once()
+    cached_arg = mock_generator.cache.set_vector_db_stats.call_args[0][0]
+    assert cached_arg["total_chunks"] == 3
+
+
+def test_vector_db_stats_failure_path_returns_500(client, mock_generator):
+    """A Qdrant failure must surface as a clean 500, not crash the app or
+    silently return partial/incorrect data."""
+    mock_generator.cache.get_vector_db_stats.return_value = None
+
+    with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")), \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        response = client.get("/api/v1/vector-db/stats")
+
+    assert response.status_code == 500
+    body = response.json()
+    assert "Failed to retrieve vector DB statistics" in body["message"]
+
+
 def test_clear_cache(client, mock_generator, monkeypatch):
     """Test cache clearing endpoint."""
     monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
@@ -825,5 +924,31 @@ def test_lifespan_startup_and_shutdown(capsys):
         assert "Cache healthy: True" in captured.out
 
         # Verify shutdown messages are printed (lines 79-81)
+        assert "Shutting down Care-Beacon API" in captured.out
+
+
+def test_lifespan_survives_answer_generator_init_failure(capsys):
+    """A cold dependency (bad credentials, Qdrant unreachable, ...) at startup
+    must not abort the ASGI lifespan. If it did, the app would never come up
+    and /api/health -- built specifically to diagnose this -- could never run;
+    the keepalive would see an opaque platform error instead of a diagnosable
+    503. Startup must log and continue.
+    """
+    from src.api.main import lifespan, app
+    import asyncio
+
+    with patch("src.api.main.get_answer_generator") as mock_get_gen:
+        mock_get_gen.side_effect = ValueError("Qdrant API key not configured.")
+
+        async def run_lifespan():
+            async with lifespan(app):
+                pass
+
+        # Must not raise -- startup completes despite the failure.
+        asyncio.run(run_lifespan())
+
+        captured = capsys.readouterr()
+        assert "Answer generator pre-initialization failed" in captured.out
+        assert "API is ready to accept requests!" in captured.out
         assert "Shutting down Care-Beacon API" in captured.out
 

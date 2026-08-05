@@ -89,11 +89,22 @@ async def lifespan(app: FastAPI):
     print(f"Environment: {'Development' if api_config.get('debug', False) else 'Production'}")
     print()
 
-    # Pre-initialize generator
-    generator = get_answer_generator()
-    print(f" Answer generator initialized")
-    print(f" Cache status: {'Enabled' if generator.cache.enabled else 'Disabled'}")
-    print(f" Cache healthy: {generator.cache.is_healthy()}")
+    # Pre-initialize generator. This is best-effort: if it raises (bad
+    # credentials, Qdrant unreachable, ...) startup must still complete, or
+    # the app could never serve /api/health -- which exists precisely to
+    # diagnose this kind of failure -- and a diagnosable 503 would be
+    # replaced by an opaque platform error instead. The lazy singleton means
+    # a real request will still construct (and surface an error from) the
+    # generator normally.
+    try:
+        generator = get_answer_generator()
+        print(f" Answer generator initialized")
+        print(f" Cache status: {'Enabled' if generator.cache.enabled else 'Disabled'}")
+        print(f" Cache healthy: {generator.cache.is_healthy()}")
+    except Exception as e:
+        logger.warning(f"Startup: answer generator pre-initialization failed: {e}")
+        print(f" Answer generator pre-initialization failed: {e}")
+        print(" Continuing startup -- /api/health will report the problem")
     print()
     print("API is ready to accept requests!")
     print("=" * 70)
@@ -213,11 +224,16 @@ async def health_check(response: Response):
     makes it valid as the scheduled keepalive target. A cluster that has been
     reclaimed must fail this check rather than be masked as healthy.
 
+    This check must only ever observe the collection, never create it:
+    QdrantVectorDatabase normally auto-creates a missing collection as a
+    convenience for query/ingestion paths, which would let a reclaimed
+    cluster silently come back as an empty collection and report healthy.
+
     Returns:
         Health status of the API and its dependent services.
     """
     try:
-        vector_db = create_vector_database()
+        vector_db = create_vector_database(create_if_missing=False)
         vector_db.client.get_collection(collection_name=vector_db.collection_name)
         vector_db_healthy = True
     except Exception as e:
@@ -395,9 +411,10 @@ async def get_vector_db_stats():
         if cached_stats is not None:
             return cached_stats
 
-        # Cache miss - compute stats
-        from src.storage.vector_db import create_vector_database
-
+        # Cache miss - compute stats. Uses the module-level create_vector_database
+        # import (see top of file) so patching src.api.main.create_vector_database
+        # in tests actually takes effect -- a function-local re-import here would
+        # silently defeat that.
         vector_db = create_vector_database()
 
         # Get stats using the database's get_stats method

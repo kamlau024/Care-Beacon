@@ -25,7 +25,8 @@ class QdrantVectorDatabase:
         self,
         url: Optional[str] = None,
         api_key: Optional[str] = None,
-        collection_name: Optional[str] = None
+        collection_name: Optional[str] = None,
+        create_if_missing: bool = True,
     ):
         """Initialize the Qdrant vector database.
 
@@ -33,6 +34,12 @@ class QdrantVectorDatabase:
             url: Qdrant Cloud URL (if None, reads from config or QDRANT_URL env var)
             api_key: Qdrant API key (if None, reads from config or QDRANT_API_KEY env var)
             collection_name: Name of the collection (if None, loads from config)
+            create_if_missing: If True (default), create the collection (and its
+                payload indexes) when it doesn't already exist -- the behaviour
+                normal query/ingestion paths need. Pass False for read-only
+                callers such as the health check, which must observe the
+                collection's real state rather than conjure an empty one back
+                into existence and report it as healthy.
         """
         config = get_config()
 
@@ -63,8 +70,10 @@ class QdrantVectorDatabase:
         }
         self.qdrant_distance = distance_map.get(self.distance_metric, Distance.COSINE)
 
-        # Create collection if it doesn't exist
-        self._ensure_collection_exists()
+        # Create collection if it doesn't exist (unless explicitly disabled --
+        # see create_if_missing docstring above).
+        if create_if_missing:
+            self._ensure_collection_exists()
 
     def _ensure_collection_exists(self) -> None:
         """Ensure the collection exists, create if it doesn't."""
