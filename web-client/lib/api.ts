@@ -57,21 +57,11 @@ export const api = {
     return handleResponse<StatsResponse>(response)
   },
 
-  // Clear cache
-  async clearCache(): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/v1/cache/clear`, {
-      method: "POST",
-    })
-    return handleResponse<{ message: string }>(response)
-  },
-
-  // Reset statistics
-  async resetStats(): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/v1/stats/reset`, {
-      method: "POST",
-    })
-    return handleResponse<{ message: string }>(response)
-  },
+  // Note: POST /api/v1/cache/clear and POST /api/v1/stats/reset are
+  // intentionally not wrapped here. They are admin-only endpoints gated by
+  // require_admin_api_key on the backend; the Admin tab that called them was
+  // removed because the browser has no way to hold that secret. They remain
+  // reachable directly via curl with the X-API-Key header.
 
   // Get vector database statistics
   async getVectorDBStats(): Promise<VectorDBStats> {
