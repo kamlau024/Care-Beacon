@@ -22,5 +22,11 @@
         "service": "web"
       }
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/health",
+      "schedule": "0 9 * * *"
+    }
   ]
 }
