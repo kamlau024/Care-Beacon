@@ -2,36 +2,54 @@
 
 ## Project Overview
 
-A Retrieval-Augmented Generation (RAG) system designed to process medical journal articles and answer patient questions with accurate, cited references. The system will provide paragraph-level citations to ensure transparency and medical accuracy.
+A Retrieval-Augmented Generation (RAG) system that processes medical journal articles and answers patient questions with accurate, cited references. The system provides paragraph-level citations to ensure transparency and medical accuracy.
+
+## Current Production State (as of the Vercel migration)
+
+This section is the authoritative description of the live system. Sections below this one describe the original design; where they conflict with this section, this section wins.
+
+- **Live at `https://care-beacon-health.vercel.app`.** One Vercel project (`care-beacon-health`) with two Services defined in `vercel.json`: `web` (Next.js 16, root `web-client/`) and `api` (FastAPI, root `api/`, entrypoint `src.api.main:app`, Python 3.12). They share one domain — `/api/(.*)` routes to the Python service, everything else to Next.js. **There is no CORS layer**; frontend and API are same-origin.
+- **Vector DB is Qdrant Cloud**, not Chroma. ChromaDB has been removed entirely from the codebase — there is no `VectorDatabase` class that talks to it. `api/src/storage/qdrant_db.py` is the only vector store implementation; `api/src/storage/vector_db.py` is a thin factory that only ever constructs it.
+- **Cache is Upstash Redis** via the Vercel Marketplace, which injects `REDIS_URL` (`rediss://` scheme). Cost and usage counters are stored in a Redis hash, not in process memory — this matters because serverless functions do not share memory between invocations.
+- **Render.com, Docker, docker-compose, ngrok and cloudflared are gone.** `render.yaml`, both Dockerfiles, `docker-compose.yml`, and tunnel scripts have all been deleted. Local development runs both services together with `vercel dev`.
+- **Rate limiting is a Vercel WAF rule** (`ask-rate-limit`): 60 requests / 60 seconds per IP on `/api/v1/ask`, returning HTTP 429. It is enforced at the platform edge, not in application code.
+- **Repository layout**: all Python lives under `api/` (`api/src/`, `api/tests/`, `api/config/`, `api/scripts/ingest.py`). `scraped_data/` and `data/` stay at the repo root, outside `api/`, so the Vercel function bundle excludes them. `.vercelignore` is load-bearing — without it the upload exceeds Vercel's 15,000-file limit.
+- **API runtime dependencies are exactly 8** (`api/requirements.txt`): fastapi, pydantic, openai, qdrant-client, redis, pyyaml, loguru, python-dotenv. Everything else (pytest, uvicorn, ragas, black, etc.) is in `api/requirements-dev.txt` and never ships to Vercel.
+- **Health check is `GET /api/health`** and performs a real Qdrant collection read, returning 503 if unreachable. `/health` (no `/api` prefix) no longer exists. A daily GitHub Actions workflow (`.github/workflows/keepalive.yml`) pings it so Qdrant's free-tier cluster doesn't get reclaimed for inactivity.
+- **Admin endpoints** `POST /api/v1/cache/clear` and `POST /api/v1/stats/reset` require an `X-API-Key` header matching the `ADMIN_API_KEY` environment variable.
+- **On-demand ingestion API endpoints were deleted** — they used to spawn a subprocess, which is impossible on serverless. Ingestion is local-only now: `make ingest` runs `api/scripts/ingest.py` against the local machine.
+- **Local test command**: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors`. A bare `pytest` resolves to the anaconda base environment and fails — always use the full interpreter path. The local dev environment is Python 3.10.19; Vercel's `api` service runs Python 3.12.
+- **The test suite is not fully green, and never has been.** Current baseline: **6 failed, 239 passed, 0 errors**. The 6 failures are pre-existing and unrelated to the migration. Do not claim the suite is green, and do not cite older counts (e.g. "284 tests passing") — they are stale.
 
 ## Key Requirements
 
 - **Input**: Pre-parsed markdown medical journal articles
 - **Scale**: 100-10,000 articles across general medicine, specific specialties, and patient education
 - **Citations**: Paragraph-level granularity with article references
-- **Updates**: Real-time ingestion capability for new articles
-- **Vector DB**: Self-hosted solution (Chroma recommended)
-- **LLM**: API-based (Claude or OpenAI)
+- **Updates**: Real-time ingestion was attempted via API but removed as incompatible with serverless; current ingestion is a local batch/incremental script (`api/scripts/ingest.py`)
+- **Vector DB**: Qdrant Cloud (managed, not self-hosted)
+- **LLM**: API-based (currently OpenAI `gpt-4o-mini`, see `api/config/config.yaml`)
 - **Query Volume**: ~1 query/second (~86,000 queries/day, ~2.6M queries/month)
 
 ## Architecture Overview
 
-```
-[Medical Articles (Markdown)]
-    ↓
-[Markdown Parser & Metadata Extractor]
-    ↓ (Extract structure, sections, metadata)
-[Document Processor]
-    ↓ (Chunk by paragraph + preserve metadata)
-[Embedding Generator]
-    ↓ (OpenAI or Cohere embeddings)
-[Vector Database (Chroma)] ← [Built-in Metadata Store]
-    ↓
-[Retrieval Engine]
-    ↓ (Top-k relevant paragraphs with metadata filtering)
-[LLM API (Claude/OpenAI)]
-    ↓ (Prompt with retrieved context)
-[Answer with Paragraph-Level Citations]
+```mermaid
+flowchart TD
+    A[Medical Articles - Markdown] --> B[Markdown Parser & Metadata Extractor]
+    B --> C[Document Processor<br/>Chunk by paragraph + preserve metadata]
+    C --> D[Embedding Generator<br/>OpenAI text-embedding-3-small]
+    D --> E[(Qdrant Cloud<br/>Vector DB + Metadata)]
+    E --> F[Retrieval Engine<br/>Top-k paragraphs + metadata filtering]
+    F --> G[LLM API<br/>OpenAI gpt-4o-mini]
+    G --> H[Answer with Paragraph-Level Citations]
+
+    subgraph Vercel["Vercel project: care-beacon-health"]
+        WEB[web service - Next.js 16]
+        API[api service - FastAPI, Python 3.12]
+    end
+    WEB -->|same origin, no CORS| API
+    API --> F
+    API --> R[(Upstash Redis<br/>cache + usage counters)]
 ```
 
 ## Technology Stack Recommendations
@@ -75,23 +93,19 @@ A Retrieval-Augmented Generation (RAG) system designed to process medical journa
 
 ### Vector Database
 
-**Chroma (RECOMMENDED for this project)**
-- Persistent storage with built-in metadata filtering
-- Easy to set up and use with Python
-- Better for real-time ingestion and updates
-- Built-in document store (no separate database needed)
+**Qdrant Cloud (IN USE)** — originally the plan called for self-hosted Chroma; the live system runs Qdrant Cloud instead. ChromaDB has been fully removed from the codebase.
+- Managed service — no server to operate ourselves
+- Metadata filtering via Qdrant's payload index (`api/src/storage/qdrant_db.py`)
+- A daily GitHub Actions keepalive ping (`.github/workflows/keepalive.yml`) prevents the free-tier cluster from being reclaimed for inactivity
 - Excellent performance at 10K articles, 1 query/sec
-- Handles concurrent reads efficiently
-- Can scale to your volume without issues
 
 **Performance Considerations at 1 query/sec:**
-- Chroma can easily handle 1 query/sec on modest hardware
 - Typical query latency: 50-200ms for vector search
-- Consider running on dedicated server (2-4 CPU cores, 8GB RAM minimum)
-- Add Redis cache layer for frequently asked questions to reduce costs:
+- Runs as a Vercel serverless function (`api` service), not a dedicated server
+- Redis cache layer (Upstash, via the Vercel Marketplace) reduces repeat LLM calls for frequently asked questions:
   - Cache query results for 24 hours
-  - Can reduce LLM API calls by 30-50% for common queries
-  - Estimated savings: ~$10-17K/month on Claude Sonnet
+  - Can reduce LLM API calls substantially for common queries
+  - Cost/usage counters live in a Redis hash so they persist across serverless invocations
 
 ### Embedding Model
 
@@ -124,10 +138,10 @@ A Retrieval-Augmented Generation (RAG) system designed to process medical journa
 - [ ] Set up project structure and dependencies
 - [ ] Implement markdown parser with metadata extraction
 - [ ] Create document preprocessing pipeline
-- [ ] Build paragraph-level chunking system with section detection
-- [ ] Set up Chroma vector database
-- [ ] Implement embedding generation with OpenAI API
-- [ ] Set up Redis cache for query results
+- [x] Build paragraph-level chunking system with section detection
+- [x] Set up Qdrant Cloud vector database (superseded the original Chroma plan)
+- [x] Implement embedding generation with OpenAI API
+- [x] Set up Redis cache for query results (Upstash, via Vercel Marketplace)
 
 ### Phase 2: Core RAG (Weeks 3-4)
 - [ ] Build retrieval engine with similarity search
@@ -137,7 +151,7 @@ A Retrieval-Augmented Generation (RAG) system designed to process medical journa
 - [ ] Build answer generation with citation formatting
 
 ### Phase 3: Real-time Ingestion (Week 5)
-- [ ] Create article ingestion API/pipeline
+- [x] ~~Create article ingestion API/pipeline~~ — attempted, then removed: an on-demand ingestion API endpoint spawned a subprocess, which serverless functions cannot do. Ingestion is now a local-only script, `api/scripts/ingest.py`, run via `make ingest`.
 - [ ] Implement duplicate detection
 - [ ] Add incremental indexing
 - [ ] Set up monitoring and logging
@@ -308,25 +322,27 @@ REQUIREMENTS:
 ANSWER:
 ```
 
-### 6. Real-time Ingestion Pipeline
+### 6. Ingestion Pipeline
+
+**This was originally designed as an API-triggered "real-time" pipeline (`Phase 3` above). That design was implemented and then removed**: the ingestion API endpoints spawned a subprocess to run the pipeline, which is not possible on Vercel's serverless functions. Ingestion today is local-only, run by hand via `make ingest` (`api/scripts/ingest.py`) against a Qdrant Cloud collection. The pseudocode below still describes the pipeline's internal steps; only the trigger (API call vs. local script) has changed.
 
 ```python
 # Pseudo-structure
 class ArticleIngestionPipeline:
     def ingest_article(self, markdown_file_path):
-        """Process new article in real-time"""
+        """Process a new article"""
         1. Read markdown file
         2. Parse markdown → structured article with metadata
         3. Check for duplicates (by DOI, title hash)
         4. Chunk into paragraphs with section context
         5. Generate embeddings (batch API calls for efficiency)
-        6. Store chunks in Chroma with metadata
+        6. Store chunks in Qdrant with metadata
         7. Invalidate related cache entries
         8. Log ingestion event
 
     def update_article(self, article_id):
         """Update existing article"""
-        1. Query Chroma for all chunks with article_id
+        1. Query Qdrant for all chunks with article_id
         2. Delete old chunks
         3. Re-process markdown file
         4. Re-index with new chunks
@@ -337,7 +353,7 @@ class ArticleIngestionPipeline:
         1. Scan directory for all .md files
         2. Process in parallel (10-20 threads)
         3. Batch embedding generation (100 chunks at a time)
-        4. Bulk insert into Chroma
+        4. Bulk insert into Qdrant
         5. Progress tracking and error handling
 ```
 
@@ -394,122 +410,108 @@ Always include:
 
 ## Project Structure
 
+This is the actual layout of the live repository — a Vercel monorepo with two Services (`vercel.json`). It supersedes the original single-`src/` design below it in spirit; the module breakdown (ingestion, embeddings, storage, retrieval, generation) survived, but everything Python now lives under `api/`, and `web-client/` is a separate Next.js service.
+
 ```
 care-beacon/
-├── src/
-│   ├── ingestion/
-│   │   ├── markdown_parser.py         # Parse markdown with frontmatter
-│   │   ├── document_processor.py      # Section detection, normalization
-│   │   └── ingestion_pipeline.py      # End-to-end ingestion orchestration
-│   ├── embeddings/
-│   │   ├── embedding_generator.py     # OpenAI embeddings API wrapper
-│   │   └── chunking.py                # Paragraph-level chunking logic
-│   ├── storage/
-│   │   ├── vector_db.py               # Chroma wrapper with metadata filtering
-│   │   ├── cache.py                   # Redis cache for query results
-│   │   └── models.py                  # Data models for articles, chunks
-│   ├── retrieval/
-│   │   ├── retriever.py               # Vector search + metadata filtering
-│   │   └── reranker.py                # Optional re-ranking logic
-│   ├── generation/
-│   │   ├── llm_client.py              # Claude/OpenAI API client
-│   │   ├── prompt_templates.py        # Prompt engineering for medical Q&A
-│   │   └── citation_formatter.py      # Format paragraph-level citations
-│   └── api/
-│       ├── query_endpoint.py          # POST /query endpoint
-│       ├── ingestion_endpoint.py      # POST /ingest endpoint
-│       └── health_check.py            # System health and metrics
-├── tests/
-│   ├── test_parser.py
-│   ├── test_chunking.py
-│   ├── test_retrieval.py
-│   ├── test_generation.py
-│   ├── test_citation.py
-│   └── test_end_to_end.py
-├── data/
-│   ├── markdown_articles/             # Source markdown files
-│   ├── vector_db/                     # Chroma persistent storage
-│   └── cache/                         # Redis dump (if using persistence)
-├── evaluation/
-│   ├── test_questions.json            # Curated test questions
-│   ├── ground_truth_answers.json      # Human-verified answers
-│   ├── evaluation_scripts.py          # Automated evaluation
-│   └── results/                       # Evaluation results and metrics
-├── notebooks/
-│   ├── data_exploration.ipynb         # Explore article corpus
-│   ├── retrieval_tuning.ipynb         # Tune retrieval parameters
-│   └── evaluation_analysis.ipynb      # Analyze quality metrics
-├── config/
-│   ├── config.yaml                    # System configuration
-│   ├── prompts.yaml                   # LLM prompt templates
-│   └── api_keys.env                   # API keys (not in git)
-├── docs/
-│   ├── api_documentation.md           # API endpoint docs
-│   └── deployment.md                  # Deployment guide
-├── requirements.txt
+├── api/                                # Vercel "api" service (FastAPI, Python 3.12)
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── main.py                 # FastAPI app: routes, health check, admin auth
+│   │   │   └── models.py               # Pydantic request/response models
+│   │   ├── ingestion/
+│   │   │   └── markdown_parser.py      # Parse markdown with frontmatter
+│   │   ├── embeddings/
+│   │   │   ├── embedding_generator.py  # OpenAI embeddings API wrapper
+│   │   │   └── chunking.py             # Paragraph-level chunking logic
+│   │   ├── storage/
+│   │   │   ├── vector_db.py            # Factory that constructs the Qdrant client
+│   │   │   ├── qdrant_db.py            # Qdrant Cloud implementation (the only one)
+│   │   │   └── models.py               # Data models for chunks, retrieval results
+│   │   ├── retrieval/
+│   │   │   ├── retrieval_engine.py     # Vector search + metadata filtering
+│   │   │   └── reranker.py             # Re-ranking logic
+│   │   ├── caching/
+│   │   │   ├── redis_cache.py          # Upstash Redis cache wrapper
+│   │   │   └── stats_store.py          # Cost/usage counters, stored in a Redis hash
+│   │   ├── generation/
+│   │   │   ├── llm_client.py           # OpenAI client (gpt-4o-mini)
+│   │   │   └── answer_generator.py     # Orchestrates retrieval + generation + citations
+│   │   └── config_loader.py
+│   ├── tests/                          # pytest suite
+│   ├── config/
+│   │   ├── config.yaml                 # System configuration
+│   │   └── prompts*.yaml               # LLM prompt templates
+│   ├── scripts/
+│   │   └── ingest.py                   # Local-only ingestion entrypoint (`make ingest`)
+│   ├── requirements.txt                # Exactly 8 runtime deps shipped to Vercel
+│   └── requirements-dev.txt            # pytest, uvicorn, black, ragas, etc. — dev only
+├── web-client/                         # Vercel "web" service (Next.js 16)
+│   ├── app/
+│   ├── components/
+│   └── lib/
+├── scraped_data/                       # Source corpus. Repo root, NOT under api/ —
+│                                       # excluded from the function bundle via .vercelignore
+├── data/                                # Generated artifacts. Also repo root, also excluded
+├── evaluation/                          # RAG evaluation scripts and sample question sets
+├── docs/                                # This project's documentation (see docs/ARCHITECTURE.md)
+├── .github/workflows/keepalive.yml     # Daily ping to /api/health to keep Qdrant alive
+├── vercel.json                          # Defines the two Services and routing rules
+├── .vercelignore                        # Load-bearing: keeps upload under 15,000 files
+├── Makefile
 ├── README.md
-├── Claude.md (this file)
-└── .env.example                       # Example environment variables
+└── Gemini.md / CLAUDE.md (this file)
 ```
 
 ## Next Steps
 
-1. ✅ **LLM Platform**: Use API-based (Claude or OpenAI)
+1. ✅ **LLM Platform**: API-based, OpenAI `gpt-4o-mini` (see `api/config/config.yaml`)
 2. ✅ **Input Format**: Parsed markdown articles
 3. ✅ **Query Volume**: 1 query/second (~86K/day)
-4. ✅ **Vector DB**: Chroma (self-hosted)
-5. **TO DO: Examine sample markdown files** - Review structure and metadata format
-6. **TO DO: Set up development environment**:
-   - Python 3.10+
-   - Install Chroma, Redis, OpenAI/Anthropic SDKs
-   - Configure API keys
-7. **TO DO: Initial data ingestion** - Process first batch of markdown articles
-8. **TO DO: Build MVP** - Implement phases 1-2 (foundation + core RAG)
-9. **TO DO: Evaluate quality** - Test retrieval and generation with sample queries
-10. **TO DO: Add caching layer** - Implement Redis to reduce API costs
-11. **TO DO: Production hardening** - Add monitoring, error handling, rate limiting
+4. ✅ **Vector DB**: Qdrant Cloud (managed, not self-hosted — supersedes the original Chroma plan)
+5. ✅ **Deployment environment**: Vercel — one project, two Services (`web` + `api`), see "Current Production State" above
+6. ✅ **Set up development environment**: `vercel dev` runs both services; Python 3.10.19 locally, 3.12 on Vercel
+7. ✅ **Add caching layer**: Upstash Redis via the Vercel Marketplace
+8. ✅ **Production hardening**: rate limiting via a Vercel WAF rule, admin endpoints behind `X-API-Key`, `/api/health` checked daily by GitHub Actions
+9. **Open**: Evaluate quality — `evaluation/` has a RAG evaluation harness (ragas); no evidence in this repo of a completed evaluation run
+10. **Open**: Initial/ongoing data ingestion volume and cadence beyond `make ingest`
 
 ## Questions to Address Before Production
 
-- [x] LLM platform choice (API-based)
+- [x] LLM platform choice (API-based) — OpenAI `gpt-4o-mini`
 - [x] Input format (markdown)
 - [x] Query volume (1 query/sec)
-- [ ] **Budget for LLM API costs**: Can you afford $35K/month (Sonnet) or prefer $2.9K/month (Haiku)?
+- [x] **Deployment environment** — Vercel, not AWS/GCP/Azure/on-premises
+- [ ] **Budget for LLM API costs**: not documented in this repo
 - [ ] **End users**: Patients directly, or medical staff answering patient questions?
 - [ ] **Medical specialties to prioritize first**: Which specialties in your markdown corpus?
-- [ ] **Markdown structure**: Do articles have YAML frontmatter? What metadata is available?
 - [ ] **Medical review process**: How will answers be validated before going to patients?
 - [ ] **Legal/compliance**: HIPAA requirements? Medical disclaimers? Jurisdiction-specific rules?
-- [ ] **Deployment environment**: Cloud (AWS/GCP/Azure) or on-premises?
-- [ ] **Monitoring and observability**: What metrics and alerting do you need?
+- [ ] **Monitoring and observability**: Beyond the daily `/api/health` keepalive ping, what else is needed?
 
-## Cost Summary (1 query/second, ~2.6M queries/month)
+## Cost Summary
+
+The dollar figures below are from the original pre-implementation planning phase and describe **hypothetical self-hosted infrastructure that was never built** (a dedicated server running Chroma + Redis). They do not reflect actual Vercel, Qdrant Cloud, or Upstash Redis billing, which this repository has no record of. They're kept only as the original LLM-choice cost comparison; treat the "Infrastructure" line in each option as void.
 
 ### Option 1: Claude 3.5 Sonnet (Premium Quality)
 - **LLM API**: ~$35,000/month
 - **Embeddings**: ~$3/month
-- **Infrastructure** (Chroma + Redis on dedicated server): ~$200-500/month
-- **Total**: **~$35,500/month** (~$426K/year)
-- **With 40% cache hit rate**: ~$21,500/month (~$258K/year)
+- **Total**: not applicable — actual system uses `gpt-4o-mini`, not Claude
 
 ### Option 2: Claude 3 Haiku (Balanced)
 - **LLM API**: ~$2,900/month
 - **Embeddings**: ~$3/month
-- **Infrastructure**: ~$200-500/month
-- **Total**: **~$3,400/month** (~$41K/year)
-- **With 40% cache hit rate**: ~$2,000/month (~$24K/year)
+- **Total**: not applicable — actual system uses `gpt-4o-mini`, not Claude
 
-### Option 3: GPT-4o-mini (Budget)
-- **LLM API**: ~$1,560/month
+### Option 3: GPT-4o-mini (Budget) — THE OPTION ACTUALLY IN USE
+- **LLM API**: ~$1,560/month (original estimate; not verified against actual usage)
 - **Embeddings**: ~$3/month
-- **Infrastructure**: ~$200-500/month
-- **Total**: **~$2,100/month** (~$25K/year)
-- **With 40% cache hit rate**: ~$1,400/month (~$17K/year)
+- **Infrastructure**: actual cost unknown — this repo has no record of Vercel/Qdrant Cloud/Upstash billing
 
-**Recommendation**: Start with **GPT-4o-mini** (most cost-effective at ~$1,560/month) for MVP. If you need higher quality, upgrade to GPT-4o (~$6,500/month) or Claude Haiku (~$2,900/month). GPT-4o-mini offers excellent value and uses the same OpenAI API as embeddings (simpler integration).
+**Note**: `gpt-4o-mini` was chosen, matching the original budget recommendation. The infrastructure cost figures above predate the decision to use Vercel + Qdrant Cloud + Upstash Redis and should not be cited as current.
 
 ---
 
-**Document Version**: 2.0
-**Last Updated**: 2025-11-07
+**Document Version**: 3.0 — updated for the Vercel migration; see "Current Production State" near the top of this file.
+**Last Updated**: 2026-08-05
 **Project Owner**: Care-Beacon Team

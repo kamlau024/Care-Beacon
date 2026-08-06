@@ -1,172 +1,95 @@
 # Testing Guide for Care-Beacon
 
+Docker, docker-compose, and the container-based test workflow this document used to describe are gone. `scripts/run_tests.sh` (which shelled out to `docker exec care-beacon-api ...`) is stale and should not be used — it no longer has a container to run tests in. Tests run directly against the local conda environment instead.
+
 ## Quick Start
 
-Run tests using the provided shell script:
+Always invoke pytest through the pinned interpreter, from `api/`. A bare `pytest` (or `python`) can resolve to the Anaconda base environment instead of the `care-beacon` env and fail outright.
 
 ```bash
-./run_tests.sh
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors
 ```
 
-## Test Script Options
-
-### Basic Usage
+Or via the Makefile from the repo root:
 
 ```bash
-# Run all tests (default)
-./run_tests.sh
-
-# Run with coverage report
-./run_tests.sh -c
-
-# Run in verbose mode (shows each test)
-./run_tests.sh -v
-
-# Quick run (minimal output)
-./run_tests.sh -q
-
-# Show help
-./run_tests.sh -h
+make test        # cd api && $(PY) -m pytest tests/ -v
+make test-cov    # same, with an HTML + terminal coverage report
 ```
 
-### Running Specific Tests
+`$(PY)` in the Makefile is already pinned to `/opt/anaconda3/envs/care-beacon/bin/python`.
+
+## Running Specific Tests
 
 ```bash
-# Run specific test file
-./run_tests.sh -f test_api.py
+cd api
+/opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/test_api.py -v
 
-# Run specific test function
-./run_tests.sh -t test_root_endpoint
+# Single test function
+/opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -k "test_root_endpoint"
 
-# Run tests matching a pattern
-./run_tests.sh -t "test_cache"
-```
-
-### Combined Options
-
-```bash
-# Run with coverage and verbose output
-./run_tests.sh -c -v
-
-# Run specific file with coverage
-./run_tests.sh -f test_api.py -c
-```
-
-## Manual Test Commands
-
-If you prefer to run tests manually:
-
-```bash
-# Run all tests
-docker exec care-beacon-api pytest /app/tests/
-
-# Run with coverage
-docker exec care-beacon-api pytest /app/tests/ --cov=src --cov-report=term-missing
-
-# Run specific test file
-docker exec care-beacon-api pytest /app/tests/test_api.py
-
-# Run in verbose mode
-docker exec care-beacon-api pytest /app/tests/ -v
-
-# Run quick mode (minimal output)
-docker exec care-beacon-api pytest /app/tests/ -q
+# Pattern match
+/opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -k "cache"
 ```
 
 ## Test Structure
 
+This reflects the actual files in `api/tests/` (test counts per file are not tracked here — see "Current Test Status" below for the only numbers that matter):
+
 ```
-tests/
+api/tests/
 ├── __init__.py
 ├── conftest.py              # Shared fixtures
-├── test_api.py              # API endpoint tests (17 tests)
-├── test_caching.py          # Redis cache tests (19 tests)
-├── test_chunking.py         # Document chunking tests (15 tests)
-├── test_config.py           # Configuration tests (6 tests)
-├── test_embeddings.py       # Embedding generation tests (11 tests)
-├── test_generation.py       # Answer generation tests (12 tests)
-├── test_parser.py           # Markdown parsing tests (15 tests)
-├── test_retrieval.py        # Retrieval engine tests (19 tests)
-└── test_vector_db.py        # Vector database tests (20 tests)
+├── test_api.py              # API endpoint tests
+├── test_caching.py          # Redis cache tests
+├── test_chunking.py         # Document chunking tests
+├── test_config.py           # Configuration tests
+├── test_embeddings.py       # Embedding generation tests
+├── test_generation.py       # Answer generation tests
+├── test_llm_client.py       # LLM client tests
+├── test_models.py           # Data model tests
+├── test_parser.py           # Markdown parsing tests
+├── test_retrieval.py        # Retrieval engine tests
+├── test_stats_store.py      # Redis-backed cost/usage counter tests
+└── test_vector_db.py        # Qdrant vector database tests
 ```
 
 ## Current Test Status
 
-✅ **134 tests passing**
-📊 **83% code coverage**
+**The suite is not fully green, and never has been.** Current baseline:
 
-## Coverage by Module
+**6 failed, 239 passed, 0 errors**
 
-| Module | Coverage |
-|--------|----------|
-| API Models | 100% |
-| Caching Models | 100% |
-| Chunking | 100% |
-| Generation Models | 100% |
-| Parser | 89% |
-| Storage | 90% |
-| Retrieval | 91-98% |
-| Answer Generator | 82% |
-| Config Loader | 83% |
-| Caching | 80% |
-| Embeddings | 66% |
-| LLM Client | 16% ⚠️ |
+The 6 failures are pre-existing and unrelated to the Vercel migration. Do not report this suite as passing, and do not cite older figures that may appear elsewhere in this repo's history (e.g. "134 tests passing," "83% coverage," "100% coverage") — none of those numbers are current. If this baseline changes (for better or worse), update this file rather than letting it go stale again.
+
+No per-module coverage percentages are recorded here, because they were not re-verified after the migration and would otherwise just be repeating unverified numbers. Run `make test-cov` locally if you need current figures.
 
 ## Running Tests in CI/CD
 
-For continuous integration, you can use:
-
-```yaml
-# GitHub Actions example
-- name: Run tests
-  run: |
-    docker-compose up -d
-    docker-compose exec -T api pytest tests/ --cov=src --cov-report=xml
-
-- name: Upload coverage
-  uses: codecov/codecov-action@v3
-```
+There is no CI test workflow in this repository at the time of writing (`.github/workflows/` contains only `keepalive.yml`, which pings `/api/health` — it does not run the test suite). If you add one, it needs to install `api/requirements.txt` + `api/requirements-dev.txt` and invoke pytest the same way as `make test`, not through Docker.
 
 ## Troubleshooting
 
-### Container Not Running
+### `pytest` not found / wrong Python picked up
 
-If you get an error that the container is not running:
+Use the full interpreter path rather than relying on `PATH`:
 
 ```bash
-# Start all services
-docker-compose up -d
-
-# Check service status
-docker-compose ps
-
-# Then run tests
-./run_tests.sh
+/opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ --version
 ```
 
-### Tests Failing After Code Changes
+### Tests failing after code changes
 
-If you've made code changes and tests are failing:
-
-1. Rebuild the Docker container:
+1. Re-install dependencies if `requirements.txt` or `requirements-dev.txt` changed:
    ```bash
-   docker-compose build api
-   docker-compose up -d api
+   cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pip install -r requirements.txt -r requirements-dev.txt
    ```
+2. Re-run: `make test` or the direct pytest command above.
 
-2. Run tests again:
-   ```bash
-   ./run_tests.sh -v
-   ```
-
-### Viewing Logs
+### Viewing full tracebacks
 
 ```bash
-# View test output with full traceback
-docker exec care-beacon-api pytest /app/tests/ -v --tb=long
-
-# View Docker logs
-docker-compose logs api
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -v --tb=long
 ```
 
 ## Writing New Tests
@@ -201,7 +124,7 @@ def test_basic_functionality(sample_data):
 
 1. **Use descriptive test names**: `test_<what>_<condition>_<expected_result>`
 2. **Use fixtures** for common test data
-3. **Mock external dependencies** (APIs, databases)
+3. **Mock external dependencies** (OpenAI, Qdrant, Redis)
 4. **Test both happy paths and error cases**
 5. **Keep tests isolated** - no dependencies between tests
 6. **Use parametrize** for testing multiple scenarios
@@ -225,4 +148,4 @@ def test_source_filtering(input, expected):
 
 - [Pytest Documentation](https://docs.pytest.org/)
 - [Pytest-Cov Documentation](https://pytest-cov.readthedocs.io/)
-- [Coverage Report](TEST_COVERAGE_REPORT.md)
+- `docs/TEST_COVERAGE_REPORT.md` — a historical snapshot; not re-verified against the current 6-failed/239-passed baseline
