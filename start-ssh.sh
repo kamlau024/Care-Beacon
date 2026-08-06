@@ -1,1 +1,0 @@
-ssh -v -i ~/.ssh/id_ed25519_render srv-d48qr6ali9vc739fg0jg@ssh.oregon.render.com

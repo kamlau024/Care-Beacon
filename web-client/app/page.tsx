@@ -11,11 +11,9 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchInterface } from "@/components/search-interface"
 import { StatsDashboard } from "@/components/stats-dashboard"
-import { HealthCheck } from "@/components/health-check"
-import { AdminControls } from "@/components/admin-controls"
 import type { QuestionResponse } from "@/lib/types"
 
-type Page = "search" | "stats" | "admin"
+type Page = "search" | "stats"
 
 export default function Home() {
   // Navigation state
@@ -59,15 +57,6 @@ export default function Home() {
                     Statistics
                   </button>
                 </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <button
-                    className={navigationMenuTriggerStyle()}
-                    onClick={() => setCurrentPage("admin")}
-                    data-active={currentPage === "admin"}
-                  >
-                    Admin
-                  </button>
-                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -100,13 +89,6 @@ export default function Home() {
           {currentPage === "stats" && (
             <div className="space-y-6">
               <StatsDashboard />
-            </div>
-          )}
-
-          {currentPage === "admin" && (
-            <div className="grid gap-6 lg:grid-cols-2">
-              <AdminControls />
-              <HealthCheck />
             </div>
           )}
         </div>

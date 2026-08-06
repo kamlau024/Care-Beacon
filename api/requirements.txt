@@ -1,0 +1,13 @@
+# Runtime dependencies for the Vercel `api` service.
+# Every package here must correspond to an import under api/src/.
+# Development, test, evaluation and ingestion-only packages live in
+# requirements-dev.txt and are never installed on Vercel.
+
+fastapi==0.115.0
+pydantic>=2.9.0
+openai>=1.109.1
+qdrant-client==1.12.1
+redis==5.0.1
+pyyaml==6.0.1
+loguru==0.7.2
+python-dotenv==1.0.1

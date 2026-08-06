@@ -110,17 +110,3 @@ export interface VectorDBStats {
     storage_mb: number
   }[]
 }
-
-export interface IngestionResponse {
-  message: string
-  status: "success" | "error"
-  elapsed_seconds: number
-  stats?: {
-    articles_processed?: string
-    chunks_created?: string
-    cost?: string
-  }
-  error?: string
-  timestamp: string
-  stdout?: string
-}

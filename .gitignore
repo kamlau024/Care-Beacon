@@ -170,3 +170,5 @@ backup/
 # Redis
 redis-data/
 evaluation/.env
+.vercel
+.env*

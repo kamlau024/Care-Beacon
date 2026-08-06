@@ -18,12 +18,14 @@ Practical examples and tutorials for using the Care-Beacon Medical RAG API.
 
 ### Your First Query
 
+There is no `docker-compose.yml` in this project anymore — local development runs both Vercel Services together via `vercel dev`. The examples below use `http://localhost:8000` as a placeholder base URL; substitute the actual port `vercel dev` assigns you locally, or `https://care-beacon-health.vercel.app` for the live deployment. Note the health check path is `/api/health`, not `/health`.
+
 ```bash
-# Start the API (if not already running)
-docker-compose up -d
+# Start both services locally
+vercel dev
 
 # Wait for services to be ready
-curl http://localhost:8000/health
+curl http://localhost:8000/api/health
 
 # Ask your first question
 curl -X POST "http://localhost:8000/api/v1/ask" \
@@ -324,7 +326,7 @@ class CareBeaconClient:
     def check_health(self) -> bool:
         """Check if API is healthy."""
         try:
-            url = f"{self.base_url}/health"
+            url = f"{self.base_url}/api/health"  # not /health -- that path no longer exists
             response = self.session.get(url, timeout=5)
             return response.status_code == 200
         except:
@@ -797,7 +799,7 @@ results = asyncio.run(ask_many_async(questions))
 - **Explore API Documentation**: [API.md](./API.md)
 - **Set up development environment**: [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md)
 - **Understand architecture**: [ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Try interactive docs**: http://localhost:8000/docs
+- **Try interactive docs**: `/docs` is only served when `api.debug: true` in `api/config/config.yaml` — disabled by default, including in production
 
 ---
 

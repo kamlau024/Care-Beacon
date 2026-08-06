@@ -1,42 +1,25 @@
-# Migrating to Qdrant Cloud for Production
+# Qdrant Cloud Setup
 
-This guide explains how to migrate from ChromaDB (local) to Qdrant Cloud (cloud-hosted) for production deployments on memory-constrained environments like Render.com free tier.
+**Current state: this migration is done, and there is no way back.** ChromaDB has been fully removed from the codebase — `api/src/storage/vector_db.py` is a factory that only ever constructs a `QdrantVectorDatabase` (`api/src/storage/qdrant_db.py`), and raises `ValueError` for any other provider. This guide originally described migrating from ChromaDB (local, on Render.com's free tier) to Qdrant Cloud; Render.com itself has since been removed too, in favor of Vercel. What follows covers what's still relevant: getting a Qdrant Cloud cluster and wiring its credentials into the current Vercel deployment.
 
 ## Why Qdrant Cloud?
 
-**Problem with ChromaDB on Render Free Tier (512MB RAM):**
-- ChromaDB stores the HNSW index and data locally
-- During queries, it loads portions of the index into memory
-- With a 1.3GB database, memory usage can exceed 400-500MB
-- This causes out-of-memory errors on Render's 512MB free tier
-
-**Qdrant Cloud Solution:**
-- Vector database runs as a separate cloud service
-- Your API service only makes HTTP requests (minimal memory footprint)
-- Free tier: 1GB storage, unlimited API calls
-- Better scalability and performance
-- Can keep LLM re-ranking enabled (improves accuracy)
+- The API service (`api`, on Vercel) makes lightweight HTTP requests to Qdrant rather than holding a vector index in its own process memory — important for a serverless function, which has no persistent local disk to keep an index on anyway.
+- Free tier: 1GB storage, unlimited API calls.
+- **Free-tier clusters get reclaimed after a period of inactivity.** `.github/workflows/keepalive.yml` runs daily and pings `GET /api/health` (which performs a real Qdrant collection read) specifically to keep the cluster alive. If you see the cluster has been reclaimed, check that this workflow is running and that the `SITE_URL` repository variable it depends on is set.
 
 ## Architecture
 
-### Before (ChromaDB Local):
-```
-[Render API - 512MB RAM]
-  ├─ FastAPI app (~50MB)
-  ├─ ChromaDB + HNSW index (~300-400MB) ❌ Causes OOM
-  ├─ Query processing (~100MB)
-  └─ Re-ranking (~50MB)
-  Total: ~500-600MB = Exceeds limit!
+```mermaid
+flowchart LR
+    subgraph Vercel["Vercel project: care-beacon-health"]
+        API["api Service<br/>FastAPI, serverless"]
+    end
+    API -->|HTTPS, QDRANT_URL + QDRANT_API_KEY| QDRANT[(Qdrant Cloud<br/>collection: care-beacon-medical)]
+    GHA["GitHub Actions<br/>keepalive.yml, daily"] -->|GET /api/health| API
 ```
 
-### After (Qdrant Cloud):
-```
-[Render API - 512MB RAM]          [Qdrant Cloud - 1GB Free]
-  ├─ FastAPI app (~50MB)     ──►  Vector Database
-  ├─ Query processing (~100MB)    (Separate service)
-  └─ Re-ranking (~50MB)
-  Total: ~200MB ✅              No RAM impact on API!
-```
+There is no local vector index shipped with the `api` function bundle, and no ChromaDB fallback.
 
 ---
 
@@ -52,9 +35,9 @@ This guide explains how to migrate from ChromaDB (local) to Qdrant Cloud (cloud-
 1. Log into Qdrant Cloud dashboard
 2. Click "+ Create Cluster"
 3. Configure your cluster:
-   - **Name**: `care-beacon-production`
+   - **Name**: `care-beacon-production` (or whatever you like — `api/config/config.yaml` sets the collection name separately, as `care-beacon-medical`)
    - **Tier**: **Free** (1GB storage)
-   - **Region**: Choose closest to your Render.com region (usually `us-east`)
+   - **Region**: pick whichever is closest to Vercel's serving region for this project
 4. Click "Create"
 5. Wait 1-2 minutes for cluster to provision
 
@@ -71,124 +54,76 @@ After cluster is created:
 5. Give it a name (e.g., "care-beacon-production")
 6. Copy the API key (you won't see it again!)
 
-## Step 4: Install Qdrant Client
+## Step 4: Qdrant Client Dependency
 
-The Qdrant client should already be in `requirements.txt`. If not:
+`qdrant-client==1.12.1` is already pinned in `api/requirements.txt` — one of the exactly 8 runtime dependencies shipped to Vercel. There's nothing to install separately unless you're setting up a fresh local environment:
 
 ```bash
-pip install qdrant-client==1.7.0
+cd api && python -m pip install -r requirements.txt
 ```
 
 ## Step 5: Configure Environment Variables
 
-### For Local Testing:
+The vector DB provider is not configurable via an env var — `api/src/storage/vector_db.py` only ever constructs a Qdrant client (it raises `ValueError` for anything else). You only need to supply credentials.
 
-Edit `.env` file:
+### Local Development
+
+Edit `.env` at the repo root (or `vercel env pull` if the project is linked):
 
 ```bash
-# Vector Database Configuration
-VECTOR_DB_PROVIDER=qdrant
-
-# Qdrant Cloud Configuration
 QDRANT_URL=https://your-cluster.qdrant.io
 QDRANT_API_KEY=your-api-key-here
 ```
 
-### For Render.com Production:
-
-1. Go to [Render Dashboard](https://dashboard.render.com)
-2. Select your `care-beacon-api` service
-3. Go to "Environment" tab
-4. Add these environment variables:
-
-| Key | Value |
-|-----|-------|
-| `VECTOR_DB_PROVIDER` | `qdrant` |
-| `QDRANT_URL` | `https://your-cluster.qdrant.io` |
-| `QDRANT_API_KEY` | `your-api-key-here` |
-
-5. Click "Save Changes"
-
-## Step 6: Migrate Your Data
-
-Run the migration script to transfer data from ChromaDB to Qdrant:
+### Vercel (Production)
 
 ```bash
-# Make sure your local ChromaDB database is at data/vector_db/
-# And Qdrant credentials are in .env
-
-python scripts/migrate_chromadb_to_qdrant.py
+vercel env add QDRANT_URL production
+vercel env add QDRANT_API_KEY production
 ```
 
-**Expected Output:**
+Or via the Vercel dashboard: Project Settings → Environment Variables. There is no Render dashboard step anymore — Render.com is not part of this deployment.
+
+## Step 6: Populate the Collection
+
+The one-time ChromaDB → Qdrant data migration already happened; there is no `migrate_chromadb_to_qdrant.py` script in this codebase to run again. Going forward, the only way to add or refresh content in a Qdrant Cloud collection is the local ingestion script:
+
+```bash
+make ingest   # runs `cd api && python scripts/ingest.py`
 ```
-======================================================================
-ChromaDB to Qdrant Migration
-======================================================================
 
-📦 Connecting to ChromaDB...
-📊 Fetching data from ChromaDB...
-   Found 50,245 chunks to migrate
-
-🚀 Connecting to Qdrant Cloud...
-   URL: https://your-cluster.qdrant.io
-   ✓ Connected
-
-📝 Creating Qdrant collection...
-   Vector size: 1536
-   ✓ Created collection: care-beacon-medical
-
-⬆️  Uploading data to Qdrant...
-   ✓ Uploaded 50,245/50,245 chunks
-
-✅ Verifying migration...
-   Qdrant collection size: 50,245 points
-   ✓ Migration successful!
-
-======================================================================
-Migration Complete!
-======================================================================
-```
+This is local-only by design — there used to be an on-demand ingestion API endpoint, but it spawned a subprocess, which serverless functions can't do, so it was removed.
 
 ## Step 7: Test Qdrant Locally
 
-Before deploying to production, test that Qdrant works:
-
 ```bash
-# Start your API locally with Qdrant configuration
-python scripts/start_api.py
+conda activate care-beacon
+vercel dev
 ```
 
-Then test a query:
+Then test a query against the actual endpoint (`POST /api/v1/ask`, not `/api/v1/query`):
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/query" \
+curl -X POST "http://localhost:3000/api/v1/ask" \
   -H "Content-Type: application/json" \
   -d '{"question": "What are the symptoms of breast cancer?"}'
 ```
 
-You should see results with citations!
+You should see an answer with citations. `GET /api/health` (real Qdrant read, 503 if unreachable) and `GET /api/v1/vector-db/stats` are also useful sanity checks.
 
-## Step 8: Deploy to Render
+## Step 8: Deploy
 
-Once you've confirmed Qdrant works locally:
+There is no Render.com dashboard step. Deployment is via Vercel:
 
-1. **Commit changes**:
-   ```bash
-   git add .
-   git commit -m "Migrate to Qdrant Cloud for production deployment"
-   git push origin main
-   ```
+```bash
+git add .
+git commit -m "..."
+git push origin main    # if the repo is connected to Vercel for auto-deploy
+# or:
+vercel --prod
+```
 
-2. **Render auto-deploys**:
-   - Render detects the push and starts deployment
-   - Wait 2-3 minutes for build to complete
-   - Check logs for any errors
-
-3. **Verify production**:
-   - Go to your Render app URL
-   - Try a query on the Search page
-   - Check that results are returned successfully
+Verify production with `curl https://care-beacon-health.vercel.app/api/health`.
 
 ---
 
@@ -197,91 +132,46 @@ Once you've confirmed Qdrant works locally:
 ### Error: "QDRANT_URL not configured"
 
 **Solution:**
-- Make sure you added `QDRANT_URL` and `QDRANT_API_KEY` to Render environment variables
-- Make sure `VECTOR_DB_PROVIDER=qdrant` is set
+- Make sure `QDRANT_URL` and `QDRANT_API_KEY` are set in Vercel's environment variables (`vercel env add ...` or the dashboard) and in your local `.env`
 - Redeploy if you just added the variables
 
-### Error: "Failed to connect to Qdrant"
+### Error: "Failed to connect to Qdrant" / `GET /api/health` returns 503
 
 **Solution:**
-- Verify your Qdrant cluster is running (check Qdrant Cloud dashboard)
+- Verify your Qdrant cluster is running (check Qdrant Cloud dashboard) — free-tier clusters get reclaimed after inactivity; confirm `.github/workflows/keepalive.yml` has been running (check the Actions tab and that the `SITE_URL` repo variable is set)
 - Check that the URL is correct and ends with `.qdrant.io`
 - Verify API key is correct (regenerate if needed)
-- Ensure no firewall/network issues
 
 ### Error: "Collection not found"
 
 **Solution:**
-- Run the migration script again: `python scripts/migrate_chromadb_to_qdrant.py`
-- Check Qdrant Cloud dashboard to see if collection exists
-- Collection name should be `care-beacon-medical`
+- Run `make ingest` to (re)populate the collection
+- Check Qdrant Cloud dashboard to see if the collection exists
+- Collection name should match `vector_db.collection_name` in `api/config/config.yaml` (`care-beacon-medical`)
 
 ### Slow Query Performance
 
 **Causes:**
-- Network latency between Render and Qdrant
+- Network latency between the Vercel function's region and Qdrant's
 - Free tier has rate limits
 
 **Solutions:**
-- Choose Qdrant region closest to your Render region
-- Enable caching (already enabled in config)
-- Consider upgrading to Qdrant paid tier if needed
-
-### Migration Failed
-
-**If migration stops midway:**
-1. Check error message
-2. Fix the issue (usually authentication or network)
-3. The migration script will overwrite the collection, so just run it again
-
----
-
-## Switching Back to ChromaDB (Local Development)
-
-To switch back to ChromaDB for local development:
-
-1. Edit `.env`:
-   ```bash
-   VECTOR_DB_PROVIDER=chromadb
-   ```
-
-2. Or in `config/config.yaml`:
-   ```yaml
-   vector_db:
-     provider: "chromadb"
-   ```
-
-3. Restart your API
+- Choose a Qdrant region close to where your Vercel function runs
+- Caching (Upstash Redis) is already enabled by default in config
+- Consider upgrading to Qdrant's paid tier if needed
 
 ---
 
 ## Cost Summary
 
-### Free Tier (What You're Using):
-| Service | Free Tier | Usage | Cost |
-|---------|-----------|-------|------|
-| Qdrant Cloud | 1GB storage | ~1.3GB compressed | $0 |
-| Qdrant API Calls | Unlimited | ~86K queries/day | $0 |
-| Render Free Tier | 512MB RAM | API only (no DB) | $0 |
-| **Total** | | | **$0/month** ✅ |
+This repository has no record of actual current billing for Qdrant Cloud, Upstash Redis, or Vercel. The free-tier figures below are what Qdrant Cloud publishes; they are not a verified statement of what this project is currently paying.
 
-### If You Outgrow Free Tier:
-| Upgrade | Cost | Benefit |
-|---------|------|---------|
-| Qdrant Standard | $25/mo | 4GB storage, better performance |
-| Render Starter | $7/mo | 2GB RAM (if you ever need it) |
+| Service | Free Tier | Notes |
+|---------|-----------|-------|
+| Qdrant Cloud | 1GB storage, unlimited API calls | Subject to idle-cluster reclamation — see the keepalive workflow above |
+| Qdrant Standard (paid) | ~$25/mo | 4GB storage, better performance, if you outgrow the free tier |
 
----
-
-## Benefits Summary
-
-✅ **No more out-of-memory errors** on Render free tier
-✅ **Keep LLM re-ranking enabled** (better accuracy)
-✅ **Better scalability** (database scales independently)
-✅ **Production-ready architecture**
-✅ **Free tier sufficient** for ~1.3GB database
-✅ **Faster deployment** (no database download needed)
-✅ **Better performance** than local ChromaDB on 512MB
+Render.com is no longer part of this deployment, so its pricing tiers are irrelevant here; Vercel's own pricing for the `api`/`web` Services isn't recorded in this repository either.
 
 ---
 

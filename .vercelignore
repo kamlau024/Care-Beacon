@@ -1,0 +1,41 @@
+# Files Vercel must not upload.
+#
+# `vercel deploy` uploads from the filesystem, NOT from git — .gitignore has no
+# effect here. Without this file the upload is ~26,000 files and fails outright
+# against Vercel's 15,000-file limit, almost all of it scraped_data/.
+
+# Source corpus: 25,673 files / 214 MB. Read only by the local ingestion
+# script, never by the deployed API.
+scraped_data/
+
+# Generated artifacts
+data/
+logs/
+output/
+
+# Python build and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# Local `vercel dev` scratch — contains an injected runtime and a venv
+api/.vercel/
+
+# Not needed to build or run either service. This replaces the `excludeFiles`
+# key, which is not valid inside a service definition.
+api/tests/
+api/scripts/
+evaluation/
+docs/
+notebooks/
+.superpowers/
+
+# Repo tooling
+.github/
+Makefile
+setup.sh
+fix_environment.sh
+install_dependencies.sh

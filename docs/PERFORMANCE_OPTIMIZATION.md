@@ -2,6 +2,8 @@
 
 This document provides a comprehensive guide to the performance monitoring and optimization capabilities of Care-Beacon.
 
+**Important caveat before reading further**: the `/api/v1/performance*` endpoints described in the next section **do not exist in the current API** (`api/src/api/main.py`). The only monitoring endpoints that actually exist today are `GET /api/health` (a real Qdrant collection read, 503 if unreachable) and `GET /api/v1/stats` (LLM usage, cache performance, retrieval cost — see `api/src/api/main.py`). The root-level `scripts/benchmark_performance.py` and `scripts/profile_rag_pipeline.py` referenced below also call a plain `/health` path and the nonexistent `/api/v1/performance*` endpoints — they predate the current API surface and would need updating before they'd work again. This section is left in place because the underlying performance concepts (percentiles, cache hit rate, cost tracking) are still useful, but treat the specific endpoints, scripts, and self-hosted infrastructure (dedicated Redis/ChromaDB boxes) described here as historical, not current.
+
 ## Table of Contents
 
 1. [Performance Monitoring System](#performance-monitoring-system)
@@ -313,9 +315,9 @@ Read Performance:
 
 #### 3. Vector Search Profiling (`--mode search`)
 
-Profiles ChromaDB vector similarity search.
+Profiles vector similarity search against the configured database — that's Qdrant Cloud now, not ChromaDB (this script predates the Qdrant migration, so double-check it actually targets `create_vector_database()` rather than an old ChromaDB import before trusting numbers from it).
 
-**Example Output:**
+**Example Output** (illustrative only — not re-measured against Qdrant Cloud):
 ```
 Vector Search (50 iterations):
 Query: 'What are the symptoms of breast cancer?'
@@ -335,8 +337,8 @@ Search Performance:
 - P95: < 800ms
 - If slower, consider:
   - Reducing `top_k` parameter
-  - Optimizing vector database configuration
-  - Adding more RAM
+  - Choosing a Qdrant Cloud region closer to where the `api` Vercel function runs
+  - Upgrading past the Qdrant free tier if you're hitting its limits
 
 ---
 
@@ -402,10 +404,7 @@ Search Performance:
   - Use metadata filters (cancer type, source) to narrow search
   - Reduce `top_k` from 5 to 3 if acceptable
 
-- **Optimize ChromaDB**:
-  - Ensure ChromaDB runs on SSD storage
-  - Allocate sufficient RAM (8GB+ for 10K documents)
-  - Use HNSW index settings for better performance
+- **Qdrant Cloud is a managed service** — there's no local disk/RAM to provision for it (that was a ChromaDB-era concern). The levers that remain are picking a Qdrant Cloud region close to where the `api` Vercel function runs, and the collection's own indexing configuration on the Qdrant Cloud side.
 
 **Expected Impact:** 20-30% reduction in search time
 
@@ -441,78 +440,46 @@ Search Performance:
 
 ### 1. Performance Monitoring
 
-**Regular Monitoring:**
+**Regular Monitoring** (using the endpoint that actually exists — `/api/v1/performance` does not):
 ```bash
-# Check performance metrics hourly
-curl http://localhost:8000/api/v1/performance | jq .
+curl https://care-beacon-health.vercel.app/api/v1/stats | jq .
 
-# Monitor cache hit rate
-curl http://localhost:8000/api/v1/performance | jq '.summary.cache.hit_rate'
+# Cache hit rate
+curl https://care-beacon-health.vercel.app/api/v1/stats | jq '.cache.hit_rate'
 
-# Check P95 response time
-curl http://localhost:8000/api/v1/performance | jq '.percentiles.p95'
+# LLM cost so far
+curl https://care-beacon-health.vercel.app/api/v1/stats | jq '.total_cost'
 ```
 
+There is no built-in P50/P90/P95/P99 latency tracking in the current API — `/api/v1/stats` reports cost, token usage, and cache performance, not response-time percentiles. If you need latency percentiles, you'd need to add that instrumentation (or rely on Vercel's own function-invocation metrics).
+
 **Set Up Alerts:**
-- Alert if P95 > 3000ms
-- Alert if error rate > 2%
-- Alert if cache hit rate < 20%
-- Alert if cost per request > $0.02
+- Alert if cache hit rate drops sharply
+- Alert if `/api/health` starts returning 503 (the daily keepalive workflow already does a minimal version of this)
+- Alert if cost per request/day exceeds budget
 
 ### 2. Load Testing
 
-**Before Production:**
-```bash
-# Run baseline benchmark
-python scripts/benchmark_performance.py --reset --iterations 10 --output baseline.json
-
-# After optimization
-python scripts/benchmark_performance.py --reset --iterations 10 --output optimized.json
-
-# Compare results
-python scripts/compare_benchmarks.py baseline.json optimized.json
-```
-
-**During Production:**
-- Run weekly benchmarks to catch performance regressions
-- Profile pipeline monthly to identify new bottlenecks
-- Monitor costs daily
+`scripts/benchmark_performance.py` and `scripts/profile_rag_pipeline.py` exist at the repo root but call stale paths (`/health` instead of `/api/health`, and the nonexistent `/api/v1/performance*`). Treat any numbers from them as unverified until they're updated to match the current API surface. There is no `scripts/compare_benchmarks.py` in this repository.
 
 ### 3. Cache Management
 
-**Warm Cache on Startup:**
-```python
-# scripts/warm_cache.py
-common_questions = [
-    "What are the symptoms of breast cancer?",
-    "How is chemotherapy administered?",
-    # ... more common questions
-]
-
-for question in common_questions:
-    requests.post(f"{API_URL}/api/v1/ask", json={"question": question})
-```
-
 **Clear Cache When Content Updates:**
 ```bash
-# After ingesting new articles
-curl -X POST http://localhost:8000/api/v1/cache/clear
+# After running `make ingest`. Requires the ADMIN_API_KEY header now --
+# this endpoint didn't used to need authentication.
+curl -X POST https://care-beacon-health.vercel.app/api/v1/cache/clear \
+  -H "X-API-Key: $ADMIN_API_KEY"
 ```
+
+There is no `scripts/warm_cache.py` in this repository — cache warming would have to hit `POST /api/v1/ask` directly for each question you want pre-cached.
 
 ### 4. Resource Allocation
 
-**Minimum Requirements:**
-- **CPU**: 2 cores
-- **RAM**: 8GB (4GB for API, 4GB for ChromaDB)
-- **Storage**: 10GB SSD
-- **Network**: Low latency to OpenAI API (< 50ms)
-
-**Recommended for Production:**
-- **CPU**: 4+ cores
-- **RAM**: 16GB (allows better caching and vector search)
-- **Storage**: 50GB SSD
-- **Redis**: Dedicated 2GB Redis instance
-- **ChromaDB**: Dedicated 8GB RAM
+There is no server to size — the `api` Service is a Vercel serverless function, Qdrant Cloud and Upstash Redis are both managed. The only capacity planning that applies:
+- Qdrant Cloud free tier: 1GB storage (upgrade if you outgrow it)
+- OpenAI API rate limits, independent of hosting
+- Vercel function limits (timeout, memory) — see Vercel's own documentation for current values, not repeated here since this repo doesn't pin a specific `functions` config in `vercel.json`
 
 ---
 
@@ -552,34 +519,31 @@ python scripts/profile_rag_pipeline.py --mode full --iterations 10
 
 ### Low Cache Hit Rate
 
-**Symptoms:** Cache hit rate < 20%
+**Symptoms:** Cache hit rate lower than expected
 
 **Diagnosis:**
 ```bash
-# Check recent requests
-curl http://localhost:8000/api/v1/performance/recent?limit=50 | jq '.requests[] | {question: .endpoint, cached: .cached}'
+curl https://care-beacon-health.vercel.app/api/v1/stats | jq '.cache'
 ```
 
+There's no `/api/v1/performance/recent` endpoint to inspect individual recent requests — `/api/v1/stats` only reports aggregates.
+
 **Solutions:**
-- Questions too varied: Implement semantic cache matching
-- Cache not warmed: Pre-populate cache with common questions
-- TTL too short: Increase cache TTL in config.yaml
+- Questions too varied: consider semantic cache matching (not currently implemented)
+- TTL too short: increase `cache.ttl_seconds` in `api/config/config.yaml`
 
 ### High Costs
 
-**Symptoms:** Cost per request > $0.02, monthly costs > budget
-
 **Diagnosis:**
 ```bash
-# Check token usage
-curl http://localhost:8000/api/v1/stats | jq '.llm'
+curl https://care-beacon-health.vercel.app/api/v1/stats | jq '.llm'
 ```
 
 **Solutions:**
 - Improve cache hit rate (biggest impact)
-- Reduce tokens per request (shorter prompts, fewer contexts)
-- Consider cheaper model (GPT-4o-mini is already cost-effective)
-- Implement rate limiting for abusive usage
+- Reduce tokens per request (shorter prompts, fewer contexts — see `api/config/prompts.yaml` / `prompts_active.yaml`)
+- Consider a cheaper model (`gpt-4o-mini` is already the budget choice; see `api/config/config.yaml`)
+- Rate limiting is already in place — the Vercel WAF rule caps `/api/v1/ask` at 60 requests/60s per IP
 
 ---
 

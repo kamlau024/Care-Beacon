@@ -1,0 +1,36 @@
+name: Qdrant keepalive
+
+# Qdrant Cloud reclaims idle free-tier clusters after roughly a week.
+# /api/health performs a real collection read, so a 200 here proves the
+# cluster is alive rather than merely that the function booted.
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /api/health
+        run: |
+          set -euo pipefail
+          if [ -z "${SITE_URL:-}" ]; then
+            echo "::error::Repository variable SITE_URL is not set."
+            exit 1
+          fi
+          echo "Pinging ${SITE_URL}/api/health"
+          status=$(curl --silent --show-error --location \
+                        --max-time 60 --retry 3 --retry-delay 10 \
+                        --write-out '%{http_code}' \
+                        --output /tmp/health.json \
+                        "${SITE_URL}/api/health")
+          echo "HTTP ${status}"
+          cat /tmp/health.json
+          echo
+          if [ "${status}" != "200" ]; then
+            echo "::error::Health check returned ${status}; Qdrant may be unreachable."
+            exit 1
+          fi
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}

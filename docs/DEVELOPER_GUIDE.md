@@ -19,83 +19,52 @@ Complete setup and development guide for the Care-Beacon Medical RAG System.
 
 ## Prerequisites
 
+Docker, Docker Compose, and a locally-run Redis server are **no longer part of this project**. `render.yaml`, both Dockerfiles, `docker-compose.yml`, and tunnel scripts (ngrok/cloudflared) have all been deleted. The cache is Upstash Redis via the Vercel Marketplace, and local development runs both Vercel Services together with `vercel dev`.
+
 ### Required Software
 
 | Software | Version | Purpose |
 |----------|---------|---------|
-| **Python** | 3.10.19 | Runtime environment |
-| **Conda** | Latest | Python environment management |
-| **Docker** | Latest | Containerization |
-| **Docker Compose** | Latest | Multi-container orchestration |
-| **Redis** | 7+ | Caching layer |
-| **Node.js** | 18+ | Frontend development (optional) |
+| **Python** | 3.10.19 (local conda env) | Local dev/test runtime — Vercel's `api` service itself runs Python 3.12 |
+| **Conda** | Latest | Python environment management (`care-beacon` env, see `setup.sh`) |
+| **Vercel CLI** | Latest | `vercel dev` runs both Services locally; also used to deploy |
+| **Node.js** | 18+ | Required for `web-client/` (Next.js 16) |
 
-### API Keys
+There is no local Redis or vector DB to install — both are managed cloud services (Upstash Redis, Qdrant Cloud) reachable via credentials in `.env`.
 
-You'll need the following API keys:
+### API Keys / Environment Variables
 
-- **OpenAI API Key** - For embeddings and LLM (required)
-- **Anthropic API Key** - For Claude LLM (optional)
-- **Redis Password** - For production deployments (optional)
+At minimum you need:
+
+- **`OPENAI_API_KEY`** — embeddings and LLM generation (required)
+- **`QDRANT_URL`** / **`QDRANT_API_KEY`** — Qdrant Cloud collection (required)
+- **`REDIS_URL`** — Upstash Redis, `rediss://` scheme, injected by the Vercel Marketplace integration when linked (required for caching/stats)
+- **`ADMIN_API_KEY`** — required to call the admin endpoints (`/api/v1/cache/clear`, `/api/v1/stats/reset`)
 
 ---
 
 ## Quick Start
 
-### Option 1: Docker (Recommended)
-
-The fastest way to get started:
+Local development runs both Vercel Services — `web` (Next.js) and `api` (FastAPI) — behind the same route table:
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-org/care-beacon.git
 cd care-beacon
 
-# Copy environment file
+# Copy environment file and fill in your keys
 cp .env.example .env
 
-# Edit .env and add your API keys
-nano .env
-
-# Start all services
-docker-compose up -d
-
-# Check logs
-docker-compose logs -f api
-
-# API will be available at http://localhost:8000
-```
-
-**Access Points**:
-- API: http://localhost:8000
-- Swagger Docs: http://localhost:8000/docs
-- Web UI: http://localhost:3000
-- Redis: localhost:6379
-
-### Option 2: Local Development
-
-For active development:
-
-```bash
-# Clone the repository
-git clone https://github.com/your-org/care-beacon.git
-cd care-beacon
-
-# Run setup script
+# Run setup script (creates the `care-beacon` conda env, Python 3.10.19)
 chmod +x setup.sh
 ./setup.sh
-
-# Activate environment
 conda activate care-beacon
 
-# Start Redis (in separate terminal)
-redis-server
-
-# Start API
-python scripts/start_api.py
-
-# API will be available at http://localhost:8000
+# Start both services via the Vercel route table
+vercel dev
 ```
+
+Everything is served from one origin (as it is in production) — the exact local port is whatever `vercel dev` assigns; there is no separate `docker-compose up` step and no standalone Redis server to start.
 
 ---
 
@@ -103,73 +72,45 @@ python scripts/start_api.py
 
 ### 1. Environment Setup
 
-**Create Conda Environment**:
+**Create Conda Environment** (matches the Makefile's `PY` path and CI's expectations):
 ```bash
-# Create environment with specific Python version
+# Create environment with the pinned local Python version
 conda create -n care-beacon python=3.10.19 -y
 
 # Activate environment
 conda activate care-beacon
 
-# Verify Python version (MUST be 3.10.19)
+# Verify Python version
 python --version
 # Output: Python 3.10.19
 ```
 
-**Why Python 3.10.19?**
-- ChromaDB database compatibility
-- Specific dependency requirements
-- Tested and validated configuration
+**Why Python 3.10.19 locally, but 3.12 on Vercel?** The 3.10.19 pin predates this migration and originally existed for ChromaDB compatibility, which no longer applies now that ChromaDB has been removed. The local conda environment has not been repinned since. Vercel's `api` service runs Python 3.12 regardless of what's used locally — the two are independent, and code needs to work under both. A bare `pytest` on a machine with multiple Python installs (e.g. Anaconda base + this env) can silently resolve to the wrong interpreter; always use the full path, `/opt/anaconda3/envs/care-beacon/bin/python`, as the Makefile does.
 
 ### 2. Install Dependencies
 
 ```bash
-# Install all dependencies
+cd api
+
+# Runtime dependencies only (exactly what ships to Vercel — 8 packages)
 python -m pip install -r requirements.txt
 
-# Or install specific groups
-python -m pip install -r requirements-dev.txt    # Development tools
-python -m pip install -r requirements-test.txt   # Testing tools
+# + development, test, evaluation, and ingestion dependencies (never shipped to Vercel)
+python -m pip install -r requirements-dev.txt
 ```
 
 ### 3. Configure Environment Variables
 
 ```bash
-# Copy example environment file
+# Copy example environment file (repo root)
 cp .env.example .env
 ```
 
-**Edit `.env`** with your configuration:
+Fill in `OPENAI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`, and — if you want caching locally — `REDIS_URL` pointing at an Upstash Redis instance (or link one via `vercel env pull` if the project is linked). There is no local Redis server and no `REDIS_HOST`/`REDIS_PORT` pair to configure; the client expects a single `rediss://` connection string.
 
-```bash
-# OpenAI Configuration (REQUIRED)
-OPENAI_API_KEY=sk-your-openai-api-key-here
+### 4. Data
 
-# Anthropic Configuration (OPTIONAL - for Claude)
-ANTHROPIC_API_KEY=sk-ant-your-anthropic-key-here
-
-# Redis Configuration
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=          # Leave empty for local development
-
-# Application Configuration
-LOG_LEVEL=INFO
-DEBUG=False
-```
-
-### 4. Initialize Data
-
-```bash
-# Create necessary directories
-mkdir -p data/vector_db data/cache
-
-# Run data ingestion (if you have markdown articles)
-python scripts/ingest_articles.py
-
-# Or use Docker volume mounts
-docker-compose up -d
-```
+There is no local vector DB or cache directory to initialize — both live in Qdrant Cloud and Upstash Redis. To populate Qdrant with content, see "Ingestion" below; there is nothing else to set up first.
 
 ---
 
@@ -177,124 +118,57 @@ docker-compose up -d
 
 ### Development Mode
 
-**Start API Server**:
+Run both Vercel Services together:
 ```bash
-# Activate environment
 conda activate care-beacon
-
-# Start with hot-reload
-uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
-
-# Or use the convenience script
-python scripts/start_api.py
+vercel dev
 ```
 
-**Start Web UI** (if available):
+This serves `web-client/` and the FastAPI `api/` service behind the same route table defined in `vercel.json`, matching production. There is no separate step to start Redis or a vector database — both are remote managed services reached via the credentials in `.env`.
+
+If you need to run just the FastAPI app directly (bypassing `vercel dev`), it's the standard ASGI app at `api/src/api/main.py`:
 ```bash
-cd web
-npm install
-npm run dev
+cd api
+uvicorn src.api.main:app --reload
 ```
 
-### Production Mode (Docker)
+### Ingestion (local only)
 
 ```bash
-# Build and start all services
-docker-compose up -d --build
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Stop and remove volumes
-docker-compose down -v
+make ingest   # runs `cd api && python scripts/ingest.py`
 ```
 
-### Service Management
-
-```bash
-# Start specific service
-docker-compose up -d api
-
-# Restart a service
-docker-compose restart api
-
-# View service status
-docker-compose ps
-
-# Execute command in container
-docker exec -it care-beacon-api bash
-
-# View real-time logs
-docker-compose logs -f api
-
-# Stop all services
-docker-compose stop
-```
+This is the only way to add or update content in Qdrant Cloud. There used to be an on-demand ingestion API endpoint; it was deleted because spawning a subprocess is impossible on Vercel's serverless functions.
 
 ---
 
 ## Testing
 
+See `docs/TESTING.md` for the full picture; this is the short version.
+
 ### Running Tests
 
-**All Tests**:
+Always run pytest via the pinned interpreter, from `api/`. A bare `pytest` command can resolve to the Anaconda base environment instead of `care-beacon` and fail outright.
+
 ```bash
-# Run full test suite
-pytest tests/
+# Full suite
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors
 
 # With coverage report
-pytest tests/ --cov=src --cov-report=term-missing
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ --cov=src --cov-report=term-missing
 
-# With coverage report (HTML)
-pytest tests/ --cov=src --cov-report=html
-open htmlcov/index.html
+# Specific file
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/test_api.py -v
+
+# By keyword
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -k "test_ask"
 ```
 
-**Specific Test Files**:
-```bash
-# Test API endpoints
-pytest tests/test_api.py -v
+`make test` and `make test-cov` wrap the same command using the Makefile's `PY` variable.
 
-# Test retrieval engine
-pytest tests/test_retrieval.py -v
+### Current Test Status
 
-# Test with keyword
-pytest tests/ -k "test_ask"
-```
-
-**Test in Docker**:
-```bash
-# Run tests in container
-docker exec care-beacon-api pytest tests/ -v
-
-# With coverage
-docker exec care-beacon-api pytest tests/ --cov=src --cov-report=term
-```
-
-### Current Test Coverage
-
-✅ **100% Code Coverage** - 1217 statements, 0 missing lines
-
-```
-Module                              Coverage
-------------------------------------------
-src/api/main.py                     100%
-src/api/models.py                   100%
-src/caching/redis_cache.py          100%
-src/config_loader.py                100%
-src/embeddings/chunking.py          100%
-src/embeddings/embedding_generator  100%
-src/generation/answer_generator     100%
-src/generation/llm_client.py        100%
-src/ingestion/markdown_parser.py    100%
-src/retrieval/retrieval_engine.py   100%
-src/storage/vector_db.py            100%
-------------------------------------------
-TOTAL                               100%
-```
+**The suite is not fully green, and never has been.** Current baseline: **6 failed, 239 passed, 0 errors**. The 6 failures are pre-existing and unrelated to the Vercel migration. Do not report the suite as passing, and do not cite older figures (e.g. "100% coverage" or "284 tests passing") — both are stale and false. If you fix or investigate one of the 6 failures, update this baseline (and `docs/TESTING.md`) rather than assuming it's still accurate.
 
 ### Writing Tests
 
@@ -331,13 +205,9 @@ def test_feature_error_handling():
     assert "error message" in str(exc_info.value)
 ```
 
-**Run New Tests**:
+**Run New Tests** (from `api/`, with the pinned interpreter):
 ```bash
-# Run only new test file
-pytest tests/test_my_feature.py -v
-
-# Run and update coverage
-pytest tests/test_my_feature.py --cov=src/my_module --cov-report=term-missing
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/test_my_feature.py -v
 ```
 
 ---
@@ -362,61 +232,27 @@ git push origin feature/my-feature
 
 ### 2. Code Style
 
-We use **Black** for formatting and **Ruff** for linting:
+We use **Black** for formatting and **flake8** + **mypy** for linting/type-checking (see `api/requirements-dev.txt` and the Makefile's `lint`/`format` targets):
 
 ```bash
+cd api
+
 # Format code
 black src/ tests/
 
-# Check formatting (without changes)
-black src/ tests/ --check
+# Check formatting without changes
+black --check src/ tests/
 
-# Lint code
-ruff check src/ tests/
-
-# Auto-fix linting issues
-ruff check src/ tests/ --fix
+# Lint and type-check
+flake8 src/ tests/
+mypy src/
 ```
 
-### 3. Pre-commit Hooks
+Or via the Makefile from the repo root: `make format`, `make format-check`, `make lint`.
 
-Install pre-commit hooks to automatically check code:
+There is no pre-commit configuration in this repository — this section previously described a `.pre-commit-config.yaml` and Ruff setup that don't exist here.
 
-```bash
-# Install pre-commit
-pip install pre-commit
-
-# Install hooks
-pre-commit install
-
-# Run manually on all files
-pre-commit run --all-files
-```
-
-**`.pre-commit-config.yaml`**:
-```yaml
-repos:
-  - repo: https://github.com/psf/black
-    rev: 23.12.0
-    hooks:
-      - id: black
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.9
-    hooks:
-      - id: ruff
-        args: [--fix]
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
-```
-
-### 4. Commit Messages
+### 3. Commit Messages
 
 Follow conventional commits format:
 
@@ -437,12 +273,12 @@ git commit -m "test: add tests for retrieval engine"
 git commit -m "refactor: modernize to Pydantic v2"
 ```
 
-### 5. Pull Request Process
+### 4. Pull Request Process
 
 1. **Create branch** from `main`
 2. **Make changes** with tests
-3. **Run tests** locally: `pytest tests/ --cov=src`
-4. **Format code**: `black src/ tests/`
+3. **Run tests** locally: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors` — confirm you haven't moved the 6-failed/239-passed baseline
+4. **Format code**: `make format` (or `cd api && black src/ tests/`)
 5. **Create PR** with clear description
 6. **Address review** comments
 7. **Merge** after approval
@@ -451,64 +287,50 @@ git commit -m "refactor: modernize to Pydantic v2"
 
 ## Architecture
 
+See `docs/ARCHITECTURE.md` for the full picture; this is the condensed version relevant to day-to-day development.
+
 ### High-Level Overview
 
-```
-┌─────────────────┐
-│   Web UI        │
-│  (Next.js)      │
-└────────┬────────┘
-         │
-         ↓
-┌─────────────────┐      ┌──────────────┐
-│   FastAPI       │─────→│    Redis     │
-│   REST API      │←─────│    Cache     │
-└────────┬────────┘      └──────────────┘
-         │
-         ↓
-┌─────────────────┐
-│  Answer Gen     │
-│  (RAG Logic)    │
-└────────┬────────┘
-         │
-    ┌────┴────┐
-    ↓         ↓
-┌─────────┐ ┌─────────┐
-│ Chroma  │ │ OpenAI  │
-│Vector DB│ │   API   │
-└─────────┘ └─────────┘
+```mermaid
+flowchart TD
+    WEB["web Service<br/>Next.js 16 (web-client/)"] -->|same origin, no CORS| API["api Service<br/>FastAPI (api/src/api/main.py)"]
+    API <--> REDIS[(Upstash Redis<br/>cache)]
+    API --> AG["Answer Generator<br/>api/src/generation/answer_generator.py"]
+    AG --> QDRANT[(Qdrant Cloud<br/>vector DB)]
+    AG --> OPENAI[OpenAI API]
 ```
 
 ### Component Responsibilities
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| **API Layer** | HTTP endpoints, request validation | `src/api/` |
-| **Answer Generator** | Orchestrate RAG pipeline | `src/generation/answer_generator.py` |
-| **Retrieval Engine** | Search vector database | `src/retrieval/retrieval_engine.py` |
-| **LLM Client** | Generate answers with citations | `src/generation/llm_client.py` |
-| **Vector DB** | Store and search embeddings | `src/storage/vector_db.py` |
-| **Cache Layer** | Cache query results | `src/caching/redis_cache.py` |
-| **Ingestion** | Parse and chunk articles | `src/ingestion/` |
-| **Embeddings** | Generate vector embeddings | `src/embeddings/` |
+| **API Layer** | HTTP endpoints, request validation, admin auth | `api/src/api/` |
+| **Answer Generator** | Orchestrate RAG pipeline | `api/src/generation/answer_generator.py` |
+| **Retrieval Engine** | Search vector database | `api/src/retrieval/retrieval_engine.py` |
+| **LLM Client** | Generate answers with citations | `api/src/generation/llm_client.py` |
+| **Vector DB** | Store and search embeddings (Qdrant Cloud, the only implementation) | `api/src/storage/qdrant_db.py` (factory: `api/src/storage/vector_db.py`) |
+| **Cache Layer** | Cache query results, cost/usage counters | `api/src/caching/redis_cache.py`, `api/src/caching/stats_store.py` |
+| **Ingestion** (local-only) | Parse and chunk articles | `api/src/ingestion/`, orchestrated by `api/scripts/ingest.py` |
+| **Embeddings** | Generate vector embeddings | `api/src/embeddings/` |
 
 ### Request Flow
 
 ```
-1. User submits question via API
+1. User submits question to POST /api/v1/ask
+   (Vercel WAF enforces 60 req/60s per IP ahead of this; no CORS check — same origin)
    ↓
-2. API validates request
+2. API validates request (Pydantic)
    ↓
-3. Check Redis cache
+3. Check Upstash Redis cache
    ├─ Cache hit → Return cached result
    ↓
 4. Generate query embedding (OpenAI)
    ↓
-5. Search vector database (Chroma)
+5. Search vector database (Qdrant Cloud)
    ↓
 6. Retrieve top-k relevant paragraphs
    ↓
-7. Generate answer with LLM (OpenAI/Claude)
+7. Generate answer with LLM (OpenAI gpt-4o-mini)
    ↓
 8. Format response with citations
    ↓
@@ -523,68 +345,50 @@ git commit -m "refactor: modernize to Pydantic v2"
 
 ### Config Files
 
-**`config/config.yaml`** - Main configuration:
+**`api/config/config.yaml`** is the real file — the excerpt below matches it (see the file itself for the full set of options, including retrieval tuning, cost-tracking rates, and medical-safety settings):
+
 ```yaml
-# API Configuration
-api:
-  host: "0.0.0.0"
-  port: 8000
-  cors_origins:
-    - "http://localhost:3000"
-  rate_limit:
-    enabled: true
-    requests_per_minute: 60
+vector_db:
+  provider: "qdrant"  # Qdrant Cloud -- the only supported provider
+  collection_name: "care-beacon-medical"
+  distance_metric: "cosine"
+  # Credentials come from the QDRANT_URL / QDRANT_API_KEY environment variables
 
-# LLM Configuration
 llm:
-  provider: "openai"        # or "anthropic"
-  model: "gpt-4o-mini"      # or "claude-3-5-sonnet-20241022"
+  provider: "openai"
+  model: "gpt-4o-mini"
+  max_tokens: 1000
   temperature: 0.1
-  max_tokens: 2000
 
-# Embeddings Configuration
 embeddings:
   provider: "openai"
   model: "text-embedding-3-small"
   dimensions: 1536
-  batch_size: 100
 
-# Vector Database Configuration
-vector_db:
-  provider: "chroma"
-  collection_name: "care-beacon-medical"
-  distance_metric: "cosine"
-  persist_directory: "data/vector_db"
-
-# Cache Configuration
 cache:
   enabled: true
-  host: "localhost"
-  port: 6379
-  db: 0
-  ttl: 86400              # 24 hours in seconds
+  redis_host: "localhost"   # fallback only -- see below
+  redis_port: 6379          # fallback only -- see below
+  ttl_seconds: 3600
 
-# Retrieval Configuration
-retrieval:
-  top_k: 10
-  min_similarity_threshold: 0.0
-  rerank_results: false
-
-# Logging Configuration
-logging:
-  level: "INFO"           # DEBUG, INFO, WARNING, ERROR
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
 ```
+
+There is no `cors_origins` or `rate_limit` block in this config — CORS doesn't apply (same-origin), and rate limiting is a Vercel WAF rule, not something the application reads from config.
 
 ### Environment Variables
 
-Environment variables override config file values:
+`api/src/caching/redis_cache.py` checks `REDIS_URL` first, before falling back to the `redis_host`/`redis_port`/`redis_db`/`redis_password` config keys above. In production, Vercel's Upstash Redis Marketplace integration injects `REDIS_URL` (`rediss://` scheme) — the `redis_host`/`redis_port` fallback exists for older/local setups, not for the live deployment.
 
 ```bash
-# Override specific settings
-export LOG_LEVEL=DEBUG
 export OPENAI_API_KEY=sk-...
-export REDIS_HOST=redis.example.com
+export QDRANT_URL=https://xyz.qdrant.io
+export QDRANT_API_KEY=...
+export REDIS_URL=rediss://...          # takes priority over redis_host/redis_port
+export ADMIN_API_KEY=...               # required for the two admin endpoints
 ```
 
 ### Loading Configuration
@@ -592,17 +396,12 @@ export REDIS_HOST=redis.example.com
 ```python
 from src.config_loader import get_config
 
-# Get configuration singleton
 config = get_config()
 
-# Access values with dot notation
-api_port = config.get("api.port")              # 8000
-llm_model = config.get("llm.model")            # "gpt-4o-mini"
-cache_ttl = config.get("cache.ttl", 3600)      # With default value
+llm_model = config.get("llm.model")              # "gpt-4o-mini"
+cache_ttl = config.get("cache.ttl_seconds", 3600)
 
-# Get API keys
 openai_key = config.get_api_key("openai")
-anthropic_key = config.get_api_key("anthropic")
 ```
 
 ---
@@ -611,18 +410,14 @@ anthropic_key = config.get_api_key("anthropic")
 
 ### Common Issues
 
-#### 1. Python Version Mismatch
+#### 1. `pytest` runs but behaves unexpectedly, or ModuleNotFoundError
 
-**Problem**: `ModuleNotFoundError` or database errors
-```
-Error: incompatible with SQLite version 3.35.0
-```
+**Problem**: a bare `pytest` (or `python`) resolves to the Anaconda base environment instead of `care-beacon`, silently using the wrong Python (3.10.19 is expected locally).
 
-**Solution**: Ensure Python 3.10.19
+**Solution**: always use the full interpreter path, as the Makefile does:
 ```bash
-python --version  # Must show 3.10.19
-conda create -n care-beacon python=3.10.19 -y
-conda activate care-beacon
+/opt/anaconda3/envs/care-beacon/bin/python --version   # Must show 3.10.19
+cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors
 ```
 
 #### 2. Redis Connection Error
@@ -632,16 +427,9 @@ conda activate care-beacon
 redis.exceptions.ConnectionError: Error connecting to Redis
 ```
 
-**Solution**: Start Redis server
+**Solution**: There is no local Redis server to start — the cache is Upstash Redis via the Vercel Marketplace. Check that `REDIS_URL` is set (`rediss://...`) in `.env`, or pull it from the linked Vercel project:
 ```bash
-# macOS/Linux
-redis-server
-
-# Docker
-docker-compose up -d redis
-
-# Check Redis is running
-redis-cli ping  # Should return "PONG"
+vercel env pull
 ```
 
 #### 3. OpenAI API Key Error
@@ -653,85 +441,45 @@ openai.error.AuthenticationError: Invalid API key
 
 **Solution**: Check API key configuration
 ```bash
-# Verify .env file has correct key
 cat .env | grep OPENAI_API_KEY
-
-# Test API key
-python -c "import openai; openai.api_key='your-key'; print('Key valid')"
 ```
 
-#### 4. Port Already in Use
+#### 4. Qdrant connection / health check failing
 
-**Problem**: Can't start API on port 8000
-```
-OSError: [Errno 48] Address already in use
-```
+**Problem**: `/api/health` returns 503, or requests fail to reach Qdrant.
 
-**Solution**: Kill process or use different port
-```bash
-# Find process using port 8000
-lsof -ti:8000
+**Solution**: Confirm `QDRANT_URL` and `QDRANT_API_KEY` are set. On the free tier, an idle Qdrant Cloud cluster can be reclaimed — the daily `.github/workflows/keepalive.yml` ping exists specifically to prevent that in production. Locally, check the Qdrant Cloud console directly.
 
-# Kill the process
-kill $(lsof -ti:8000)
+#### 5. Admin endpoint returns 401/403
 
-# Or use different port
-uvicorn src.api.main:app --port 8001
-```
+**Problem**: `POST /api/v1/cache/clear` or `POST /api/v1/stats/reset` rejects the request.
 
-#### 5. Docker Volume Permission Issues
-
-**Problem**: Permission denied errors in Docker
-```
-PermissionError: [Errno 13] Permission denied: 'data/vector_db'
-```
-
-**Solution**: Fix permissions
-```bash
-# Fix local directory permissions
-chmod -R 755 data/
-
-# Or run container as your user
-docker-compose run --user $(id -u):$(id -g) api bash
-```
+**Solution**: Both require an `X-API-Key` header matching the `ADMIN_API_KEY` environment variable.
 
 ### Debug Mode
 
-Enable debug logging for troubleshooting:
-
-```python
-# In config/config.yaml
-logging:
-  level: "DEBUG"
-
-# Or via environment variable
+```bash
 export LOG_LEVEL=DEBUG
 ```
 
-View detailed logs:
-```bash
-# Docker logs
-docker-compose logs -f api
-
-# Local logs (if using file logging)
-tail -f logs/care-beacon.log
+or in `api/config/config.yaml`:
+```yaml
+logging:
+  level: "DEBUG"
 ```
 
 ### Health Checks
 
 ```bash
-# Check API health
-curl http://localhost:8000/health
+# Check API health (note the /api prefix -- plain /health no longer exists)
+curl https://care-beacon-health.vercel.app/api/health
 
-# Check Redis
-docker exec care-beacon-redis redis-cli ping
+# Locally, via vercel dev
+curl http://localhost:3000/api/health   # exact local port depends on what vercel dev assigns
 
-# Check Chroma database size
-docker exec care-beacon-api python -c "
-from src.storage.vector_db import VectorDatabase
-db = VectorDatabase()
-print(f'Total chunks: {db.get_stats()[\"total_chunks\"]}')
-"
+# Check vector DB stats through the API rather than a direct DB file inspection --
+# there is no local Chroma/SQLite file anymore
+curl https://care-beacon-health.vercel.app/api/v1/vector-db/stats
 ```
 
 ---
@@ -755,18 +503,17 @@ print(f'Total chunks: {db.get_stats()[\"total_chunks\"]}')
 ### Development Guidelines
 
 1. **Write tests** for new features
-2. **Maintain 100% coverage** - All new code must be tested
-3. **Follow code style** - Use Black and Ruff
+2. **Don't regress the test baseline** — the suite is not fully green (6 failed, 239 passed, 0 errors as of this writing); don't introduce new failures, and don't claim "100% coverage" anywhere in code or docs
+3. **Follow code style** - Black for formatting, flake8 + mypy for linting/type-checking
 4. **Update documentation** - Keep docs in sync with code
 5. **Add type hints** - Use Python type annotations
 6. **Write docstrings** - Document all public functions/classes
 
 ### Code Review Checklist
 
-- [ ] Tests added and passing
-- [ ] Code coverage at 100%
+- [ ] Tests added and passing; existing baseline (6 failed, 239 passed) not made worse
 - [ ] Code formatted with Black
-- [ ] Linting passes (Ruff)
+- [ ] Linting passes (flake8, mypy)
 - [ ] Documentation updated
 - [ ] Type hints added
 - [ ] Commit messages follow convention
@@ -775,41 +522,32 @@ print(f'Total chunks: {db.get_stats()[\"total_chunks\"]}')
 ### Running Quality Checks
 
 ```bash
-# Format code
+cd api
 black src/ tests/
-
-# Lint code
-ruff check src/ tests/ --fix
-
-# Run tests
-pytest tests/ --cov=src --cov-report=term-missing
-
-# Type checking (optional)
+flake8 src/ tests/
 mypy src/
+/opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ --cov=src --cov-report=term-missing
 
-# All checks
-make check  # If Makefile exists
+# Or, from the repo root:
+make format lint test
 ```
 
 ---
 
 ## Additional Resources
 
-- **API Documentation**: [docs/API.md](./API.md)
 - **Architecture**: [docs/ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Project Plan**: [Claude.md](../Claude.md)
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Testing**: [docs/TESTING.md](./TESTING.md)
+- **Qdrant Cloud setup**: [docs/QDRANT_CLOUD_SETUP.md](./QDRANT_CLOUD_SETUP.md)
+- **Project reference doc**: [../CLAUDE.md](../CLAUDE.md)
+- **API docs (Swagger/ReDoc)**: only served when `api.debug: true` in `api/config/config.yaml` (`docs_url`/`redoc_url` are `None` otherwise) — disabled by default, including in production
 
 ---
 
 ## Contact & Support
 
 - **Issues**: [GitHub Issues](https://github.com/your-org/care-beacon/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-org/care-beacon/discussions)
-- **Email**: dev@care-beacon.example.com
 
 ---
 
-**Last Updated**: 2024-01-15
-**Version**: 2.0.0
+**Last Updated**: 2026-08-05

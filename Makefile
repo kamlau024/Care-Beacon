@@ -1,5 +1,11 @@
 # Care-Beacon Development Makefile
-.PHONY: help setup docker-up docker-down docker-logs docker-clean test lint format
+#
+# Layout: two Vercel Services, `api/` (FastAPI, Python) and `web-client/`
+# (Next.js). Local dev runs both behind the same route table via `vercel dev`.
+
+PY := /opt/anaconda3/envs/care-beacon/bin/python
+
+.PHONY: help setup env-activate test test-cov lint format dev ingest clean-cache clean-logs clean-all check
 
 help:  ## Show this help message
 	@echo "Care-Beacon Development Commands:"
@@ -13,74 +19,30 @@ setup:  ## Run initial setup (create conda env and install dependencies)
 env-activate:  ## Show command to activate conda environment
 	@echo "Run: conda activate care-beacon"
 
-# Docker Infrastructure
-docker-up:  ## Start Docker infrastructure (Redis)
-	docker-compose up -d
-	@echo "✅ Infrastructure started!"
-	@echo "Redis: localhost:6379"
-	@echo "Redis Commander (debug UI): http://localhost:8081"
-
-docker-up-debug:  ## Start Docker infrastructure with debug tools (Redis Commander)
-	docker-compose --profile debug up -d
-	@echo "✅ Infrastructure started with debug tools!"
-	@echo "Redis: localhost:6379"
-	@echo "Redis Commander UI: http://localhost:8081"
-
-docker-down:  ## Stop Docker infrastructure
-	docker-compose down
-	@echo "✅ Infrastructure stopped"
-
-docker-logs:  ## View Docker logs
-	docker-compose logs -f
-
-docker-status:  ## Check Docker container status
-	docker-compose ps
-
-docker-clean:  ## Stop and remove all containers, volumes, and networks
-	docker-compose down -v
-	@echo "✅ All containers, volumes, and networks removed"
-
-docker-restart:  ## Restart Docker infrastructure
-	docker-compose restart
-
 # Testing
 test:  ## Run all tests
-	pytest -v
+	cd api && $(PY) -m pytest tests/ -v
 
 test-cov:  ## Run tests with coverage report
-	pytest --cov=src --cov-report=html --cov-report=term
-	@echo "Coverage report: htmlcov/index.html"
-
-test-config:  ## Run configuration tests only
-	pytest tests/test_config.py -v
-
-test-parser:  ## Run parser tests only (when available)
-	pytest tests/test_parser.py -v
+	cd api && $(PY) -m pytest tests/ --cov=src --cov-report=html --cov-report=term
 
 # Code Quality
 lint:  ## Run code linting
-	flake8 src/ tests/
-	mypy src/
+	cd api && flake8 src/ tests/ && mypy src/
 
 format:  ## Format code with black
-	black src/ tests/
+	cd api && black src/ tests/
 
 format-check:  ## Check code formatting without making changes
-	black --check src/ tests/
+	cd api && black --check src/ tests/
 
-# Data Ingestion (Phase 1)
-ingest:  ## Run article ingestion pipeline (coming soon)
-	@echo "Not implemented yet - Checkpoint 1.6"
-	# python scripts/ingest_all_articles.py
+# Local Development
+dev:  ## Run both services locally via the Vercel route table
+	vercel dev
 
-# API Server (Phase 2)
-api-dev:  ## Start API server in development mode (coming soon)
-	@echo "Not implemented yet - Phase 2"
-	# uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
-
-api-prod:  ## Start API server in production mode (coming soon)
-	@echo "Not implemented yet - Phase 2"
-	# uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --workers 4
+# Data Ingestion (local only)
+ingest:  ## Run article ingestion (local only)
+	cd api && $(PY) scripts/ingest.py
 
 # Utilities
 clean-cache:  ## Clear Python cache files
@@ -91,22 +53,11 @@ clean-cache:  ## Clear Python cache files
 
 clean-logs:  ## Clear log files
 	rm -rf logs/*.log
-	@echo "✅ Log files cleared"
+	@echo "Log files cleared"
 
-clean-all: clean-cache clean-logs docker-clean  ## Clean everything
-	@echo "✅ All cleaned"
-
-# Development Workflow
-dev-start: docker-up  ## Start development environment
-	@echo ""
-	@echo "Development environment ready!"
-	@echo "Next steps:"
-	@echo "  1. conda activate care-beacon"
-	@echo "  2. Start coding!"
-
-dev-stop: docker-down  ## Stop development environment
-	@echo "✅ Development environment stopped"
+clean-all: clean-cache clean-logs  ## Clean everything
+	@echo "All cleaned"
 
 # Quick checks
 check: test lint  ## Run tests and linting
-	@echo "✅ All checks passed!"
+	@echo "All checks passed!"
