@@ -274,19 +274,34 @@ Main configuration is in `api/config/config.yaml`. Key settings:
 ## Keepalive
 
 Qdrant Cloud reclaims idle free-tier clusters after roughly a week of inactivity.
-`.github/workflows/keepalive.yml` issues a daily request to `/api/health`, which
-performs a real Qdrant collection read — a 200 proves the cluster answered.
+A Vercel cron job issues a daily GET to `/api/health`, which performs a real Qdrant
+collection read — so a 200 proves the cluster answered, not merely that the function
+booted.
 
-**Setup:** add a repository variable `SITE_URL` (Settings → Secrets and variables →
-Actions → Variables) set to the deployed origin, `https://care-beacon-health.vercel.app`.
+It is configured in `vercel.json` and needs no secrets, no repository variables and
+no external service:
 
-**Two things to know:**
+```json
+"crons": [{ "path": "/api/health", "schedule": "0 9 * * *" }]
+```
 
-1. GitHub disables scheduled workflows in a repository with no commits for 60 days.
-   If the repo goes quiet, the pings stop silently. The workflow also declares
-   `workflow_dispatch`, so it can be run by hand from the Actions tab.
-2. A failed ping shows up as a red run in the Actions tab. Check there first if the
-   vector database appears empty.
+**Three things to know:**
+
+1. **The schedule is UTC**, always. `0 9 * * *` is 09:00 UTC.
+2. **Hobby runs cron once per day, with up to 59 minutes of jitter.** That is ample
+   here — Qdrant's idle threshold is about a week, so a daily ping has six days of
+   margin. Per-minute scheduling would require Pro.
+3. **Cron requests are identifiable**: Vercel sends them with the user agent
+   `vercel-cron/1.0` and an `x-vercel-cron-schedule` header.
+
+Check runs under Project → Cron Jobs in the Vercel dashboard, or with
+`vercel crons ls`.
+
+A GitHub Actions workflow was used for this originally. It was replaced because
+this repository is private, so Actions runs consume the account's minutes quota —
+and when that quota is exhausted, jobs sit queued forever with no runner assigned
+and no error. A keepalive whose own failure mode is silent is worse than none.
+
 
 ## Data Source
 
