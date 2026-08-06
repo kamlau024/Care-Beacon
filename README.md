@@ -1,48 +1,45 @@
 # Care-Beacon Medical RAG System
 
-A production-ready Retrieval-Augmented Generation (RAG) system for answering patient questions about cancer using medical articles from BC Cancer and Canadian Cancer Society. Provides accurate, cited answers with paragraph-level references.
+A production Retrieval-Augmented Generation (RAG) system for answering patient questions about cancer using medical articles from BC Cancer, Canadian Cancer Society, and Cleveland Clinic. Provides accurate, cited answers with paragraph-level references.
 
-## 🎉 Project Status
+## Project Status
 
-**Current Version**: 2.0.0 - **Production Ready** ✅
+**Current Version**: 3.0.0 - **Live in Production** (Vercel)
 
-### ✅ Fully Completed
+### Architecture
 
-- **Phase 1: Foundation** - ✅ Complete
-  - Project structure setup
-  - Configuration management
-  - Data models and storage layer
+- **Phase 1: Foundation** - Complete
   - Markdown parser with YAML frontmatter
   - Document chunking and embeddings
+  - Data models and storage layer
 
-- **Phase 2: Core RAG System** - ✅ Complete
-  - Vector database (ChromaDB) integration
+- **Phase 2: Core RAG System** - Complete
+  - Vector database integration (Qdrant Cloud)
   - Retrieval engine with semantic search
   - LLM integration (OpenAI GPT-4o-mini)
   - Answer generation with citations
-  - Redis caching layer
+  - Redis caching layer (Upstash, via Vercel Marketplace)
 
-- **Phase 3: Production Hardening** - ✅ Complete
-  - **100% test coverage** (1217 statements, 253 tests)
+- **Phase 3: Production Deployment** - Complete
+  - Deployed on Vercel as two Services (`api` + `web`) behind one route table
   - FastAPI REST API with OpenAPI docs
-  - Docker containerization
-  - Source filtering (BC Cancer / Canadian Cancer Society)
-  - Rate limiting and error handling
-  - Modern FastAPI lifespan pattern
-  - Pydantic v2 compliant
-  - Comprehensive documentation
+  - Source filtering (BC Cancer / Canadian Cancer Society / Cleveland Clinic)
+  - Rate limiting via Vercel WAF, error handling
+  - Modern FastAPI lifespan pattern, Pydantic v2 compliant
 
-### 📊 Quality Metrics
+### Quality Metrics
 
 | Metric | Status |
 |--------|--------|
-| **Test Coverage** | 100% (1359/1359 statements) ✅ |
-| **Total Tests** | 284 passing ✅ |
-| **Code Quality** | Zero deprecation warnings ✅ |
-| **API Documentation** | Comprehensive with examples ✅ |
-| **Performance** | Real-time monitoring, < 2s average response time ✅ |
+| **Test Suite** | 239 passing, 6 pre-existing failures (see `api/tests/`) |
+| **API Documentation** | Comprehensive with examples |
+| **Performance** | Real-time monitoring, < 2s average response time |
 
-## 📚 Documentation
+The 6 failing tests predate this deployment migration and are tracked separately;
+none touch the RAG pipeline's production behavior. Run `make test` for the current
+state on your machine.
+
+## Documentation
 
 Comprehensive documentation is available:
 
@@ -51,193 +48,112 @@ Comprehensive documentation is available:
 - **[Usage Examples](docs/USAGE_EXAMPLES.md)** - Tutorials and integration patterns
 - **[Performance Optimization](docs/PERFORMANCE_OPTIMIZATION.md)** - Monitoring, benchmarking, and optimization guide
 - **[Architecture](docs/ARCHITECTURE.md)** - System design and component overview
-- **[Interactive API Docs](http://localhost:8000/docs)** - Swagger UI (when running)
+- **[Interactive API Docs](https://care-beacon-health.vercel.app/api/docs)** - Swagger UI
 - **[Project Plan](Claude.md)** - Original requirements and design decisions
 
-## ✨ Features
+## Features
 
 - **Intelligent Question Answering** - AI-powered responses with paragraph-level citations
-- **Multi-Source Support** - BC Cancer and Canadian Cancer Society content
+- **Multi-Source Support** - BC Cancer, Canadian Cancer Society, and Cleveland Clinic content
 - **Source Filtering** - Filter by cancer type or information source
-- **Smart Caching** - 30-50% cost reduction via Redis caching
-- **Vector Search** - Semantic similarity using OpenAI embeddings and ChromaDB
+- **Smart Caching** - Redis (Upstash) caching to reduce repeated LLM/embedding costs
+- **Vector Search** - Semantic similarity using OpenAI embeddings and Qdrant Cloud
 - **Citation Transparency** - Every claim linked to original source paragraph
 - **Performance Monitoring** - Real-time metrics, benchmarking, and profiling tools
 - **REST API** - Modern FastAPI with OpenAPI documentation
-- **Docker Ready** - Full containerization for easy deployment
-- **100% Test Coverage** - Comprehensive test suite with 284 tests
+- **Vercel Native** - Two Services (`api` + `web`) behind one route table, one domain
 
 ## Project Structure
 
 ```
 care-beacon/
-├── src/                      # Source code
-│   ├── ingestion/           # Article parsing and ingestion
-│   ├── embeddings/          # Embedding generation and chunking
-│   ├── storage/             # Vector DB and cache
-│   ├── retrieval/           # Search and retrieval
-│   ├── generation/          # LLM integration and prompts
-│   └── api/                 # REST API endpoints
-├── tests/                    # Test suite
-├── scraped_data/            # Source markdown articles (94 files)
-├── config/                  # Configuration files
-│   ├── config.yaml         # Main configuration
-│   └── prompts.yaml        # LLM prompts (coming soon)
-├── data/                    # Generated data
-│   ├── vector_db/          # Chroma database
-│   └── cache/              # Redis cache
-├── evaluation/             # Test questions and evaluation
-├── notebooks/              # Jupyter notebooks for exploration
-└── docs/                   # Documentation
+├── api/                      # FastAPI service (Vercel Service: api)
+│   ├── src/
+│   │   ├── ingestion/       # Article parsing and ingestion
+│   │   ├── embeddings/      # Embedding generation and chunking
+│   │   ├── storage/         # Vector DB (Qdrant) and cache (Redis)
+│   │   ├── retrieval/       # Search and retrieval
+│   │   ├── generation/      # LLM integration and prompts
+│   │   ├── caching/         # Query result caching
+│   │   └── api/             # REST API endpoints (FastAPI app)
+│   ├── tests/                # Test suite
+│   ├── scripts/              # Ingestion entrypoint (local only)
+│   ├── config/                # config.yaml, prompts.yaml
+│   └── requirements.txt       # Runtime deps only (8 packages)
+├── web-client/                # Next.js frontend (Vercel Service: web)
+├── scraped_data/               # Source markdown articles (never bundled into api/)
+├── evaluation/                 # Test questions and evaluation
+├── docs/                       # Documentation
+├── vercel.json                  # Service routing table
+└── .vercelignore                 # Filesystem upload exclusions (load-bearing, see Deployment)
 ```
 
 ## Installation
 
 ### Prerequisites
 
-- **Python 3.10.19** (via Conda - see below)
-- Conda (Anaconda or Miniconda)
-- Redis (for caching)
-- OpenAI API key (for embeddings)
-- Anthropic API key (optional, for Claude LLM)
+- **Python 3.10.19** (via Conda) - for local API development and tests; Vercel itself runs the `api` service on Python 3.12
+- Node.js - for `web-client` (Next.js 16)
+- [Vercel CLI](https://vercel.com/docs/cli) - for `vercel dev` and deployments
+- OpenAI API key (embeddings + LLM)
+- Qdrant Cloud instance (vector database)
 
-**Important**: This project requires **Python 3.10.19** specifically. Using a different version may cause database compatibility issues.
+### Step 1: Clone and Set Up the Python Environment
 
-### Step 1: Clone and Setup Environment
-
-**Option A: Automated Setup (Recommended)**
 ```bash
-# Navigate to project directory
 cd /Users/kamlau/Projects/Care-Beacon
 
-# Run setup script
-./setup.sh
-```
-
-**Option B: Manual Setup**
-```bash
-# Navigate to project directory
-cd /Users/kamlau/Projects/Care-Beacon
-
-# Create conda environment with Python 3.10.19
 conda create -n care-beacon python=3.10.19 -y
-
-# Activate conda environment
 conda activate care-beacon
-
-# Verify Python version (MUST be 3.10.19)
-python --version
-
-# Install dependencies using python -m pip
-python -m pip install -r requirements.txt
+python -m pip install -r api/requirements.txt -r api/requirements-dev.txt
 ```
 
-### Step 2: Configure API Keys
+### Step 2: Configure Environment Variables
 
 ```bash
-# Copy example environment file
 cp .env.example .env
-
-# Edit .env and add your API keys
-# OPENAI_API_KEY=sk-your-key-here
-# ANTHROPIC_API_KEY=sk-ant-your-key-here
+# Fill in OPENAI_API_KEY, QDRANT_URL, QDRANT_API_KEY, ADMIN_API_KEY
 ```
 
-### Step 3: Start Docker Infrastructure
+`REDIS_URL` is injected automatically by the Upstash Redis Marketplace integration
+when running on Vercel; for local work, pull it with `vercel env pull`.
 
-**Start Redis with Docker Compose (Recommended)**
+### Step 3: Verify Installation
+
 ```bash
-# Start Redis cache
-make docker-up
-
-# Or with Docker Compose directly
-docker-compose up -d
-
-# Verify it's running
-docker-compose ps
+make test
 ```
 
-**Start with Debug Tools**
-```bash
-# Start Redis + Redis Commander web UI
-make docker-up-debug
+See [Deployment](#deployment) below for how the app runs in production, and
+`docs/DEVELOPER_GUIDE.md` for a full local development walkthrough.
 
-# Access Redis Commander at: http://localhost:8081
-```
+## Quick Start
 
-**Alternative: Skip caching**
-- Edit `config/config.yaml` and set `cache.enabled: false`
+### Production
 
-See `docs/docker.md` for detailed Docker infrastructure guide.
-
-### Step 4: Verify Installation
+The app is live at **https://care-beacon-health.vercel.app**.
 
 ```bash
-# Verify Python version
-python --version
-# Expected: Python 3.10.19
-
-# Run configuration tests
-pytest tests/test_config.py -v
-
-# Should see all tests pass ✅
-```
-
-**Troubleshooting**: If you encounter Python version issues, see `docs/environment_troubleshooting.md` for detailed guidance.
-
-## 🚀 Quick Start
-
-### Docker (Recommended)
-
-Get started in under 2 minutes:
-
-```bash
-# Clone and configure
-git clone https://github.com/your-org/care-beacon.git
-cd care-beacon
-cp .env.example .env
-# Add your OPENAI_API_KEY to .env
-
-# Start all services
-docker-compose up -d
-
 # Check health
-curl http://localhost:8000/health
+curl https://care-beacon-health.vercel.app/api/health
 
-# Ask your first question
-curl -X POST "http://localhost:8000/api/v1/ask" \
+# Ask a question
+curl -X POST "https://care-beacon-health.vercel.app/api/v1/ask" \
   -H "Content-Type: application/json" \
   -d '{"question": "What are the symptoms of breast cancer?"}'
 ```
 
-**Access the application**:
-- API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-- Web UI: http://localhost:3000
-
 ### Local Development
 
 ```bash
-# Set up environment
-conda create -n care-beacon python=3.10.19 -y
-conda activate care-beacon
-python -m pip install -r requirements.txt
-
-# Configure
-cp .env.example .env
-# Add your OPENAI_API_KEY to .env
-
-# Start Redis
-docker-compose up -d redis
-
-# Start API
-python scripts/start_api.py
-
-# Run tests
-pytest tests/ --cov=src
+# Set up environment (see Installation above), then:
+vercel dev
 ```
 
-## 💡 Usage Examples
+`vercel dev` runs both Services (`api` and `web`) behind the same route table used
+in production, so `/api/*` and everything else resolve exactly as they do live.
+
+## Usage Examples
 
 ### Python Client
 
@@ -246,7 +162,7 @@ import requests
 
 # Ask a question
 response = requests.post(
-    "http://localhost:8000/api/v1/ask",
+    "https://care-beacon-health.vercel.app/api/v1/ask",
     json={
         "question": "What are the symptoms of breast cancer?",
         "cancer_type": "Breast Cancer",
@@ -264,7 +180,7 @@ print(f"Cost: ${result['metadata']['cost']:.6f}")
 
 ```bash
 # Basic question
-curl -X POST "http://localhost:8000/api/v1/ask" \
+curl -X POST "https://care-beacon-health.vercel.app/api/v1/ask" \
   -H "Content-Type: application/json" \
   -d '{
     "question": "What is chemotherapy?",
@@ -272,7 +188,7 @@ curl -X POST "http://localhost:8000/api/v1/ask" \
   }'
 
 # With filters
-curl -X POST "http://localhost:8000/api/v1/ask" \
+curl -X POST "https://care-beacon-health.vercel.app/api/v1/ask" \
   -H "Content-Type: application/json" \
   -d '{
     "question": "What are treatment options?",
@@ -281,89 +197,75 @@ curl -X POST "http://localhost:8000/api/v1/ask" \
   }'
 
 # Get statistics
-curl "http://localhost:8000/api/v1/stats"
+curl "https://care-beacon-health.vercel.app/api/v1/stats"
 ```
 
 For more examples, see [Usage Examples](docs/USAGE_EXAMPLES.md).
 
-## 🧪 Testing
+## Testing
 
 ```bash
-# Run all tests with coverage
-pytest tests/ --cov=src --cov-report=term-missing
+export PY=/opt/anaconda3/envs/care-beacon/bin/python
 
-# Run specific test file
-pytest tests/test_api.py -v
+# Run all tests
+cd api && $PY -m pytest tests/ -q --continue-on-collection-errors
 
-# Run tests in Docker
-docker exec care-beacon-api pytest tests/ -v
+# Run a specific test file
+cd api && $PY -m pytest tests/test_api.py -v
+
+# Run with coverage
+cd api && $PY -m pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-**Current Coverage**: 100% (1217/1217 statements) ✅
+A bare `pytest` may resolve to a different interpreter (e.g. an Anaconda base
+environment) and fail; use the `care-beacon` conda env's Python explicitly, or
+`make test`, which does this for you.
 
----
+**Current state**: 239 passed, 6 pre-existing failures unrelated to the Vercel
+migration. There is no coverage or pass-rate guarantee implied here — check
+`api/tests/` and CI output for the current numbers.
 
-## 📦 Phase 1: Data Ingestion
+## Deployment
 
-```bash
-# Parse and chunk all articles (if you have markdown files)
-python scripts/ingest_all_articles.py
+One Vercel project (`care-beacon-health`), two Services, one domain:
 
-# This will:
-# - Parse 94 markdown articles
-# - Create ~2,000-5,000 text chunks
-# - Generate embeddings ($1-2 cost)
-# - Store in Chroma vector database
-```
+| Service | Root | Framework | Public paths |
+|---------|------|-----------|--------------|
+| `web`   | `web-client/` | Next.js 16 | everything not under `/api/` |
+| `api`   | `api/`        | FastAPI, Python 3.12 | `/api/*` |
 
-### Validating Ingestion
+Routing is defined in `vercel.json`. The `/api/(.*)` rewrite must stay ahead of the
+`/(.*)` catch-all, because rewrites are evaluated in order and routing into a service
+is final.
 
-After ingestion, use the validation script to verify your data:
+**Environment variables:** `OPENAI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`,
+`ADMIN_API_KEY`, `VECTOR_DB_PROVIDER=qdrant`. `REDIS_URL` is injected automatically
+by the Upstash Redis Marketplace integration.
 
-```bash
-# Show database statistics
-./scripts/validate_ingestion.sh stats
+**Local development:** `vercel dev` runs both services behind the same route table as
+production. `make test` runs the Python suite.
 
-# Search for specific content
-./scripts/validate_ingestion.sh search "What is a normal PSA level?" 5
+**Ingestion is local-only:** `make ingest`. It reads `scraped_data/` — which lives
+outside `api/` and is never bundled into the function — and upserts into Qdrant Cloud.
 
-# Search with source filter (BC Cancer only)
-./scripts/validate_ingestion.sh search "What is a normal PSA level?" 5 "BC Cancer"
+**Rate limiting** is enforced by the Vercel WAF, not application code: a custom rule
+(`ask-rate-limit`) allows 60 requests per 60 seconds per IP on `/api/v1/ask` and
+returns 429 past that, configured via `vercel firewall rules`.
 
-# Check if a specific file was ingested
-./scripts/validate_ingestion.sh file scraped_data/bc-cancer/articles/health-info/types-of-cancer/pelvic-area/prostate.md
+**The upload, not just the deploy, is filesystem-based:** `vercel deploy` uploads
+from disk, not from git, so `.gitignore` has no effect on it. `.vercelignore` keeps
+`scraped_data/` (25,000+ files) and other local-only content out of the upload —
+without it, the upload exceeds Vercel's 15,000-file limit. Do not delete it.
 
-# Filter by source
-./scripts/validate_ingestion.sh source "BC Cancer"
-
-# List all chunks (with limit)
-./scripts/validate_ingestion.sh list 50
-
-# Show help
-./scripts/validate_ingestion.sh help
-```
-
-### Phase 2: Query System (Coming Soon)
-
-```bash
-# Start the API server
-uvicorn src.api.main:app --reload
-
-# Query from command line
-python scripts/test_query.py "What are the symptoms of breast cancer?"
-
-# Query via API
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "What are the symptoms of breast cancer?"}'
-```
+**Admin route** is protected by Vercel Deployment Protection (dashboard-configured,
+not in code), so the browser never needs to hold the admin key.
 
 ## Configuration
 
-Main configuration is in `config/config.yaml`. Key settings:
+Main configuration is in `api/config/config.yaml`. Key settings:
 
 - **Embeddings**: Model, batch size, dimensions
-- **Vector DB**: Collection name, persistence location
+- **Vector DB**: Qdrant collection name, distance metric
 - **Retrieval**: Top-k results, similarity threshold
 - **LLM**: Model selection, temperature, max tokens
 - **Cache**: Redis settings, TTL
@@ -376,7 +278,7 @@ Qdrant Cloud reclaims idle free-tier clusters after roughly a week of inactivity
 performs a real Qdrant collection read — a 200 proves the cluster answered.
 
 **Setup:** add a repository variable `SITE_URL` (Settings → Secrets and variables →
-Actions → Variables) set to the deployed origin, e.g. `https://care-beacon.vercel.app`.
+Actions → Variables) set to the deployed origin, `https://care-beacon-health.vercel.app`.
 
 **Two things to know:**
 
@@ -388,81 +290,47 @@ Actions → Variables) set to the deployed origin, e.g. `https://care-beacon.ver
 
 ## Data Source
 
-- **Source**: BC Cancer (bccancer.bc.ca)
-- **Articles**: 94 patient education articles
+- **Sources**: BC Cancer (bccancer.bc.ca), Canadian Cancer Society, Cleveland Clinic
 - **Topics**: Various cancer types (breast, lung, digestive, etc.)
 - **Format**: Markdown with YAML frontmatter
-- **Location**: `scraped_data/articles/`
+- **Location**: `scraped_data/`
 
 ## Development
 
 ### Daily Development Workflow
 
 ```bash
-# 1. Start Docker infrastructure
-make docker-up
-
-# 2. Activate conda environment
+# 1. Activate conda environment
 conda activate care-beacon
+
+# 2. Run both services locally
+vercel dev
 
 # 3. Run tests or develop
 make test
-# ... your development work ...
-
-# 4. Stop infrastructure when done
-make docker-down
 ```
 
 ### Makefile Commands
 
 ```bash
-# Infrastructure
-make docker-up          # Start Redis
-make docker-up-debug    # Start Redis + Redis Commander UI
-make docker-down        # Stop infrastructure
-make docker-logs        # View logs
-make docker-status      # Check status
-make docker-clean       # Remove all data
-
-# Testing
 make test               # Run all tests
-make test-cov          # Run tests with coverage
-make test-config       # Run config tests only
-
-# Code Quality
-make format            # Format code with Black
-make lint              # Run linting
-make check             # Run tests + linting
-
-# Utilities
-make clean-cache       # Clear Python cache
-make clean-logs        # Clear log files
-make help              # Show all commands
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run specific test file
-pytest tests/test_config.py -v
-
-# Run with coverage
-pytest --cov=src --cov-report=html
+make test-cov           # Run tests with coverage
+make lint                # Run linting (flake8 + mypy)
+make format             # Format code with Black
+make check               # Run tests + linting
+make dev                 # Run both services via vercel dev
+make ingest               # Run article ingestion (local only)
+make clean-cache        # Clear Python cache
+make clean-logs          # Clear log files
+make help                 # Show all commands
 ```
 
 ### Code Formatting
 
 ```bash
-# Format code with Black
+cd api
 black src/ tests/
-
-# Check code style
 flake8 src/ tests/
-
-# Type checking
 mypy src/
 ```
 
@@ -483,13 +351,6 @@ Based on 1 query/second (~2.6M queries/month):
 - **Claude Haiku**: ~$2,000/month
 - **GPT-4o-mini**: ~$1,400/month
 
-## Documentation
-
-- `Claude.md` - Overall project guidance and architecture
-- `IMPLEMENTATION_PLAN.md` - Detailed implementation checkpoints
-- `docs/api_documentation.md` - API endpoints (coming soon)
-- `docs/deployment.md` - Deployment guide (coming soon)
-
 ## License
 
 [Add your license here]
@@ -500,5 +361,5 @@ Based on 1 query/second (~2.6M queries/month):
 
 ---
 
-**Last Updated**: 2025-11-07
-**Version**: 0.1.0 (Phase 1 - Checkpoint 1.1)
+**Last Updated**: 2026-08-05
+**Version**: 3.0.0 (Live in production on Vercel)
