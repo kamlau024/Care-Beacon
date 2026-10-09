@@ -2,6 +2,13 @@
 
 A production Retrieval-Augmented Generation (RAG) system for answering patient questions about cancer using medical articles from BC Cancer, Canadian Cancer Society, and Cleveland Clinic. Provides accurate, cited answers with paragraph-level references.
 
+**Live:** https://care-beacon-health.vercel.app
+
+**Companion repository:** [Vital-Atlas](https://github.com/kamlau024/Vital-Atlas) is the
+upstream scraper that produces this system's corpus. Care-Beacon consumes Markdown and
+serves answers; it does no crawling of its own. See
+[Where the corpus comes from](#where-the-corpus-comes-from).
+
 ## Project Status
 
 **Current Version**: 3.0.0 - **Live in Production** (Vercel)
@@ -308,7 +315,41 @@ and no error. A keepalive whose own failure mode is silent is worse than none.
 - **Sources**: BC Cancer (bccancer.bc.ca), Canadian Cancer Society, Cleveland Clinic
 - **Topics**: Various cancer types (breast, lung, digestive, etc.)
 - **Format**: Markdown with YAML frontmatter
-- **Location**: `scraped_data/`
+- **Location**: `scraped_data/` (gitignored — the corpus is not part of this repository)
+
+### Where the corpus comes from
+
+Care-Beacon does not scrape. Acquisition lives in a separate repository,
+**[Vital-Atlas](https://github.com/kamlau024/Vital-Atlas)** — a Scrapy + Playwright
+crawler with one spider per source that converts each article to clean Markdown with
+YAML frontmatter. Together the two repositories form one pipeline:
+
+```mermaid
+graph LR
+    subgraph VA["Vital-Atlas — acquisition"]
+        W["bccancer.bc.ca<br/>cancer.ca<br/>clevelandclinic.org"]
+        S["Scrapy + Playwright<br/>3 spiders · metadata extraction<br/>change detection"]
+        W --> S
+    end
+    MD["scraped_data/&lt;source&gt;/articles/**.md<br/>title · url · date_scraped · breadcrumbs"]
+    subgraph CB["Care-Beacon — retrieval & generation"]
+        I["api/scripts/ingest.py<br/>parse → chunk → embed"]
+        Q[("Qdrant Cloud")]
+        A["FastAPI + Next.js<br/>retrieve → rerank → cite"]
+        I --> Q --> A
+    end
+    S --> MD --> I
+```
+
+The contract between them is just the Markdown file and its frontmatter schema. That
+boundary is why this repository could change hosts, swap its vector store, and drop a
+272 MB keyword index without the scraper being touched.
+
+**The hand-off is manual.** Vital-Atlas writes to its own `scraped_data/`; those files
+are copied into this repository and then ingested with `make ingest`. Nothing
+reconciles the two sides, so the corpora can drift — neither repository can detect
+articles the other has not seen, and Qdrant can only report what it holds, never what
+it is missing.
 
 ## Development
 
