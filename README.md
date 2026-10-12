@@ -108,7 +108,8 @@ care-beacon/
 ### Step 1: Clone and Set Up the Python Environment
 
 ```bash
-cd /Users/kamlau/Projects/Care-Beacon
+git clone https://github.com/kamlau024/Care-Beacon.git
+cd Care-Beacon
 
 conda create -n care-beacon python=3.10.19 -y
 conda activate care-beacon
@@ -212,7 +213,8 @@ For more examples, see [Usage Examples](docs/USAGE_EXAMPLES.md).
 ## Testing
 
 ```bash
-export PY=/opt/anaconda3/envs/care-beacon/bin/python
+conda activate care-beacon
+export PY="$CONDA_PREFIX/bin/python"
 
 # Run all tests
 cd api && $PY -m pytest tests/ -q --continue-on-collection-errors
@@ -304,9 +306,9 @@ no external service:
 Check runs under Project → Cron Jobs in the Vercel dashboard, or with
 `vercel crons ls`.
 
-A GitHub Actions workflow was used for this originally. It was replaced because
-this repository is private, so Actions runs consume the account's minutes quota —
-and when that quota is exhausted, jobs sit queued forever with no runner assigned
+A GitHub Actions workflow was used for this originally. It was replaced while this
+repository was still private, when Actions runs consumed the account's minutes quota —
+and once that quota was exhausted, jobs sat queued forever with no runner assigned
 and no error. A keepalive whose own failure mode is silent is worse than none.
 
 
@@ -409,11 +411,11 @@ Based on 1 query/second (~2.6M queries/month):
 
 ## License
 
-[Add your license here]
+[MIT](LICENSE)
 
 ## Contact
 
-[Add your contact information here]
+Built by Kam — [github.com/kamlau024](https://github.com/kamlau024).
 
 ---
 
