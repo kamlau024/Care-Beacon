@@ -158,7 +158,7 @@ No specific latency, cost-per-query, or cache-hit-rate numbers are recorded in t
   - python-frontmatter — dev/ingestion-only, not a runtime dependency of the deployed API
 - **Testing** (`api/requirements-dev.txt`, never shipped to Vercel)
   - pytest 8.0.0, pytest-asyncio, pytest-cov, httpx
-  - Run with `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors` — current baseline is 6 failed, 239 passed, 0 errors
+  - Run with `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors` — current baseline is 245 passed, 0 failed, 0 errors
 - **Deployment**
   - Vercel: one project (`care-beacon-health`), two Services (`web`, `api`) defined in `vercel.json`
   - No Docker, no docker-compose, no Render.com — all deleted as part of the migration
@@ -254,7 +254,7 @@ Care-Beacon/
 └── README.md
 ```
 
-Current test count for `api/tests/`: **6 failed, 239 passed, 0 errors** (see `docs/TESTING.md`) — not "all passing," and not the older test counts that appear in some historical docs under `docs/CHECKPOINT_*.md`.
+Current test count for `api/tests/`: **245 passed, 0 failed, 0 errors** (see `docs/TESTING.md`) — not the older test counts that appear in some historical docs under `docs/CHECKPOINT_*.md`.
 
 ## Deployment Architecture
 

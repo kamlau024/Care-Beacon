@@ -1,5 +1,7 @@
 """Tests for markdown parser."""
 
+import hashlib
+
 import pytest
 from pathlib import Path
 from datetime import datetime
@@ -155,8 +157,10 @@ def test_article_derived_metadata(parser, sample_markdown_file):
     """Test that derived metadata is generated."""
     article = parser.parse_file(sample_markdown_file)
 
-    # Article ID should be generated from title
-    assert article.article_id == "test-cancer-article"
+    # Article ID = source prefix + title slug + short hash of the file path,
+    # so the same title from different sources or folders can't collide
+    path_hash = hashlib.md5(str(sample_markdown_file).encode()).hexdigest()[:8]
+    assert article.article_id == f"bc-cancer_test-cancer-article_{path_hash}"
 
     # Cancer type should be extracted from breadcrumbs
     assert article.cancer_type == "Test Cancer"

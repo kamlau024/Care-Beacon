@@ -168,7 +168,7 @@ cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -k "test_a
 
 ### Current Test Status
 
-**The suite is not fully green, and never has been.** Current baseline: **6 failed, 239 passed, 0 errors**. The 6 failures are pre-existing and unrelated to the Vercel migration. Do not report the suite as passing, and do not cite older figures (e.g. "100% coverage" or "284 tests passing") — both are stale and false. If you fix or investigate one of the 6 failures, update this baseline (and `docs/TESTING.md`) rather than assuming it's still accurate.
+**The suite is green as of 2026-10-12.** Current baseline: **245 passed, 0 failed, 0 errors**. A new failure is a regression, not a pre-existing condition. Do not cite older figures (e.g. "6 failed, 239 passed," "100% coverage" or "284 tests passing") — they are stale and false. If the baseline changes, update it here and in `docs/TESTING.md` rather than assuming it's still accurate.
 
 ### Writing Tests
 
@@ -277,7 +277,7 @@ git commit -m "refactor: modernize to Pydantic v2"
 
 1. **Create branch** from `main`
 2. **Make changes** with tests
-3. **Run tests** locally: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors` — confirm you haven't moved the 6-failed/239-passed baseline
+3. **Run tests** locally: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors` — confirm the full suite still passes
 4. **Format code**: `make format` (or `cd api && black src/ tests/`)
 5. **Create PR** with clear description
 6. **Address review** comments
@@ -503,7 +503,7 @@ curl https://care-beacon-health.vercel.app/api/v1/vector-db/stats
 ### Development Guidelines
 
 1. **Write tests** for new features
-2. **Don't regress the test baseline** — the suite is not fully green (6 failed, 239 passed, 0 errors as of this writing); don't introduce new failures, and don't claim "100% coverage" anywhere in code or docs
+2. **Don't regress the test baseline** — the full suite passes; don't introduce new failures, and don't claim "100% coverage" anywhere in code or docs
 3. **Follow code style** - Black for formatting, flake8 + mypy for linting/type-checking
 4. **Update documentation** - Keep docs in sync with code
 5. **Add type hints** - Use Python type annotations
@@ -511,7 +511,7 @@ curl https://care-beacon-health.vercel.app/api/v1/vector-db/stats
 
 ### Code Review Checklist
 
-- [ ] Tests added and passing; existing baseline (6 failed, 239 passed) not made worse
+- [ ] Tests added and passing; full suite still green
 - [ ] Code formatted with Black
 - [ ] Linting passes (flake8, mypy)
 - [ ] Documentation updated

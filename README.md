@@ -38,13 +38,11 @@ serves answers; it does no crawling of its own. See
 
 | Metric | Status |
 |--------|--------|
-| **Test Suite** | 239 passing, 6 pre-existing failures (see `api/tests/`) |
+| **Test Suite** | 245 passing, 0 failing (see `api/tests/`) |
 | **API Documentation** | Comprehensive with examples |
 | **Performance** | Real-time monitoring, < 2s average response time |
 
-The 6 failing tests predate this deployment migration and are tracked separately;
-none touch the RAG pipeline's production behavior. Run `make test` for the current
-state on your machine.
+Run `make test` for the current state on your machine.
 
 ## Documentation
 
@@ -230,9 +228,8 @@ A bare `pytest` may resolve to a different interpreter (e.g. an Anaconda base
 environment) and fail; use the `care-beacon` conda env's Python explicitly, or
 `make test`, which does this for you.
 
-**Current state**: 239 passed, 6 pre-existing failures unrelated to the Vercel
-migration. There is no coverage or pass-rate guarantee implied here — check
-`api/tests/` and CI output for the current numbers.
+**Current state**: 245 passed, 0 failed (as of 2026-10-12). There is no coverage
+guarantee implied here — check `api/tests/` and CI output for the current numbers.
 
 ## Deployment
 

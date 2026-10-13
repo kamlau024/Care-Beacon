@@ -69,8 +69,8 @@ def test_chunk_metadata(chunker, sample_article):
 
     first_chunk = chunks[0]
 
-    # Check metadata
-    assert first_chunk.article_id == "test-cancer"
+    # Check metadata (ID format itself is covered by the parser tests)
+    assert first_chunk.article_id == sample_article.article_id
     assert first_chunk.article_title == "Test Cancer"
     assert first_chunk.url == "https://example.com/test-cancer"
     assert first_chunk.breadcrumbs == ["Health", "Cancer", "Test"]
@@ -90,7 +90,7 @@ def test_chunk_id_generation(chunker, sample_article):
 
     # Check format: article-id_section-slug_pXXX
     first_chunk_id = chunks[0].chunk_id
-    assert first_chunk_id.startswith("test-cancer_")
+    assert first_chunk_id.startswith(f"{sample_article.article_id}_")
     assert "_p" in first_chunk_id
 
 
