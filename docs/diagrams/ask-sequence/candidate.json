@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "How Care-Beacon Answers a Question",
+    "output": "docs/diagrams/ask-sequence/ask-sequence.html",
+    "viewBox": [
+      1060,
+      683
+    ],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/kamlau024/Care-Beacon.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "ceea036b3cad439e9cbf2b54f63648df6b736dc7"
+    },
+    "legend": {
+      "entries": {
+        "dashed": {
+          "label": "cache write"
+        }
+      }
+    }
+  },
+  "participants": [
+    {
+      "id": "patient",
+      "type": "external",
+      "label": "Patient",
+      "sublabel": "Web UI in browser",
+      "sources": [
+        {
+          "path": "web-client/lib/api.ts",
+          "line": 43,
+          "end_line": 50,
+          "label": "POST /api/v1/ask"
+        }
+      ]
+    },
+    {
+      "id": "fastapi",
+      "type": "backend",
+      "label": "FastAPI",
+      "sublabel": "/api/v1/ask",
+      "sources": [
+        {
+          "path": "api/src/api/main.py",
+          "line": 261,
+          "end_line": 339,
+          "label": "ask endpoint"
+        }
+      ]
+    },
+    {
+      "id": "generator",
+      "type": "backend",
+      "label": "Answer generator",
+      "sublabel": "orchestrates",
+      "sources": [
+        {
+          "path": "api/src/generation/answer_generator.py",
+          "line": 168,
+          "end_line": 293,
+          "label": "generate_answer"
+        }
+      ]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis cache",
+      "sublabel": "Upstash · 1 h TTL",
+      "sources": [
+        {
+          "path": "api/src/caching/redis_cache.py",
+          "line": 137,
+          "end_line": 153,
+          "label": "SHA-256 cache key"
+        },
+        {
+          "path": "api/config/config.yaml",
+          "line": 61,
+          "end_line": 67,
+          "label": "1 h TTL"
+        }
+      ]
+    },
+    {
+      "id": "retrieval",
+      "type": "backend",
+      "label": "Retrieval engine",
+      "sublabel": "search · rerank · filter",
+      "sources": [
+        {
+          "path": "api/src/retrieval/retrieval_engine.py",
+          "line": 95,
+          "end_line": 140,
+          "label": "retrieve"
+        },
+        {
+          "path": "api/config/config.yaml",
+          "line": 35,
+          "end_line": 40,
+          "label": "threshold 0.6, rerank on"
+        }
+      ]
+    },
+    {
+      "id": "qdrant",
+      "type": "database",
+      "label": "Qdrant Cloud",
+      "sublabel": "vector search",
+      "sources": [
+        {
+          "path": "api/src/storage/qdrant_db.py",
+          "line": 47,
+          "end_line": 63,
+          "label": "QdrantClient"
+        }
+      ]
+    },
+    {
+      "id": "openai",
+      "type": "external",
+      "label": "OpenAI",
+      "sublabel": "embeddings · gpt-4o-mini",
+      "sources": [
+        {
+          "path": "api/src/embeddings/embedding_generator.py",
+          "line": 36,
+          "label": "embeddings client"
+        },
+        {
+          "path": "api/src/retrieval/reranker.py",
+          "line": 12,
+          "end_line": 20,
+          "label": "LLM reranker"
+        },
+        {
+          "path": "api/src/generation/llm_client.py",
+          "line": 61,
+          "end_line": 64,
+          "label": "chat client"
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": "ask-request",
+      "from": "patient",
+      "to": "fastapi",
+      "y": 162,
+      "label": "POST /api/v1/ask",
+      "variant": "emphasis"
+    },
+    {
+      "id": "call-generator",
+      "from": "fastapi",
+      "to": "generator",
+      "y": 190,
+      "label": "generate_answer()",
+      "variant": "default"
+    },
+    {
+      "id": "cache-lookup",
+      "from": "generator",
+      "to": "redis",
+      "y": 218,
+      "label": "get (SHA-256 key)",
+      "variant": "default"
+    },
+    {
+      "id": "cache-miss",
+      "from": "redis",
+      "to": "generator",
+      "y": 246,
+      "label": "miss",
+      "variant": "return"
+    },
+    {
+      "id": "retrieve-call",
+      "from": "generator",
+      "to": "retrieval",
+      "y": 276,
+      "label": "retrieve_text (min 0.6)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "embed-query",
+      "from": "retrieval",
+      "to": "openai",
+      "y": 304,
+      "label": "embed question → 1536-d vector",
+      "variant": "default"
+    },
+    {
+      "id": "vector-search",
+      "from": "retrieval",
+      "to": "qdrant",
+      "y": 332,
+      "label": "fetch 6× results",
+      "variant": "default"
+    },
+    {
+      "id": "candidates",
+      "from": "qdrant",
+      "to": "retrieval",
+      "y": 360,
+      "label": "scored candidates",
+      "variant": "return"
+    },
+    {
+      "id": "rerank",
+      "from": "retrieval",
+      "to": "openai",
+      "y": 390,
+      "label": "LLM rerank → relevance scores",
+      "variant": "default"
+    },
+    {
+      "id": "kept-chunks",
+      "from": "retrieval",
+      "to": "generator",
+      "y": 418,
+      "label": "every chunk ≥ 0.6",
+      "variant": "return"
+    },
+    {
+      "id": "generate",
+      "from": "generator",
+      "to": "openai",
+      "y": 448,
+      "label": "answer with citations",
+      "variant": "emphasis"
+    },
+    {
+      "id": "answer-text",
+      "from": "openai",
+      "to": "generator",
+      "y": 476,
+      "label": "answer + token cost",
+      "variant": "return"
+    },
+    {
+      "id": "cache-store",
+      "from": "generator",
+      "to": "redis",
+      "y": 504,
+      "label": "setex (1 h TTL)",
+      "variant": "dashed"
+    },
+    {
+      "id": "generator-return",
+      "from": "generator",
+      "to": "fastapi",
+      "y": 532,
+      "label": "answer + citations",
+      "variant": "return"
+    },
+    {
+      "id": "http-response",
+      "from": "fastapi",
+      "to": "patient",
+      "y": 560,
+      "label": "200 JSON + sources",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "fastapi",
+      "from": 162,
+      "to": 564,
+      "type": "backend"
+    },
+    {
+      "participant": "generator",
+      "from": 190,
+      "to": 536,
+      "type": "backend"
+    },
+    {
+      "participant": "redis",
+      "from": 214,
+      "to": 250,
+      "type": "database"
+    },
+    {
+      "participant": "retrieval",
+      "from": 276,
+      "to": 422,
+      "type": "backend"
+    },
+    {
+      "participant": "openai",
+      "from": 300,
+      "to": 312,
+      "type": "external"
+    },
+    {
+      "participant": "qdrant",
+      "from": 328,
+      "to": 364,
+      "type": "database"
+    },
+    {
+      "participant": "openai",
+      "from": 386,
+      "to": 398,
+      "type": "external"
+    },
+    {
+      "participant": "openai",
+      "from": 444,
+      "to": 480,
+      "type": "external"
+    },
+    {
+      "participant": "redis",
+      "from": 500,
+      "to": 508,
+      "type": "database"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Two shortcuts",
+      "items": [
+        "Cache hit: the answer comes straight from Redis, with no OpenAI cost",
+        "Nothing relevant found: a fixed reply, with no answer-generation call"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Why fetch 6× candidates",
+      "items": [
+        "With reranking on, Qdrant returns max_results × 6 so the reranker sees a wide pool",
+        "A loose pre-filter keeps scores ≥ 0.3 before reranking",
+        "After reranking, every chunk scoring ≥ 0.6 is kept, with no top-k cut"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Cache key",
+      "items": [
+        "SHA-256 of the lowercased question plus filters, max_results, and min_similarity"
+      ]
+    }
+  ]
+}

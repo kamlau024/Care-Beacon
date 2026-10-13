@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Care-Beacon — Production Architecture",
+    "output": "docs/diagrams/architecture/architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/kamlau024/Care-Beacon.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "ceea036b3cad439e9cbf2b54f63648df6b736dc7"
+    }
+  },
+  "components": [
+    {
+      "id": "web-ui", "type": "frontend", "label": "Web UI", "sublabel": "Next.js 16 · service: web",
+      "pos": [225, 30], "size": [170, 64],
+      "sources": [
+        { "path": "vercel.json", "line": 4, "end_line": 6, "label": "web service" },
+        { "path": "web-client/package.json", "line": 30, "end_line": 33, "label": "Next.js + React" },
+        { "path": "web-client/lib/api.ts", "line": 43, "end_line": 50, "label": "POST /api/v1/ask" }
+      ]
+    },
+    {
+      "id": "patient", "type": "external", "label": "Patient", "sublabel": "browser",
+      "pos": [40, 170], "size": [120, 64],
+      "sources": [
+        { "path": "web-client/lib/api.ts", "line": 10, "label": "same-origin API calls" }
+      ]
+    },
+    {
+      "id": "route-table", "type": "cloud", "label": "Vercel route table", "sublabel": "vercel.json rewrites",
+      "pos": [230, 170], "size": [160, 64],
+      "sources": [
+        { "path": "vercel.json", "line": 12, "end_line": 25, "label": "rewrites" }
+      ]
+    },
+    {
+      "id": "fastapi-app", "type": "backend", "label": "FastAPI app", "sublabel": "service: api · Python",
+      "pos": [480, 170], "size": [160, 64],
+      "sources": [
+        { "path": "vercel.json", "line": 7, "end_line": 10, "label": "api service" },
+        { "path": "api/src/api/main.py", "line": 261, "end_line": 304, "label": "POST /api/v1/ask" }
+      ]
+    },
+    {
+      "id": "redis-cache", "type": "database", "label": "Redis cache", "sublabel": "Upstash · 1 h TTL",
+      "pos": [40, 340], "size": [150, 64],
+      "sources": [
+        { "path": "api/src/caching/redis_cache.py", "line": 37, "end_line": 41, "label": "REDIS_URL (Upstash)" },
+        { "path": "api/src/caching/redis_cache.py", "line": 155, "end_line": 237, "label": "get / set" },
+        { "path": "api/config/config.yaml", "line": 61, "end_line": 67, "label": "1 h TTL" }
+      ]
+    },
+    {
+      "id": "answer-generator", "type": "backend", "label": "Answer generator", "sublabel": "cache → retrieve → generate",
+      "pos": [475, 340], "size": [170, 64],
+      "sources": [
+        { "path": "api/src/generation/answer_generator.py", "line": 46, "end_line": 51, "label": "composition" },
+        { "path": "api/src/generation/answer_generator.py", "line": 168, "end_line": 293, "label": "generate_answer" }
+      ]
+    },
+    {
+      "id": "retrieval-engine", "type": "backend", "label": "Retrieval engine", "sublabel": "6× fetch · LLM rerank · ≥ 0.6",
+      "pos": [755, 340], "size": [175, 64],
+      "sources": [
+        { "path": "api/src/retrieval/retrieval_engine.py", "line": 95, "end_line": 140, "label": "search, rerank, filter" },
+        { "path": "api/config/config.yaml", "line": 35, "end_line": 40, "label": "top_k, 0.6, rerank" },
+        { "path": "api/src/retrieval/reranker.py", "line": 12, "end_line": 20, "label": "LLM reranker" }
+      ]
+    },
+    {
+      "id": "qdrant", "type": "database", "label": "Qdrant Cloud", "sublabel": "care-beacon-medical",
+      "pos": [1040, 340], "size": [150, 64],
+      "sources": [
+        { "path": "api/src/storage/qdrant_db.py", "line": 47, "end_line": 63, "label": "QdrantClient" },
+        { "path": "api/config/config.yaml", "line": 18, "end_line": 20, "label": "collection" }
+      ]
+    },
+    {
+      "id": "openai", "type": "external", "label": "OpenAI API", "sublabel": "text-embedding-3-small · gpt-4o-mini",
+      "pos": [540, 510], "size": [330, 64],
+      "sources": [
+        { "path": "api/src/embeddings/embedding_generator.py", "line": 36, "label": "embeddings client" },
+        { "path": "api/src/generation/llm_client.py", "line": 61, "end_line": 64, "label": "chat client" },
+        { "path": "api/config/config.yaml", "line": 9, "end_line": 12, "label": "embedding model" }
+      ]
+    },
+    {
+      "id": "ingest", "type": "backend", "label": "ingest.py", "sublabel": "parse → chunk → embed → store",
+      "pos": [1020, 510], "size": [190, 64],
+      "sources": [
+        { "path": "api/scripts/ingest.py", "line": 70, "end_line": 118, "label": "ingestion steps" }
+      ]
+    },
+    {
+      "id": "corpus", "type": "external", "label": "Vital-Atlas corpus", "sublabel": "Markdown + YAML frontmatter",
+      "pos": [1020, 670], "size": [190, 64],
+      "sources": [
+        { "path": "README.md", "line": 319, "end_line": 324, "label": "upstream scraper" },
+        { "path": "api/config/config.yaml", "line": 4, "end_line": 6, "label": "articles path" }
+      ]
+    }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Vercel · two services behind one route table", "wraps": ["web-ui", "route-table", "fastapi-app", "answer-generator", "retrieval-engine"] },
+    { "kind": "region", "label": "Local machine · offline ingestion", "wraps": ["ingest", "corpus"] }
+  ],
+  "connections": [
+    { "id": "patient-https", "from": "patient", "to": "route-table", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "pages-rewrite", "from": "route-table", "to": "web-ui", "label": "/(.*)" },
+    { "id": "api-rewrite", "from": "route-table", "to": "fastapi-app", "label": "/api/(.*)", "variant": "emphasis" },
+    { "id": "ask-to-generator", "from": "fastapi-app", "to": "answer-generator", "label": "generate_answer()", "variant": "emphasis" },
+    { "id": "cache-read-write", "from": "answer-generator", "to": "redis-cache", "label": "get · setex" },
+    { "id": "cache-miss-retrieve", "from": "answer-generator", "to": "retrieval-engine", "label": "cache miss", "variant": "emphasis" },
+    { "id": "vector-search", "from": "retrieval-engine", "to": "qdrant", "label": "vector search" },
+    { "id": "embed-and-rerank", "from": "retrieval-engine", "to": "openai", "label": "embed · rerank" },
+    { "id": "generate-answer", "from": "answer-generator", "to": "openai", "label": "answer + citations" },
+    { "id": "ingest-embed", "from": "ingest", "to": "openai", "label": "embed chunks", "variant": "dashed" },
+    { "id": "ingest-upsert", "from": "ingest", "to": "qdrant", "label": "upsert chunks", "variant": "dashed" },
+    { "id": "corpus-files", "from": "corpus", "to": "ingest", "label": "*.md", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Answering a question",
+      "items": [
+        "Redis is checked first; a cache hit returns immediately",
+        "On a miss: fetch 6× candidates from Qdrant, LLM-rerank them, keep scores ≥ 0.6",
+        "If nothing passes, a fixed 'no context' reply is returned without an LLM call",
+        "Generated answers are cached for 1 hour"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Production safeguards",
+      "items": [
+        "A daily Vercel cron calls /api/health, which reads Qdrant and returns 503 if it is unreachable",
+        "Admin endpoints require X-API-Key and are disabled when no key is set",
+        "API docs (/docs, /openapi.json) are served only in debug mode"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Offline ingestion",
+      "items": [
+        "Vital-Atlas scrapes three sources into Markdown",
+        "ingest.py runs locally: parse, chunk, embed, then upsert into Qdrant"
+      ]
+    }
+  ]
+}
