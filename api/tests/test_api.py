@@ -607,14 +607,13 @@ def test_admin_endpoints_disabled_when_no_key_configured(client, mock_generator,
     assert client.post("/api/v1/cache/clear").status_code == 503
 
 
-def test_openapi_docs_available(client):
-    """Test that OpenAPI documentation is available."""
-    response = client.get("/docs")
-    assert response.status_code == 200
+def test_openapi_docs_disabled_when_not_debug(client):
+    """API docs are only served in debug mode, which the config turns off."""
+    for path in ("/docs", "/redoc", "/openapi.json"):
+        assert client.get(path).status_code == 404
 
-    response = client.get("/openapi.json")
-    assert response.status_code == 200
-    data = response.json()
+    # The schema itself still builds, so debug mode can serve it
+    data = app.openapi()
     assert "openapi" in data
     assert "info" in data
 
@@ -797,25 +796,26 @@ def test_general_exception_handler():
     assert "internal server error" in data["message"].lower()
 
 
-def test_min_similarity_adjustment_based_on_max_results(client, mock_generator):
-    """Test min_similarity adjustment based on max_results (line 256)."""
+def test_max_results_unchanged_with_min_similarity(client, mock_generator):
+    """max_results is passed through as requested, even with min_similarity.
+
+    The old over-fetch (max_results forced to 50 whenever min_similarity > 0)
+    was removed when reranking was added.
+    """
     with patch("src.api.main.get_answer_generator", return_value=mock_generator):
-        # Request with min_similarity > 0 should adjust max_results to 50
         response = client.post(
             "/api/v1/ask",
             json={
                 "question": "What are symptoms?",
                 "max_results": 5,
-                "min_similarity": 0.7,  # Line 256: when min_similarity > 0, max_results becomes 50
+                "min_similarity": 0.7,
             },
         )
 
         assert response.status_code == 200
 
-        # Check that generate_answer was called with adjusted max_results
         call_kwargs = mock_generator.generate_answer.call_args.kwargs
-        # Line 256: if min_similarity > 0, max_results is set to 50
-        assert call_kwargs["max_results"] == 50
+        assert call_kwargs["max_results"] == 5
         assert call_kwargs["min_similarity"] == 0.7
 
 

@@ -19,7 +19,7 @@ This section is the authoritative description of the live system. Sections below
 - **Admin endpoints** `POST /api/v1/cache/clear` and `POST /api/v1/stats/reset` require an `X-API-Key` header matching the `ADMIN_API_KEY` environment variable.
 - **On-demand ingestion API endpoints were deleted** — they used to spawn a subprocess, which is impossible on serverless. Ingestion is local-only now: `make ingest` runs `api/scripts/ingest.py` against the local machine.
 - **Local test command**: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors`. A bare `pytest` resolves to the anaconda base environment and fails — always use the full interpreter path. The local dev environment is Python 3.10.19; Vercel's `api` service runs Python 3.12.
-- **The test suite is not fully green, and never has been.** Current baseline: **6 failed, 239 passed, 0 errors**. The 6 failures are pre-existing and unrelated to the migration. Do not claim the suite is green, and do not cite older counts (e.g. "284 tests passing") — they are stale.
+- **The test suite is green as of 2026-10-12.** Current baseline: **245 passed, 0 failed, 0 errors**. A new failure is a regression, not a pre-existing condition. Do not cite older counts (e.g. "6 failed, 239 passed" or "284 tests passing") — they are stale.
 
 ## Key Requirements
 

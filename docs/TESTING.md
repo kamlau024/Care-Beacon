@@ -56,11 +56,11 @@ api/tests/
 
 ## Current Test Status
 
-**The suite is not fully green, and never has been.** Current baseline:
+**The suite is green as of 2026-10-12.** Current baseline:
 
-**6 failed, 239 passed, 0 errors**
+**245 passed, 0 failed, 0 errors**
 
-The 6 failures are pre-existing and unrelated to the Vercel migration. Do not report this suite as passing, and do not cite older figures that may appear elsewhere in this repo's history (e.g. "134 tests passing," "83% coverage," "100% coverage") — none of those numbers are current. If this baseline changes (for better or worse), update this file rather than letting it go stale again.
+Six tests used to fail because they still checked behavior that had since been changed on purpose: source-prefixed article IDs, the tuned similarity threshold, API docs turned off outside debug mode, and the removed over-fetch when filtering by similarity. They were updated on 2026-10-12. Do not cite older figures that may appear elsewhere in this repo's history (e.g. "6 failed, 239 passed," "134 tests passing," "83% coverage," "100% coverage") — none of those numbers are current. If this baseline changes (for better or worse), update this file rather than letting it go stale again.
 
 No per-module coverage percentages are recorded here, because they were not re-verified after the migration and would otherwise just be repeating unverified numbers. Run `make test-cov` locally if you need current figures.
 
@@ -148,4 +148,4 @@ def test_source_filtering(input, expected):
 
 - [Pytest Documentation](https://docs.pytest.org/)
 - [Pytest-Cov Documentation](https://pytest-cov.readthedocs.io/)
-- `docs/TEST_COVERAGE_REPORT.md` — a historical snapshot; not re-verified against the current 6-failed/239-passed baseline
+- `docs/TEST_COVERAGE_REPORT.md` — a historical snapshot; not re-verified against the current 245-passed baseline
