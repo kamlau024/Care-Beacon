@@ -9,11 +9,36 @@ upstream scraper that produces this system's corpus. Care-Beacon consumes Markdo
 serves answers; it does no crawling of its own. See
 [Where the corpus comes from](#where-the-corpus-comes-from).
 
+## Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture.dark.svg">
+  <img alt="Care-Beacon production architecture. A patient's browser reaches the Vercel route table, which sends /api/* to the FastAPI service and everything else to the Next.js web UI. In the FastAPI service, the answer generator checks a Redis cache, then calls a retrieval engine that searches Qdrant Cloud and uses OpenAI for embeddings and reranking, and calls OpenAI gpt-4o-mini to write the answer. A local ingest.py script loads the Vital-Atlas Markdown corpus into Qdrant." src="docs/diagrams/architecture.light.svg">
+</picture>
+
+- **Two Vercel services behind one route table:** `/api/*` goes to the FastAPI `api` service; everything else goes to the Next.js `web` service.
+- **Cited answers:** the answer generator checks Redis first, then retrieves passages from Qdrant Cloud and writes the answer with OpenAI `gpt-4o-mini`.
+- **Offline ingestion:** `api/scripts/ingest.py` runs on a local machine and loads the [Vital-Atlas](https://github.com/kamlau024/Vital-Atlas) corpus into Qdrant. The deployed API has no ingestion endpoints.
+
+### How a question is answered
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/ask-sequence.dark.svg">
+  <img alt="Sequence of one question. The browser posts to /api/v1/ask; FastAPI calls the answer generator, which looks the question up in Redis. On a miss it asks the retrieval engine, which embeds the question with OpenAI, fetches six times the requested results from Qdrant, reranks them with an OpenAI model, and returns every chunk scoring at least 0.6. The generator asks OpenAI for an answer with citations, caches it in Redis for one hour, and returns it." src="docs/diagrams/ask-sequence.light.svg">
+</picture>
+
+1. **Cache check.** Redis is keyed on a SHA-256 hash of the normalized question, filters, and limits. A hit returns immediately, with no OpenAI calls.
+2. **Wide retrieval.** On a miss, the question is embedded with `text-embedding-3-small` (1536 dimensions) and Qdrant returns 6× the requested number of chunks.
+3. **Rerank and filter.** A loose pre-filter keeps scores ≥ 0.3, `gpt-4o-mini` reranks every remaining candidate, and every chunk scoring ≥ 0.6 is kept, with no top-k cut. (0.6 is the configured default; a request can set its own `min_similarity`.)
+4. **Generate and cache.** `gpt-4o-mini` writes an answer with paragraph-level citations, cached for 1 hour. If no chunk passes the threshold, a fixed "no context" reply is returned without an LLM call, and it isn't cached.
+
+Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagrams/): download `architecture/architecture.html` or `ask-sequence/ask-sequence.html` and open it in a browser to search, focus on a component, and follow each one to the source lines it was drawn from.
+
 ## Project Status
 
 **Current Version**: 3.0.0 - **Live in Production** (Vercel)
 
-### Architecture
+### Build history
 
 - **Phase 1: Foundation** - Complete
   - Markdown parser with YAML frontmatter
@@ -29,7 +54,7 @@ serves answers; it does no crawling of its own. See
 
 - **Phase 3: Production Deployment** - Complete
   - Deployed on Vercel as two Services (`api` + `web`) behind one route table
-  - FastAPI REST API with OpenAPI docs
+  - FastAPI REST API (OpenAPI docs served only in debug mode)
   - Source filtering (BC Cancer / Canadian Cancer Society / Cleveland Clinic)
   - Rate limiting via Vercel WAF, error handling
   - Modern FastAPI lifespan pattern, Pydantic v2 compliant
@@ -53,7 +78,7 @@ Comprehensive documentation is available:
 - **[Usage Examples](docs/USAGE_EXAMPLES.md)** - Tutorials and integration patterns
 - **[Performance Optimization](docs/PERFORMANCE_OPTIMIZATION.md)** - Monitoring, benchmarking, and optimization guide
 - **[Architecture](docs/ARCHITECTURE.md)** - System design and component overview
-- **[Interactive API Docs](https://care-beacon-health.vercel.app/api/docs)** - Swagger UI
+- **Interactive API Docs** - Swagger UI at `/docs`, served by the FastAPI app only when `api.debug` is `true` in `api/config/config.yaml` (off in production)
 - **[Project Plan](Claude.md)** - Original requirements and design decisions
 
 ## Features
@@ -95,6 +120,9 @@ care-beacon/
 
 ## Installation
 
+<details>
+<summary>Prerequisites, environment setup, and verification</summary>
+
 ### Prerequisites
 
 - **Python 3.10.19** (via Conda) - for local API development and tests; Vercel itself runs the `api` service on Python 3.12
@@ -133,6 +161,8 @@ make test
 See [Deployment](#deployment) below for how the app runs in production, and
 `docs/DEVELOPER_GUIDE.md` for a full local development walkthrough.
 
+</details>
+
 ## Quick Start
 
 ### Production
@@ -160,6 +190,9 @@ vercel dev
 in production, so `/api/*` and everything else resolve exactly as they do live.
 
 ## Usage Examples
+
+<details>
+<summary>Python client and cURL examples</summary>
 
 ### Python Client
 
@@ -207,6 +240,8 @@ curl "https://care-beacon-health.vercel.app/api/v1/stats"
 ```
 
 For more examples, see [Usage Examples](docs/USAGE_EXAMPLES.md).
+
+</details>
 
 ## Testing
 
@@ -352,6 +387,9 @@ it is missing.
 
 ## Development
 
+<details>
+<summary>Daily workflow, Makefile commands, and code formatting</summary>
+
 ### Daily Development Workflow
 
 ```bash
@@ -388,6 +426,8 @@ black src/ tests/
 flake8 src/ tests/
 mypy src/
 ```
+
+</details>
 
 ## Cost Estimates
 
