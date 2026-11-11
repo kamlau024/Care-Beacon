@@ -1,7 +1,6 @@
 """Main FastAPI application for Care-Beacon RAG system."""
 
 import os
-import sys
 from datetime import datetime
 from typing import Dict, Any
 from contextlib import asynccontextmanager
@@ -11,26 +10,6 @@ from fastapi import FastAPI, HTTPException, Request, Response, status, Depends, 
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from loguru import logger
-
-# Disable ChromaDB telemetry before importing our modules
-os.environ["ANONYMIZED_TELEMETRY"] = "False"
-
-# Filter ChromaDB warnings
-class FilteredStderr:
-    """Filter out ChromaDB telemetry warnings from stderr."""
-
-    def __init__(self, original_stderr):
-        self.original_stderr = original_stderr
-
-    def write(self, message):
-        if "telemetry" not in message.lower() and "capture()" not in message:
-            self.original_stderr.write(message)
-
-    def flush(self):
-        self.original_stderr.flush()
-
-
-sys.stderr = FilteredStderr(sys.stderr)
 
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
@@ -312,9 +291,8 @@ async def ask_question(question_request: QuestionRequest):
             include_full_text=question_request.include_full_text,
         )
 
-        # Check if answer was cached
-        cache_stats = generator.cache.get_stats()
-        was_cached = cache_stats.get("cache_hits", 0) > 0
+        # Whether THIS answer came from the cache (not a cumulative hit counter)
+        was_cached = answer.cached
 
         # Convert citations
         sources = [

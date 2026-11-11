@@ -315,6 +315,7 @@ class RedisCache:
             cost=answer_dict["cost"],
             generation_time_ms=answer_dict["generation_time_ms"],
             disclaimer=answer_dict.get("disclaimer"),
+            cached=True,
         )
 
     def invalidate(

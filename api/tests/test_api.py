@@ -685,49 +685,6 @@ def test_error_response_model():
     assert error.message == "Invalid input"
 
 
-def test_filtered_stderr_write_filters_telemetry(capsys):
-    """Test FilteredStderr.write() filters telemetry messages (lines 26-27)."""
-    from src.api.main import FilteredStderr
-    import sys
-    from io import StringIO
-
-    # Create a mock stderr to capture output
-    mock_stderr = StringIO()
-    filtered = FilteredStderr(mock_stderr)
-
-    # Test filtering telemetry message (should be filtered out)
-    filtered.write("WARNING: telemetry is enabled")
-    # Test normal message (should pass through)
-    filtered.write("Normal message")
-
-    # Get the output
-    output = mock_stderr.getvalue()
-
-    # Telemetry message should be filtered out
-    assert "telemetry" not in output
-    # Normal message should be present
-    assert "Normal message" in output
-
-
-def test_filtered_stderr_flush_method(capsys):
-    """Test FilteredStderr.flush() method (line 30)."""
-    from src.api.main import FilteredStderr
-    import sys
-    from io import StringIO
-
-    # Create a mock stderr
-    mock_stderr = StringIO()
-    filtered = FilteredStderr(mock_stderr)
-
-    # Write something and flush
-    filtered.write("Test message")
-    filtered.flush()  # Line 30
-
-    # Should not raise any exceptions
-    output = mock_stderr.getvalue()
-    assert "Test message" in output
-
-
 def test_get_answer_generator_singleton_initialization():
     """Test get_answer_generator() creates singleton on first call (lines 81-83)."""
     from src.api.main import get_answer_generator, _answer_generator
@@ -971,3 +928,20 @@ def test_ask_unknown_source_is_422(client, mock_generator):
     with patch("src.api.main.get_answer_generator", return_value=mock_generator):
         r = client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": ["Mayo Clinic"]})
     assert r.status_code == 422
+
+
+def test_metadata_cached_reflects_this_request_not_history(client, mock_generator, mock_answer):
+    mock_generator.cache.get_stats.return_value = {"cache_hits": 99}
+    mock_answer.cached = False
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?"})
+    assert r.json()["metadata"]["cached"] is False
+
+
+def test_stderr_is_not_wrapped():
+    import sys
+    import src.api.main  # noqa: F401
+
+    assert type(sys.stderr).__name__ != "FilteredStderr"
+    # pytest swaps sys.stderr, so also assert the wrapper class is gone
+    assert not hasattr(src.api.main, "FilteredStderr")
