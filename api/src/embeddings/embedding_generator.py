@@ -79,6 +79,7 @@ class EmbeddingGenerator:
                 self.total_cost += cost
                 self.stats_store.incr("embed_tokens", tokens_used)
                 self.stats_store.incr_float("embed_cost", cost)
+                self.stats_store.incr_daily_cost(cost)
 
                 return embedding
 
@@ -144,6 +145,7 @@ class EmbeddingGenerator:
                 self.total_cost += cost
                 self.stats_store.incr("embed_tokens", tokens_used)
                 self.stats_store.incr_float("embed_cost", cost)
+                self.stats_store.incr_daily_cost(cost)
 
                 return embeddings
 

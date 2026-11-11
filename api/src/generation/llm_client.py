@@ -171,7 +171,7 @@ class LLMClient:
                 self.total_cost += cost
                 self.stats_store.incr("llm_input_tokens", input_tokens)
                 self.stats_store.incr("llm_output_tokens", output_tokens)
-                self.stats_store.incr_float("llm_cost", cost)
+                self._record_cost(cost)
 
                 return {
                     "answer": answer,
@@ -191,6 +191,15 @@ class LLMClient:
                     time.sleep(wait_time)
                 else:
                     raise Exception(f"LLM API call failed after {self.max_retries} attempts: {e}")
+
+    def _record_cost(self, cost: float) -> None:
+        """Record spend in the cumulative counter and the per-UTC-day counter.
+
+        Every call path (including streaming) should use this so the daily
+        spend cap sees all model cost.
+        """
+        self.stats_store.incr_float("llm_cost", cost)
+        self.stats_store.incr_daily_cost(cost)
 
     def get_stats(self) -> Dict[str, Any]:
         """Get usage statistics.
