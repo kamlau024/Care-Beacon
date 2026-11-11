@@ -5,7 +5,7 @@ claude_sessions:
 
 # Serverless streaming spike: findings (Task 7)
 
-**Decision: Go with commit-fallback for interrupted turns.** Checks 1 and 2 passed. Check 3 failed in a specific way: the `GeneratorExit` handler never ran, because the generator was never interrupted. It kept running to the end after the client went away.
+**Decision: Go.** The implementer's Step-3 reading was "Go with commit-fallback". The controller then ruled that there is no client-commit endpoint (see "Controller ruling"). Checks 1 and 2 passed. Check 3 failed in a specific way: the `GeneratorExit` handler never ran, because the generator was never interrupted. It kept running to the end after the client went away.
 
 ## Setup
 
@@ -14,7 +14,7 @@ claude_sessions:
 - Preview deployments only (`vercel deploy --yes`, never `--prod`):
   - `care-beacon-health-jybhx1wa5-kam-lau-s-projects.vercel.app` (checks 1 to 3)
   - `care-beacon-health-ihgl7ctrx-kam-lau-s-projects.vercel.app` (adds `n`/`hdr` params: header-free and long-stream disconnect runs)
-- Deployment protection: plain `curl` gets a `302` to `vercel.com/sso-api`. All requests went through **`vercel curl`** (CLI 54.14.0, beta). On first use it printed that it was generating a deployment protection bypass token for the project. Protection settings were not changed by hand.
+- Deployment protection: plain `curl` gets a `302` to `vercel.com/sso-api`. All requests went through **`vercel curl`** (CLI 54.14.0, beta). On first use it generated a project-level protection bypass secret, which persists after the spike (see Surprises 6).
 - Python runtime observed in the function: **3.12.16**.
 - Timestamps come from `perl -MTime::HiRes` on each line as it arrives. t=0 is when the `vercel curl` CLI starts, so the first ~1.2-2.2 s is CLI project lookup plus TTFB. The `t=` inside each frame is the server's monotonic clock since the generator started.
 
@@ -86,7 +86,7 @@ Every run's `done` frame came 25-45 ms after frame 9. That gap is a fresh pooled
 
 Verdict: a DB write inside the generator, before the last frame, completed on 5/5 runs (7/7 counting the warm-up and `hdr=0` runs).
 
-## Check 3: Disconnect. FAIL (`GeneratorExit` never fires), but the generator runs to completion
+## Check 3: Disconnect (sync generator). FAIL: `GeneratorExit` never fires, and the generator runs to completion
 
 Command: read until `frame 2`, then `pkill -9` the curl process (3 runs at n=10, 2 runs at n=40):
 
@@ -119,7 +119,13 @@ longdisc2:complete 2026-11-11T23:42:10.236527+00:00
 
 No `:disconnected` row appeared in any run.
 
-Verdict: client disconnects do not reach the sync generator on Vercel. `GeneratorExit` is never raised, so the handler-based save cannot work. The generator keeps yielding into the void until it finishes: about 12 s after the disconnect in the n=40 runs. Its final write still happens.
+Verdict (scoped to what was tested): with a **sync** generator behind `StreamingResponse` on Vercel, the `GeneratorExit` handler never ran after a client disconnect. The generator kept iterating to completion, about 12 s after the disconnect in the n=40 runs, and its final write still happened.
+
+Two causes fit the evidence, and this spike cannot tell them apart:
+- (a) The Vercel runtime never forwards the client disconnect to the ASGI app.
+- (b) The disconnect is forwarded and Starlette cancels the response task, but the threadpool worker iterating the sync generator is not stopped and never has `close()` called on it.
+
+Not tested: an **async** generator, and an explicit `await request.is_disconnected()` poll. Either could behave differently, especially under cause (b). The conclusion holds for sync generators only.
 
 ## Decision (per brief Step 3)
 
@@ -128,14 +134,34 @@ Verdict: client disconnects do not reach the sync generator on Vercel. `Generato
 - Tasks 13-14 proceed as written. The guaranteed writes go inside the generator, before the `done` frame (checks 1 and 2).
 - Interrupted turns cannot be saved from a `GeneratorExit` handler (check 3). Use the spec's fallback: the client re-sends the partial text, and Task 14 adds `POST /api/v1/threads/{id}/messages/{message_id}/commit`.
 
+This was the implementer's reading of Step 3. It is superseded by the controller ruling below.
+
+## Controller ruling (supersedes the commit-fallback above)
+
+Task 14 does **not** build a client-commit endpoint.
+
+Reason: on Vercel, a disconnected turn's sync generator still runs to completion and performs the guaranteed assistant-message write with the full answer, so the guarantee holds without a client commit. A client commit of partial text would race that server write and could overwrite a complete answer with a partial one.
+
+Task 14 must:
+- (a) use a **sync** generator, matching what was tested;
+- (b) keep a `GeneratorExit` → `status='interrupted'` path for runtimes that do cancel (for example uvicorn locally);
+- (c) make the final assistant write happen **exactly once** per turn.
+
+Consequences accepted: tokens are spent on answers nobody reads, and an abandoned turn is saved as complete rather than interrupted.
+
 ## Surprises and things Tasks 13-14 should know
 
 1. **A stream that has started does not stop when the user leaves.** The server keeps running the whole turn, including the LLM call and the final write. Consequences:
-   - The **commit fallback can race the server's own final write**. After a "stop", the server may still persist the full answer seconds later. The commit endpoint needs a clear rule, such as "commit wins if the message is still `streaming`, and the server's final write must not overwrite a `committed`/`interrupted` row" (for example a conditional `UPDATE ... WHERE status = 'streaming'`).
+   - (Superseded by the controller ruling: there is no commit endpoint.) The **commit fallback can race the server's own final write**. After a "stop", the server may still persist the full answer seconds later. The commit endpoint needs a clear rule, such as "commit wins if the message is still `streaming`, and the server's final write must not overwrite a `committed`/`interrupted` row" (for example a conditional `UPDATE ... WHERE status = 'streaming'`).
    - **A client "stop" does not save LLM tokens.** Cancellation needs a server-side signal (for example a flag the generator checks between tokens), or acceptance of the cost.
    - We only observed this to 12 s. Behaviour near the function's `maxDuration` was not tested, and it is not documented, so do not rely on the server-side completion as the save path.
 2. **Anti-buffering headers are not required** on Vercel. Keep `Cache-Control: no-cache` anyway: without it the response carries `cache-control: public, max-age=0, must-revalidate`. `X-Accel-Buffering: no` is harmless.
 3. **Cold start was not observable** at this resolution. The first request to a fresh deployment had headers at 1.72 s from CLI start, against 1.2-2.2 s for warm requests. The variance is dominated by `vercel curl`'s project lookup.
 4. **Preview `/api/health` returns 500** (TTFB ~1.2 s), not the documented 503. The preview has no Qdrant/OpenAI/Redis keys. The app still booted and served the probe. Worth a look separately.
 5. **Function runtime is Python 3.12.16.**
-6. **`vercel curl` generated a protection bypass token for the project** the first time it was used. No protection setting was changed by hand.
+6. **Side effect: a project-level Deployment Protection bypass secret now exists.** The first `vercel curl` call generated it automatically ("Successfully generated deployment protection bypass token for project ..."). It is a standing secret for the whole `care-beacon-health` project, not just these previews, and it **persists after the spike**. If it is unwanted, the owner should revoke or rotate it in Vercel → Project Settings → Deployment Protection (Protection Bypass for Automation). Its value was never printed or recorded.
+7. **Probe preview deployments are still live and safe to delete:**
+   - `https://care-beacon-health-jybhx1wa5-kam-lau-s-projects.vercel.app`
+   - `https://care-beacon-health-ihgl7ctrx-kam-lau-s-projects.vercel.app`
+
+   They serve the throwaway `/api/v1/_spike/stream` probe, which writes to a table that no longer exists, so requests to it would now fail.
