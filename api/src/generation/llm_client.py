@@ -91,23 +91,40 @@ class LLMClient:
                 - model: Model used
                 - generation_time_ms: Time taken in milliseconds
         """
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+        return self.generate_messages(
+            messages, max_tokens=max_tokens, temperature=temperature
+        )
+
+    def generate_messages(
+        self,
+        messages: List[Dict[str, Any]],
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        model: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Generate a response from an arbitrary message list (blocking).
+
+        Returns the same dictionary shape as ``generate()``.
+        """
         start_time = time.time()
 
         if max_tokens is None:
             max_tokens = self.max_tokens
         if temperature is None:
             temperature = self.temperature
+        model = model or self.model
 
-        # Call appropriate provider
         if self.provider == "openai":
-            result = self._generate_openai(system_prompt, user_prompt, max_tokens, temperature)
+            result = self._generate_openai(messages, max_tokens, temperature, model)
         else:
             raise NotImplementedError(f"Provider {self.provider} not implemented")
 
-        # Calculate time
         generation_time = (time.time() - start_time) * 1000  # Convert to ms
 
-        # Update tracking
         self.call_count += 1
         self.stats_store.incr("llm_calls")
 
@@ -116,74 +133,46 @@ class LLMClient:
             "generation_time_ms": generation_time,
         }
 
-    def _generate_openai(
+    def generate_stream(
         self,
-        system_prompt: str,
-        user_prompt: str,
-        max_tokens: int,
-        temperature: float,
-    ) -> Dict[str, Any]:
-        """Generate response using OpenAI API.
+        messages: List[Dict[str, Any]],
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        model: Optional[str] = None,
+    ) -> "LLMStream":
+        """Open a streaming completion and return an iterable of text deltas.
 
-        Args:
-            system_prompt: System prompt
-            user_prompt: User prompt
-            max_tokens: Maximum tokens
-            temperature: Temperature
-
-        Returns:
-            Dictionary with answer, tokens_used, cost, model
+        Only the opening API call is retried; once iteration has started,
+        errors propagate. ``LLMStream.usage`` is set when the usage chunk
+        arrives, at which point cost and token counters are recorded.
         """
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ]
+        if self.provider != "openai":
+            raise NotImplementedError(f"Provider {self.provider} not implemented")
 
-        # Call API with retries
+        if max_tokens is None:
+            max_tokens = self.max_tokens
+        if temperature is None:
+            temperature = self.temperature
+        model = model or self.model
+
+        raw = self._with_retries(
+            lambda: self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                timeout=self.timeout,
+                stream=True,
+                stream_options={"include_usage": True},
+            )
+        )
+        return LLMStream(self, raw, model)
+
+    def _with_retries(self, call):
+        """Run ``call`` with exponential-backoff retries."""
         for attempt in range(self.max_retries):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    max_tokens=max_tokens,
-                    temperature=temperature,
-                    timeout=self.timeout,
-                )
-
-                # Extract response
-                answer = response.choices[0].message.content
-
-                # Extract token usage
-                usage = response.usage
-                input_tokens = usage.prompt_tokens
-                output_tokens = usage.completion_tokens
-                total_tokens = usage.total_tokens
-
-                # Calculate cost
-                cost = (
-                    (input_tokens / 1000) * self.cost_per_1k_input +
-                    (output_tokens / 1000) * self.cost_per_1k_output
-                )
-
-                # Update totals
-                self.total_input_tokens += input_tokens
-                self.total_output_tokens += output_tokens
-                self.total_cost += cost
-                self.stats_store.incr("llm_input_tokens", input_tokens)
-                self.stats_store.incr("llm_output_tokens", output_tokens)
-                self._record_cost(cost)
-
-                return {
-                    "answer": answer,
-                    "tokens_used": {
-                        "input": input_tokens,
-                        "output": output_tokens,
-                        "total": total_tokens,
-                    },
-                    "cost": cost,
-                    "model": self.model,
-                }
-
+                return call()
             except Exception as e:
                 if attempt < self.max_retries - 1:
                     wait_time = 2 ** attempt  # Exponential backoff
@@ -191,6 +180,58 @@ class LLMClient:
                     time.sleep(wait_time)
                 else:
                     raise Exception(f"LLM API call failed after {self.max_retries} attempts: {e}")
+
+    def _generate_openai(
+        self,
+        messages: List[Dict[str, Any]],
+        max_tokens: int,
+        temperature: float,
+        model: str,
+    ) -> Dict[str, Any]:
+        """Generate response using OpenAI API.
+
+        Returns:
+            Dictionary with answer, tokens_used, cost, model
+        """
+
+        def _call() -> Dict[str, Any]:
+            response = self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                timeout=self.timeout,
+            )
+            answer = response.choices[0].message.content
+            usage = response.usage
+            tokens_used, cost = self._record_usage(
+                usage.prompt_tokens, usage.completion_tokens, usage.total_tokens
+            )
+            return {
+                "answer": answer,
+                "tokens_used": tokens_used,
+                "cost": cost,
+                "model": model,
+            }
+
+        return self._with_retries(_call)
+
+    def _record_usage(self, input_tokens: int, output_tokens: int, total_tokens: int):
+        """Compute cost and update all token/cost counters. Returns (tokens_used, cost)."""
+        cost = (
+            (input_tokens / 1000) * self.cost_per_1k_input +
+            (output_tokens / 1000) * self.cost_per_1k_output
+        )
+        self.total_input_tokens += input_tokens
+        self.total_output_tokens += output_tokens
+        self.total_cost += cost
+        self.stats_store.incr("llm_input_tokens", input_tokens)
+        self.stats_store.incr("llm_output_tokens", output_tokens)
+        self._record_cost(cost)
+        return (
+            {"input": input_tokens, "output": output_tokens, "total": total_tokens},
+            cost,
+        )
 
     def _record_cost(self, cost: float) -> None:
         """Record spend in the cumulative counter and the per-UTC-day counter.
@@ -239,3 +280,37 @@ class LLMClient:
         self.total_cost = 0.0
         self.call_count = 0
         self.stats_store.reset()
+
+
+class LLMStream:
+    """Iterable of text deltas from a streaming completion.
+
+    ``usage`` stays ``None`` until the usage chunk arrives (and if the stream
+    never delivers one). Mid-stream errors propagate and are not retried.
+    """
+
+    def __init__(self, client: LLMClient, raw_stream: Any, model: str):
+        self._client = client
+        self._raw = raw_stream
+        self._model = model
+        self.usage: Optional[Dict[str, Any]] = None
+
+    def __iter__(self):
+        for chunk in self._raw:
+            usage = getattr(chunk, "usage", None)
+            if usage is not None:
+                tokens_used, cost = self._client._record_usage(
+                    usage.prompt_tokens, usage.completion_tokens, usage.total_tokens
+                )
+                self._client.call_count += 1
+                self._client.stats_store.incr("llm_calls")
+                self.usage = {
+                    "tokens_used": tokens_used,
+                    "cost": cost,
+                    "model": self._model,
+                }
+            choices = getattr(chunk, "choices", None)
+            if choices:
+                text = choices[0].delta.content
+                if text:
+                    yield text

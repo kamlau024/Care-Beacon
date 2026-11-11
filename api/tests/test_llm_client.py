@@ -405,3 +405,140 @@ def test_zero_max_tokens_is_passed_through(mock_openai_client):
 
             call_kwargs = mock_openai_client.chat.completions.create.call_args.kwargs
             assert call_kwargs["max_tokens"] == 0
+
+
+# ---------------------------------------------------------------------------
+# Message lists and streaming
+# ---------------------------------------------------------------------------
+
+def _delta_chunk(text):
+    chunk = Mock()
+    chunk.choices = [Mock()]
+    chunk.choices[0].delta.content = text
+    chunk.usage = None
+    return chunk
+
+
+def _usage_chunk(prompt=100, completion=50):
+    chunk = Mock()
+    chunk.choices = []
+    chunk.usage = Mock()
+    chunk.usage.prompt_tokens = prompt
+    chunk.usage.completion_tokens = completion
+    chunk.usage.total_tokens = prompt + completion
+    return chunk
+
+
+def _stream_client(chunks_or_iter):
+    mock_client = Mock()
+    mock_client.chat.completions.create.return_value = chunks_or_iter
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.get_openai_client", return_value=mock_client):
+            llm = LLMClient(provider="openai")
+    return llm, mock_client
+
+
+def test_stream_yields_deltas_and_sets_usage():
+    llm, mock_client = _stream_client(
+        iter([_delta_chunk("Hel"), _delta_chunk("lo"), _usage_chunk(100, 50)])
+    )
+    messages = [{"role": "user", "content": "hi"}]
+
+    stream = llm.generate_stream(messages, max_tokens=10, temperature=0.0, model="other-model")
+    assert stream.usage is None
+    assert "".join(stream) == "Hello"
+
+    kwargs = mock_client.chat.completions.create.call_args.kwargs
+    assert kwargs["stream"] is True
+    assert kwargs["stream_options"] == {"include_usage": True}
+    assert kwargs["temperature"] == 0.0
+    assert kwargs["model"] == "other-model"
+    assert kwargs["messages"] == messages
+
+    expected_cost = (100 / 1000) * llm.cost_per_1k_input + (50 / 1000) * llm.cost_per_1k_output
+    assert stream.usage["tokens_used"] == {"input": 100, "output": 50, "total": 150}
+    assert stream.usage["cost"] == pytest.approx(expected_cost)
+    assert stream.usage["model"] == "other-model"
+    assert llm.total_input_tokens == 100
+    assert llm.total_output_tokens == 50
+    assert llm.total_cost == pytest.approx(expected_cost)
+
+
+def test_stream_records_daily_cost():
+    llm, _ = _stream_client(iter([_delta_chunk("a"), _usage_chunk(100, 50)]))
+    llm.stats_store = Mock()
+
+    list(llm.generate_stream([{"role": "user", "content": "hi"}]))
+
+    expected_cost = (100 / 1000) * llm.cost_per_1k_input + (50 / 1000) * llm.cost_per_1k_output
+    llm.stats_store.incr_daily_cost.assert_called_once_with(pytest.approx(expected_cost))
+    llm.stats_store.incr_float.assert_called_once_with("llm_cost", pytest.approx(expected_cost))
+    llm.stats_store.incr.assert_any_call("llm_input_tokens", 100)
+    llm.stats_store.incr.assert_any_call("llm_output_tokens", 50)
+
+
+def test_stream_error_after_first_delta_propagates_without_retry():
+    def broken():
+        yield _delta_chunk("Hel")
+        raise RuntimeError("connection dropped")
+
+    llm, mock_client = _stream_client(broken())
+    stream = llm.generate_stream([{"role": "user", "content": "hi"}])
+
+    it = iter(stream)
+    assert next(it) == "Hel"
+    with pytest.raises(RuntimeError, match="connection dropped"):
+        next(it)
+    assert mock_client.chat.completions.create.call_count == 1
+    assert stream.usage is None
+
+
+def test_stream_usage_stays_none_without_usage_chunk():
+    llm, _ = _stream_client(iter([_delta_chunk("Hi")]))
+    stream = llm.generate_stream([{"role": "user", "content": "hi"}])
+    assert "".join(stream) == "Hi"
+    assert stream.usage is None
+
+
+def test_stream_retries_opening_call():
+    mock_client = Mock()
+    mock_client.chat.completions.create.side_effect = [
+        Exception("boom"),
+        iter([_delta_chunk("ok"), _usage_chunk()]),
+    ]
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.get_openai_client", return_value=mock_client):
+            llm = LLMClient(provider="openai")
+    with patch("time.sleep"):
+        stream = llm.generate_stream([{"role": "user", "content": "hi"}])
+    assert "".join(stream) == "ok"
+    assert mock_client.chat.completions.create.call_count == 2
+
+
+def test_generate_delegates_to_generate_messages():
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.get_openai_client"):
+            llm = LLMClient(provider="openai")
+    llm.generate_messages = Mock(return_value={"answer": "x", "tokens_used": {}, "cost": 0.0, "model": "m"})
+
+    result = llm.generate("SYS", "USR", max_tokens=5, temperature=0.0)
+
+    llm.generate_messages.assert_called_once_with(
+        [{"role": "system", "content": "SYS"}, {"role": "user", "content": "USR"}],
+        max_tokens=5,
+        temperature=0.0,
+    )
+    assert result["answer"] == "x"
+
+
+def test_generate_messages_model_override(mock_openai_client):
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.get_openai_client", return_value=mock_openai_client):
+            llm = LLMClient(provider="openai")
+    msgs = [{"role": "user", "content": "q"}]
+    result = llm.generate_messages(msgs, model="utility-model", temperature=0.0)
+    kwargs = mock_openai_client.chat.completions.create.call_args.kwargs
+    assert kwargs["model"] == "utility-model"
+    assert kwargs["temperature"] == 0.0
+    assert kwargs["messages"] == msgs
+    assert result["model"] == "utility-model"
