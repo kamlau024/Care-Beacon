@@ -172,3 +172,6 @@ redis-data/
 evaluation/.env
 .vercel
 .env*
+
+# Superpowers brainstorming scratch (mockups, session state)
+.superpowers/
