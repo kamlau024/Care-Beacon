@@ -26,7 +26,9 @@ def connect() -> psycopg.Connection:
     try:
         return psycopg.connect(url, row_factory=dict_row, connect_timeout=5)
     except psycopg.Error as e:
-        raise DatabaseUnavailable(f"Postgres unreachable: {e}") from e
+        # Never include str(e): psycopg messages can quote the conninfo
+        # (password, host, user). Log/raise the exception type only.
+        raise DatabaseUnavailable(f"Postgres unreachable ({type(e).__name__})") from e
 
 
 def db_healthy() -> bool:
@@ -36,5 +38,5 @@ def db_healthy() -> bool:
             conn.execute("SELECT 1")
         return True
     except Exception as e:
-        logger.warning(f"Health check: Postgres unavailable: {e}")
+        logger.warning(f"Health check: Postgres unavailable ({type(e).__name__})")
         return False
