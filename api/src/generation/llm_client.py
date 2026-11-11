@@ -4,6 +4,8 @@ import time
 from typing import Dict, Any, Optional, List
 import os
 
+from loguru import logger
+
 from src.caching.stats_store import StatsStore
 from src.config_loader import get_config
 from src.observability.tracing import get_openai_client
@@ -166,7 +168,7 @@ class LLMClient:
                 stream_options={"include_usage": True},
             )
         )
-        return LLMStream(self, raw, model)
+        return LLMStream(self, raw, model, messages)
 
     def _with_retries(self, call):
         """Run ``call`` with exponential-backoff retries."""
@@ -285,32 +287,65 @@ class LLMClient:
 class LLMStream:
     """Iterable of text deltas from a streaming completion.
 
-    ``usage`` stays ``None`` until the usage chunk arrives (and if the stream
-    never delivers one). Mid-stream errors propagate and are not retried.
+    ``usage`` is set when the usage chunk arrives. If iteration ends without
+    one (mid-stream error, consumer closing the generator, API omitting it),
+    an estimate (~4 chars/token) is recorded through the same counters so the
+    daily spend cap cannot be bypassed, and ``usage["estimated"]`` is True.
+    Real usage has ``"estimated": False``. Mid-stream errors are not retried.
     """
 
-    def __init__(self, client: LLMClient, raw_stream: Any, model: str):
+    def __init__(self, client: LLMClient, raw_stream: Any, model: str, messages: Optional[List[Dict[str, Any]]] = None):
         self._client = client
         self._raw = raw_stream
         self._model = model
+        self._messages = messages or []
+        self._chars_out = 0
+        self._recorded = False
         self.usage: Optional[Dict[str, Any]] = None
 
+    def _record(self, input_tokens: int, output_tokens: int, total_tokens: int, estimated: bool) -> None:
+        tokens_used, cost = self._client._record_usage(input_tokens, output_tokens, total_tokens)
+        self._recorded = True
+        self._client.call_count += 1
+        self._client.stats_store.incr("llm_calls")
+        self.usage = {
+            "tokens_used": tokens_used,
+            "cost": cost,
+            "model": self._model,
+            "estimated": estimated,
+        }
+
+    def _record_estimate(self) -> None:
+        try:
+            chars_in = sum(
+                len(m.get("content") or "")
+                for m in self._messages
+                if isinstance(m.get("content"), str)
+            )
+            input_tokens = -(-chars_in // 4)
+            output_tokens = -(-self._chars_out // 4)
+            self._record(input_tokens, output_tokens, input_tokens + output_tokens, True)
+            logger.warning(
+                "LLM stream ended without usage; cost estimated "
+                f"(input~{input_tokens}, output~{output_tokens} tokens)"
+            )
+        except Exception as e:  # never mask the original exception
+            logger.error(f"Failed to record estimated stream cost: {e}")
+
     def __iter__(self):
-        for chunk in self._raw:
-            usage = getattr(chunk, "usage", None)
-            if usage is not None:
-                tokens_used, cost = self._client._record_usage(
-                    usage.prompt_tokens, usage.completion_tokens, usage.total_tokens
-                )
-                self._client.call_count += 1
-                self._client.stats_store.incr("llm_calls")
-                self.usage = {
-                    "tokens_used": tokens_used,
-                    "cost": cost,
-                    "model": self._model,
-                }
-            choices = getattr(chunk, "choices", None)
-            if choices:
-                text = choices[0].delta.content
-                if text:
-                    yield text
+        try:
+            for chunk in self._raw:
+                usage = getattr(chunk, "usage", None)
+                if usage is not None and not self._recorded:
+                    self._record(
+                        usage.prompt_tokens, usage.completion_tokens, usage.total_tokens, False
+                    )
+                choices = getattr(chunk, "choices", None)
+                if choices:
+                    text = choices[0].delta.content
+                    if text:
+                        self._chars_out += len(text)
+                        yield text
+        finally:
+            if not self._recorded:
+                self._record_estimate()

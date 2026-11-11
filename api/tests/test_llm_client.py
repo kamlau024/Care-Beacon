@@ -457,6 +457,7 @@ def test_stream_yields_deltas_and_sets_usage():
 
     expected_cost = (100 / 1000) * llm.cost_per_1k_input + (50 / 1000) * llm.cost_per_1k_output
     assert stream.usage["tokens_used"] == {"input": 100, "output": 50, "total": 150}
+    assert stream.usage["estimated"] is False
     assert stream.usage["cost"] == pytest.approx(expected_cost)
     assert stream.usage["model"] == "other-model"
     assert llm.total_input_tokens == 100
@@ -490,14 +491,69 @@ def test_stream_error_after_first_delta_propagates_without_retry():
     with pytest.raises(RuntimeError, match="connection dropped"):
         next(it)
     assert mock_client.chat.completions.create.call_count == 1
-    assert stream.usage is None
+    assert stream.usage["estimated"] is True
 
 
-def test_stream_usage_stays_none_without_usage_chunk():
-    llm, _ = _stream_client(iter([_delta_chunk("Hi")]))
+def test_stream_without_usage_chunk_records_estimate():
+    llm, _ = _stream_client(iter([_delta_chunk("Hi there")]))
+    llm.stats_store = Mock()
+    msgs = [{"role": "user", "content": "a" * 40}]
+    stream = llm.generate_stream(msgs)
+    assert "".join(stream) == "Hi there"
+    assert stream.usage["estimated"] is True
+    assert stream.usage["tokens_used"] == {"input": 10, "output": 2, "total": 12}
+    llm.stats_store.incr_daily_cost.assert_called_once()
+
+
+def test_stream_closed_early_records_estimated_cost():
+    llm, _ = _stream_client(iter([_delta_chunk("Hel"), _delta_chunk("lo"), _usage_chunk()]))
+    llm.stats_store = Mock()
+    stream = llm.generate_stream([{"role": "user", "content": "hello world"}])
+    gen = iter(stream)
+    assert next(gen) == "Hel"
+    gen.close()
+    llm.stats_store.incr_daily_cost.assert_called_once()
+    assert llm.stats_store.incr_daily_cost.call_args.args[0] > 0
+    assert stream.usage["estimated"] is True
+    assert llm.call_count == 1
+
+
+def test_stream_error_mid_stream_records_estimate_and_reraises():
+    def broken():
+        yield _delta_chunk("Hel")
+        raise RuntimeError("dropped")
+
+    llm, _ = _stream_client(broken())
+    llm.stats_store = Mock()
+    gen = iter(llm.generate_stream([{"role": "user", "content": "hi"}]))
+    next(gen)
+    with pytest.raises(RuntimeError, match="dropped"):
+        next(gen)
+    llm.stats_store.incr_daily_cost.assert_called_once()
+
+
+def test_stream_with_usage_does_not_double_record():
+    llm, _ = _stream_client(iter([_delta_chunk("a"), _usage_chunk()]))
+    llm.stats_store = Mock()
     stream = llm.generate_stream([{"role": "user", "content": "hi"}])
-    assert "".join(stream) == "Hi"
-    assert stream.usage is None
+    list(stream)
+    llm.stats_store.incr_daily_cost.assert_called_once()
+    assert stream.usage["estimated"] is False
+    assert llm.call_count == 1
+
+
+def test_stream_estimate_recording_failure_is_swallowed():
+    def broken():
+        yield _delta_chunk("x")
+        raise RuntimeError("original")
+
+    llm, _ = _stream_client(broken())
+    llm.stats_store = Mock()
+    llm.stats_store.incr_daily_cost.side_effect = ValueError("redis down")
+    gen = iter(llm.generate_stream([{"role": "user", "content": "hi"}]))
+    next(gen)
+    with pytest.raises(RuntimeError, match="original"):
+        next(gen)
 
 
 def test_stream_retries_opening_call():
