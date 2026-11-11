@@ -14,6 +14,7 @@ from src.retrieval.models import Query, RetrievedContext, RetrievalConfig
 from src.storage.models import RetrievalResult
 from src.retrieval.reranker import LLMReranker
 from src.config_loader import get_config
+from src.observability.tracing import span
 
 
 class RetrievalEngine:
@@ -93,7 +94,9 @@ class RetrievalEngine:
         start_time = time.time()
 
         # Generate query embedding
-        query_embedding = self.embedding_generator.embed_text(query.text)
+        with span("embed", input=query.text) as embed_span:
+            query_embedding = self.embedding_generator.embed_text(query.text)
+            embed_span.update(output={"dimensions": len(query_embedding)})
 
         # Retrieve more results if re-ranking is enabled (retrieve 6x to ensure completeness)
         initial_n_results = query.max_results * 6 if self.reranker else query.max_results
@@ -102,11 +105,16 @@ class RetrievalEngine:
             f"🔍 Vector search: fetching {initial_n_results} results "
             f"(reranker={'enabled' if self.reranker else 'disabled'})"
         )
-        results = self.vector_db.search(
-            query_embedding=query_embedding,
-            n_results=initial_n_results,
-            where=query.filters,
-        )
+        with span(
+            "vector_search",
+            input={"n_results": initial_n_results, "filters": query.filters},
+        ) as search_span:
+            results = self.vector_db.search(
+                query_embedding=query_embedding,
+                n_results=initial_n_results,
+                where=query.filters,
+            )
+            search_span.update(output={"count": len(results)})
         logger.info(f"📊 Vector search returned {len(results)} results")
 
         # When re-ranking is enabled, skip or loosen pre-filter
@@ -122,11 +130,13 @@ class RetrievalEngine:
 
             # Re-rank using LLM - re-rank ALL candidates, don't limit yet
             logger.info(f"🎯 Calling reranker with {len(results)} results, will re-rank all candidates")
-            results = self.reranker.rerank(
-                query=query.text,
-                results=results,
-                top_k=len(results)  # Re-rank all candidates, filter will select best ones
-            )
+            with span("rerank", input={"candidates": len(results)}) as rerank_span:
+                results = self.reranker.rerank(
+                    query=query.text,
+                    results=results,
+                    top_k=len(results)  # Re-rank all candidates, filter will select best ones
+                )
+                rerank_span.update(output={"count": len(results)})
             logger.info(f"✅ Re-ranking returned {len(results)} results")
 
             # Apply strict filter AFTER re-ranking (on re-ranked scores)

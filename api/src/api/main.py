@@ -14,6 +14,7 @@ from loguru import logger
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
 from src.config_loader import get_config
+from src.observability.tracing import flush, request_trace
 from src.api.filters import configured_sources, normalize_sources
 from src.storage.vector_db import create_vector_database
 from src.api.models import (
@@ -258,72 +259,91 @@ async def ask_question(question_request: QuestionRequest):
         HTTPException: If processing fails
     """
     try:
-        # Get generator
-        generator = get_answer_generator()
-
-        # Build filters
-        filters = {}
-        if question_request.cancer_type:
-            filters["cancer_type"] = question_request.cancer_type
-        try:
-            source_filter = normalize_sources(
-                question_request.source, configured_sources()
-            )
-        except ValueError as e:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
-            )
-        if source_filter is not None:
-            filters["source"] = source_filter
-
-        # Generate answer
-        start_time = time.time()
-
-        # Use the requested max_results directly
-        # Re-ranking will automatically fetch more results (2x) for better quality
-        max_results = question_request.max_results
-
-        answer = generator.generate_answer(
-            question=question_request.question,
-            filters=filters if filters else None,
-            max_results=max_results,
-            min_similarity=question_request.min_similarity,
-            include_full_text=question_request.include_full_text,
-        )
-
-        # Whether THIS answer came from the cache (not a cumulative hit counter)
-        was_cached = answer.cached
-
-        # Convert citations
-        sources = [
-            CitationResponse(
-                article_title=citation.article_title,
-                section=citation.section,
-                url=citation.url,
-                paragraph_index=citation.paragraph_index,
-                text_excerpt=citation.text_excerpt,
-                similarity_score=citation.similarity_score,
-                source=citation.source,
-                full_text=citation.full_text,
-            )
-            for citation in answer.citations
-        ]
-
-        # Build response
-        return QuestionResponse(
-            question=answer.query,
-            answer=answer.answer,
-            sources=sources,
-            disclaimer=answer.disclaimer,
-            model=answer.model,
+        with request_trace(
+            "ask",
             metadata={
-                "tokens_used": answer.tokens_used.get("total", 0),
-                "cost": answer.cost,
-                "generation_time_ms": answer.generation_time_ms,
-                "cached": was_cached,
-                "sources_count": len(answer.citations),
+                "endpoint": "/api/v1/ask",
+                "filters": {
+                    "cancer_type": question_request.cancer_type,
+                    "source": question_request.source,
+                },
+                "min_similarity": question_request.min_similarity,
             },
-        )
+        ) as trace:
+            # Get generator
+            generator = get_answer_generator()
+
+            # Build filters
+            filters = {}
+            if question_request.cancer_type:
+                filters["cancer_type"] = question_request.cancer_type
+            try:
+                source_filter = normalize_sources(
+                    question_request.source, configured_sources()
+                )
+            except ValueError as e:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+                )
+            if source_filter is not None:
+                filters["source"] = source_filter
+
+            # Generate answer
+            start_time = time.time()
+
+            # Use the requested max_results directly
+            # Re-ranking will automatically fetch more results (2x) for better quality
+            max_results = question_request.max_results
+
+            answer = generator.generate_answer(
+                question=question_request.question,
+                filters=filters if filters else None,
+                max_results=max_results,
+                min_similarity=question_request.min_similarity,
+                include_full_text=question_request.include_full_text,
+            )
+
+            # Whether THIS answer came from the cache (not a cumulative hit counter)
+            was_cached = answer.cached
+
+            # Convert citations
+            sources = [
+                CitationResponse(
+                    article_title=citation.article_title,
+                    section=citation.section,
+                    url=citation.url,
+                    paragraph_index=citation.paragraph_index,
+                    text_excerpt=citation.text_excerpt,
+                    similarity_score=citation.similarity_score,
+                    source=citation.source,
+                    full_text=citation.full_text,
+                )
+                for citation in answer.citations
+            ]
+
+            # Build response
+            response = QuestionResponse(
+                question=answer.query,
+                answer=answer.answer,
+                sources=sources,
+                disclaimer=answer.disclaimer,
+                model=answer.model,
+                metadata={
+                    "tokens_used": answer.tokens_used.get("total", 0),
+                    "cost": answer.cost,
+                    "generation_time_ms": answer.generation_time_ms,
+                    "cached": was_cached,
+                    "sources_count": len(answer.citations),
+                },
+            )
+            trace.update(
+                output=response.answer,
+                metadata={
+                    "cached": was_cached,
+                    "sources_count": len(answer.citations),
+                },
+            )
+            return response
 
     except HTTPException:
         raise
@@ -350,6 +370,8 @@ async def ask_question(question_request: QuestionRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=detail,
         )
+    finally:
+        flush()
 
 
 @app.get(

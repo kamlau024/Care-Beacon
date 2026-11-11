@@ -2,11 +2,11 @@
 
 import time
 from typing import Dict, Any, Optional, List
-from openai import OpenAI
 import os
 
 from src.caching.stats_store import StatsStore
 from src.config_loader import get_config
+from src.observability.tracing import get_openai_client
 
 
 class LLMClient:
@@ -61,7 +61,7 @@ class LLMClient:
             api_key = api_key or os.getenv("OPENAI_API_KEY")
             if not api_key:
                 raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY environment variable.")
-            self.client = OpenAI(api_key=api_key)
+            self.client = get_openai_client(api_key)
         elif self.provider == "anthropic":
             # Future: Initialize Anthropic client
             raise NotImplementedError("Anthropic provider not yet implemented")

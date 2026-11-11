@@ -137,7 +137,7 @@ def test_llm_client_reports_persisted_totals_not_instance_totals():
     store.incr("llm_calls", 10)
     store.incr_float("llm_cost", 0.42)
 
-    with patch("src.generation.llm_client.OpenAI"):
+    with patch("src.generation.llm_client.get_openai_client"):
         client = LLMClient(api_key="test-key", stats_store=store)
 
     stats = client.get_stats()
