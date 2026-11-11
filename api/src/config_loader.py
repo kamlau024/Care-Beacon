@@ -137,3 +137,20 @@ def get_config(config_path: str | Path = _DEFAULT_CONFIG_PATH) -> Config:
     if _config_instance is None:
         _config_instance = Config(config_path)
     return _config_instance
+
+
+MODEL_ROLES = ("generation", "rerank", "utility")
+
+
+def get_model(role: str) -> str:
+    """Return the model name configured for a role.
+
+    Reads ``llm.models.<role>``, falling back to ``llm.model``.
+
+    Raises:
+        KeyError: If ``role`` is not one of MODEL_ROLES.
+    """
+    if role not in MODEL_ROLES:
+        raise KeyError(f"Unknown model role '{role}'; expected one of {MODEL_ROLES}")
+    config = get_config()
+    return config.get(f"llm.models.{role}") or config.get("llm.model", "gpt-4o-mini")

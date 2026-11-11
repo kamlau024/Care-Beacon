@@ -381,3 +381,27 @@ def test_prompt_structure(mock_openai_client):
             assert messages[0]["content"] == system_text
             assert messages[1]["role"] == "user"
             assert messages[1]["content"] == user_text
+
+
+def test_zero_temperature_is_passed_through(mock_openai_client):
+    """An explicit temperature=0.0 must reach the API, not be replaced by the default."""
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.OpenAI", return_value=mock_openai_client):
+            client = LLMClient(provider="openai")
+
+            client.generate("s", "u", temperature=0.0)
+
+            call_kwargs = mock_openai_client.chat.completions.create.call_args.kwargs
+            assert call_kwargs["temperature"] == 0.0
+
+
+def test_zero_max_tokens_is_passed_through(mock_openai_client):
+    """An explicit max_tokens=0 must not be replaced by the default."""
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.OpenAI", return_value=mock_openai_client):
+            client = LLMClient(provider="openai")
+
+            client.generate("s", "u", max_tokens=0)
+
+            call_kwargs = mock_openai_client.chat.completions.create.call_args.kwargs
+            assert call_kwargs["max_tokens"] == 0

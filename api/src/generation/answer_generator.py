@@ -11,7 +11,7 @@ from src.generation.llm_client import LLMClient
 from src.generation.models import GeneratedAnswer, Citation, GenerationConfig
 from src.caching.redis_cache import RedisCache
 from src.embeddings.embedding_generator import EmbeddingGenerator
-from src.config_loader import get_config
+from src.config_loader import get_config, get_model
 
 
 class AnswerGenerator:
@@ -45,7 +45,7 @@ class AnswerGenerator:
         """
         # Cache first: it owns the StatsStore that the other components share.
         self.cache = cache or RedisCache()
-        self.llm_client = llm_client or LLMClient(stats_store=self.cache.stats_store)
+        self.llm_client = llm_client or LLMClient(model=get_model("generation"), stats_store=self.cache.stats_store)
         self.retrieval_engine = retrieval_engine or RetrievalEngine(
             embedding_generator=EmbeddingGenerator(stats_store=self.cache.stats_store),
         )
@@ -66,7 +66,7 @@ class AnswerGenerator:
         safety_config = config.get("safety", {})
 
         return GenerationConfig(
-            model=llm_config.get("model", "gpt-4o-mini"),
+            model=get_model("generation"),
             max_tokens=llm_config.get("max_tokens", 1000),
             temperature=llm_config.get("temperature", 0.1),
             max_context_chunks=prompt_config.get("max_context_tokens", 6000) // 200,  # Rough estimate

@@ -1,22 +1,23 @@
 """LLM-based re-ranking for retrieval results."""
 
-from typing import List
+from typing import List, Optional
 from loguru import logger
 from src.storage.models import RetrievalResult
+from src.config_loader import get_model
 from src.generation.llm_client import LLMClient
 
 
 class LLMReranker:
     """Re-rank retrieval results using LLM reasoning."""
 
-    def __init__(self, llm_client: LLMClient = None, model: str = "gpt-4o-mini"):
+    def __init__(self, llm_client: LLMClient = None, model: Optional[str] = None):
         """Initialize the re-ranker.
 
         Args:
             llm_client: LLM client for scoring (optional)
-            model: Model to use for re-ranking (default: gpt-4o-mini for speed/cost)
+            model: Model to use for re-ranking (default: the configured "rerank" role model)
         """
-        self.model = model
+        self.model = model or get_model("rerank")
         self.llm_client = llm_client or LLMClient(model=self.model)
 
     def rerank(

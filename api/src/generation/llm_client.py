@@ -93,8 +93,10 @@ class LLMClient:
         """
         start_time = time.time()
 
-        max_tokens = max_tokens or self.max_tokens
-        temperature = temperature or self.temperature
+        if max_tokens is None:
+            max_tokens = self.max_tokens
+        if temperature is None:
+            temperature = self.temperature
 
         # Call appropriate provider
         if self.provider == "openai":
