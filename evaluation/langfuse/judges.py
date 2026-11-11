@@ -1,7 +1,10 @@
 """LLM-as-judge scorers. Each makes one gpt-4o-mini call (temperature 0, JSON output)."""
 
 import json
+import logging
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 JUDGE_MODEL = "gpt-4o-mini"
 
@@ -94,6 +97,10 @@ def _judge(prompt: str) -> Score:
 
 
 def judge_grounded(question: str, answer: str, sources_text: str) -> Score:
+    if not sources_text.strip():
+        # Judging against nothing would be meaningless; fail visibly without a call.
+        logger.warning("judge_grounded: no source text for question %r", question)
+        return Score(0, "no source text available to judge against")
     return _judge(
         GROUNDED_PROMPT.format(
             question=question, answer=answer, sources_text=sources_text

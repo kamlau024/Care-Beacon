@@ -8,6 +8,7 @@ Usage (from the repo root):
 import argparse
 import json
 import statistics
+import sys
 import time
 from pathlib import Path
 
@@ -89,7 +90,7 @@ def run_search_baseline(base_url: str, run_name: str):
     upsert_dataset("search-baseline", items)
     client = Langfuse()
     dataset = client.get_dataset("search-baseline")
-    return client.run_experiment(
+    result = client.run_experiment(
         name="search-baseline",
         run_name=run_name,
         data=dataset.items,
@@ -97,14 +98,20 @@ def run_search_baseline(base_url: str, run_name: str):
         evaluators=[grounded_evaluator, latency_evaluator],
         max_concurrency=4,
     )
+    return result, len(items)
 
 
-# Dataset name -> runner(base_url, run_name). Task 17 adds "followups" and "safety".
+# Dataset name -> runner(base_url, run_name) -> (result, expected_item_count). Task 17 adds "followups" and "safety".
 RUNNERS = {"search-baseline": run_search_baseline}
 
 
 def summarize(result) -> dict:
-    """Aggregate per-item evaluations into pass rates and median latency."""
+    """Aggregate per-item evaluations into pass rates and median latency.
+
+    The SDK swallows task and evaluator exceptions, so failed items simply have no
+    evaluation. ``items`` counts surviving items and ``<name>_scored`` counts items
+    that actually got each score; callers compare both with the dataset size.
+    """
     values: dict[str, list[float]] = {}
     for item in result.item_results:
         for ev in item.evaluations:
@@ -114,8 +121,22 @@ def summarize(result) -> dict:
         if name == "ask_latency_s":
             summary["median_ask_latency_s"] = statistics.median(vals)
         else:
+            summary[f"{name}_scored"] = len(vals)
             summary[f"{name}_pass_rate"] = sum(vals) / len(vals)
+    summary.setdefault("grounded_scored", 0)
     return summary
+
+
+def incomplete_reasons(summary: dict, expected: int) -> list[str]:
+    """Reasons the run cannot be trusted as a full baseline (empty if complete)."""
+    reasons = []
+    if summary["items"] < expected:
+        reasons.append(f"only {summary['items']}/{expected} items completed (task failures)")
+    if summary["grounded_scored"] < expected:
+        reasons.append(
+            f"only {summary['grounded_scored']}/{expected} items got a grounded score (judge failures)"
+        )
+    return reasons
 
 
 def main(argv=None) -> int:
@@ -125,13 +146,17 @@ def main(argv=None) -> int:
     parser.add_argument("--run-name", required=True)
     args = parser.parse_args(argv)
 
-    result = RUNNERS[args.dataset](args.base_url, args.run_name)
+    result, expected = RUNNERS[args.dataset](args.base_url, args.run_name)
     print(f"run: {result.run_name}")
     if getattr(result, "dataset_run_url", None):
         print(f"url: {result.dataset_run_url}")
-    for key, value in summarize(result).items():
+    summary = summarize(result)
+    for key, value in summary.items():
         print(f"{key}: {value:.3f}" if isinstance(value, float) else f"{key}: {value}")
-    return 0
+    reasons = incomplete_reasons(summary, expected)
+    for reason in reasons:
+        print(f"WARNING: INCOMPLETE RUN - {reason}", file=sys.stderr)
+    return 1 if reasons else 0
 
 
 if __name__ == "__main__":
