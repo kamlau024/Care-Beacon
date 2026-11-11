@@ -39,3 +39,10 @@ Makefile
 setup.sh
 fix_environment.sh
 install_dependencies.sh
+
+# Local env files hold real API keys and connection strings. Vercel's built-in
+# ignore list only covers .env.local, so without this a CLI deploy uploads .env.
+# Deployed services read Vercel-managed environment variables instead.
+.env
+.env*
+!.env.example
