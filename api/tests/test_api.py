@@ -98,6 +98,7 @@ def test_health_check_reports_qdrant_reachable(client, mock_generator):
     from unittest.mock import MagicMock, patch
 
     with patch("src.api.main.create_vector_database") as mock_factory, \
+         patch("src.api.main.db_healthy", return_value=True), \
          patch("src.api.main.get_answer_generator", return_value=mock_generator):
         mock_factory.return_value.client.get_collection = MagicMock(return_value=object())
         response = client.get("/api/health")
@@ -114,6 +115,7 @@ def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator
     from unittest.mock import patch
 
     with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")), \
+         patch("src.api.main.db_healthy", return_value=True), \
          patch("src.api.main.get_answer_generator", return_value=mock_generator):
         response = client.get("/api/health")
 
@@ -121,6 +123,18 @@ def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator
     body = response.json()
     assert body["status"] == "degraded"
     assert body["services"]["vector_db"] is False
+
+
+def test_health_503_when_postgres_down(client, mock_generator):
+    from unittest.mock import patch
+
+    with patch("src.api.main.db_healthy", return_value=False), \
+         patch("src.api.main.create_vector_database"), \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.get("/api/health")
+    assert r.status_code == 503
+    assert r.json()["services"]["postgres"] is False
+    assert r.json()["services"]["vector_db"] is True
 
 
 def test_old_health_path_is_gone(client):

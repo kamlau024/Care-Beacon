@@ -5,7 +5,7 @@
 
 PY := /opt/anaconda3/envs/care-beacon/bin/python
 
-.PHONY: help setup env-activate test test-cov lint format dev ingest clean-cache clean-logs clean-all check
+.PHONY: help setup env-activate test test-cov lint format dev ingest migrate test-db clean-cache clean-logs clean-all check
 
 help:  ## Show this help message
 	@echo "Care-Beacon Development Commands:"
@@ -43,6 +43,13 @@ dev:  ## Run both services locally via the Vercel route table
 # Data Ingestion (local only)
 ingest:  ## Run article ingestion (local only)
 	cd api && $(PY) scripts/ingest.py
+
+# Postgres (Neon)
+migrate:  ## Apply SQL migrations (uses DATABASE_URL_UNPOOLED, else DATABASE_URL)
+	cd api && $(PY) scripts/migrate.py
+
+test-db:  ## Run Postgres tests (requires TEST_DATABASE_URL; uses an isolated schema)
+	cd api && $(PY) -m pytest tests/db -v
 
 # Utilities
 clean-cache:  ## Clear Python cache files

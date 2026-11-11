@@ -17,6 +17,7 @@ from src.config_loader import get_config
 from src.observability.tracing import flush, request_trace
 from src.api.filters import configured_sources, normalize_sources
 from src.storage.vector_db import create_vector_database
+from src.db.connection import db_healthy
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
@@ -199,7 +200,7 @@ async def root():
 
 @app.get("/api/health", response_model=HealthResponse, tags=["Monitoring"])
 async def health_check(response: Response):
-    """Health check that performs a real Qdrant read.
+    """Health check that performs a real Qdrant read and a Postgres SELECT 1.
 
     A 200 from this endpoint proves the vector database is reachable, which is what
     makes it valid as the scheduled keepalive target. A cluster that has been
@@ -221,18 +222,22 @@ async def health_check(response: Response):
         logger.warning(f"Health check: Qdrant unreachable: {e}")
         vector_db_healthy = False
 
+    postgres_healthy = db_healthy()
+
     generator = get_answer_generator()
     services = {
         "vector_db": vector_db_healthy,
         "redis_cache": generator.cache.is_healthy(),
+        "postgres": postgres_healthy,
         "llm_client": True,
     }
 
-    if not vector_db_healthy:
+    all_healthy = vector_db_healthy and postgres_healthy
+    if not all_healthy:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
     return HealthResponse(
-        status="healthy" if vector_db_healthy else "degraded",
+        status="healthy" if all_healthy else "degraded",
         version=API_VERSION,
         timestamp=datetime.now(),
         services=services,
