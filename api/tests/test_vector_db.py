@@ -58,3 +58,27 @@ def test_create_if_missing_true_creates_missing_collection():
         QdrantVectorDatabase(url="https://example.qdrant.io", api_key="test-key")
 
         assert mock_client.create_collection.called
+
+
+def test_list_filter_value_uses_match_any():
+    from qdrant_client.models import MatchAny
+    from src.storage.qdrant_db import build_qdrant_filter
+
+    f = build_qdrant_filter({"source": ["BC Cancer", "Cleveland Clinic"]})
+    assert isinstance(f.must[0].match, MatchAny)
+    assert f.must[0].match.any == ["BC Cancer", "Cleveland Clinic"]
+
+
+def test_scalar_filter_value_still_uses_match_value():
+    from qdrant_client.models import MatchValue
+    from src.storage.qdrant_db import build_qdrant_filter
+
+    f = build_qdrant_filter({"source": "BC Cancer"})
+    assert isinstance(f.must[0].match, MatchValue)
+
+
+def test_no_filter_returns_none():
+    from src.storage.qdrant_db import build_qdrant_filter
+
+    assert build_qdrant_filter(None) is None
+    assert build_qdrant_filter({}) is None

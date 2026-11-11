@@ -952,3 +952,22 @@ def test_lifespan_survives_answer_generator_init_failure(capsys):
         assert "API is ready to accept requests!" in captured.out
         assert "Shutting down Care-Beacon API" in captured.out
 
+
+
+def test_ask_two_of_three_sources_filters_by_list(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": ["BC Cancer", "Cleveland Clinic"]})
+    assert r.status_code == 200
+    assert mock_generator.generate_answer.call_args.kwargs["filters"] == {"source": ["BC Cancer", "Cleveland Clinic"]}
+
+
+def test_ask_single_string_source_still_accepted(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": "BC Cancer"})
+    assert mock_generator.generate_answer.call_args.kwargs["filters"] == {"source": "BC Cancer"}
+
+
+def test_ask_unknown_source_is_422(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": ["Mayo Clinic"]})
+    assert r.status_code == 422

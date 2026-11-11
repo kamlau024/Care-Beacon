@@ -132,11 +132,10 @@ export function SearchInterface({
       // Build request with source filter and min similarity
       const requestData: any = { question: question.trim() }
 
-      // If only one source is selected, add it as a filter
-      if (selectedSources.length === 1) {
-        requestData.source = selectedSources[0]
+      // Filter whenever fewer than all sources are selected
+      if (selectedSources.length < SOURCES.length) {
+        requestData.source = selectedSources
       }
-      // If both sources are selected, don't add source filter (search all)
 
       // Add minimum similarity threshold
       if (minSimilarity > 0) {

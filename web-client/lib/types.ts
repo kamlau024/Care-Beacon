@@ -95,7 +95,7 @@ export interface StatsResponse {
 export interface QuestionRequest {
   question: string
   cancer_type?: string
-  source?: string
+  source?: string | string[]
   max_results?: number
   min_similarity?: number
 }

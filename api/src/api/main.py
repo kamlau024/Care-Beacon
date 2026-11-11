@@ -35,6 +35,7 @@ sys.stderr = FilteredStderr(sys.stderr)
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
 from src.config_loader import get_config
+from src.api.filters import configured_sources, normalize_sources
 from src.storage.vector_db import create_vector_database
 from src.api.models import (
     QuestionRequest,
@@ -285,8 +286,16 @@ async def ask_question(question_request: QuestionRequest):
         filters = {}
         if question_request.cancer_type:
             filters["cancer_type"] = question_request.cancer_type
-        if question_request.source:
-            filters["source"] = question_request.source
+        try:
+            source_filter = normalize_sources(
+                question_request.source, configured_sources()
+            )
+        except ValueError as e:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+            )
+        if source_filter is not None:
+            filters["source"] = source_filter
 
         # Generate answer
         start_time = time.time()
@@ -338,6 +347,8 @@ async def ask_question(question_request: QuestionRequest):
             },
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
         # Log the full error with traceback
         import traceback

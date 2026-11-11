@@ -37,6 +37,10 @@ retrieval:
   min_similarity_threshold: 0.6  # Minimum similarity score (0-1) for re-ranked results (optimal threshold)
   max_chunks_per_article: 20  # Diversity: max chunks from same article (increased from 3 for more comprehensive answers)
   enable_metadata_filtering: true
+  sources:  # Valid values for the `source` filter, in display order
+    - BC Cancer
+    - Canadian Cancer Society
+    - Cleveland Clinic
   rerank_results: true  # LLM-based re-ranking for better relevance
   include_metadata: true  # Include full metadata in results
   cache_query_embeddings: true  # Cache embeddings for repeated queries
