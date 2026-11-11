@@ -223,3 +223,28 @@ To expand the test dataset:
 - [Ragas Documentation](https://docs.ragas.io/)
 - [Ragas Metrics Explained](https://docs.ragas.io/en/latest/concepts/metrics/index.html)
 - [LangChain Documentation](https://python.langchain.com/)
+
+## Langfuse experiments (LLM-as-judge)
+
+`evaluation/langfuse/` holds the dataset-driven experiment runner. Judges
+(`judges.py`) run in our own code with `gpt-4o-mini` at temperature 0 and post their
+scores to Langfuse; `datasets.py` uploads datasets idempotently by item id.
+
+Required environment variables: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`,
+`LANGFUSE_HOST` (or `LANGFUSE_BASE_URL`) and `OPENAI_API_KEY`.
+
+Search baseline (78 questions from `ragas/test_questions.json`, grounded pass rate and
+median `/ask` latency), run from the repo root:
+
+```bash
+/opt/anaconda3/envs/care-beacon/bin/python -m evaluation.langfuse.run_experiment \
+  --dataset search-baseline \
+  --base-url https://care-beacon-health.vercel.app \
+  --run-name search-baseline-$(date +%F)
+```
+
+Record the run name, Langfuse run URL, item count, grounded pass rate and median
+latency in `evaluation/results/<date>-search-baseline.md`.
+
+Judge unit tests (OpenAI mocked, no network):
+`/opt/anaconda3/envs/care-beacon/bin/python -m pytest evaluation/langfuse/test_judges.py -q`
