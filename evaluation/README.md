@@ -268,7 +268,9 @@ Needs `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (or
 `LANGFUSE_BASE_URL`) and `OPENAI_API_KEY` locally. The target must be a preview deploy of
 the branch with its own chat environment (Redis, Qdrant, OpenAI keys) and a daily cap high
 enough for roughly 150 turns (all three datasets). Preview deployments behind Vercel Deployment Protection need
-a bypass; adjust `--base-url` accordingly.
+the project's automation bypass secret (Project Settings → Deployment Protection →
+Protection Bypass for Automation): export it as `VERCEL_AUTOMATION_BYPASS_SECRET` and the
+runner sends it as the `x-vercel-protection-bypass` header on every request.
 
 ```bash
 BASE_URL=https://<branch-preview>.vercel.app

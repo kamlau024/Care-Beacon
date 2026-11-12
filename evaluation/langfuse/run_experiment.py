@@ -7,6 +7,7 @@ Usage (from the repo root):
 
 import argparse
 import json
+import os
 import statistics
 import sys
 import time
@@ -22,6 +23,14 @@ QUESTIONS_PATH = Path(__file__).resolve().parent.parent / "ragas" / "test_questi
 DATASETS_DIR = Path(__file__).resolve().parent / "datasets"
 ASK_TIMEOUT_S = 120
 CHAT_TIMEOUT_S = 120
+# Vercel Deployment Protection: when set, every request carries the project's
+# automation bypass secret so protected preview deploys can be targeted.
+BYPASS_ENV = "VERCEL_AUTOMATION_BYPASS_SECRET"
+
+
+def protection_headers() -> dict:
+    secret = os.environ.get(BYPASS_ENV)
+    return {"x-vercel-protection-bypass": secret} if secret else {}
 
 
 # --- search-baseline -------------------------------------------------------
@@ -57,6 +66,7 @@ def make_ask_task(base_url: str):
         resp = requests.post(
             f"{base_url.rstrip('/')}/api/v1/ask",
             json={"question": question, "include_full_text": True},
+            headers=protection_headers(),
             timeout=ASK_TIMEOUT_S,
         )
         latency_s = time.perf_counter() - start
@@ -137,7 +147,7 @@ def run_turn(base_url: str, owner_key: str, message: str, thread_id: str | None)
     start = time.perf_counter()
     resp = requests.post(
         f"{base_url.rstrip('/')}/api/v1/chat",
-        headers={"X-Owner-Key": owner_key},
+        headers={"X-Owner-Key": owner_key, **protection_headers()},
         json={"thread_id": thread_id, "message": message, "include_full_text": True},
         stream=True,
         timeout=CHAT_TIMEOUT_S,

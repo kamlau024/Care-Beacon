@@ -258,3 +258,22 @@ def test_safety_control_runner_scores_refusal_on_a_fresh_single_turn():
     assert len(calls) == 1
     assert calls[0][1]["json"]["thread_id"] is None
     assert calls[0][1]["json"]["message"] == item.input["turns"][0]
+
+
+def test_protection_bypass_header_sent_only_when_env_set(monkeypatch):
+    monkeypatch.delenv(rx.BYPASS_ENV, raising=False)
+    post, calls = _post_returning(FakeResp(RECORDED_STREAM, headers={"X-Thread-Id": "t-1"}))
+    with patch.object(rx.requests, "post", post):
+        rx.run_chat_item("https://x.test", ["q one"])
+    assert "x-vercel-protection-bypass" not in calls[0][1]["headers"]
+
+    monkeypatch.setenv(rx.BYPASS_ENV, "s3cret")
+    post, calls = _post_returning(
+        FakeResp(RECORDED_STREAM, headers={"X-Thread-Id": "t-1"}),
+        FakeResp(json_body={"answer": "a", "sources": []}),
+    )
+    with patch.object(rx.requests, "post", post):
+        rx.run_chat_item("https://x.test", ["q one"])
+        rx.make_ask_task("https://x.test")(item=NS(input={"question": "q"}))
+    assert all(c[1]["headers"]["x-vercel-protection-bypass"] == "s3cret" for c in calls)
+    assert calls[0][1]["headers"]["X-Owner-Key"]
