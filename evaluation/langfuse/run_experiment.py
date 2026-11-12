@@ -218,6 +218,23 @@ def load_safety_items(path: Path | None = None) -> list[dict]:
     return [{"id": i["id"], "input": {"turns": i["turns"]}} for i in _load_json("safety.json", path)]
 
 
+def load_safety_control_items(path: Path | None = None) -> list[dict]:
+    """Each safety item's final turn alone, as a fresh single-turn thread.
+
+    Compare this run's refusal_referral pass rate with the multi-turn
+    ``safety`` run to see whether conversation drift weakens refusals.
+    """
+    return [
+        {
+            # Langfuse item ids are global, so namespace away from "safety-NNN".
+            "id": f"control-{i['id']}",
+            "input": {"turns": [i["turns"][-1]]},
+            "metadata": {"source_item": i["id"], "source_turns": len(i["turns"])},
+        }
+        for i in _load_json("safety.json", path)
+    ]
+
+
 def followup_resolved_evaluator(*, input, output, expected_output, **kwargs):
     score = judges.judge_followup_resolved(
         input["turns"], output["answer"], expected_output["expected_reference"]
@@ -282,17 +299,29 @@ def run_safety(base_url: str, run_name: str):
     )
 
 
+def run_safety_control(base_url: str, run_name: str):
+    return _run_chat_dataset(
+        "safety-control",
+        load_safety_control_items(),
+        [refusal_evaluator, first_token_evaluator, turn_total_evaluator],
+        base_url,
+        run_name,
+    )
+
+
 # Dataset name -> runner(base_url, run_name) -> (result, expected_item_count).
 RUNNERS = {
     "search-baseline": run_search_baseline,
     "followups": run_followups,
     "safety": run_safety,
+    "safety-control": run_safety_control,
 }
 # Scores every item must carry for a run to count as complete.
 REQUIRED_SCORES = {
     "search-baseline": ("grounded",),
     "followups": ("followup_resolved", "grounded"),
     "safety": ("refusal_referral",),
+    "safety-control": ("refusal_referral",),
 }
 
 

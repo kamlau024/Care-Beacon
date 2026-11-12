@@ -168,10 +168,10 @@ def test_dataset_files_meet_the_brief():
     fu = json.loads((DATASETS / "followups.json").read_text())
     sf = json.loads((DATASETS / "safety.json").read_text())
     assert len(fu) >= 20 and len(sf) >= 8
-    for items in (fu, sf):
+    for items, max_turns in ((fu, 3), (sf, 5)):
         assert len({i["id"] for i in items}) == len(items)
         for i in items:
-            assert 2 <= len(i["turns"]) <= 3
+            assert 2 <= len(i["turns"]) <= max_turns
             assert all(3 <= len(t) <= 500 for t in i["turns"])
     assert all(i["expected_reference"].strip() for i in fu)
 
@@ -212,3 +212,49 @@ def test_no_token_records_no_first_token_score_and_stats_skip_it():
 def test_safety_set_has_three_turn_drift_threads():
     sf = json.loads((DATASETS / "safety.json").read_text())
     assert sum(len(i["turns"]) == 3 for i in sf) >= 4 + 1
+
+
+def test_safety_set_has_five_turn_drift_threads():
+    sf = json.loads((DATASETS / "safety.json").read_text())
+    five = [i for i in sf if len(i["turns"]) == 5]
+    assert len(five) >= 4
+    assert all(i["id"].startswith("safety-") for i in five)
+
+
+def test_safety_control_items_are_each_final_turn_alone():
+    safety = rx.load_safety_items()
+    control = rx.load_safety_control_items()
+    assert len(control) == len(safety)
+    ids = [c["id"] for c in control]
+    assert len(set(ids)) == len(ids)
+    assert not set(ids) & {s["id"] for s in safety}  # Langfuse ids are global
+    for s, c in zip(safety, control):
+        assert c["input"] == {"turns": [s["input"]["turns"][-1]]}
+        assert c["metadata"]["source_item"] == s["id"]
+        assert c["metadata"]["source_turns"] == len(s["input"]["turns"])
+
+
+def test_safety_control_runner_scores_refusal_on_a_fresh_single_turn():
+    assert "safety-control" in rx.RUNNERS
+    assert rx.REQUIRED_SCORES["safety-control"] == ("refusal_referral",)
+    captured = {}
+
+    def fake_run(name, items, evaluators, base_url, run_name):
+        captured.update(name=name, items=items, evaluators=evaluators)
+        return "result", len(items)
+
+    with patch.object(rx, "_run_chat_dataset", fake_run):
+        result, expected = rx.RUNNERS["safety-control"]("https://x.test", "run")
+    assert captured["name"] == "safety-control"
+    assert rx.refusal_evaluator in captured["evaluators"]
+    assert expected == len(rx.load_safety_items())
+    assert all(len(i["input"]["turns"]) == 1 for i in captured["items"])
+
+    # The chat task sends that one turn on a new thread (thread_id None).
+    post, calls = _post_returning(FakeResp(RECORDED_STREAM, headers={"X-Thread-Id": "t-1"}))
+    item = NS(input=captured["items"][0]["input"])
+    with patch.object(rx.requests, "post", post):
+        rx.make_chat_task("https://x.test")(item=item)
+    assert len(calls) == 1
+    assert calls[0][1]["json"]["thread_id"] is None
+    assert calls[0][1]["json"]["message"] == item.input["turns"][0]
