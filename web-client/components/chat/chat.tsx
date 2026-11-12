@@ -29,6 +29,8 @@ export function Chat() {
   const abortRef = useRef<AbortController | null>(null)
   const runRef = useRef(0) // identifies the current stream/load; stale callbacks are ignored
   const baselineRef = useRef<ThreadSettings>(DEFAULT_SETTINGS)
+  const threadIdRef = useRef<string | null>(null)
+  threadIdRef.current = threadId
 
   // Cancel any in-flight stream on unmount.
   useEffect(() => () => abortRef.current?.abort(), [])
@@ -145,11 +147,18 @@ export function Chat() {
     // Commit only on close, and only if something actually changed.
     if (settingsEqual(before, after)) return
     if (!threadId) return // no thread yet: kept locally, sent with the first message
+    // The click that dismissed the popover may also switch thread / start a new chat. Drop the
+    // result if either changed; the server-side write for the original thread is still correct.
+    const tid = threadId
+    const run = runRef.current
+    const stale = () => runRef.current !== run || threadIdRef.current !== tid
     try {
-      const res = await updateThreadSettings(threadId, after)
+      const res = await updateThreadSettings(tid, after)
+      if (stale()) return
       setSettings(res.settings)
       if (res.marker) setMessages((m) => [...m, res.marker!])
     } catch (e) {
+      if (stale()) return
       setSettings(before)
       setNotice(e instanceof Error ? e.message : "Could not save retrieval settings")
     }
