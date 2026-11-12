@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/navigation-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchInterface } from "@/components/search-interface"
+import { Chat } from "@/components/chat/chat"
 import { StatsDashboard } from "@/components/stats-dashboard"
 import type { QuestionResponse } from "@/lib/types"
 
-type Page = "search" | "stats"
+type Page = "search" | "chat" | "stats"
 
 export default function Home() {
   // Navigation state
@@ -30,10 +31,10 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container max-w-6xl mx-auto flex h-16 items-center justify-between px-4 md:px-8">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-6">
             <div className="flex items-center gap-2">
               <Activity className="h-6 w-6" />
-              <h1 className="text-xl font-bold">Care Beacon</h1>
+              <h1 className="sr-only text-xl font-bold sm:not-sr-only">Care Beacon</h1>
             </div>
 
             {/* Navigation Menu */}
@@ -46,6 +47,15 @@ export default function Home() {
                     data-active={currentPage === "search"}
                   >
                     Search
+                  </button>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <button
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => setCurrentPage("chat")}
+                    data-active={currentPage === "chat"}
+                  >
+                    Chat
                   </button>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -85,6 +95,8 @@ export default function Home() {
               />
             </div>
           )}
+
+          {currentPage === "chat" && <Chat />}
 
           {currentPage === "stats" && (
             <div className="space-y-6">
