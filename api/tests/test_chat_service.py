@@ -11,7 +11,7 @@ import pytest
 
 from src.api.chat_models import ChatRequest
 from src.chat.models import ThreadSettings
-from src.chat.prompt import load_chat_prompts
+from src.chat.prompt import fallback_title, load_chat_prompts
 from src.chat.repository import ThreadNotFound
 from src.chat.service import ERROR_MESSAGE, ChatService, run_in_pinned_context
 from src.chat.sse import frame
@@ -321,8 +321,11 @@ def test_disconnect_persists_partial_as_interrupted(repo, prompts):
     # The LLM stream was closed, so its (estimated) cost was recorded and saved.
     assert llm.streams[0].closed
     assert msg.cost == pytest.approx(0.0005) and msg.tokens == 12
-    # Titling is skipped for an interrupted turn.
-    assert repo.get_thread(thread.id, OWNER).title is None
+    # An interrupted first turn gets the fallback title (no LLM titling call).
+    assert repo.get_thread(thread.id, OWNER).title == fallback_title(
+        "What are the side effects of radiation?"
+    )
+    assert not any("Title:" in p for p in llm.utility_calls)
 
     # The thread reopens normally and the next turn works, with the
     # interrupted answer in the history given to the prompt builder.
@@ -482,3 +485,46 @@ def test_run_in_pinned_context_keeps_contextvars_across_threadpool_hops():
     assert seen == ["set-in-step-1"]
     assert closed == ["set-in-step-1"]
     assert var.get() == "unset"
+
+
+def test_chat_uses_same_max_results_default_as_ask(repo, prompts):
+    from src.api.models import QuestionRequest
+
+    default = QuestionRequest.model_fields["max_results"].default
+    retrieval = FakeRetrieval()
+    service = make_service(repo, prompts, retrieval=retrieval, max_context_chunks=30)
+    _, gen = run_turn(service)
+    list(gen)
+    assert retrieval.queries[0].max_results == default
+
+
+def test_error_on_new_thread_sets_fallback_title(repo, prompts):
+    llm = FakeLLM()
+    retrieval = FakeRetrieval(raises=RuntimeError("qdrant down secret"))
+    service = make_service(repo, prompts, retrieval=retrieval, llm=llm)
+    q = "Does chemotherapy always cause hair loss for everyone?"
+    thread, gen = run_turn(service, message=q)
+    frames = [parse(f) for f in gen]
+    assert frames[-1][0] == "error"
+    assert repo.get_thread(thread.id, OWNER).title == fallback_title(q)
+    assert llm.utility_calls == []
+
+
+def test_error_on_existing_thread_leaves_title_alone(repo, prompts):
+    service = make_service(repo, prompts)
+    thread, gen = run_turn(service)
+    list(gen)
+    repo.rename_thread(thread.id, OWNER, "Mine")
+    bad = make_service(repo, prompts, retrieval=FakeRetrieval(raises=RuntimeError("x")))
+    _, gen2 = run_turn(bad, message="And after that?", thread_id=thread.id)
+    list(gen2)
+    assert repo.get_thread(thread.id, OWNER).title == "Mine"
+
+
+def test_fallback_title_failure_does_not_break_error_frame(repo, prompts):
+    retrieval = FakeRetrieval(raises=RuntimeError("x"))
+    service = make_service(repo, prompts, retrieval=retrieval)
+    repo.set_title_if_empty = MagicMock(side_effect=RuntimeError("db gone"))
+    _, gen = run_turn(service)
+    frames = [parse(f) for f in gen]
+    assert frames[-1] == ("error", {"message": ERROR_MESSAGE})

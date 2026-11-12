@@ -25,7 +25,8 @@ from loguru import logger
 from src.api.chat_models import ChatRequest
 from src.api.filters import configured_sources, normalize_sources
 from src.chat.models import Message, Thread, ThreadSettings
-from src.chat.prompt import build_chat_messages, generate_title, rewrite_query
+from src.api.models import QuestionRequest
+from src.chat.prompt import build_chat_messages, fallback_title, generate_title, rewrite_query
 from src.chat.repository import ThreadNotFound
 from src.chat.sse import frame
 from src.observability.tracing import flush, request_trace
@@ -35,6 +36,9 @@ DEFAULT_MIN_SIMILARITY = 0.5
 EXCERPT_MAX_CHARS = 500
 ERROR_MESSAGE = "Something went wrong while answering. Please try again."
 ENDPOINT = "/api/v1/chat"
+# Same retrieval breadth as /api/v1/ask from the Search page, so Chat and
+# Search stay comparable (spec, open decision 2).
+ASK_MAX_RESULTS = QuestionRequest.model_fields["max_results"].default
 
 
 def default_settings() -> ThreadSettings:
@@ -174,6 +178,16 @@ class ChatService:
             except Exception as e:
                 logger.error(f"Saving interrupted chat answer failed: {type(e).__name__}")
 
+        def fallback_title_if_new() -> None:
+            # A first turn that never reaches `done` still gets a title, so the
+            # thread isn't left untitled in History. No LLM call; best effort.
+            if not is_new:
+                return
+            try:
+                self.repository.set_title_if_empty(thread.id, fallback_title(question))
+            except Exception as e:
+                logger.warning(f"Chat fallback titling failed: {type(e).__name__}")
+
         try:
             query_text = question
             if any(m.role != "settings" for m in prior_messages):
@@ -183,7 +197,7 @@ class ChatService:
             yield frame("status", {"stage": "searching", "query": query_text})
             query = self.retrieval_engine.make_query(
                 query_text,
-                max_results=self.max_context_chunks,
+                max_results=ASK_MAX_RESULTS,
                 min_similarity=thread.settings.min_similarity,
                 filters=self._filters(thread.settings),
             )
@@ -222,11 +236,13 @@ class ChatService:
             })
         except GeneratorExit:
             save_partial()
+            fallback_title_if_new()
             raise
         except Exception as e:
             # Never echo exception text (it may carry provider or DB details).
             logger.error(f"Chat turn failed: {type(e).__name__}")
             save_partial()
+            fallback_title_if_new()
             trace.update(metadata={"status": "error"})
             yield frame("error", {"message": ERROR_MESSAGE})
             return
