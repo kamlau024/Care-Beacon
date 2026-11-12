@@ -1,12 +1,13 @@
-"""Thread REST endpoints (list, open, rename, delete, settings)."""
+"""Thread REST endpoints (list, open, rename, delete, settings) and the chat stream."""
 
 import re
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from src.api.chat_models import (
+    ChatRequest,
     OkResponse,
     RenameRequest,
     RenameResponse,
@@ -15,7 +16,10 @@ from src.api.chat_models import (
     ThreadListResponse,
 )
 from src.chat.models import ThreadSettings
+from src.chat.prompt import load_chat_prompts
 from src.chat.repository import ThreadNotFound, ThreadRepository
+from src.chat.service import ChatService
+from src.chat.spend import cap_reached
 from src.db.connection import DatabaseUnavailable, connect
 
 _OWNER_KEY_RE = re.compile(
@@ -35,6 +39,24 @@ def require_owner_key(
 
 def get_repository() -> ThreadRepository:
     return ThreadRepository(connect=connect)
+
+
+def get_chat_service(
+    repo: ThreadRepository = Depends(get_repository),
+) -> ChatService:
+    """Chat shares the AnswerGenerator's retrieval engine, LLM client and cost counter."""
+    from src.api.main import get_answer_generator  # lazy: main imports this module
+
+    generator = get_answer_generator()
+    return ChatService(
+        repository=repo,
+        retrieval_engine=generator.retrieval_engine,
+        llm_client=generator.llm_client,
+        prompts=load_chat_prompts(),
+        stats_store=generator.cache.stats_store,
+        max_context_chunks=generator.config.max_context_chunks,
+        disclaimer=generator.config.disclaimer_text,
+    )
 
 
 async def database_unavailable_handler(request: Request, exc: DatabaseUnavailable):
@@ -113,3 +135,32 @@ def update_thread_settings(
     except ThreadNotFound:
         raise _not_found()
     return SettingsResponse(settings=settings, marker=marker)
+
+
+@router.post("/chat")
+def chat(
+    body: ChatRequest,
+    owner: str = Depends(require_owner_key),
+    service: ChatService = Depends(get_chat_service),
+):
+    if cap_reached(service.stats_store):
+        return JSONResponse(
+            status_code=429,
+            content={
+                "error": "DailyLimitReached",
+                "message": "Today's chat limit has been reached. It resets at midnight UTC.",
+            },
+        )
+    try:
+        thread, prior, is_new = service.start_turn(owner, body)
+    except ThreadNotFound:
+        raise _not_found()
+    return StreamingResponse(
+        service.stream_turn(thread, prior, is_new, body.message, body.include_full_text),
+        media_type="text/event-stream",
+        headers={
+            "X-Thread-Id": thread.id,
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

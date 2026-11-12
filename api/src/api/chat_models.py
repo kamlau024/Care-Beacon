@@ -3,11 +3,13 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 from src.chat.models import Message, ThreadSettings, ThreadSummary
 
 MAX_TITLE_LENGTH = 200
+MIN_MESSAGE_LENGTH = 3
+MAX_MESSAGE_LENGTH = 500
 
 
 class ThreadListResponse(BaseModel):
@@ -45,3 +47,12 @@ class OkResponse(BaseModel):
 class SettingsResponse(BaseModel):
     settings: ThreadSettings
     marker: Optional[Message] = None
+
+
+class ChatRequest(BaseModel):
+    """One chat turn. ``settings`` applies only when creating a thread."""
+
+    thread_id: Optional[str] = None
+    message: str = Field(min_length=MIN_MESSAGE_LENGTH, max_length=MAX_MESSAGE_LENGTH)
+    settings: Optional[ThreadSettings] = None
+    include_full_text: bool = False

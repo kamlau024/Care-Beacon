@@ -145,3 +145,125 @@ def test_database_unavailable_is_503_without_detail(method, path, body):
     assert r.status_code == 503
     assert "secret" not in r.text and "postgres" not in r.text
     assert set(r.json()) == {"error", "message", "timestamp"}
+
+
+# ---------------------------------------------------------------- POST /api/v1/chat
+
+from types import SimpleNamespace  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
+
+import src.api.main as main_module  # noqa: E402
+from src.api.chat_routes import get_chat_service  # noqa: E402
+from src.caching.redis_cache import RedisCache  # noqa: E402
+from src.chat.prompt import load_chat_prompts  # noqa: E402
+from src.chat.service import ChatService  # noqa: E402
+from tests.test_chat_service import FakeLLM, FakeRetrieval  # noqa: E402
+
+CHAT_BODY = {"message": "What are the side effects of radiation therapy?"}
+
+
+def _stats(daily_cost=0.0):
+    stats = MagicMock()
+    stats.get_daily_cost.return_value = daily_cost
+    return stats
+
+
+@pytest.fixture
+def chat_parts(repo):
+    return SimpleNamespace(retrieval=FakeRetrieval(), llm=FakeLLM(), stats=_stats(), repo=repo)
+
+
+@pytest.fixture
+def chat_client(chat_parts):
+    def build():
+        return ChatService(
+            repository=chat_parts.repo,
+            retrieval_engine=chat_parts.retrieval,
+            llm_client=chat_parts.llm,
+            prompts=load_chat_prompts(),
+            stats_store=chat_parts.stats,
+            max_context_chunks=5,
+            disclaimer="Disclaimer.",
+        )
+
+    app.dependency_overrides[get_chat_service] = build
+    yield TestClient(app)
+    app.dependency_overrides.pop(get_chat_service, None)
+
+
+def _events(text):
+    return [line[len("event: "):] for line in text.split("\n") if line.startswith("event: ")]
+
+
+def test_chat_requires_owner_key(chat_client):
+    assert chat_client.post("/api/v1/chat", json=CHAT_BODY).status_code == 400
+
+
+def test_spend_cap_returns_429_before_any_model_call(chat_client, chat_parts, repo):
+    chat_parts.stats.get_daily_cost.return_value = 1000.0
+    r = chat_client.post("/api/v1/chat", json=CHAT_BODY, headers=h())
+    assert r.status_code == 429
+    assert r.json() == {
+        "error": "DailyLimitReached",
+        "message": "Today's chat limit has been reached. It resets at midnight UTC.",
+    }
+    assert chat_parts.retrieval.queries == []
+    assert chat_parts.llm.stream_calls == [] and chat_parts.llm.utility_calls == []
+    assert repo.list_threads(OWNER) == []
+
+
+def test_chat_404_for_other_owners_thread(chat_client, repo):
+    theirs = repo.create_thread(OTHER, SETTINGS)
+    other = chat_client.post("/api/v1/chat", json={**CHAT_BODY, "thread_id": theirs.id}, headers=h())
+    missing = chat_client.post("/api/v1/chat", json={**CHAT_BODY, "thread_id": "thr_x"}, headers=h())
+    assert other.status_code == missing.status_code == 404
+    assert repo.list_messages(theirs.id) == []
+
+
+def test_chat_sets_thread_id_header_for_new_thread(chat_client, repo):
+    r = chat_client.post("/api/v1/chat", json=CHAT_BODY, headers=h())
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/event-stream")
+    assert r.headers["cache-control"] == "no-cache"
+    assert r.headers["x-accel-buffering"] == "no"
+    [summary] = repo.list_threads(OWNER)
+    assert r.headers["x-thread-id"] == summary.id
+    assert _events(r.text) == ["status", "status", "citations", "token", "token", "token", "done"]
+    roles = [m.role for m in repo.list_messages(summary.id)]
+    assert roles == ["user", "assistant"]
+
+
+def test_chat_existing_thread_streams_follow_up(chat_client, repo, thread):
+    repo.append_message(thread.id, "user", "Earlier question")
+    repo.append_message(thread.id, "assistant", "Earlier answer")
+    r = chat_client.post("/api/v1/chat", json={**CHAT_BODY, "thread_id": thread.id}, headers=h())
+    assert r.headers["x-thread-id"] == thread.id
+    assert _events(r.text)[0] == "status" and '"stage":"rewriting"' in r.text
+
+
+def test_chat_503_when_database_unavailable(chat_client, repo):
+    def boom(*a, **kw):
+        raise DatabaseUnavailable("x")
+
+    repo.create_thread = boom
+    r = chat_client.post("/api/v1/chat", json=CHAT_BODY, headers=h())
+    assert r.status_code == 503
+
+
+def test_answer_cache_never_used(client, repo, monkeypatch):
+    """Real get_chat_service wiring from the AnswerGenerator; its cache is never read or written."""
+    cache = MagicMock(spec=RedisCache)
+    cache.stats_store = _stats()
+    generator = SimpleNamespace(
+        cache=cache,
+        retrieval_engine=FakeRetrieval(),
+        llm_client=FakeLLM(),
+        config=SimpleNamespace(max_context_chunks=5, disclaimer_text="Ask disclaimer."),
+    )
+    monkeypatch.setattr(main_module, "_answer_generator", generator)
+    r = client.post("/api/v1/chat", json=CHAT_BODY, headers=h())
+    assert r.status_code == 200 and _events(r.text)[-1] == "done"
+    assert '"disclaimer":"Ask disclaimer."' in r.text
+    cache.get.assert_not_called()
+    cache.set.assert_not_called()
+    cache.stats_store.get_daily_cost.assert_called()
