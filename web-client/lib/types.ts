@@ -120,7 +120,7 @@ export interface ThreadSettings {
 
 export interface ThreadSummary {
   id: string
-  title: string
+  title: string | null
   last_activity_at: string
   message_count: number
 }
@@ -156,7 +156,7 @@ export interface ChatMessage {
 
 export interface ThreadDetail {
   id: string
-  title: string
+  title: string | null
   settings: ThreadSettings
   messages: ChatMessage[]
 }

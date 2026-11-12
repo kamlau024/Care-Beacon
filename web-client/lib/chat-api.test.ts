@@ -41,9 +41,10 @@ describe("streamChat", () => {
       )
     )
     const h = handlers()
-    await streamChat({ threadId: null, message: "hello there" }, h)
+    const res = await streamChat({ threadId: null, message: "hello there" }, h)
     expect(h.onError).toHaveBeenCalledWith(msg)
     expect(h.onToken).not.toHaveBeenCalled()
+    expect(res.httpStatus).toBe(429)
   })
 
   it("sends owner header and thread_id, dispatches events across split chunks", async () => {

@@ -5,6 +5,7 @@ import { History, Plus, Send, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getThread, streamChat, updateThreadSettings } from "@/lib/chat-api"
+import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH, restoreInputAfter, showCounter, tooShort } from "@/lib/chat-input"
 import { DEFAULT_SETTINGS, settingsEqual } from "@/lib/settings"
 import type { ThreadSettings } from "@/lib/types"
 import { HistorySheet } from "./history-sheet"
@@ -76,7 +77,7 @@ export function Chat() {
 
   const send = async () => {
     const text = input.trim()
-    if (!text || streaming) return
+    if (!text || streaming || tooShort(text)) return
     setInput("")
     setNotice(null)
     setDisclaimer(null)
@@ -111,7 +112,7 @@ export function Chat() {
       )
     }
 
-    const { threadId: tid } = await streamChat(
+    const { threadId: tid, httpStatus } = await streamChat(
       { threadId, message: text, ...(threadId ? {} : { settings }) },
       {
         onStatus: (stage) => patch({ stage }),
@@ -131,6 +132,8 @@ export function Chat() {
     if (runRef.current !== run) return
     // Even a failed first turn may have created the thread; keep follow-ups attached to it.
     if (tid) setThreadId(tid)
+    // A rejected request (e.g. 422, 429) shouldn't lose what the user typed.
+    if (restoreInputAfter(httpStatus)) setInput((cur) => cur || text)
     abortRef.current = null
     setStreaming(false)
     setHistoryKey((k) => k + 1)
@@ -195,6 +198,13 @@ export function Chat() {
         </p>
       )}
 
+      {(tooShort(input) || showCounter(input.length)) && (
+        <p className="flex justify-between pb-1 text-xs text-muted-foreground" aria-live="polite">
+          <span>{tooShort(input) ? `Questions need at least ${MIN_MESSAGE_LENGTH} characters.` : ""}</span>
+          <span>{showCounter(input.length) ? `${input.length}/${MAX_MESSAGE_LENGTH}` : ""}</span>
+        </p>
+      )}
+
       <form
         className="flex items-end gap-2 border-t pt-3"
         onSubmit={(e) => {
@@ -212,13 +222,13 @@ export function Chat() {
             }
           }}
           rows={2}
-          maxLength={2000}
+          maxLength={MAX_MESSAGE_LENGTH}
           disabled={streaming}
           placeholder="Ask a question…"
           aria-label="Your question"
           className="min-h-[2.5rem] flex-1 resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         />
-        <Button type="submit" disabled={streaming || !input.trim()} aria-label="Send">
+        <Button type="submit" disabled={streaming || !input.trim() || tooShort(input)} aria-label="Send">
           <Send />
         </Button>
       </form>

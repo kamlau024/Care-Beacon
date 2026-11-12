@@ -78,7 +78,7 @@ export async function streamChat(
   req: { threadId: string | null; message: string; settings?: ThreadSettings },
   handlers: StreamHandlers,
   signal?: AbortSignal
-): Promise<{ threadId: string }> {
+): Promise<{ threadId: string; httpStatus?: number }> {
   let threadId = req.threadId ?? ""
   // Exactly one terminal callback (onDone or onError) per call, unless aborted.
   let terminated = false
@@ -135,7 +135,7 @@ export async function streamChat(
 
     if (!response.ok || !response.body) {
       fail((await errorFrom(response)).message)
-      return { threadId }
+      return response.ok ? { threadId } : { threadId, httpStatus: response.status }
     }
 
     const reader = response.body.getReader()
