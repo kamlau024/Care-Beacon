@@ -17,7 +17,8 @@ from src.config_loader import get_config
 from src.observability.tracing import flush, request_trace
 from src.api.filters import configured_sources, normalize_sources
 from src.storage.vector_db import create_vector_database
-from src.db.connection import db_healthy
+from src.db.connection import db_healthy, DatabaseUnavailable
+from src.api.chat_routes import router as chat_router, database_unavailable_handler
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
@@ -122,6 +123,10 @@ def get_answer_generator() -> AnswerGenerator:
     if _answer_generator is None:
         _answer_generator = AnswerGenerator()
     return _answer_generator
+
+
+app.include_router(chat_router)
+app.add_exception_handler(DatabaseUnavailable, database_unavailable_handler)
 
 
 # Exception handlers
