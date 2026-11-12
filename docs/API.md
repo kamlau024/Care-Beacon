@@ -73,10 +73,10 @@ Get API information and available endpoints.
   "version": "2.0.0",
   "description": "Retrieval-Augmented Generation API for cancer information",
   "docs": "/docs",
-  "health": "/health",
+  "health": "/api/health",
   "endpoints": {
     "ask": "/api/v1/ask",
-    "health": "/health",
+    "health": "/api/health",
     "stats": "/api/v1/stats"
   }
 }
@@ -252,7 +252,7 @@ Send one chat turn and stream the answer as Server-Sent Events (`text/event-stre
 {
   "thread_id": null,
   "message": "What are common side effects of chemotherapy?",
-  "settings": { "sources": ["bc_cancer"], "min_similarity": 0.3 },
+  "settings": { "sources": ["BC Cancer", "Canadian Cancer Society"], "min_similarity": 0.3 },
   "include_full_text": false
 }
 ```
@@ -280,7 +280,7 @@ Send one chat turn and stream the answer as Server-Sent Events (`text/event-stre
 
 A title for a new thread is generated after `done` (best effort); fetch it with `GET /api/v1/threads`.
 
-**Daily spend cap** (HTTP 429, returned before any stream starts). Once today's UTC chat spend reaches `chat.daily_spend_cap_usd` (default $2.00 in `api/config/config.yaml`), chat is refused until midnight UTC:
+**Daily spend cap** (HTTP 429, returned before any stream starts). The cap counts all of today's UTC LLM and embedding spend across the app (chat **and** Search / `/api/v1/ask`), because every OpenAI call records into the same Redis daily cost counter. It is enforced on `POST /api/v1/chat` only; `/api/v1/ask` is never refused by it. Once that spend reaches `chat.daily_spend_cap_usd` (default $2.00 in `api/config/config.yaml`), chat is refused until midnight UTC:
 ```json
 {
   "error": "DailyLimitReached",
@@ -573,7 +573,7 @@ curl -X POST "http://localhost:8000/api/v1/ask" \
 curl "http://localhost:8000/api/v1/stats"
 
 # Health check
-curl "http://localhost:8000/health"
+curl "http://localhost:8000/api/health"
 ```
 
 ### JavaScript / TypeScript
