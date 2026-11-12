@@ -63,7 +63,7 @@ Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagram
 
 | Metric | Status |
 |--------|--------|
-| **Test Suite** | 245 passing, 0 failing (see `api/tests/`) |
+| **Test Suite** | API: 390 passing, 14 skipped (Postgres tests, need `TEST_DATABASE_URL`), 0 failing (see `api/tests/`); web: 32 passing (Vitest); CI runs both on every push |
 | **API Documentation** | Comprehensive with examples |
 | **Performance** | Real-time monitoring, < 2s average response time |
 
@@ -86,6 +86,7 @@ Comprehensive documentation is available:
 - **Intelligent Question Answering** - AI-powered responses with paragraph-level citations
 - **Multi-Source Support** - BC Cancer, Canadian Cancer Society, and Cleveland Clinic content
 - **Source Filtering** - Filter by cancer type or information source
+- **Conversational Chat** - Multi-turn chat with follow-up questions, streamed answers (SSE), per-thread retrieval settings and cited sources; threads and messages are stored in Postgres (Neon). Optional Langfuse tracing; a daily spend cap protects the LLM budget
 - **Smart Caching** - Redis (Upstash) caching to reduce repeated LLM/embedding costs
 - **Vector Search** - Semantic similarity using OpenAI embeddings and Qdrant Cloud
 - **Citation Transparency** - Every claim linked to original source paragraph
@@ -252,6 +253,12 @@ export PY="$CONDA_PREFIX/bin/python"
 # Run all tests
 cd api && $PY -m pytest tests/ -q --continue-on-collection-errors
 
+# Postgres tests (skipped unless TEST_DATABASE_URL is set)
+make test-db
+
+# Web client tests (Vitest)
+cd web-client && npm test
+
 # Run a specific test file
 cd api && $PY -m pytest tests/test_api.py -v
 
@@ -263,7 +270,7 @@ A bare `pytest` may resolve to a different interpreter (e.g. an Anaconda base
 environment) and fail; use the `care-beacon` conda env's Python explicitly, or
 `make test`, which does this for you.
 
-**Current state**: 245 passed, 0 failed (as of 2026-10-12). There is no coverage
+**Current state**: 390 passed, 14 skipped, 0 failed (as of 2026-11-11; the skips are Postgres tests). There is no coverage
 guarantee implied here — check `api/tests/` and CI output for the current numbers.
 
 ## Deployment

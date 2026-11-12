@@ -14,12 +14,21 @@ This section is the authoritative description of the live system. Sections below
 - **Render.com, Docker, docker-compose, ngrok and cloudflared are gone.** `render.yaml`, both Dockerfiles, `docker-compose.yml`, and tunnel scripts have all been deleted. Local development runs both services together with `vercel dev`.
 - **Rate limiting is a Vercel WAF rule** (`ask-rate-limit`): 60 requests / 60 seconds per IP on `/api/v1/ask`, returning HTTP 429. It is enforced at the platform edge, not in application code.
 - **Repository layout**: all Python lives under `api/` (`api/src/`, `api/tests/`, `api/config/`, `api/scripts/ingest.py`). `scraped_data/` and `data/` stay at the repo root, outside `api/`, so the Vercel function bundle excludes them. `.vercelignore` is load-bearing — without it the upload exceeds Vercel's 15,000-file limit.
-- **API runtime dependencies are exactly 8** (`api/requirements.txt`): fastapi, pydantic, openai, qdrant-client, redis, pyyaml, loguru, python-dotenv. Everything else (pytest, uvicorn, ragas, black, etc.) is in `api/requirements-dev.txt` and never ships to Vercel.
-- **Health check is `GET /api/health`** and performs a real Qdrant collection read, returning 503 if unreachable. `/health` (no `/api` prefix) no longer exists. A daily GitHub Actions workflow (`.github/workflows/keepalive.yml`) pings it so Qdrant's free-tier cluster doesn't get reclaimed for inactivity.
+- **API runtime dependencies are exactly 10** (`api/requirements.txt`): fastapi, pydantic, openai, qdrant-client, redis, pyyaml, loguru, python-dotenv, plus `langfuse` (optional tracing) and `psycopg[binary]` (Postgres). Everything else (pytest, uvicorn, ragas, black, etc.) is in `api/requirements-dev.txt` and never ships to Vercel.
+- **Health check is `GET /api/health`** and performs a real Qdrant collection read, and a Postgres `SELECT 1`, returning 503 if either Qdrant or Postgres is unreachable. `/health` (no `/api` prefix) no longer exists. A daily Vercel cron (the `crons` entry in `vercel.json`, `0 9 * * *` UTC) pings it so Qdrant's free-tier cluster doesn't get reclaimed for inactivity. There is no GitHub Actions keepalive; the only workflow is `.github/workflows/test.yml` (tests on push and pull request).
 - **Admin endpoints** `POST /api/v1/cache/clear` and `POST /api/v1/stats/reset` require an `X-API-Key` header matching the `ADMIN_API_KEY` environment variable.
 - **On-demand ingestion API endpoints were deleted** — they used to spawn a subprocess, which is impossible on serverless. Ingestion is local-only now: `make ingest` runs `api/scripts/ingest.py` against the local machine.
 - **Local test command**: `cd api && /opt/anaconda3/envs/care-beacon/bin/python -m pytest tests/ -q --continue-on-collection-errors`. A bare `pytest` resolves to the anaconda base environment and fails — always use the full interpreter path. The local dev environment is Python 3.10.19; Vercel's `api` service runs Python 3.12.
-- **The test suite is green as of 2026-10-12.** Current baseline: **245 passed, 0 failed, 0 errors**. A new failure is a regression, not a pre-existing condition. Do not cite older counts (e.g. "6 failed, 239 passed" or "284 tests passing") — they are stale.
+- **The test suite is green as of 2026-11-11.** Current baselines: API **390 passed, 14 skipped, 0 failed** (`api/tests/`; the skips are Postgres tests that need `TEST_DATABASE_URL`), eval tooling **28 passed** (`/opt/anaconda3/envs/care-beacon/bin/python -m pytest evaluation/langfuse/ -q`), web **32 passed** (`cd web-client && npm test`, Vitest). A new failure is a regression, not a pre-existing condition. Do not cite older counts (e.g. "245 passed", "6 failed, 239 passed" or "284 tests passing") — they are stale.
+- **CI** (`.github/workflows/test.yml`) runs on every push and pull request with no secrets: an `api` job (Python 3.10, `pip install -r requirements.txt -r requirements-dev.txt`, `python -m pytest tests/ -q`) and a `web` job (`npm ci`, `npm test`, `npx tsc --noEmit`, `npm run build`). `npm run lint` is not run because Next 16 removed `next lint`.
+- **Postgres is Neon**, via the Vercel Marketplace (resource `care-beacon-chat`), connected to Production, Preview and Development. It stores chat `threads` and `messages` (plus `schema_migrations`). The API uses the **pooled** `DATABASE_URL`. Migrations are SQL files in `api/migrations/`, applied by `make migrate` (which uses `DATABASE_URL_UNPOOLED`, falling back to `DATABASE_URL`). Postgres tests run only when `TEST_DATABASE_URL` is set: `make test-db` (isolated schema); the default suite skips them.
+- **Chat endpoints** (`api/src/api/chat_routes.py`; full contract in `docs/API.md`): `POST /api/v1/chat` streams SSE frames (`status*` → `citations` → `token*` → `done`, or `error`) and returns the thread id in the `X-Thread-Id` header; `GET /api/v1/threads`, `GET`/`PATCH`/`DELETE /api/v1/threads/{id}`, `PATCH /api/v1/threads/{id}/settings`. All require an `X-Owner-Key` header (lowercase UUID; 400 if missing or malformed; 404 for another owner's thread).
+- **Chat spend cap**: `chat.daily_spend_cap_usd` in `api/config/config.yaml` (default $2.00 per UTC day, measured from the Redis daily cost counters). Once reached, `POST /api/v1/chat` returns 429 `DailyLimitReached` until midnight UTC.
+- **Chat rate limit**: a Vercel WAF rule `chat-rate-limit` on `/api/v1/chat`, 20 requests / 60 seconds per IP, is intended. It lives in the Vercel dashboard, not in code, and **has not been confirmed as configured** — it must be set up there.
+- **Langfuse tracing is optional**: on only when `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` and `LANGFUSE_HOST` are all set. Traces carry a SHA-256 pseudonym of the owner key, never the raw key. Evaluation tooling lives in `evaluation/langfuse/` (see `evaluation/README.md`).
+- **Pending owner steps (not done as of this writing)**: `maxDuration` for the `api` service is not yet set (long chat streams may be cut off), and the Phase 1 eval gate (follow-up and safety datasets) has not yet been run.
+- **Local dev gotcha**: under `vercel dev`, the API service reads `.env` (via `load_dotenv`), not `.env.local`, so `DATABASE_URL` must be exported into the shell (or be present in `.env`) for chat to reach Postgres locally. `.vercelignore` excludes `.env` / `.env*` (except `.env.example`) so CLI deploys don't upload env files.
+- **Web client pages**: Search (default), Chat (new, between Search and Statistics in the nav), Statistics.
 
 ## Key Requirements
 
@@ -96,7 +105,7 @@ flowchart TD
 **Qdrant Cloud (IN USE)** — originally the plan called for self-hosted Chroma; the live system runs Qdrant Cloud instead. ChromaDB has been fully removed from the codebase.
 - Managed service — no server to operate ourselves
 - Metadata filtering via Qdrant's payload index (`api/src/storage/qdrant_db.py`)
-- A daily GitHub Actions keepalive ping (`.github/workflows/keepalive.yml`) prevents the free-tier cluster from being reclaimed for inactivity
+- A daily Vercel cron ping of `/api/health` (`crons` in `vercel.json`) prevents the free-tier cluster from being reclaimed for inactivity
 - Excellent performance at 10K articles, 1 query/sec
 
 **Performance Considerations at 1 query/sec:**
@@ -444,7 +453,7 @@ care-beacon/
 │   │   └── prompts*.yaml               # LLM prompt templates
 │   ├── scripts/
 │   │   └── ingest.py                   # Local-only ingestion entrypoint (`make ingest`)
-│   ├── requirements.txt                # Exactly 8 runtime deps shipped to Vercel
+│   ├── requirements.txt                # Exactly 10 runtime deps shipped to Vercel
 │   └── requirements-dev.txt            # pytest, uvicorn, black, ragas, etc. — dev only
 ├── web-client/                         # Vercel "web" service (Next.js 16)
 │   ├── app/
@@ -455,7 +464,7 @@ care-beacon/
 ├── data/                                # Generated artifacts. Also repo root, also excluded
 ├── evaluation/                          # RAG evaluation scripts and sample question sets
 ├── docs/                                # This project's documentation (see docs/ARCHITECTURE.md)
-├── .github/workflows/keepalive.yml     # Daily ping to /api/health to keep Qdrant alive
+├── .github/workflows/test.yml          # CI: API + web tests on push and PR (no secrets)
 ├── vercel.json                          # Defines the two Services and routing rules
 ├── .vercelignore                        # Load-bearing: keeps upload under 15,000 files
 ├── Makefile
@@ -472,7 +481,7 @@ care-beacon/
 5. ✅ **Deployment environment**: Vercel — one project, two Services (`web` + `api`), see "Current Production State" above
 6. ✅ **Set up development environment**: `vercel dev` runs both services; Python 3.10.19 locally, 3.12 on Vercel
 7. ✅ **Add caching layer**: Upstash Redis via the Vercel Marketplace
-8. ✅ **Production hardening**: rate limiting via a Vercel WAF rule, admin endpoints behind `X-API-Key`, `/api/health` checked daily by GitHub Actions
+8. ✅ **Production hardening**: rate limiting via a Vercel WAF rule, admin endpoints behind `X-API-Key`, `/api/health` pinged daily by a Vercel cron
 9. **Open**: Evaluate quality — `evaluation/` has a RAG evaluation harness (ragas); no evidence in this repo of a completed evaluation run
 10. **Open**: Initial/ongoing data ingestion volume and cadence beyond `make ingest`
 
