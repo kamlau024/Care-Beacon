@@ -1,6 +1,8 @@
 """Tests for the streaming chat turn (ChatService + SSE framing)."""
 
 import contextvars
+import hashlib
+from contextlib import contextmanager
 import json
 import uuid
 from unittest.mock import MagicMock
@@ -322,6 +324,23 @@ def test_disconnect_persists_partial_as_interrupted(repo, prompts):
     # Titling is skipped for an interrupted turn.
     assert repo.get_thread(thread.id, OWNER).title is None
 
+    # The thread reopens normally and the next turn works, with the
+    # interrupted answer in the history given to the prompt builder.
+    history = repo.list_messages(thread.id)
+    assert [(m.role, m.status) for m in history] == [
+        ("user", "complete"), ("assistant", "interrupted")
+    ]
+    _, gen2 = run_turn(service, message="And how long does it last?", thread_id=thread.id)
+    frames = [parse(f) for f in gen2]
+    assert frames[0] == ("status", {"stage": "rewriting"})
+    assert frames[-1][0] == "done"
+    prompt = llm.stream_calls[-1][-1]["content"]
+    assert "Assistant: Fatigue is" in prompt
+    assert [(m.role, m.status) for m in repo.list_messages(thread.id)] == [
+        ("user", "complete"), ("assistant", "interrupted"),
+        ("user", "complete"), ("assistant", "complete"),
+    ]
+
 
 def test_disconnect_before_any_token_saves_nothing(repo, prompts):
     service = make_service(repo, prompts)
@@ -404,6 +423,37 @@ def test_assistant_write_failure_emits_error_once(repo, prompts):
     assert "psycopg" not in "".join(raw)
     # A failed final write is not retried as an interrupted row: at most one write.
     assert calls == ["complete"]
+
+
+# ---------------------------------------------------------------- tracing
+
+
+def test_trace_gets_owner_pseudonym_never_raw_key(repo, prompts, monkeypatch):
+    import src.chat.service as service_module
+
+    recorded = []
+
+    class Handle:
+        def update(self, output=None, metadata=None):
+            recorded.append(("update", output, metadata))
+
+    @contextmanager
+    def fake_trace(name, *, metadata, session_id=None, user_id=None):
+        recorded.append(("start", name, metadata, session_id, user_id))
+        yield Handle()
+
+    monkeypatch.setattr(service_module, "request_trace", fake_trace)
+    service = make_service(repo, prompts)
+    thread, gen = run_turn(service)
+    raw = "".join(gen)
+
+    start = recorded[0]
+    assert start[1] == "chat"
+    assert start[3] == thread.id
+    assert start[4] == hashlib.sha256(OWNER.encode()).hexdigest()[:32]
+    assert any(r[0] == "update" for r in recorded)
+    assert OWNER not in repr(recorded)
+    assert OWNER not in raw
 
 
 # ---------------------------------------------------------------- context pinning

@@ -17,6 +17,7 @@ The chat path never touches the answer cache.
 """
 
 import contextvars
+import hashlib
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from loguru import logger
@@ -39,6 +40,16 @@ ENDPOINT = "/api/v1/chat"
 def default_settings() -> ThreadSettings:
     """All configured sources, min_similarity 0.5."""
     return ThreadSettings(sources=configured_sources(), min_similarity=DEFAULT_MIN_SIMILARITY)
+
+
+def owner_pseudonym(owner_key: str) -> str:
+    """Non-reversible trace user id for an owner key.
+
+    The owner key is the bearer credential for a user's chat history, so it is
+    never sent to the tracing provider. A UUIDv4 carries 122 bits of entropy,
+    so an unsalted hash cannot be brute-forced back to the key.
+    """
+    return hashlib.sha256(owner_key.encode()).hexdigest()[:32]
 
 
 def run_in_pinned_context(inner: Iterator[str]) -> Iterator[str]:
@@ -130,7 +141,7 @@ class ChatService:
                     "settings": thread.settings.model_dump(),
                 },
                 session_id=thread.id,
-                user_id=thread.owner_key,
+                user_id=owner_pseudonym(thread.owner_key),
             ) as trace:
                 yield from self._turn_body(
                     trace, thread, prior_messages, is_new, question, include_full_text
