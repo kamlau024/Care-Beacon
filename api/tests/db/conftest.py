@@ -5,6 +5,11 @@ The target database may also be a production database, so every fixture works
 exclusively inside a throwaway ``test_<random>`` schema it creates itself:
 each statement is either schema-qualified or runs on a connection whose
 search_path contains only that schema. Nothing here touches ``public``.
+
+TEST_DATABASE_URL must be an **unpooled** URL (ideally a Neon test branch):
+a pooled URL drops the ``search_path`` startup option. Every connection is
+checked with ``SELECT current_schema()`` and the run fails hard (raises, never
+skips) if it is not the test schema.
 """
 
 import os
@@ -20,6 +25,7 @@ API_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(API_ROOT / "scripts"))
 
 from migrate import apply_migrations  # noqa: E402
+from tests.db.schema_guard import assert_test_schema  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -43,6 +49,7 @@ def raw_conn(migrations_dir, test_schema):
         conn.execute(f"CREATE SCHEMA {test_schema}")
         # Only the test schema: unqualified names can never resolve to public.
         conn.execute(f"SET search_path TO {test_schema}")
+        assert_test_schema(conn, test_schema)
         apply_migrations(conn, migrations_dir)
         yield conn
     finally:
@@ -57,10 +64,17 @@ def db(raw_conn, test_schema):
     raw_conn.execute(f"TRUNCATE {test_schema}.messages, {test_schema}.threads")
 
     def connect() -> psycopg.Connection:
-        return psycopg.connect(
+        conn = psycopg.connect(
             url,
             row_factory=dict_row,
             options=f"-c search_path={test_schema}",
         )
+        try:
+            assert_test_schema(conn, test_schema)
+            conn.rollback()  # end the check's implicit transaction; start clean
+        except BaseException:
+            conn.close()
+            raise
+        return conn
 
     return connect

@@ -48,7 +48,7 @@ ingest:  ## Run article ingestion (local only)
 migrate:  ## Apply SQL migrations (uses DATABASE_URL_UNPOOLED, else DATABASE_URL)
 	cd api && $(PY) scripts/migrate.py
 
-test-db:  ## Run Postgres tests (requires TEST_DATABASE_URL; uses an isolated schema)
+test-db:  ## Run Postgres tests (TEST_DATABASE_URL must be an UNPOOLED URL, ideally a Neon test branch; isolated schema)
 	cd api && $(PY) -m pytest tests/db -v
 
 # Utilities
