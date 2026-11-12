@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 
 from src.retrieval.retrieval_engine import RetrievalEngine
+from src.retrieval.reranker import LLMReranker
 from src.retrieval.models import Query, RetrievedContext
 from src.generation.llm_client import LLMClient
 from src.generation.models import GeneratedAnswer, Citation, GenerationConfig
@@ -46,9 +47,19 @@ class AnswerGenerator:
         # Cache first: it owns the StatsStore that the other components share.
         self.cache = cache or RedisCache()
         self.llm_client = llm_client or LLMClient(model=get_model("generation"), stats_store=self.cache.stats_store)
-        self.retrieval_engine = retrieval_engine or RetrievalEngine(
-            embedding_generator=EmbeddingGenerator(stats_store=self.cache.stats_store),
-        )
+        if retrieval_engine is None:
+            # The reranker's LLM calls must reach the shared StatsStore too, or
+            # the daily spend cap never sees them.
+            reranker = None
+            if get_config().get("retrieval", {}).get("rerank_results", False):
+                reranker = LLMReranker(
+                    llm_client=LLMClient(model=get_model("rerank"), stats_store=self.cache.stats_store)
+                )
+            retrieval_engine = RetrievalEngine(
+                embedding_generator=EmbeddingGenerator(stats_store=self.cache.stats_store),
+                reranker=reranker,
+            )
+        self.retrieval_engine = retrieval_engine
         self.config = config or self._load_config()
 
         # Load prompts

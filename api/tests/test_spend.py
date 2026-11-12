@@ -78,3 +78,47 @@ def test_llm_client_and_embeddings_record_daily_cost():
     gen.embed_batch(["hi"])
 
     assert store.get_daily_cost() == pytest.approx(0.5)
+
+
+def test_answer_generator_reranker_records_daily_cost():
+    """The rerank LLM call must count toward the daily spend cap."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock, patch
+
+    from src.generation.answer_generator import AnswerGenerator
+    from src.storage.models import RetrievalResult
+
+    store = StatsStore(FakeRedis())
+    cache = MagicMock()
+    cache.stats_store = store
+
+    fake_openai = MagicMock()
+    fake_openai.chat.completions.create.return_value = SimpleNamespace(
+        choices=[SimpleNamespace(message=SimpleNamespace(content="[1, 2]"))],
+        usage=SimpleNamespace(prompt_tokens=100000, completion_tokens=0, total_tokens=100000),
+    )
+
+    with patch("src.generation.llm_client.get_openai_client", return_value=fake_openai), \
+         patch("src.retrieval.retrieval_engine.create_vector_database", return_value=MagicMock()), \
+         patch("src.generation.answer_generator.EmbeddingGenerator", return_value=MagicMock()), \
+         patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        generator = AnswerGenerator(cache=cache)
+
+    reranker = generator.retrieval_engine.reranker
+    assert reranker is not None
+    assert reranker.llm_client.stats_store is store
+
+    results = [MagicMock(spec=RetrievalResult) for _ in range(2)]
+    for i, r in enumerate(results):
+        r.chunk = MagicMock()
+        r.chunk.text = f"text {i}"
+        r.chunk.article_title = f"title {i}"
+        r.chunk.section_name = "s"
+        r.similarity_score = 0.5
+    try:
+        reranker.rerank("question", results, top_k=2)
+    except Exception:
+        pass  # parsing of the fake reply doesn't matter; the call was made
+
+    assert fake_openai.chat.completions.create.called
+    assert store.get_daily_cost() > 0
