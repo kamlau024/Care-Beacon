@@ -103,7 +103,7 @@ def test_history_section_precedes_sources(prompts):
     out = build_chat_messages("Q?", [result()], [msg("user", "hi"), msg("assistant", "yo")], prompts)
     c = out[1]["content"]
     assert c.index("Earlier in this conversation:") < c.index("Sources:") < c.index("Question:")
-    assert "You: hi" in c and "Assistant: yo" in c
+    assert "User: hi" in c and "Assistant: yo" in c
 
 
 def test_history_budget_keeps_newest_and_drops_oldest():
@@ -116,14 +116,14 @@ def test_history_budget_keeps_newest_and_drops_oldest():
 def test_history_always_keeps_last_turn_even_if_over_budget():
     hist = [msg("user", "a", 1), msg("assistant", "z" * 500, 2)]
     out = format_history(hist, max_chars=50)
-    assert "z" * 500 in out and "You: a" not in out
+    assert "z" * 500 in out and "User: a" not in out
 
 
 def test_settings_rows_excluded_from_history():
     hist = [msg("user", "hello"), msg("settings", "SECRET-SETTINGS"), msg("assistant", "hi")]
     out = format_history(hist)
     assert "SECRET-SETTINGS" not in out
-    assert out == "You: hello\nAssistant: hi"
+    assert out == "User: hello\nAssistant: hi"
 
 
 def test_question_passed_verbatim_not_rewritten(prompts):
@@ -131,7 +131,7 @@ def test_question_passed_verbatim_not_rewritten(prompts):
     out = build_chat_messages(q, [result("text {x} {}")], [msg("user", "{a}")], prompts)
     c = out[1]["content"]
     assert c.endswith("Question:\n" + q)
-    assert "text {x} {}" in c and "You: {a}" in c
+    assert "text {x} {}" in c and "User: {a}" in c
 
 
 def test_rewrite_returns_question_when_llm_raises(prompts):
@@ -179,3 +179,49 @@ def test_fallback_and_clean_title_caps():
     assert len(fallback_title("x" * 200)) == 60
     assert clean_title("'Hello world!'  ") == "Hello world"
     assert len(clean_title("y" * 100)) == 60
+
+
+def test_history_labels_user_lines_user_not_you():
+    out = format_history([msg("user", "hello"), msg("assistant", "hi")])
+    assert out.startswith("User: hello")
+    assert "You:" not in out
+
+
+@pytest.mark.parametrize(
+    "content,expected",
+    [
+        ("Fatigue is common [1].", "Fatigue is common."),
+        ("Nausea [2] and hair loss [10] happen.", "Nausea and hair loss happen."),
+        ("Both apply [1, 2].", "Both apply."),
+        ("Grouped [1,2,3] and [4][5] forms.", "Grouped and forms."),
+    ],
+)
+def test_assistant_history_strips_stale_citation_markers(content, expected):
+    out = format_history([msg("user", "q [1] stays"), msg("assistant", content)])
+    assert out == f"User: q [1] stays\nAssistant: {expected}"
+
+
+def test_rewrite_prompt_history_also_strips_markers(prompts):
+    llm = FakeLLM(answer="standalone")
+    rewrite_query(llm, "and then?", [msg("user", "q"), msg("assistant", "Yes [1, 2] it does [3].")], prompts)
+    sent = llm.calls[0]["messages"][0]["content"]
+    assert "Assistant: Yes it does." in sent
+    assert "[1" not in sent and "[3]" not in sent
+
+
+def test_safety_instructions_sit_between_sources_and_question(prompts):
+    c = build_chat_messages("Q?", [result()], [], prompts)[1]["content"]
+    no_ctx = prompts["no_context_found"].strip()
+    sources_at = c.index("Sources:")
+    question_at = c.index("Question:")
+    assert sources_at < c.index(no_ctx) < question_at
+    assert "If the Sources do not contain the answer" in c
+    advice = "Never give personal medical advice or diagnoses; direct the user to their healthcare provider."
+    assert sources_at < c.index(advice) < question_at
+
+
+def test_braces_in_no_context_found_do_not_break_assembly(prompts):
+    weird = dict(prompts, no_context_found="Nothing {here} {0} {question} {")
+    c = build_chat_messages("Q?", [result()], [], weird)[1]["content"]
+    assert "Nothing {here} {0} {question} {" in c
+    assert c.endswith("Question:\nQ?")

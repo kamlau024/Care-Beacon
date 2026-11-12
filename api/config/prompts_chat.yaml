@@ -17,6 +17,9 @@ system_prompt: |
 
 sources_instruction: |
   Answer the question below using only the numbered Sources above. Cite each factual claim inline as [n]. Do not cite the earlier conversation.
+  If the Sources do not contain the answer, say:
+  {no_context_found}
+  Never give personal medical advice or diagnoses; direct the user to their healthcare provider.
 
 rewrite_prompt: |
   Rewrite the user's latest question as a single standalone search query that makes sense without the conversation. Resolve pronouns and references (for example "it", "that treatment", "the second one") using the conversation. Keep medical terms. Do not answer the question. Reply with only the rewritten query.

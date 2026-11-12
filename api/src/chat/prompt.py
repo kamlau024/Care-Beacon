@@ -6,6 +6,7 @@ passed through ``str.format``; templates are filled with ``str.replace`` on
 fixed placeholders, and user-supplied text is inserted last.
 """
 
+import re
 from pathlib import Path
 from typing import Dict, List
 
@@ -38,9 +39,21 @@ def load_chat_prompts() -> Dict[str, str]:
     return prompts
 
 
+# Inline citation markers such as [1], [10] or [1, 2]. In history they point
+# at an earlier turn's Sources, so they are removed (spec anti-goal 1).
+_CITATION_MARKER = re.compile(r"\s*\[\d+(?:\s*,\s*\d+)*\]")
+
+
+def strip_citation_markers(text: str) -> str:
+    """Remove inline ``[n]`` / ``[n, m]`` markers from an assistant answer."""
+    return _CITATION_MARKER.sub("", text).strip()
+
+
 def _turn_line(m: Message) -> str:
-    label = "You" if m.role == "user" else "Assistant"
-    return f"{label}: {m.content}"
+    # "User", not "You": inside a user-role message "You" reads as the assistant.
+    if m.role == "user":
+        return f"User: {m.content}"
+    return f"Assistant: {strip_citation_markers(m.content)}"
 
 
 def _turns(messages: List[Message]) -> List[Message]:
@@ -89,7 +102,12 @@ def build_chat_messages(
     if history_text:
         parts.append("Earlier in this conversation:\n" + history_text)
     parts.append("Sources:\n" + format_sources(results))
-    parts.append(prompts["sources_instruction"].strip())
+    parts.append(
+        _fill(
+            prompts["sources_instruction"].strip(),
+            no_context_found=prompts["no_context_found"].strip(),
+        )
+    )
     parts.append("Question:\n" + question)
     return [
         {"role": "system", "content": prompts["system_prompt"]},
