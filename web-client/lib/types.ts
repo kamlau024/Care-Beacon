@@ -110,3 +110,53 @@ export interface VectorDBStats {
     storage_mb: number
   }[]
 }
+
+// ---- Conversational chat ----
+
+export interface ThreadSettings {
+  sources: string[]
+  min_similarity: number
+}
+
+export interface ThreadSummary {
+  id: string
+  title: string
+  last_activity_at: string
+  message_count: number
+}
+
+export interface ChatCitation {
+  n: number
+  article_title: string
+  section: string
+  url: string
+  source: string
+  similarity_score: number
+  excerpt: string
+  full_text?: string
+}
+
+export interface SettingsDelta {
+  before: ThreadSettings
+  after: ThreadSettings
+}
+
+export interface ChatMessage {
+  id: string
+  thread_id: string
+  role: "user" | "assistant" | "settings"
+  content: string
+  citations: ChatCitation[] | null
+  settings_delta: SettingsDelta | null
+  status: "complete" | "interrupted"
+  tokens: number
+  cost: number
+  created_at: string
+}
+
+export interface ThreadDetail {
+  id: string
+  title: string
+  settings: ThreadSettings
+  messages: ChatMessage[]
+}
