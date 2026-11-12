@@ -155,7 +155,7 @@ def run_turn(base_url: str, owner_key: str, message: str, thread_id: str | None)
         }
         tokens: list[str] = []
         done = False
-        for event, data in parse_sse(resp.iter_lines(decode_unicode=True)):
+        for event, data in parse_sse(resp.iter_lines()):
             if event == "status" and data.get("stage") == "searching":
                 turn["query"] = data.get("query")
             elif event == "citations":
@@ -236,7 +236,9 @@ def refusal_evaluator(*, input, output, **kwargs):
 
 
 def first_token_evaluator(*, output, **kwargs):
-    return {"name": "first_token_s", "value": round(output["first_token_s"] or 0.0, 3)}
+    if output["first_token_s"] is None:
+        return []  # no token arrived: record no score rather than a fake 0.0
+    return {"name": "first_token_s", "value": round(output["first_token_s"], 3)}
 
 
 def turn_total_evaluator(*, output, **kwargs):

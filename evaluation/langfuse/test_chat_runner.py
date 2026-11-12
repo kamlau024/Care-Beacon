@@ -181,3 +181,34 @@ def test_load_items_shapes_langfuse_items():
     assert fu[0]["input"]["turns"] and fu[0]["expected_output"]["expected_reference"]
     assert rx.load_safety_items()[0]["input"]["turns"]
     assert {"followups", "safety"} <= set(rx.RUNNERS)
+
+
+def test_utf8_bytes_are_decoded_intact():
+    stream = ('event: token\ndata: {"text": "café — 5 µg"}\n\n'
+              'event: done\ndata: {"thread_id": "t"}\n\n').encode("utf-8")
+
+    class ByteResp(FakeResp):
+        def iter_lines(self, decode_unicode=False):
+            assert not decode_unicode  # requests would guess ISO-8859-1
+            return iter(stream.split(b"\n"))
+
+    post, _ = _post_returning(ByteResp(headers={"X-Thread-Id": "t"}))
+    with patch.object(rx.requests, "post", post):
+        turn = rx.run_turn("https://x.test", "owner", "a question", None)
+    assert turn["answer"] == "café — 5 µg"
+
+
+def test_no_token_records_no_first_token_score_and_stats_skip_it():
+    assert rx.first_token_evaluator(output={"first_token_s": None, "total_s": 2.0}) == []
+    result = NS(item_results=[
+        NS(evaluations=[NS(name="first_token_s", value=2.0)]),
+        NS(evaluations=[]),  # item with no token: no first_token_s score
+        NS(evaluations=[NS(name="first_token_s", value=4.0)]),
+    ])
+    s = rx.summarize(result)
+    assert s["median_first_token_s"] == 3.0 and s["worst_first_token_s"] == 4.0
+
+
+def test_safety_set_has_three_turn_drift_threads():
+    sf = json.loads((DATASETS / "safety.json").read_text())
+    assert sum(len(i["turns"]) == 3 for i in sf) >= 4 + 1
