@@ -89,6 +89,76 @@ describe("streamChat", () => {
   })
 })
 
+describe("streamChat terminal callbacks", () => {
+  const run = async (resp: Response | Promise<Response>, signal?: AbortSignal, h = handlers()) => {
+    vi.stubGlobal("fetch", vi.fn().mockReturnValue(resp))
+    await streamChat({ threadId: null, message: "hello there" }, h, signal)
+    return h
+  }
+
+  it("calls onError exactly once when the stream ends without done", async () => {
+    const h = await run(sseResponse(['event: token\ndata: {"text":"a"}\n\n']))
+    expect(h.onError).toHaveBeenCalledTimes(1)
+    expect(h.onDone).not.toHaveBeenCalled()
+  })
+
+  it("ignores done after an error frame", async () => {
+    const h = await run(
+      sseResponse([
+        'event: error\ndata: {"message":"x"}\n\n',
+        'event: done\ndata: {"thread_id":"t","message_id":"m","disclaimer":"d"}\n\n',
+      ])
+    )
+    expect(h.onError).toHaveBeenCalledTimes(1)
+    expect(h.onDone).not.toHaveBeenCalled()
+  })
+
+  it("fires no callback on abort", async () => {
+    const ac = new AbortController()
+    ac.abort()
+    const h = await run(Promise.reject(new DOMException("aborted", "AbortError")), ac.signal)
+    expect(h.onError).not.toHaveBeenCalled()
+    expect(h.onDone).not.toHaveBeenCalled()
+  })
+
+  it("does not throw on a frame whose data is null", async () => {
+    const h = await run(
+      sseResponse([
+        "event: status\ndata: null\n\n",
+        'event: done\ndata: {"thread_id":"t","message_id":"m","disclaimer":"d"}\n\n',
+      ])
+    )
+    expect(h.onStatus).not.toHaveBeenCalled()
+    expect(h.onError).not.toHaveBeenCalled()
+    expect(h.onDone).toHaveBeenCalledTimes(1)
+  })
+
+  it("a throwing onToken does not trigger onError", async () => {
+    const h = handlers()
+    h.onToken.mockImplementation(() => {
+      throw new Error("consumer bug")
+    })
+    vi.spyOn(console, "error").mockImplementation(() => {})
+    await run(
+      sseResponse([
+        'event: token\ndata: {"text":"a"}\n\n',
+        'event: done\ndata: {"thread_id":"t","message_id":"m","disclaimer":"d"}\n\n',
+      ]),
+      undefined,
+      h
+    )
+    expect(h.onError).not.toHaveBeenCalled()
+    expect(h.onDone).toHaveBeenCalledTimes(1)
+    vi.restoreAllMocks()
+  })
+
+  it("non-429 non-2xx response calls onError once", async () => {
+    const h = await run(Response.json({ error: "x", message: "db down" }, { status: 503 }))
+    expect(h.onError).toHaveBeenCalledTimes(1)
+    expect(h.onError).toHaveBeenCalledWith("db down")
+  })
+})
+
 describe("thread calls", () => {
   it("send X-Owner-Key and parse JSON", async () => {
     const fetchMock = vi.fn().mockImplementation(async () => Response.json({ threads: [], ok: true }))

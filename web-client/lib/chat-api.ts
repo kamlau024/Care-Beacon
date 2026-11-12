@@ -80,6 +80,46 @@ export async function streamChat(
   signal?: AbortSignal
 ): Promise<{ threadId: string }> {
   let threadId = req.threadId ?? ""
+  // Exactly one terminal callback (onDone or onError) per call, unless aborted.
+  let terminated = false
+
+  // Consumer exceptions must not be mistaken for network failures.
+  const safe = (fn: () => void) => {
+    try {
+      fn()
+    } catch (e) {
+      console.error("streamChat handler threw", e)
+    }
+  }
+  const fail = (message: string) => {
+    if (terminated) return
+    terminated = true
+    safe(() => handlers.onError(message))
+  }
+  const dispatch = (event: string, raw: unknown) => {
+    if (terminated || !raw || typeof raw !== "object") return
+    const data = raw as Record<string, any>
+    switch (event) {
+      case "status":
+        safe(() => handlers.onStatus(data.stage, data.query))
+        break
+      case "citations":
+        safe(() => handlers.onCitations(Array.isArray(data.citations) ? data.citations : []))
+        break
+      case "token":
+        if (typeof data.text === "string") safe(() => handlers.onToken(data.text))
+        break
+      case "done":
+        if (data.thread_id) threadId = data.thread_id
+        terminated = true
+        safe(() => handlers.onDone(data as any))
+        break
+      case "error":
+        fail(typeof data.message === "string" ? data.message : "Chat failed")
+        break
+    }
+  }
+
   try {
     const response = await fetch(`${BASE}/chat`, {
       method: "POST",
@@ -94,35 +134,13 @@ export async function streamChat(
     threadId = response.headers.get("X-Thread-Id") ?? threadId
 
     if (!response.ok || !response.body) {
-      const err = await errorFrom(response)
-      handlers.onError(err.message)
+      fail((await errorFrom(response)).message)
       return { threadId }
     }
 
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ""
-    const dispatch = (event: string, data: any) => {
-      switch (event) {
-        case "status":
-          handlers.onStatus(data.stage, data.query)
-          break
-        case "citations":
-          handlers.onCitations(data.citations)
-          break
-        case "token":
-          handlers.onToken(data.text)
-          break
-        case "done":
-          if (data.thread_id) threadId = data.thread_id
-          handlers.onDone(data)
-          break
-        case "error":
-          handlers.onError(data.message)
-          break
-      }
-    }
-
     for (;;) {
       const { value, done } = await reader.read()
       if (done) break
@@ -131,9 +149,12 @@ export async function streamChat(
       buffer = parsed.rest
       for (const e of parsed.events) dispatch(e.event, e.data)
     }
+    if (!terminated && !signal?.aborted) {
+      fail("The response was interrupted before it finished.")
+    }
   } catch (e) {
-    if ((e as Error)?.name !== "AbortError") {
-      handlers.onError(e instanceof Error ? e.message : "Network error")
+    if ((e as Error)?.name !== "AbortError" && !signal?.aborted) {
+      fail(e instanceof Error ? e.message : "Network error")
     }
   }
   return { threadId }
