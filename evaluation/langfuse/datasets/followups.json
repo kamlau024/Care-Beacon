@@ -1,0 +1,205 @@
+[
+  {
+    "id": "followups-001",
+    "turns": [
+      "How is tardive dyskinesia treated?",
+      "Is it reversible once it has started?"
+    ],
+    "expected_reference": "whether tardive dyskinesia can be reversed or improve after treatment"
+  },
+  {
+    "id": "followups-002",
+    "turns": [
+      "What is tardive dyskinesia and what causes it?",
+      "Which of those medicines are most often involved?"
+    ],
+    "expected_reference": "medications, such as antipsychotics, that can cause tardive dyskinesia"
+  },
+  {
+    "id": "followups-003",
+    "turns": [
+      "What is the only definitive treatment for heel spurs?",
+      "What does that involve?"
+    ],
+    "expected_reference": "surgery to remove a heel spur"
+  },
+  {
+    "id": "followups-004",
+    "turns": [
+      "Can treatments ease the pain associated with heel spurs?",
+      "Which of those can I do at home?"
+    ],
+    "expected_reference": "home treatments for heel spur pain such as rest, ice, stretching or supportive footwear"
+  },
+  {
+    "id": "followups-005",
+    "turns": [
+      "Can previous heart attacks lead to left-sided heart failure?",
+      "And how does high blood pressure compare?"
+    ],
+    "expected_reference": "how hypertension contributes to left-sided heart failure"
+  },
+  {
+    "id": "followups-006",
+    "turns": [
+      "What medications can lower my lipoprotein (a) levels?",
+      "Do the injectable ones work well?"
+    ],
+    "expected_reference": "PCSK9 inhibitors and their effectiveness at lowering lipoprotein (a)"
+  },
+  {
+    "id": "followups-007",
+    "turns": [
+      "What is parosmia?",
+      "Can it be treated with medication, or is surgery the only option?"
+    ],
+    "expected_reference": "treatment options for parosmia, including medication and surgery"
+  },
+  {
+    "id": "followups-008",
+    "turns": [
+      "What complications can occur after trichiasis treatment?",
+      "What can be done about those?"
+    ],
+    "expected_reference": "managing complications after trichiasis treatment"
+  },
+  {
+    "id": "followups-009",
+    "turns": [
+      "What is emotional dysregulation?",
+      "How does it affect a person's ability to learn?"
+    ],
+    "expected_reference": "emotional dysregulation and its effect on learning"
+  },
+  {
+    "id": "followups-010",
+    "turns": [
+      "What emotional problems are associated with Reactive Attachment Disorder?",
+      "And what physical complications can come with it?"
+    ],
+    "expected_reference": "physical complications of Reactive Attachment Disorder in children"
+  },
+  {
+    "id": "followups-011",
+    "turns": [
+      "What is hormone therapy used for in neuroendocrine cancer?",
+      "Can it be used on its own?"
+    ],
+    "expected_reference": "whether hormone therapy is a standalone treatment for neuroendocrine cancer"
+  },
+  {
+    "id": "followups-012",
+    "turns": [
+      "What should I do about side effects after surgery for soft tissue sarcoma?",
+      "Why does my team need to know about them?"
+    ],
+    "expected_reference": "why side effects after soft tissue sarcoma surgery should be reported to the healthcare team"
+  },
+  {
+    "id": "followups-013",
+    "turns": [
+      "What does it mean when breast cancer is recurrent?",
+      "How is it usually treated?"
+    ],
+    "expected_reference": "treatment of recurrent breast cancer"
+  },
+  {
+    "id": "followups-014",
+    "turns": [
+      "What are the main treatment options for stage 2 anal cancer?",
+      "How does that differ from earlier stages?"
+    ],
+    "expected_reference": "how stage 2 anal cancer treatment differs from earlier stages"
+  },
+  {
+    "id": "followups-015",
+    "turns": [
+      "What is the Modified Whipple procedure for?",
+      "How does it differ from the traditional one?"
+    ],
+    "expected_reference": "differences between the Modified Whipple and the traditional Whipple procedure"
+  },
+  {
+    "id": "followups-016",
+    "turns": [
+      "How does immunotherapy work for melanoma skin cancer?",
+      "Does it reach cells all over the body?"
+    ],
+    "expected_reference": "immunotherapy for melanoma is a systemic treatment travelling through the bloodstream"
+  },
+  {
+    "id": "followups-017",
+    "turns": [
+      "How is the grade of penile cancer determined?",
+      "What does a high one mean?"
+    ],
+    "expected_reference": "what a high grade means for penile cancer cells"
+  },
+  {
+    "id": "followups-018",
+    "turns": [
+      "What emotional impacts can follow the removal of an eye due to cancer?",
+      "What kinds of support help with that?"
+    ],
+    "expected_reference": "supportive care for emotional impacts after eye removal"
+  },
+  {
+    "id": "followups-019",
+    "turns": [
+      "What does differentiation mean for a tumour?",
+      "How does that relate to how fast the cells divide?"
+    ],
+    "expected_reference": "relationship between tumour differentiation and cancer cell growth and division rates"
+  },
+  {
+    "id": "followups-020",
+    "turns": [
+      "How many servings of vegetables and fruit should I aim for each day?",
+      "Why does it help to vary them?"
+    ],
+    "expected_reference": "benefits of eating a variety of vegetables and fruit"
+  },
+  {
+    "id": "followups-021",
+    "turns": [
+      "What statistics are available on childhood leukemia in Canada?",
+      "Where can I find more detail on those?"
+    ],
+    "expected_reference": "where to find detailed childhood leukemia statistics in Canada"
+  },
+  {
+    "id": "followups-022",
+    "turns": [
+      "What should I do if I hear about a co-worker's cancer diagnosis through the grapevine?",
+      "What if they have made it public instead?"
+    ],
+    "expected_reference": "how to approach a co-worker whose cancer diagnosis is public"
+  },
+  {
+    "id": "followups-023",
+    "turns": [
+      "What is the Whipple procedure?",
+      "What structures get reconstructed in the modified version?",
+      "Is that different from the traditional one?"
+    ],
+    "expected_reference": "differences between the Modified Whipple and the traditional Whipple procedure"
+  },
+  {
+    "id": "followups-024",
+    "turns": [
+      "What is tardive dyskinesia?",
+      "What causes it?",
+      "How is it treated?"
+    ],
+    "expected_reference": "treatment of tardive dyskinesia"
+  },
+  {
+    "id": "followups-025",
+    "turns": [
+      "What are common risk factors for left-sided heart failure?",
+      "How does high blood pressure fit in?",
+      "Can a heart attack do the same thing?"
+    ],
+    "expected_reference": "previous heart attacks can lead to left-sided heart failure"
+  }
+]
