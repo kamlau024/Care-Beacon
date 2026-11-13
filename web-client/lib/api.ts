@@ -20,14 +20,15 @@ class ApiError extends Error {
   }
 }
 
+// Shown for a 429 from Vercel's firewall rate limit, which answers before the API with
+// its own error shape ({"error": {"message": "Too Many Requests"}}).
+export const RATE_LIMITED_MESSAGE = "Too many requests. Please wait a minute and try again."
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: "Unknown error" }))
-    throw new ApiError(
-      error.detail || `HTTP ${response.status}`,
-      response.status,
-      error
-    )
+    const fallback = response.status === 429 ? RATE_LIMITED_MESSAGE : `HTTP ${response.status}`
+    throw new ApiError(error.detail || fallback, response.status, error)
   }
   return response.json()
 }

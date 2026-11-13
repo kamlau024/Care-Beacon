@@ -36,25 +36,14 @@ Currently, the API does not require authentication. Authentication will be added
 
 ## Rate Limiting
 
-**Default Limits**:
-- **60 requests per minute** per IP address
-- Rate limiting can be disabled in `config/config.yaml`
+Rate limiting is enforced by the Vercel firewall, before requests reach the API.
 
-**Rate Limit Headers** (coming soon):
-```
-X-RateLimit-Limit: 60
-X-RateLimit-Remaining: 45
-X-RateLimit-Reset: 1234567890
-```
-
-**Rate Limit Exceeded Response** (HTTP 429):
-```json
-{
-  "error": "HTTPException",
-  "message": "Rate limit exceeded. Maximum 60 requests per minute.",
-  "timestamp": "2024-01-15T10:30:00Z"
-}
-```
+- **Limit:** 20 requests per 60 seconds per IP address, counted together across `POST /api/v1/ask` and `POST /api/v1/chat`.
+- **When exceeded:** HTTP 429 from the platform edge until the 60-second window resets. The response comes from Vercel, not the API, so it uses Vercel's error shape (with an `x-vercel-mitigated: deny` header):
+  ```json
+  {"error": {"code": "429", "message": "Too Many Requests", "id": "..."}}
+  ```
+- **Separate from the daily spend cap,** which returns 429 `DailyLimitReached` on chat only (see [Chat and Threads](#chat-and-threads)).
 
 ---
 
@@ -288,7 +277,7 @@ A title for a new thread is generated after `done` (best effort); fetch it with 
 }
 ```
 
-**Other errors**: 400 bad `X-Owner-Key`; 404 unknown thread; 422 invalid body; 503 `ServiceUnavailable` if Postgres is down. Per-IP rate limiting for this route is intended as a Vercel WAF rule `chat-rate-limit` (20 requests / 60 seconds), configured in the Vercel dashboard rather than in code.
+**Other errors**: 400 bad `X-Owner-Key`; 404 unknown thread; 422 invalid body; 503 `ServiceUnavailable` if Postgres is down. Per-IP rate limiting (20 requests / 60 seconds, shared with `/api/v1/ask`) is enforced by the Vercel firewall; see [Rate Limiting](#rate-limiting).
 
 ---
 

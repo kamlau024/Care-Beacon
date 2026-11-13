@@ -543,7 +543,7 @@ curl https://care-beacon-health.vercel.app/api/v1/stats | jq '.llm'
 - Improve cache hit rate (biggest impact)
 - Reduce tokens per request (shorter prompts, fewer contexts — see `api/config/prompts.yaml` / `prompts_active.yaml`)
 - Consider a cheaper model (`gpt-4o-mini` is already the budget choice; see `api/config/config.yaml`)
-- Rate limiting is already in place — the Vercel WAF rule caps `/api/v1/ask` at 60 requests/60s per IP
+- Rate limiting is already in place — the Vercel WAF rule caps `/api/v1/ask` and `/api/v1/chat` together at 20 requests/60s per IP
 
 ---
 
