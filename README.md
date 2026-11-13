@@ -1,6 +1,11 @@
 # Care-Beacon Medical RAG System
 
-A production Retrieval-Augmented Generation (RAG) system for answering patient questions about cancer using medical articles from BC Cancer, Canadian Cancer Society, and Cleveland Clinic. Provides accurate, cited answers with paragraph-level references.
+A production Retrieval-Augmented Generation (RAG) system that answers patient questions about cancer from articles published by BC Cancer, the Canadian Cancer Society and Cleveland Clinic. Every answer cites the source paragraphs it was built from.
+
+It offers two ways to ask:
+
+- **Chat** (default): a multi-turn conversation with memory. Follow-up questions such as "What does that involve?" are rewritten into standalone searches, answers stream token by token, and every conversation is saved so it can be reopened later.
+- **Search**: a single question with a single cited answer, cached in Redis.
 
 **Live:** https://care-beacon-health.vercel.app
 
@@ -8,6 +13,15 @@ A production Retrieval-Augmented Generation (RAG) system for answering patient q
 upstream scraper that produces this system's corpus. Care-Beacon consumes Markdown and
 serves answers; it does no crawling of its own. See
 [Where the corpus comes from](#where-the-corpus-comes-from).
+
+## Highlights
+
+- **Conversational RAG with memory.** Follow-up questions are rewritten using the conversation, retrieval runs on the rewritten query, and the answer is generated with a character-budgeted history. Threads and messages persist in Postgres (Neon).
+- **Streaming on serverless.** `POST /api/v1/chat` streams Server-Sent Events from a Python function on Vercel: progress stages (`rewriting` → `searching` → `ranking`), then citations, then answer tokens. The answer is saved even when the client disconnects mid-stream; a partial answer is stored as `interrupted`.
+- **Measured, not assumed.** A Langfuse evaluation harness with LLM judges gates each release. The latest gate: **19/19** safety refusals in multi-turn drift threads, **0.88** follow-up resolution, **0.96** grounded answers, about **$0.0007 per chat turn** ([results](evaluation/results/2026-11-12-phase1-gate.md)).
+- **Cost and abuse controls.** A daily LLM spend cap ($2/day by default), counted in Redis across all OpenAI calls; per-IP rate limits as Vercel WAF rules; admin endpoints behind an API key.
+- **Privacy by design.** No accounts: each browser holds an anonymous owner key, and traces carry only its SHA-256 pseudonym. Clients get generic error messages, and logs record only the error type, never database error text.
+- **Tested end to end.** 407 API tests, 38 web tests and 32 evaluation-tooling tests, run in GitHub Actions on every push and pull request.
 
 ## Architecture
 
@@ -18,6 +32,8 @@ serves answers; it does no crawling of its own. See
 
 - **Two Vercel services behind one route table:** `/api/*` goes to the FastAPI `api` service; everything else goes to the Next.js `web` service.
 - **Cited answers:** the answer generator checks Redis first, then retrieves passages from Qdrant Cloud and writes the answer with OpenAI `gpt-4o-mini`.
+- **Conversation storage:** chat threads and messages live in Neon Postgres, reached through its pooled connection string. Migrations are plain SQL files in `api/migrations/`.
+- **Observability:** optional Langfuse tracing records each step of a turn (rewrite, search, rerank, generation) with token cost.
 - **Offline ingestion:** `api/scripts/ingest.py` runs on a local machine and loads the [Vital-Atlas](https://github.com/kamlau024/Vital-Atlas) corpus into Qdrant. The deployed API has no ingestion endpoints.
 
 ### How a question is answered
@@ -32,11 +48,47 @@ serves answers; it does no crawling of its own. See
 3. **Rerank and filter.** A loose pre-filter keeps scores ≥ 0.3, `gpt-4o-mini` reranks every remaining candidate, and every chunk scoring ≥ 0.6 is kept, with no top-k cut. (0.6 is the configured default; a request can set its own `min_similarity`.)
 4. **Generate and cache.** `gpt-4o-mini` writes an answer with paragraph-level citations, cached for 1 hour. If no chunk passes the threshold, a fixed "no context" reply is returned without an LLM call, and it isn't cached.
 
+### How a chat turn is answered
+
+Chat reuses the same retrieval and reranking as Search, with three additions: query rewriting, conversation history and streaming.
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant A as FastAPI /api/v1/chat
+    participant P as Neon Postgres
+    participant O as OpenAI
+    participant Q as Qdrant Cloud
+    B->>A: message + X-Owner-Key (+ thread_id)
+    A->>A: check daily spend cap (Redis)
+    A->>P: load thread, settings and recent turns, save user message
+    opt follow-up turn
+        A-->>B: status: rewriting
+        A->>O: rewrite into a standalone query
+    end
+    A-->>B: status: searching (query)
+    A->>O: embed query
+    A->>Q: vector search with source filter
+    A-->>B: status: ranking
+    A->>O: rerank candidates
+    A-->>B: citations [1], [2], ...
+    A->>O: generate (history + sources + question)
+    O-->>A: token stream
+    A-->>B: token frames
+    A->>P: save assistant message with citations and cost
+    A-->>B: done (thread_id, message_id)
+```
+
+1. **Rewrite.** On a follow-up, `gpt-4o-mini` turns the last few turns plus the new message into one standalone search query, so "Does it reach cells all over the body?" searches for the treatment being discussed. The rewritten query is shown to the user as the search runs.
+2. **Retrieve and rerank.** The query goes through the same embed → Qdrant → LLM rerank pipeline as Search, filtered by the thread's own source and similarity settings.
+3. **Generate with history.** The most recent turns that fit a 6,000-character budget are included, with old `[n]` citation markers stripped so they can't be confused with this turn's sources. Safety instructions are placed next to the question, where they hold up under multi-turn pressure.
+4. **Persist.** The user's message is saved before retrieval starts and the answer, with its citations and cost, once it completes. Changing a thread's settings adds a settings event to the conversation and applies to later turns only.
+
 Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagrams/): download `architecture/architecture.html` or `ask-sequence/ask-sequence.html` and open it in a browser to search, focus on a component, and follow each one to the source lines it was drawn from.
 
 ## Project Status
 
-**Current Version**: 3.0.0 - **Live in Production** (Vercel)
+**Current Version**: 4.0.0 - **Live in Production** (Vercel)
 
 ### Build history
 
@@ -59,13 +111,24 @@ Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagram
   - Rate limiting via Vercel WAF, error handling
   - Modern FastAPI lifespan pattern, Pydantic v2 compliant
 
+- **Phase 4: Conversational Chat** - Complete
+  - Streaming chat endpoint (SSE) with query rewriting and conversation memory
+  - Thread history in Neon Postgres: list, rename, delete, per-thread retrieval settings
+  - Chat page as the default view: history drawer, settings popover, citation chips, streamed progress
+  - Daily spend cap, pseudonymous Langfuse tracing, evaluation harness with a release gate
+  - Search now filters by any combination of sources; per-role model configuration
+
 ### Quality Metrics
 
 | Metric | Status |
 |--------|--------|
-| **Test Suite** | API: 390 passing, 14 skipped (Postgres tests, need `TEST_DATABASE_URL`), 0 failing (see `api/tests/`); web: 32 passing (Vitest); CI runs both on every push |
-| **API Documentation** | Comprehensive with examples |
-| **Performance** | Real-time monitoring, < 2s average response time |
+| **Test suite** | API: 407 passing, 14 skipped (Postgres tests, which need `TEST_DATABASE_URL`); web: 38 passing (Vitest); evaluation tooling: 32 passing. CI runs the API and web suites, the TypeScript check and a production build on every push and pull request. |
+| **Safety** | 19/19 refusal-and-referral passes in multi-turn drift threads; 19/19 in the single-turn control |
+| **Answer quality** | Chat: 0.88 follow-ups resolved, 0.96 grounded. Search baseline: 0.744 grounded |
+| **Latency** | Chat turn: 12.5 s median, 19.8 s worst on the follow-up set. Most of it is spent before the first token (rewrite, search, rerank) |
+| **Cost** | About $0.0007 per chat turn (median of 128 traced turns) |
+
+Quality, safety, latency and cost figures come from the 2026-11-12 evaluation gate, described in [`evaluation/results/2026-11-12-phase1-gate.md`](evaluation/results/2026-11-12-phase1-gate.md).
 
 Run `make test` for the current state on your machine.
 
@@ -73,7 +136,8 @@ Run `make test` for the current state on your machine.
 
 Comprehensive documentation is available:
 
-- **[API Documentation](docs/API.md)** - Complete REST API reference with examples
+- **[API Documentation](docs/API.md)** - Complete REST API reference with examples, including the chat SSE frame contract
+- **[Evaluation](evaluation/README.md)** - How the Langfuse datasets, judges and experiment runs work
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Setup, testing, and development workflow
 - **[Usage Examples](docs/USAGE_EXAMPLES.md)** - Tutorials and integration patterns
 - **[Performance Optimization](docs/PERFORMANCE_OPTIMIZATION.md)** - Monitoring, benchmarking, and optimization guide
@@ -85,12 +149,16 @@ Comprehensive documentation is available:
 
 - **Intelligent Question Answering** - AI-powered responses with paragraph-level citations
 - **Multi-Source Support** - BC Cancer, Canadian Cancer Society, and Cleveland Clinic content
-- **Source Filtering** - Filter by cancer type or information source
-- **Conversational Chat** - Multi-turn chat with follow-up questions, streamed answers (SSE), per-thread retrieval settings and cited sources; threads and messages are stored in Postgres (Neon). Optional Langfuse tracing; a daily spend cap protects the LLM budget
+- **Source Filtering** - Filter by any combination of the three sources
+- **Conversational Chat** - Multi-turn chat with follow-up questions, streamed answers (SSE) and visible progress stages
+- **Conversation History** - Threads saved in Postgres (Neon), with auto-generated titles, rename and delete, and no sign-up required
+- **Per-Thread Settings** - Choose sources and a similarity threshold per conversation; changes are logged in the transcript and apply to later turns
 - **Smart Caching** - Redis (Upstash) caching to reduce repeated LLM/embedding costs
 - **Vector Search** - Semantic similarity using OpenAI embeddings and Qdrant Cloud
 - **Citation Transparency** - Every claim linked to original source paragraph
-- **Performance Monitoring** - Real-time metrics, benchmarking, and profiling tools
+- **Usage Statistics** - Live cost, cache and query counters on the Statistics page
+- **Evaluation and Tracing** - Langfuse traces per turn and LLM-judged experiment runs
+- **Spend Protection** - Daily LLM budget cap enforced on chat
 - **REST API** - Modern FastAPI with OpenAPI documentation
 - **Vercel Native** - Two Services (`api` + `web`) behind one route table, one domain
 
@@ -105,15 +173,22 @@ care-beacon/
 │   │   ├── storage/         # Vector DB (Qdrant) and cache (Redis)
 │   │   ├── retrieval/       # Search and retrieval
 │   │   ├── generation/      # LLM integration and prompts
-│   │   ├── caching/         # Query result caching
+│   │   ├── caching/         # Query result caching and usage counters
+│   │   ├── chat/            # Chat service, prompt and history, SSE, spend cap, thread repository
+│   │   ├── db/              # Postgres connection
+│   │   ├── observability/   # Optional Langfuse tracing
 │   │   └── api/             # REST API endpoints (FastAPI app)
+│   ├── migrations/           # SQL migrations (make migrate)
 │   ├── tests/                # Test suite
 │   ├── scripts/              # Ingestion entrypoint (local only)
-│   ├── config/                # config.yaml, prompts.yaml
-│   └── requirements.txt       # Runtime deps only (8 packages)
+│   ├── config/                # config.yaml, prompts.yaml, prompts_chat.yaml
+│   └── requirements.txt       # Runtime deps only (10 packages)
 ├── web-client/                # Next.js frontend (Vercel Service: web)
+│   ├── components/chat/      # Chat page, transcript, history drawer, settings popover
+│   └── lib/                  # API clients, SSE parser, owner key, citation rendering
 ├── scraped_data/               # Source markdown articles (never bundled into api/)
-├── evaluation/                 # Test questions and evaluation
+├── evaluation/                 # Langfuse datasets, judges, experiment runner, results
+├── .github/workflows/test.yml  # CI: API and web tests on push and pull request
 ├── docs/                       # Documentation
 ├── vercel.json                  # Service routing table
 └── .vercelignore                 # Filesystem upload exclusions (load-bearing, see Deployment)
@@ -131,6 +206,7 @@ care-beacon/
 - [Vercel CLI](https://vercel.com/docs/cli) - for `vercel dev` and deployments
 - OpenAI API key (embeddings + LLM)
 - Qdrant Cloud instance (vector database)
+- Neon Postgres database (chat history); provisioned through the Vercel Marketplace
 
 ### Step 1: Clone and Set Up the Python Environment
 
@@ -150,8 +226,13 @@ cp .env.example .env
 # Fill in OPENAI_API_KEY, QDRANT_URL, QDRANT_API_KEY, ADMIN_API_KEY
 ```
 
-`REDIS_URL` is injected automatically by the Upstash Redis Marketplace integration
-when running on Vercel; for local work, pull it with `vercel env pull`.
+`REDIS_URL` and `DATABASE_URL` are injected automatically by the Upstash Redis and
+Neon Marketplace integrations when running on Vercel; for local work, pull them with
+`vercel env pull`. Then create the chat tables:
+
+```bash
+make migrate
+```
 
 ### Step 3: Verify Installation
 
@@ -168,7 +249,8 @@ See [Deployment](#deployment) below for how the app runs in production, and
 
 ### Production
 
-The app is live at **https://care-beacon-health.vercel.app**.
+The app is live at **https://care-beacon-health.vercel.app**. It opens on the Chat
+page; Search and Statistics are in the top navigation.
 
 ```bash
 # Check health
@@ -178,6 +260,12 @@ curl https://care-beacon-health.vercel.app/api/health
 curl -X POST "https://care-beacon-health.vercel.app/api/v1/ask" \
   -H "Content-Type: application/json" \
   -d '{"question": "What are the symptoms of breast cancer?"}'
+
+# Start a chat (streams Server-Sent Events; -N disables buffering)
+curl -N -X POST "https://care-beacon-health.vercel.app/api/v1/chat" \
+  -H "Content-Type: application/json" \
+  -H "X-Owner-Key: $(uuidgen | tr 'A-Z' 'a-z')" \
+  -d '{"message": "What are common side effects of chemotherapy?"}'
 ```
 
 ### Local Development
@@ -189,6 +277,8 @@ vercel dev
 
 `vercel dev` runs both Services (`api` and `web`) behind the same route table used
 in production, so `/api/*` and everything else resolve exactly as they do live.
+Under `vercel dev` the API reads `.env`, not `.env.local`, so `DATABASE_URL` must be in
+`.env` or exported in your shell for chat to reach Postgres.
 
 ## Usage Examples
 
@@ -259,6 +349,9 @@ make test-db
 # Web client tests (Vitest)
 cd web-client && npm test
 
+# Evaluation tooling tests
+$PY -m pytest evaluation/langfuse/ -q
+
 # Run a specific test file
 cd api && $PY -m pytest tests/test_api.py -v
 
@@ -270,8 +363,26 @@ A bare `pytest` may resolve to a different interpreter (e.g. an Anaconda base
 environment) and fail; use the `care-beacon` conda env's Python explicitly, or
 `make test`, which does this for you.
 
-**Current state**: 390 passed, 14 skipped, 0 failed (as of 2026-11-11; the skips are Postgres tests). There is no coverage
-guarantee implied here — check `api/tests/` and CI output for the current numbers.
+**Current state** (2026-11-12): API 407 passed, 14 skipped (Postgres tests), 0 failed;
+web 38 passed; evaluation tooling 32 passed. `make test-db` runs the Postgres tests in an
+isolated schema and refuses to run outside it.
+
+## Evaluation
+
+Answer quality is measured, not eyeballed. `evaluation/langfuse/` holds versioned
+datasets, LLM judges (`gpt-4o-mini` at temperature 0) and an experiment runner that
+drives the real API, Search or Chat, and posts every score to Langfuse.
+
+| Dataset | What it checks |
+|---|---|
+| Search baseline (78 questions) | Is the single-shot answer grounded in its sources? |
+| Follow-ups (25 threads) | Does the answer to a vague follow-up address what the user meant, and stay grounded? |
+| Safety (19 threads of 2, 3 and 5 turns) | Does the assistant still refuse personal medical decisions and refer the user to a clinician when a conversation drifts from general information to "what should I do"? |
+| Safety control (19 single turns) | The same final questions asked cold, to show whether the conversation weakens refusals |
+
+Safety is a hard gate: every item must pass before release. The current results and
+the three follow-ups that still miss are written up in
+[`evaluation/results/`](evaluation/results/).
 
 ## Deployment
 
@@ -287,8 +398,12 @@ Routing is defined in `vercel.json`. The `/api/(.*)` rewrite must stay ahead of 
 is final.
 
 **Environment variables:** `OPENAI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`,
-`ADMIN_API_KEY`, `VECTOR_DB_PROVIDER=qdrant`. `REDIS_URL` is injected automatically
-by the Upstash Redis Marketplace integration.
+`ADMIN_API_KEY`, `VECTOR_DB_PROVIDER=qdrant`. `REDIS_URL` and `DATABASE_URL` are
+injected by the Upstash Redis and Neon Marketplace integrations. Langfuse tracing turns
+on only when `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` and `LANGFUSE_HOST` are all set.
+
+**Function duration:** the `api` service allows 60 seconds per request
+(`maxDuration` in `vercel.json`), about 3× the slowest measured chat turn.
 
 **Local development:** `vercel dev` runs both services behind the same route table as
 production. `make test` runs the Python suite.
@@ -298,15 +413,20 @@ outside `api/` and is never bundled into the function — and upserts into Qdran
 
 **Rate limiting** is enforced by the Vercel WAF, not application code: a custom rule
 (`ask-rate-limit`) allows 60 requests per 60 seconds per IP on `/api/v1/ask` and
-returns 429 past that, configured via `vercel firewall rules`.
+returns 429 past that, configured via `vercel firewall rules`. Chat is limited more
+tightly (`chat-rate-limit`, 20 requests per 60 seconds).
+
+**Spend cap:** every OpenAI call adds its cost to a per-UTC-day counter in Redis. Once
+the day's total reaches `chat.daily_spend_cap_usd` ($2.00 by default), chat returns 429
+until midnight UTC. Search keeps working, so the cheaper, cached path stays available.
 
 **The upload, not just the deploy, is filesystem-based:** `vercel deploy` uploads
 from disk, not from git, so `.gitignore` has no effect on it. `.vercelignore` keeps
 `scraped_data/` (25,000+ files) and other local-only content out of the upload —
 without it, the upload exceeds Vercel's 15,000-file limit. Do not delete it.
 
-**Admin route** is protected by Vercel Deployment Protection (dashboard-configured,
-not in code), so the browser never needs to hold the admin key.
+**Admin endpoints** (`POST /api/v1/cache/clear`, `POST /api/v1/stats/reset`) require
+an `X-API-Key` header matching `ADMIN_API_KEY`.
 
 ## Configuration
 
@@ -318,6 +438,11 @@ Main configuration is in `api/config/config.yaml`. Key settings:
 - **LLM**: Model selection, temperature, max tokens
 - **Cache**: Redis settings, TTL
 - **Costs**: API cost tracking
+- **Chat**: daily spend cap (`chat.daily_spend_cap_usd`)
+
+The LLM model is set per role (`llm.models`: generation, rerank, utility for rewriting
+and titles), so a stronger model can be used for answers without paying for it on
+every rerank. Prompts are in `prompts.yaml` (Search) and `prompts_chat.yaml` (Chat).
 
 ## Keepalive
 
@@ -420,6 +545,8 @@ make format             # Format code with Black
 make check               # Run tests + linting
 make dev                 # Run both services via vercel dev
 make ingest               # Run article ingestion (local only)
+make migrate              # Apply SQL migrations to Postgres
+make test-db              # Run Postgres tests in an isolated schema
 make clean-cache        # Clear Python cache
 make clean-logs          # Clear log files
 make help                 # Show all commands
@@ -436,22 +563,18 @@ mypy src/
 
 </details>
 
-## Cost Estimates
+## Cost
 
-Based on 1 query/second (~2.6M queries/month):
+Measured from Langfuse traces of 128 chat turns (2026-11-12):
 
-### Embeddings
-- **One-time indexing**: ~$1-2 (for 10K articles)
-- **Query embedding**: ~$3/month (negligible)
+- **Per chat turn:** median $0.00071, max $0.00119. That covers query rewriting,
+  embedding, reranking and the streamed answer, all on `gpt-4o-mini`.
+- **Daily cap:** at the default $2.00/day the app allows roughly 2,800 median chat turns
+  a day, shared with Search.
+- **Search:** repeated questions are served from the Redis cache at no LLM cost.
 
-### LLM API (per month)
-- **Claude 3.5 Sonnet**: ~$35,000/month
-- **Claude 3 Haiku**: ~$3,400/month (recommended)
-- **GPT-4o-mini**: ~$2,100/month
-
-### With 40% Cache Hit Rate
-- **Claude Haiku**: ~$2,000/month
-- **GPT-4o-mini**: ~$1,400/month
+The original planning estimates for other models (Claude, GPT-4o) are kept in
+[`Claude.md`](Claude.md) for comparison.
 
 ## License
 
@@ -463,5 +586,5 @@ Built by Kam — [github.com/kamlau024](https://github.com/kamlau024).
 
 ---
 
-**Last Updated**: 2026-08-05
-**Version**: 3.0.0 (Live in production on Vercel)
+**Last Updated**: 2026-11-12
+**Version**: 4.0.0 (Live in production on Vercel)

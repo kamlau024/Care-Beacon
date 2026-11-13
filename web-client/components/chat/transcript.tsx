@@ -27,7 +27,7 @@ export function Transcript({
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center p-6 text-center text-sm text-muted-foreground">
-        Ask a question about cancer care. Answers cite the sources they come from.
+        Chat about cancer care. Answers cite the sources they come from.
       </div>
     )
   }
