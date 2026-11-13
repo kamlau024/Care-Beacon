@@ -167,8 +167,10 @@ export function Chat() {
     }
   }
 
+  // 15.5rem covers the header, the page's vertical padding and the footer (about 242px),
+  // so the chat fits the window without scrolling the page; only the transcript scrolls.
   return (
-    <div className="flex h-[calc(100dvh-14rem)] min-h-[440px] flex-col">
+    <div className="flex h-[calc(100dvh-15.5rem)] min-h-[440px] flex-col">
       <div className="flex items-center justify-between gap-2 border-b pb-3">
         <Button variant="outline" size="sm" onClick={() => setHistoryOpen(true)}>
           <History /> History
