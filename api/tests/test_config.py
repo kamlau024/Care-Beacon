@@ -1,7 +1,7 @@
 """Tests for configuration loader."""
 
 import pytest
-from src.config_loader import Config, get_config
+from src.config_loader import Config, get_config, get_model
 
 
 def test_config_loads_successfully(config_path):
@@ -128,3 +128,13 @@ def test_config_get_api_key_openai(config_path, monkeypatch):
     # Get OpenAI API key
     api_key = config.get_api_key("openai")
     assert api_key == "test-openai-key-789"
+
+
+def test_each_role_defaults_to_gpt_4o_mini():
+    for role in ("generation", "rerank", "utility"):
+        assert get_model(role) == "gpt-4o-mini"
+
+
+def test_unknown_role_raises():
+    with pytest.raises(KeyError):
+        get_model("vision")

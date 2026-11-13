@@ -681,3 +681,22 @@ def test_cache_is_healthy_when_disabled():
 
         # Should return False immediately
         assert cache.is_healthy() is False
+
+
+def test_deserialized_answer_is_marked_cached(redis_cache):
+    """An answer restored from the cache must report cached=True; a fresh one must not."""
+    original = GeneratedAnswer(
+        query="What are symptoms?",
+        answer="Symptoms include...",
+        citations=[],
+        context_used=None,
+        model="gpt-4o-mini",
+        tokens_used={"input": 100, "output": 50, "total": 150},
+        cost=0.0002,
+        generation_time_ms=500.0,
+    )
+    assert original.cached is False
+
+    restored = redis_cache._deserialize_answer(redis_cache._serialize_answer(original))
+
+    assert restored.cached is True

@@ -14,6 +14,7 @@ from src.retrieval.models import Query, RetrievedContext, RetrievalConfig
 from src.storage.models import RetrievalResult
 from src.retrieval.reranker import LLMReranker
 from src.config_loader import get_config
+from src.observability.tracing import span
 
 
 class RetrievalEngine:
@@ -78,11 +79,9 @@ class RetrievalEngine:
     def retrieve(self, query: Query) -> RetrievedContext:
         """Retrieve relevant chunks for a query.
 
-        This is the main retrieval method. It:
-        1. Generates embedding for the query text
-        2. Searches the vector database
-        3. Filters results by similarity threshold
-        4. Returns structured context
+        This is the main retrieval method. It runs the two public steps back to
+        back: ``search_candidates`` (embed, vector search, loose pre-filter) and
+        ``rank_candidates`` (rerank and similarity filter).
 
         Args:
             query: Query object with text and optional filters
@@ -92,8 +91,35 @@ class RetrievalEngine:
         """
         start_time = time.time()
 
+        results = self.rank_candidates(query, self.search_candidates(query))
+
+        # Calculate retrieval time
+        retrieval_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+
+        # Create and return context
+        return RetrievedContext(
+            query=query,
+            results=results,
+            total_chunks=len(results),
+            retrieval_time_ms=retrieval_time,
+        )
+
+    def search_candidates(self, query: Query) -> List[RetrievalResult]:
+        """Embed the query and run the vector search.
+
+        Fetches ``max_results * 6`` candidates when the reranker is on, then
+        applies a loose pre-filter so the reranker sees reasonable candidates.
+
+        Args:
+            query: Query object with text and optional filters
+
+        Returns:
+            Candidate results, ready for ``rank_candidates``
+        """
         # Generate query embedding
-        query_embedding = self.embedding_generator.embed_text(query.text)
+        with span("embed", input=query.text) as embed_span:
+            query_embedding = self.embedding_generator.embed_text(query.text)
+            embed_span.update(output={"dimensions": len(query_embedding)})
 
         # Retrieve more results if re-ranking is enabled (retrieve 6x to ensure completeness)
         initial_n_results = query.max_results * 6 if self.reranker else query.max_results
@@ -102,11 +128,16 @@ class RetrievalEngine:
             f"🔍 Vector search: fetching {initial_n_results} results "
             f"(reranker={'enabled' if self.reranker else 'disabled'})"
         )
-        results = self.vector_db.search(
-            query_embedding=query_embedding,
-            n_results=initial_n_results,
-            where=query.filters,
-        )
+        with span(
+            "vector_search",
+            input={"n_results": initial_n_results, "filters": query.filters},
+        ) as search_span:
+            results = self.vector_db.search(
+                query_embedding=query_embedding,
+                n_results=initial_n_results,
+                where=query.filters,
+            )
+            search_span.update(output={"count": len(results)})
         logger.info(f"📊 Vector search returned {len(results)} results")
 
         # When re-ranking is enabled, skip or loosen pre-filter
@@ -120,13 +151,35 @@ class RetrievalEngine:
                 results = [r for r in results if r.similarity_score >= pre_filter_threshold]
                 logger.info(f"🔽 Pre-filter for re-ranking (threshold={pre_filter_threshold:.2f}): {before_filter} → {len(results)} results")
 
+        return results
+
+    def rank_candidates(
+        self, query: Query, candidates: List[RetrievalResult]
+    ) -> List[RetrievalResult]:
+        """Rerank candidates and apply the similarity threshold.
+
+        With the reranker on, reranks all candidates and filters on the
+        re-ranked scores. With it off, filters the vector scores directly.
+
+        Args:
+            query: Query object the candidates were searched for
+            candidates: Output of ``search_candidates``
+
+        Returns:
+            Final results that passed the threshold
+        """
+        results = candidates
+
+        if self.reranker and len(results) > 0:
             # Re-rank using LLM - re-rank ALL candidates, don't limit yet
             logger.info(f"🎯 Calling reranker with {len(results)} results, will re-rank all candidates")
-            results = self.reranker.rerank(
-                query=query.text,
-                results=results,
-                top_k=len(results)  # Re-rank all candidates, filter will select best ones
-            )
+            with span("rerank", input={"candidates": len(results)}) as rerank_span:
+                results = self.reranker.rerank(
+                    query=query.text,
+                    results=results,
+                    top_k=len(results)  # Re-rank all candidates, filter will select best ones
+                )
+                rerank_span.update(output={"count": len(results)})
             logger.info(f"✅ Re-ranking returned {len(results)} results")
 
             # Apply strict filter AFTER re-ranking (on re-ranked scores)
@@ -145,15 +198,35 @@ class RetrievalEngine:
                 results = [r for r in results if r.similarity_score >= query.min_similarity]
                 logger.info(f"🔽 Filtered by min_similarity={query.min_similarity}: {before_filter} → {len(results)} results")
 
-        # Calculate retrieval time
-        retrieval_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+        return results
 
-        # Create and return context
-        return RetrievedContext(
-            query=query,
-            results=results,
-            total_chunks=len(results),
-            retrieval_time_ms=retrieval_time,
+    def make_query(
+        self,
+        query_text: str,
+        max_results: Optional[int] = None,
+        min_similarity: Optional[float] = None,
+        filters: Optional[Dict[str, Any]] = None,
+    ) -> Query:
+        """Build a Query from text, resolving unset values from config defaults.
+
+        Args:
+            query_text: The query text
+            max_results: Maximum number of results (uses default if None)
+            min_similarity: Minimum similarity threshold (uses default if None)
+            filters: Optional metadata filters
+
+        Returns:
+            Query with defaults applied
+        """
+        # Debug: Log what values we're using
+        resolved_min_similarity = min_similarity if min_similarity is not None else self.config.default_min_similarity
+        logger.info(f"🔧 retrieve_text: min_similarity={min_similarity} (passed) → using {resolved_min_similarity} (config default={self.config.default_min_similarity})")
+
+        return Query(
+            text=query_text,
+            max_results=max_results if max_results is not None else self.config.default_max_results,
+            min_similarity=resolved_min_similarity,
+            filters=filters,
         )
 
     def retrieve_text(
@@ -174,18 +247,7 @@ class RetrievalEngine:
         Returns:
             RetrievedContext with retrieved chunks
         """
-        # Debug: Log what values we're using
-        resolved_min_similarity = min_similarity if min_similarity is not None else self.config.default_min_similarity
-        logger.info(f"🔧 retrieve_text: min_similarity={min_similarity} (passed) → using {resolved_min_similarity} (config default={self.config.default_min_similarity})")
-
-        query = Query(
-            text=query_text,
-            max_results=max_results if max_results is not None else self.config.default_max_results,
-            min_similarity=resolved_min_similarity,
-            filters=filters,
-        )
-
-        return self.retrieve(query)
+        return self.retrieve(self.make_query(query_text, max_results, min_similarity, filters))
 
     def retrieve_for_cancer_type(
         self,

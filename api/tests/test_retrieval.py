@@ -470,3 +470,69 @@ def test_retrieved_context_get_by_article(retrieval_engine):
     assert len(filtered_results) > 0
     for result in filtered_results:
         assert result.chunk.article_id == "article_0"
+
+
+# --- search / rank split -----------------------------------------------------
+
+
+def _engine_with_reranker(mock_embedding_generator, mock_vector_db, min_similarity=0.0):
+    reranker = Mock()
+
+    def fake_rerank(query, results, top_k):
+        # Reverse order and halve scores so the rank step is observable
+        return [
+            RetrievalResult(chunk=r.chunk, similarity_score=r.similarity_score / 2, rank=i + 1)
+            for i, r in enumerate(reversed(results))
+        ]
+
+    reranker.rerank.side_effect = fake_rerank
+    config = RetrievalConfig(
+        default_max_results=2,
+        default_min_similarity=min_similarity,
+        rerank_results=True,
+    )
+    return RetrievalEngine(
+        embedding_generator=mock_embedding_generator,
+        vector_db=mock_vector_db,
+        config=config,
+        reranker=reranker,
+    )
+
+
+def test_make_query_resolves_defaults(retrieval_engine):
+    query = retrieval_engine.make_query("q")
+    assert query.text == "q"
+    assert query.max_results == 10
+    assert query.min_similarity == 0.0
+    assert query.filters is None
+
+    query = retrieval_engine.make_query("q", max_results=3, min_similarity=0.5, filters={"a": 1})
+    assert (query.max_results, query.min_similarity, query.filters) == (3, 0.5, {"a": 1})
+
+
+def test_retrieve_equals_search_then_rank(mock_embedding_generator, mock_vector_db):
+    engine = _engine_with_reranker(mock_embedding_generator, mock_vector_db, min_similarity=0.2)
+    query = engine.make_query("symptoms")
+
+    candidates = engine.search_candidates(query)
+    # reranker on: fetches max_results * 6
+    assert mock_vector_db.search.call_args.kwargs["n_results"] == 12
+    ranked = engine.rank_candidates(query, candidates)
+
+    context = engine.retrieve(query)
+
+    assert [r.chunk.chunk_id for r in context.results] == [r.chunk.chunk_id for r in ranked]
+    assert [r.similarity_score for r in context.results] == [r.similarity_score for r in ranked]
+    assert context.total_chunks == len(ranked)
+    assert engine.reranker.rerank.called
+
+
+def test_rank_candidates_without_reranker_filters_by_threshold(retrieval_engine):
+    query = retrieval_engine.make_query("q", min_similarity=0.65)
+    candidates = retrieval_engine.search_candidates(query)
+    assert len(candidates) == 5
+
+    ranked = retrieval_engine.rank_candidates(query, candidates)
+
+    assert [r.similarity_score >= 0.65 for r in ranked] == [True] * len(ranked)
+    assert len(ranked) == 3

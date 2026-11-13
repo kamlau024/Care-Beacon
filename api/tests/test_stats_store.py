@@ -1,5 +1,7 @@
 """Tests for the Redis-backed statistics store."""
 
+from datetime import date
+
 import pytest
 from redis.exceptions import RedisError
 
@@ -26,6 +28,22 @@ class FakeRedis:
     def delete(self, name):
         self.data.pop(name, None)
 
+    # String-key operations (daily cost counter)
+    def incrbyfloat(self, name, amount):
+        self.data[name] = float(self.data.get(name, 0)) + amount
+        return self.data[name]
+
+    def expire(self, name, seconds):
+        self.ttls = getattr(self, "ttls", {})
+        self.ttls[name] = seconds
+
+    def ttl(self, name):
+        return getattr(self, "ttls", {}).get(name, -1)
+
+    def get(self, name):
+        value = self.data.get(name)
+        return None if value is None else str(value)
+
 
 class ExplodingRedis:
     """Redis stand-in whose every command raises, simulating an outage mid-call.
@@ -44,6 +62,15 @@ class ExplodingRedis:
         raise RedisError("connection lost")
 
     def delete(self, name):
+        raise RedisError("connection lost")
+
+    def incrbyfloat(self, name, amount):
+        raise RedisError("connection lost")
+
+    def expire(self, name, seconds):
+        raise RedisError("connection lost")
+
+    def get(self, name):
         raise RedisError("connection lost")
 
 
@@ -137,9 +164,44 @@ def test_llm_client_reports_persisted_totals_not_instance_totals():
     store.incr("llm_calls", 10)
     store.incr_float("llm_cost", 0.42)
 
-    with patch("src.generation.llm_client.OpenAI"):
+    with patch("src.generation.llm_client.get_openai_client"):
         client = LLMClient(api_key="test-key", stats_store=store)
 
     stats = client.get_stats()
     assert stats["total_calls"] == 10
     assert stats["total_cost"] == pytest.approx(0.42)
+
+
+def test_daily_cost_uses_utc_date_key_and_ttl():
+    fake = FakeRedis()
+    store = StatsStore(fake)
+
+    store.incr_daily_cost(0.5, day=date(2026, 11, 11))
+    store.incr_daily_cost(0.25, day=date(2026, 11, 11))
+
+    assert fake.data["care_beacon:cost:2026-11-11"] == pytest.approx(0.75)
+    assert fake.ttl("care_beacon:cost:2026-11-11") == 172800
+    assert store.get_daily_cost(date(2026, 11, 11)) == pytest.approx(0.75)
+
+
+def test_daily_cost_defaults_to_utc_today(monkeypatch):
+    from datetime import datetime, timezone
+
+    fake = FakeRedis()
+    StatsStore(fake).incr_daily_cost(1.0)
+
+    today = datetime.now(timezone.utc).date().isoformat()
+    assert f"care_beacon:cost:{today}" in fake.data
+
+
+def test_get_daily_cost_missing_key_is_zero_not_none():
+    assert StatsStore(FakeRedis()).get_daily_cost(date(2026, 1, 1)) == 0.0
+
+
+def test_daily_cost_unavailable_is_none_and_never_raises():
+    assert StatsStore(None).get_daily_cost() is None
+    StatsStore(None).incr_daily_cost(1.0)
+
+    store = StatsStore(ExplodingRedis())
+    store.incr_daily_cost(1.0)
+    assert store.get_daily_cost() is None

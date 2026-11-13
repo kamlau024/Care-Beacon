@@ -98,6 +98,7 @@ def test_health_check_reports_qdrant_reachable(client, mock_generator):
     from unittest.mock import MagicMock, patch
 
     with patch("src.api.main.create_vector_database") as mock_factory, \
+         patch("src.api.main.db_healthy", return_value=True), \
          patch("src.api.main.get_answer_generator", return_value=mock_generator):
         mock_factory.return_value.client.get_collection = MagicMock(return_value=object())
         response = client.get("/api/health")
@@ -114,6 +115,7 @@ def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator
     from unittest.mock import patch
 
     with patch("src.api.main.create_vector_database", side_effect=Exception("connection refused")), \
+         patch("src.api.main.db_healthy", return_value=True), \
          patch("src.api.main.get_answer_generator", return_value=mock_generator):
         response = client.get("/api/health")
 
@@ -121,6 +123,18 @@ def test_health_check_returns_503_when_qdrant_unreachable(client, mock_generator
     body = response.json()
     assert body["status"] == "degraded"
     assert body["services"]["vector_db"] is False
+
+
+def test_health_503_when_postgres_down(client, mock_generator):
+    from unittest.mock import patch
+
+    with patch("src.api.main.db_healthy", return_value=False), \
+         patch("src.api.main.create_vector_database"), \
+         patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.get("/api/health")
+    assert r.status_code == 503
+    assert r.json()["services"]["postgres"] is False
+    assert r.json()["services"]["vector_db"] is True
 
 
 def test_old_health_path_is_gone(client):
@@ -685,49 +699,6 @@ def test_error_response_model():
     assert error.message == "Invalid input"
 
 
-def test_filtered_stderr_write_filters_telemetry(capsys):
-    """Test FilteredStderr.write() filters telemetry messages (lines 26-27)."""
-    from src.api.main import FilteredStderr
-    import sys
-    from io import StringIO
-
-    # Create a mock stderr to capture output
-    mock_stderr = StringIO()
-    filtered = FilteredStderr(mock_stderr)
-
-    # Test filtering telemetry message (should be filtered out)
-    filtered.write("WARNING: telemetry is enabled")
-    # Test normal message (should pass through)
-    filtered.write("Normal message")
-
-    # Get the output
-    output = mock_stderr.getvalue()
-
-    # Telemetry message should be filtered out
-    assert "telemetry" not in output
-    # Normal message should be present
-    assert "Normal message" in output
-
-
-def test_filtered_stderr_flush_method(capsys):
-    """Test FilteredStderr.flush() method (line 30)."""
-    from src.api.main import FilteredStderr
-    import sys
-    from io import StringIO
-
-    # Create a mock stderr
-    mock_stderr = StringIO()
-    filtered = FilteredStderr(mock_stderr)
-
-    # Write something and flush
-    filtered.write("Test message")
-    filtered.flush()  # Line 30
-
-    # Should not raise any exceptions
-    output = mock_stderr.getvalue()
-    assert "Test message" in output
-
-
 def test_get_answer_generator_singleton_initialization():
     """Test get_answer_generator() creates singleton on first call (lines 81-83)."""
     from src.api.main import get_answer_generator, _answer_generator
@@ -952,3 +923,39 @@ def test_lifespan_survives_answer_generator_init_failure(capsys):
         assert "API is ready to accept requests!" in captured.out
         assert "Shutting down Care-Beacon API" in captured.out
 
+
+
+def test_ask_two_of_three_sources_filters_by_list(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": ["BC Cancer", "Cleveland Clinic"]})
+    assert r.status_code == 200
+    assert mock_generator.generate_answer.call_args.kwargs["filters"] == {"source": ["BC Cancer", "Cleveland Clinic"]}
+
+
+def test_ask_single_string_source_still_accepted(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": "BC Cancer"})
+    assert mock_generator.generate_answer.call_args.kwargs["filters"] == {"source": "BC Cancer"}
+
+
+def test_ask_unknown_source_is_422(client, mock_generator):
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?", "source": ["Mayo Clinic"]})
+    assert r.status_code == 422
+
+
+def test_metadata_cached_reflects_this_request_not_history(client, mock_generator, mock_answer):
+    mock_generator.cache.get_stats.return_value = {"cache_hits": 99}
+    mock_answer.cached = False
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        r = client.post("/api/v1/ask", json={"question": "What is breast cancer?"})
+    assert r.json()["metadata"]["cached"] is False
+
+
+def test_stderr_is_not_wrapped():
+    import sys
+    import src.api.main  # noqa: F401
+
+    assert type(sys.stderr).__name__ != "FilteredStderr"
+    # pytest swaps sys.stderr, so also assert the wrapper class is gone
+    assert not hasattr(src.api.main, "FilteredStderr")

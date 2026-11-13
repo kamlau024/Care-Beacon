@@ -1,7 +1,7 @@
 """API request and response models."""
 
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from datetime import datetime
 
 
@@ -29,9 +29,9 @@ class QuestionRequest(BaseModel):
         None,
         description="Filter by specific cancer type",
     )
-    source: Optional[str] = Field(
+    source: Optional[Union[str, List[str]]] = Field(
         None,
-        description="Filter by information source",
+        description="Filter by information source (one name, or a list to match any of them)",
     )
     max_results: Optional[int] = Field(
         5,

@@ -92,6 +92,9 @@ class GeneratedAnswer:
     timestamp: datetime = field(default_factory=datetime.now)
     """When the answer was generated"""
 
+    cached: bool = False
+    """True when this answer was served from the cache"""
+
     def get_formatted_answer(self, include_disclaimer: bool = True) -> str:
         """Get formatted answer with citations.
 

@@ -223,3 +223,63 @@ To expand the test dataset:
 - [Ragas Documentation](https://docs.ragas.io/)
 - [Ragas Metrics Explained](https://docs.ragas.io/en/latest/concepts/metrics/index.html)
 - [LangChain Documentation](https://python.langchain.com/)
+
+## Langfuse experiments (LLM-as-judge)
+
+`evaluation/langfuse/` holds the dataset-driven experiment runner. Judges
+(`judges.py`) run in our own code with `gpt-4o-mini` at temperature 0 and post their
+scores to Langfuse; `datasets.py` uploads datasets idempotently by item id.
+
+Required environment variables: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`,
+`LANGFUSE_HOST` (or `LANGFUSE_BASE_URL`) and `OPENAI_API_KEY`.
+
+Search baseline (78 questions from `ragas/test_questions.json`, grounded pass rate and
+median `/ask` latency), run from the repo root:
+
+```bash
+/opt/anaconda3/envs/care-beacon/bin/python -m evaluation.langfuse.run_experiment \
+  --dataset search-baseline \
+  --base-url https://care-beacon-health.vercel.app \
+  --run-name search-baseline-$(date +%F)
+```
+
+Record the run name, Langfuse run URL, item count, grounded pass rate and median
+latency in `evaluation/results/<date>-search-baseline.md`.
+
+Judge unit tests (OpenAI mocked, no network):
+`/opt/anaconda3/envs/care-beacon/bin/python -m pytest evaluation/langfuse/test_judges.py -q`
+
+### Chat follow-up and safety evals (Phase 1 gate)
+
+`followups` (25 multi-turn threads, last turn depends on earlier turns) and `safety`
+(19 threads of 2, 3 or 5 turns whose last turn asks for personal medical advice; the
+five-turn threads drift from general information in turns 1-3 to the user's own situation
+in turn 4 and a personal decision or diagnosis in turn 5) drive `POST /api/v1/chat`
+with a fresh owner key per item. `safety-control` sends only each safety item's final turn
+as a fresh single-turn thread, scored the same way, so you can compare the multi-turn and
+single-turn `refusal_referral` pass rates (a lower multi-turn rate means drift weakens
+refusals). Datasets live in `evaluation/langfuse/datasets/`.
+Follow-ups are scored `followup_resolved` + `grounded`; safety is scored
+`refusal_referral`, and every item must score 1. First-token and total turn times are
+recorded as `first_token_s` and `turn_total_s`. A 429, an `error` frame, or a stream
+without `done` fails the item and makes the run INCOMPLETE (exit code 1).
+
+Needs `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (or
+`LANGFUSE_BASE_URL`) and `OPENAI_API_KEY` locally. The target must be a preview deploy of
+the branch with its own chat environment (Redis, Qdrant, OpenAI keys) and a daily cap high
+enough for roughly 150 turns (all three datasets). Preview deployments behind Vercel Deployment Protection need
+the project's automation bypass secret (Project Settings → Deployment Protection →
+Protection Bypass for Automation): export it as `VERCEL_AUTOMATION_BYPASS_SECRET` and the
+runner sends it as the `x-vercel-protection-bypass` header on every request.
+
+```bash
+BASE_URL=https://<branch-preview>.vercel.app
+/opt/anaconda3/envs/care-beacon/bin/python -m evaluation.langfuse.run_experiment \
+  --dataset followups --base-url "$BASE_URL" --run-name followups-$(date +%F)
+/opt/anaconda3/envs/care-beacon/bin/python -m evaluation.langfuse.run_experiment \
+  --dataset safety --base-url "$BASE_URL" --run-name safety-$(date +%F)
+/opt/anaconda3/envs/care-beacon/bin/python -m evaluation.langfuse.run_experiment \
+  --dataset safety-control --base-url "$BASE_URL" --run-name safety-control-$(date +%F)
+```
+
+Unit tests (HTTP and judges mocked): `/opt/anaconda3/envs/care-beacon/bin/python -m pytest evaluation/langfuse/ -q`

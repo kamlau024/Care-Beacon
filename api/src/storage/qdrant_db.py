@@ -9,6 +9,7 @@ from qdrant_client.models import (
     PointStruct,
     Filter,
     FieldCondition,
+    MatchAny,
     MatchValue,
     SearchRequest
 )
@@ -16,6 +17,34 @@ from qdrant_client.models import (
 from src.storage.models import Chunk, RetrievalResult
 from src.config_loader import get_config
 from loguru import logger
+
+
+def _match_for(value: Any):
+    """A list value matches any of its items; a scalar matches exactly."""
+    if isinstance(value, (list, tuple)):
+        return MatchAny(any=list(value))
+    return MatchValue(value=value)
+
+
+def build_qdrant_filter(where: Optional[Dict[str, Any]]) -> Optional[Filter]:
+    """Convert a ChromaDB-style where clause into a Qdrant Filter.
+
+    A list value becomes MatchAny (any-of); a scalar stays MatchValue.
+    Returns None when there is nothing to filter on.
+    """
+    if not where:
+        return None
+
+    must_conditions = []
+    for key, value in where.items():
+        if key == "$and":
+            for condition in value:
+                for k, v in condition.items():
+                    must_conditions.append(FieldCondition(key=k, match=_match_for(v)))
+        else:
+            must_conditions.append(FieldCondition(key=key, match=_match_for(value)))
+
+    return Filter(must=must_conditions) if must_conditions else None
 
 
 class QdrantVectorDatabase:
@@ -263,33 +292,7 @@ class QdrantVectorDatabase:
         Returns:
             List of RetrievalResult objects
         """
-        # Build filter from where clause
-        query_filter = None
-        if where:
-            # Convert ChromaDB-style where clause to Qdrant filter
-            must_conditions = []
-
-            for key, value in where.items():
-                if key == "$and":
-                    # Handle $and from ChromaDB format
-                    for condition in value:
-                        for k, v in condition.items():
-                            must_conditions.append(
-                                FieldCondition(
-                                    key=k,
-                                    match=MatchValue(value=v)
-                                )
-                            )
-                else:
-                    must_conditions.append(
-                        FieldCondition(
-                            key=key,
-                            match=MatchValue(value=value)
-                        )
-                    )
-
-            if must_conditions:
-                query_filter = Filter(must=must_conditions)
+        query_filter = build_qdrant_filter(where)
 
         # Search in Qdrant
         search_results = self.client.search(

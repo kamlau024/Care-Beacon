@@ -1,7 +1,6 @@
 """Main FastAPI application for Care-Beacon RAG system."""
 
 import os
-import sys
 from datetime import datetime
 from typing import Dict, Any
 from contextlib import asynccontextmanager
@@ -12,30 +11,14 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from loguru import logger
 
-# Disable ChromaDB telemetry before importing our modules
-os.environ["ANONYMIZED_TELEMETRY"] = "False"
-
-# Filter ChromaDB warnings
-class FilteredStderr:
-    """Filter out ChromaDB telemetry warnings from stderr."""
-
-    def __init__(self, original_stderr):
-        self.original_stderr = original_stderr
-
-    def write(self, message):
-        if "telemetry" not in message.lower() and "capture()" not in message:
-            self.original_stderr.write(message)
-
-    def flush(self):
-        self.original_stderr.flush()
-
-
-sys.stderr = FilteredStderr(sys.stderr)
-
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
 from src.config_loader import get_config
+from src.observability.tracing import flush, request_trace
+from src.api.filters import configured_sources, normalize_sources
 from src.storage.vector_db import create_vector_database
+from src.db.connection import db_healthy, DatabaseUnavailable
+from src.api.chat_routes import router as chat_router, database_unavailable_handler
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
@@ -142,6 +125,10 @@ def get_answer_generator() -> AnswerGenerator:
     return _answer_generator
 
 
+app.include_router(chat_router)
+app.add_exception_handler(DatabaseUnavailable, database_unavailable_handler)
+
+
 # Exception handlers
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -218,7 +205,7 @@ async def root():
 
 @app.get("/api/health", response_model=HealthResponse, tags=["Monitoring"])
 async def health_check(response: Response):
-    """Health check that performs a real Qdrant read.
+    """Health check that performs a real Qdrant read and a Postgres SELECT 1.
 
     A 200 from this endpoint proves the vector database is reachable, which is what
     makes it valid as the scheduled keepalive target. A cluster that has been
@@ -240,18 +227,22 @@ async def health_check(response: Response):
         logger.warning(f"Health check: Qdrant unreachable: {e}")
         vector_db_healthy = False
 
+    postgres_healthy = db_healthy()
+
     generator = get_answer_generator()
     services = {
         "vector_db": vector_db_healthy,
         "redis_cache": generator.cache.is_healthy(),
+        "postgres": postgres_healthy,
         "llm_client": True,
     }
 
-    if not vector_db_healthy:
+    all_healthy = vector_db_healthy and postgres_healthy
+    if not all_healthy:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
     return HealthResponse(
-        status="healthy" if vector_db_healthy else "degraded",
+        status="healthy" if all_healthy else "degraded",
         version=API_VERSION,
         timestamp=datetime.now(),
         services=services,
@@ -278,66 +269,94 @@ async def ask_question(question_request: QuestionRequest):
         HTTPException: If processing fails
     """
     try:
-        # Get generator
-        generator = get_answer_generator()
-
-        # Build filters
-        filters = {}
-        if question_request.cancer_type:
-            filters["cancer_type"] = question_request.cancer_type
-        if question_request.source:
-            filters["source"] = question_request.source
-
-        # Generate answer
-        start_time = time.time()
-
-        # Use the requested max_results directly
-        # Re-ranking will automatically fetch more results (2x) for better quality
-        max_results = question_request.max_results
-
-        answer = generator.generate_answer(
-            question=question_request.question,
-            filters=filters if filters else None,
-            max_results=max_results,
-            min_similarity=question_request.min_similarity,
-            include_full_text=question_request.include_full_text,
-        )
-
-        # Check if answer was cached
-        cache_stats = generator.cache.get_stats()
-        was_cached = cache_stats.get("cache_hits", 0) > 0
-
-        # Convert citations
-        sources = [
-            CitationResponse(
-                article_title=citation.article_title,
-                section=citation.section,
-                url=citation.url,
-                paragraph_index=citation.paragraph_index,
-                text_excerpt=citation.text_excerpt,
-                similarity_score=citation.similarity_score,
-                source=citation.source,
-                full_text=citation.full_text,
-            )
-            for citation in answer.citations
-        ]
-
-        # Build response
-        return QuestionResponse(
-            question=answer.query,
-            answer=answer.answer,
-            sources=sources,
-            disclaimer=answer.disclaimer,
-            model=answer.model,
+        with request_trace(
+            "ask",
             metadata={
-                "tokens_used": answer.tokens_used.get("total", 0),
-                "cost": answer.cost,
-                "generation_time_ms": answer.generation_time_ms,
-                "cached": was_cached,
-                "sources_count": len(answer.citations),
+                "endpoint": "/api/v1/ask",
+                "filters": {
+                    "cancer_type": question_request.cancer_type,
+                    "source": question_request.source,
+                },
+                "min_similarity": question_request.min_similarity,
             },
-        )
+        ) as trace:
+            # Get generator
+            generator = get_answer_generator()
 
+            # Build filters
+            filters = {}
+            if question_request.cancer_type:
+                filters["cancer_type"] = question_request.cancer_type
+            try:
+                source_filter = normalize_sources(
+                    question_request.source, configured_sources()
+                )
+            except ValueError as e:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+                )
+            if source_filter is not None:
+                filters["source"] = source_filter
+
+            # Generate answer
+            start_time = time.time()
+
+            # Use the requested max_results directly
+            # Re-ranking will automatically fetch more results (2x) for better quality
+            max_results = question_request.max_results
+
+            answer = generator.generate_answer(
+                question=question_request.question,
+                filters=filters if filters else None,
+                max_results=max_results,
+                min_similarity=question_request.min_similarity,
+                include_full_text=question_request.include_full_text,
+            )
+
+            # Whether THIS answer came from the cache (not a cumulative hit counter)
+            was_cached = answer.cached
+
+            # Convert citations
+            sources = [
+                CitationResponse(
+                    article_title=citation.article_title,
+                    section=citation.section,
+                    url=citation.url,
+                    paragraph_index=citation.paragraph_index,
+                    text_excerpt=citation.text_excerpt,
+                    similarity_score=citation.similarity_score,
+                    source=citation.source,
+                    full_text=citation.full_text,
+                )
+                for citation in answer.citations
+            ]
+
+            # Build response
+            response = QuestionResponse(
+                question=answer.query,
+                answer=answer.answer,
+                sources=sources,
+                disclaimer=answer.disclaimer,
+                model=answer.model,
+                metadata={
+                    "tokens_used": answer.tokens_used.get("total", 0),
+                    "cost": answer.cost,
+                    "generation_time_ms": answer.generation_time_ms,
+                    "cached": was_cached,
+                    "sources_count": len(answer.citations),
+                },
+            )
+            trace.update(
+                output=response.answer,
+                metadata={
+                    "cached": was_cached,
+                    "sources_count": len(answer.citations),
+                },
+            )
+            return response
+
+    except HTTPException:
+        raise
     except Exception as e:
         # Log the full error with traceback
         import traceback
@@ -361,6 +380,8 @@ async def ask_question(question_request: QuestionRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=detail,
         )
+    finally:
+        flush()
 
 
 @app.get(
