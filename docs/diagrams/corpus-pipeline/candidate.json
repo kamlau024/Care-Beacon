@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Where the Corpus Comes From",
+    "output": "docs/diagrams/corpus-pipeline/corpus-pipeline.html",
+    "viewBox": [
+      1080,
+      520
+    ],
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/kamlau024/Care-Beacon.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "16c89dd1c52e576d4e4d3b77efc9fa1e17bcbd9d"
+    },
+    "legend": {
+      "entries": {
+        "dashed": {
+          "label": "manual hand-off"
+        }
+      }
+    }
+  },
+  "stages": [
+    {
+      "label": "Publishers"
+    },
+    {
+      "label": "Vital-Atlas"
+    },
+    {
+      "label": "Hand-off"
+    },
+    {
+      "label": "Care-Beacon ingest"
+    },
+    {
+      "label": "Care-Beacon serve"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "publishers",
+      "type": "external",
+      "label": "Health sites",
+      "sublabel": "3 cancer publishers",
+      "tag": "public web",
+      "stage": 0,
+      "row": 1
+    },
+    {
+      "id": "spiders",
+      "type": "backend",
+      "label": "Spiders",
+      "sublabel": "Scrapy + Playwright",
+      "tag": "separate repo",
+      "stage": 1,
+      "row": 1
+    },
+    {
+      "id": "corpus",
+      "type": "database",
+      "label": "Markdown corpus",
+      "sublabel": "scraped_data/",
+      "tag": "frontmatter",
+      "stage": 2,
+      "row": 1,
+      "sources": [
+        {
+          "path": "api/scripts/ingest.py",
+          "line": 209,
+          "end_line": 245,
+          "label": "reads scraped_data/<source>/articles"
+        },
+        {
+          "path": "api/src/ingestion/markdown_parser.py",
+          "line": 53,
+          "end_line": 125,
+          "label": "frontmatter contract"
+        },
+        {
+          "path": ".vercelignore",
+          "line": 1,
+          "end_line": 9,
+          "label": "kept out of the deploy"
+        }
+      ]
+    },
+    {
+      "id": "ingest",
+      "type": "backend",
+      "label": "ingest.py",
+      "sublabel": "parse · chunk",
+      "tag": "make ingest",
+      "stage": 3,
+      "row": 0,
+      "sources": [
+        {
+          "path": "api/scripts/ingest.py",
+          "line": 51,
+          "end_line": 128,
+          "label": "process_batch"
+        },
+        {
+          "path": "api/src/embeddings/chunking.py",
+          "line": 21,
+          "end_line": 84,
+          "label": "paragraph chunks"
+        },
+        {
+          "path": "Makefile",
+          "line": 44,
+          "end_line": 45,
+          "label": "make ingest"
+        }
+      ]
+    },
+    {
+      "id": "embeddings",
+      "type": "external",
+      "label": "OpenAI",
+      "sublabel": "embeddings",
+      "tag": "1536-d",
+      "stage": 3,
+      "row": 2,
+      "sources": [
+        {
+          "path": "api/src/embeddings/embedding_generator.py",
+          "line": 171,
+          "label": "embed_chunks"
+        }
+      ]
+    },
+    {
+      "id": "qdrant",
+      "type": "database",
+      "label": "Qdrant Cloud",
+      "sublabel": "vectors + metadata",
+      "tag": "managed",
+      "stage": 4,
+      "row": 0,
+      "sources": [
+        {
+          "path": "api/src/storage/qdrant_db.py",
+          "line": 212,
+          "end_line": 276,
+          "label": "add_chunks (upsert)"
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "FastAPI + Next.js",
+      "sublabel": "retrieve · rerank · cite",
+      "tag": "Vercel",
+      "stage": 4,
+      "row": 2,
+      "sources": [
+        {
+          "path": "api/src/retrieval/retrieval_engine.py",
+          "line": 107,
+          "end_line": 202,
+          "label": "search and rank"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "crawl",
+      "from": "publishers",
+      "to": "spiders",
+      "label": "article pages",
+      "classification": "HTML",
+      "variant": "default"
+    },
+    {
+      "id": "convert",
+      "from": "spiders",
+      "to": "corpus",
+      "label": "Markdown files",
+      "classification": "frontmatter",
+      "variant": "emphasis",
+      "labelAt": [
+        423,
+        315
+      ]
+    },
+    {
+      "id": "handoff",
+      "from": "corpus",
+      "to": "ingest",
+      "label": "copied in by hand",
+      "classification": "manual",
+      "variant": "dashed"
+    },
+    {
+      "id": "embed",
+      "from": "ingest",
+      "to": "embeddings",
+      "label": "chunk text",
+      "classification": "batched",
+      "variant": "default",
+      "labelAt": [
+        745,
+        201
+      ]
+    },
+    {
+      "id": "store",
+      "from": "ingest",
+      "to": "qdrant",
+      "label": "chunks + vectors",
+      "classification": "upsert",
+      "variant": "emphasis"
+    },
+    {
+      "id": "retrieve",
+      "from": "qdrant",
+      "to": "app",
+      "label": "scored chunks",
+      "classification": "per question",
+      "variant": "default",
+      "labelAt": [
+        960,
+        201
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "The contract is the file",
+      "items": [
+        "Vital-Atlas and Care-Beacon share only Markdown files and their frontmatter schema",
+        "That boundary let Care-Beacon change hosts and swap vector stores without touching the scraper"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Manual hand-off",
+      "items": [
+        "Files are copied from Vital-Atlas into scraped_data/ and ingested with make ingest",
+        "Nothing reconciles the two sides, so the corpora can drift"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Kept out of the deploy",
+      "items": [
+        "scraped_data/ sits at the repository root, outside api/",
+        ".vercelignore keeps its 25,000+ files out of the Vercel upload"
+      ]
+    }
+  ]
+}
