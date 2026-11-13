@@ -480,22 +480,14 @@ Care-Beacon does not scrape. Acquisition lives in a separate repository,
 crawler with one spider per source that converts each article to clean Markdown with
 YAML frontmatter. Together the two repositories form one pipeline:
 
-```mermaid
-graph LR
-    subgraph VA["Vital-Atlas — acquisition"]
-        W["bccancer.bc.ca<br/>cancer.ca<br/>clevelandclinic.org"]
-        S["Scrapy + Playwright<br/>3 spiders · metadata extraction<br/>change detection"]
-        W --> S
-    end
-    MD["scraped_data/&lt;source&gt;/articles/**.md<br/>title · url · date_scraped · breadcrumbs"]
-    subgraph CB["Care-Beacon — retrieval & generation"]
-        I["api/scripts/ingest.py<br/>parse → chunk → embed"]
-        Q[("Qdrant Cloud")]
-        A["FastAPI + Next.js<br/>retrieve → rerank → cite"]
-        I --> Q --> A
-    end
-    S --> MD --> I
-```
+<a href="https://care-beacon-health.vercel.app/diagrams/corpus-pipeline.html">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/corpus-pipeline.dark.svg">
+  <img alt="The corpus pipeline across two repositories. In Vital-Atlas, Scrapy and Playwright spiders crawl article pages from three cancer health publishers and write Markdown files with frontmatter. Those files are copied by hand into Care-Beacon's scraped_data folder. Care-Beacon's ingest.py, run with make ingest, parses and chunks them, sends the chunk text to OpenAI for embeddings, and upserts chunks with vectors into Qdrant Cloud. The FastAPI and Next.js app then retrieves scored chunks from Qdrant to answer questions." src="docs/diagrams/corpus-pipeline.light.svg">
+</picture>
+</a>
+
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
 
 The contract between them is just the Markdown file and its frontmatter schema. That
 boundary is why this repository could change hosts, swap its vector store, and drop a

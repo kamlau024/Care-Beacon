@@ -2,15 +2,17 @@
 
 Generated with [Archify](https://github.com/tt-a1i/archify). Every component cites the source
 lines it was drawn from: the architecture and ask diagrams at commit `ceea036`, the chat
-diagram at `b148fc8`.
+diagram at `b148fc8`, the corpus pipeline at `16c89dd`. The corpus pipeline's Vital-Atlas
+nodes have no source links, because that code lives in a separate repository.
 
 | File | What it is |
 |---|---|
 | `architecture.light.svg`, `architecture.dark.svg` | Production architecture, embedded in the main README |
 | `ask-sequence.light.svg`, `ask-sequence.dark.svg` | How one question is answered, embedded in the main README |
 | `chat-sequence.light.svg`, `chat-sequence.dark.svg` | How one chat turn is answered, embedded in the main README |
-| `architecture/architecture.html`, `ask-sequence/ask-sequence.html`, `chat-sequence/chat-sequence.html` | Interactive versions, also hosted at `/diagrams/<name>.html` on the live site (copied to `web-client/public/diagrams/`) |
-| `architecture/candidate.json`, `ask-sequence/candidate.json`, `chat-sequence/candidate.json` | The diagram sources |
+| `corpus-pipeline.light.svg`, `corpus-pipeline.dark.svg` | Where the corpus comes from (Vital-Atlas → Care-Beacon), embedded in the main README |
+| `architecture/architecture.html`, `ask-sequence/ask-sequence.html`, `chat-sequence/chat-sequence.html`, `corpus-pipeline/corpus-pipeline.html` | Interactive versions, also hosted at `/diagrams/<name>.html` on the live site (copied to `web-client/public/diagrams/`) |
+| `architecture/candidate.json`, `ask-sequence/candidate.json`, `chat-sequence/candidate.json`, `corpus-pipeline/candidate.json` | The diagram sources |
 
 ## Regenerating after a code change
 
@@ -22,7 +24,7 @@ diagram at `b148fc8`.
    node <archify>/bin/archify.mjs finalize architecture docs/diagrams/architecture/candidate.json docs/diagrams/architecture/architecture.html --repo-root . --quality showcase
    ```
 
-   Use `sequence` and the `ask-sequence` or `chat-sequence` paths for the other diagrams. `finalize` checks
+   Use `sequence` and the `ask-sequence` or `chat-sequence` paths, or `dataflow` and the `corpus-pipeline` paths, for the other diagrams. `finalize` checks
    every source reference against that commit and renders the page in headless Chrome.
 3. Open the HTML, choose **Export → SVG · Light** and **Export → SVG · Dark**, and save
    them over the SVGs in this folder.
