@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { deleteThread, getThread, listThreads, streamChat, updateThreadSettings } from "./chat-api"
+import {
+  RATE_LIMITED_MESSAGE,
+  deleteThread,
+  getThread,
+  listThreads,
+  streamChat,
+  updateThreadSettings,
+} from "./chat-api"
 
 const handlers = () => ({
   onStatus: vi.fn(),
@@ -44,6 +51,23 @@ describe("streamChat", () => {
     const res = await streamChat({ threadId: null, message: "hello there" }, h)
     expect(h.onError).toHaveBeenCalledWith(msg)
     expect(h.onToken).not.toHaveBeenCalled()
+    expect(res.httpStatus).toBe(429)
+  })
+
+  it("shows a friendly message for the firewall's rate-limit 429", async () => {
+    // Vercel's firewall answers before the API, with its own error shape.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        Response.json(
+          { error: { code: "429", message: "Too Many Requests", id: "pdx1::abc" } },
+          { status: 429 }
+        )
+      )
+    )
+    const h = handlers()
+    const res = await streamChat({ threadId: null, message: "hello there" }, h)
+    expect(h.onError).toHaveBeenCalledWith(RATE_LIMITED_MESSAGE)
     expect(res.httpStatus).toBe(429)
   })
 

@@ -19,9 +19,9 @@ serves answers; it does no crawling of its own. See
 - **Conversational RAG with memory.** Follow-up questions are rewritten using the conversation, retrieval runs on the rewritten query, and the answer is generated with a character-budgeted history. Threads and messages persist in Postgres (Neon).
 - **Streaming on serverless.** `POST /api/v1/chat` streams Server-Sent Events from a Python function on Vercel: progress stages (`rewriting` → `searching` → `ranking`), then citations, then answer tokens. The answer is saved even when the client disconnects mid-stream; a partial answer is stored as `interrupted`.
 - **Measured, not assumed.** A Langfuse evaluation harness with LLM judges gates each release. The latest gate: **19/19** safety refusals in multi-turn drift threads, **0.88** follow-up resolution, **0.96** grounded answers, about **$0.0007 per chat turn** ([results](evaluation/results/2026-11-12-phase1-gate.md)).
-- **Cost and abuse controls.** A daily LLM spend cap ($2/day by default), counted in Redis across all OpenAI calls; per-IP rate limits as Vercel WAF rules; admin endpoints behind an API key.
+- **Cost and abuse controls.** A daily LLM spend cap ($2/day by default), counted in Redis across all OpenAI calls; a per-IP rate limit at the Vercel firewall; admin endpoints behind an API key.
 - **Privacy by design.** No accounts: each browser holds an anonymous owner key, and traces carry only its SHA-256 pseudonym. Clients get generic error messages, and logs record only the error type, never database error text.
-- **Tested end to end.** 407 API tests, 38 web tests and 32 evaluation-tooling tests, run in GitHub Actions on every push and pull request.
+- **Tested end to end.** 407 API tests, 41 web tests and 32 evaluation-tooling tests, run in GitHub Actions on every push and pull request.
 
 ## Architecture
 
@@ -112,7 +112,7 @@ Each diagram opens in an interactive viewer hosted on the live site, where you c
 
 | Metric | Status |
 |--------|--------|
-| **Test suite** | API: 407 passing, 14 skipped (Postgres tests, which need `TEST_DATABASE_URL`); web: 38 passing (Vitest); evaluation tooling: 32 passing. CI runs the API and web suites, the TypeScript check and a production build on every push and pull request. |
+| **Test suite** | API: 407 passing, 14 skipped (Postgres tests, which need `TEST_DATABASE_URL`); web: 41 passing (Vitest); evaluation tooling: 32 passing. CI runs the API and web suites, the TypeScript check and a production build on every push and pull request. |
 | **Safety** | 19/19 refusal-and-referral passes in multi-turn drift threads; 19/19 in the single-turn control |
 | **Answer quality** | Chat: 0.88 follow-ups resolved, 0.96 grounded. Search baseline: 0.744 grounded |
 | **Latency** | Chat turn: 12.5 s median, 19.8 s worst on the follow-up set. Most of it is spent before the first token (rewrite, search, rerank) |
@@ -354,7 +354,7 @@ environment) and fail; use the `care-beacon` conda env's Python explicitly, or
 `make test`, which does this for you.
 
 **Current state** (2026-11-12): API 407 passed, 14 skipped (Postgres tests), 0 failed;
-web 38 passed; evaluation tooling 32 passed. `make test-db` runs the Postgres tests in an
+web 41 passed; evaluation tooling 32 passed. `make test-db` runs the Postgres tests in an
 isolated schema and refuses to run outside it.
 
 ## Evaluation
@@ -401,10 +401,10 @@ production. `make test` runs the Python suite.
 **Ingestion is local-only:** `make ingest`. It reads `scraped_data/` — which lives
 outside `api/` and is never bundled into the function — and upserts into Qdrant Cloud.
 
-**Rate limiting** is enforced by the Vercel WAF, not application code: a custom rule
-(`ask-rate-limit`) allows 60 requests per 60 seconds per IP on `/api/v1/ask` and
-returns 429 past that, configured via `vercel firewall rules`. Chat is limited more
-tightly (`chat-rate-limit`, 20 requests per 60 seconds).
+**Rate limiting** is enforced by the Vercel WAF, not application code: one custom rule
+(`api-rate-limit`) allows 20 requests per 60 seconds per IP, counted together across
+`/api/v1/ask` and `/api/v1/chat`, and returns 429 past that. It is managed with
+`vercel firewall rules`.
 
 **Spend cap:** every OpenAI call adds its cost to a per-UTC-day counter in Redis. Once
 the day's total reaches `chat.daily_spend_cap_usd` ($2.00 by default), chat returns 429

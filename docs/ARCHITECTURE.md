@@ -269,7 +269,7 @@ flowchart TB
         ROUTE{"vercel.json rewrites<br/>/api/(.*) → api service<br/>everything else → web service"}
         WEBSVC["web Service<br/>Next.js 16, web-client/"]
         APISVC["api Service<br/>FastAPI, api/, Python 3.12<br/>entrypoint src.api.main:app"]
-        WAF["Vercel WAF rule 'ask-rate-limit'<br/>60 req / 60s per IP on /api/v1/ask → 429"]
+        WAF["Vercel WAF rule 'api-rate-limit'<br/>20 req / 60s per IP on /api/v1/ask + /api/v1/chat → 429"]
     end
     ROUTE --> WEBSVC
     ROUTE --> APISVC
@@ -290,7 +290,7 @@ There is no CORS layer (same origin), no load balancer to configure, and no cont
 
 The specific latency, throughput and cache-hit-rate figures that used to live in this section (e.g. "~2,500ms first query," "40-60% hit rate," "HNSW index ~25MB") described the earlier self-hosted Chroma/SQLite setup and were never re-measured against the live Qdrant Cloud + Vercel deployment. Rather than repeat unverified numbers, note what's actually enforced:
 
-- Rate limiting is a Vercel WAF rule capping `/api/v1/ask` at 60 requests / 60 seconds per IP (HTTP 429 beyond that) — not an application-level throughput figure.
+- Rate limiting is a Vercel WAF rule capping `/api/v1/ask` and `/api/v1/chat` together at 20 requests / 60 seconds per IP (HTTP 429 beyond that) — not an application-level throughput figure.
 - Caching is Upstash Redis; see `docs/PERFORMANCE_OPTIMIZATION.md` for how the cache and cost/usage counters work.
 - Qdrant Cloud is a managed service; there is no local index-size or SQLite-concurrency characteristic to report anymore.
 

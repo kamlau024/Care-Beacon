@@ -1,4 +1,4 @@
-import { ApiError } from "./api"
+import { ApiError, RATE_LIMITED_MESSAGE } from "./api"
 import { getOwnerKey } from "./owner"
 import { parseSSE } from "./sse"
 import type {
@@ -17,13 +17,14 @@ function headers(json = false): Record<string, string> {
   return h
 }
 
+export { RATE_LIMITED_MESSAGE }
+
 async function errorFrom(response: Response): Promise<ApiError> {
   const body = await response.json().catch(() => null)
-  return new ApiError(
-    body?.message || body?.detail || `HTTP ${response.status}`,
-    response.status,
-    body
-  )
+  // The API's own errors carry a top-level `message` (e.g. the daily spend cap's 429);
+  // a 429 without one is the firewall rate limit.
+  const fallback = response.status === 429 ? RATE_LIMITED_MESSAGE : `HTTP ${response.status}`
+  return new ApiError(body?.message || body?.detail || fallback, response.status, body)
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
