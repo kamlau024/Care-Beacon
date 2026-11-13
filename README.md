@@ -25,10 +25,14 @@ serves answers; it does no crawling of its own. See
 
 ## Architecture
 
+<a href="https://care-beacon-health.vercel.app/diagrams/architecture.html">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture.dark.svg">
   <img alt="Care-Beacon production architecture. A patient's browser reaches the Vercel route table, which sends /api/* to the FastAPI service and everything else to the Next.js web UI. In the FastAPI service, the answer generator checks a Redis cache, then calls a retrieval engine that searches Qdrant Cloud and uses OpenAI for embeddings and reranking, and calls OpenAI gpt-4o-mini to write the answer. A local ingest.py script loads the Vital-Atlas Markdown corpus into Qdrant." src="docs/diagrams/architecture.light.svg">
 </picture>
+</a>
+
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
 
 - **Two Vercel services behind one route table:** `/api/*` goes to the FastAPI `api` service; everything else goes to the Next.js `web` service.
 - **Cited answers:** the answer generator checks Redis first, then retrieves passages from Qdrant Cloud and writes the answer with OpenAI `gpt-4o-mini`.
@@ -38,10 +42,14 @@ serves answers; it does no crawling of its own. See
 
 ### How a question is answered
 
+<a href="https://care-beacon-health.vercel.app/diagrams/ask-sequence.html">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/ask-sequence.dark.svg">
   <img alt="Sequence of one question. The browser posts to /api/v1/ask; FastAPI calls the answer generator, which looks the question up in Redis. On a miss it asks the retrieval engine, which embeds the question with OpenAI, fetches six times the requested results from Qdrant, reranks them with an OpenAI model, and returns every chunk scoring at least 0.6. The generator asks OpenAI for an answer with citations, caches it in Redis for one hour, and returns it." src="docs/diagrams/ask-sequence.light.svg">
 </picture>
+</a>
+
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
 
 1. **Cache check.** Redis is keyed on a SHA-256 hash of the normalized question, filters, and limits. A hit returns immediately, with no OpenAI calls.
 2. **Wide retrieval.** On a miss, the question is embedded with `text-embedding-3-small` (1536 dimensions) and Qdrant returns 6× the requested number of chunks.
@@ -52,17 +60,21 @@ serves answers; it does no crawling of its own. See
 
 Chat reuses the same retrieval and reranking as Search, with three additions: query rewriting, conversation history and streaming.
 
+<a href="https://care-beacon-health.vercel.app/diagrams/chat-sequence.html">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/chat-sequence.dark.svg">
   <img alt="Sequence of one chat turn. The browser posts the message with its owner key to /api/v1/chat. FastAPI checks today's spend in Redis and returns 429 if the cap is reached, then calls the chat service, which loads the thread and prior turns from Neon Postgres and saves the question. On follow-up turns the service asks OpenAI to rewrite the message as a standalone query. It streams a status frame to the browser, then asks the retrieval engine to search and rank: the engine embeds the query with OpenAI, fetches six times the results from Qdrant with the thread's source filter, and reranks them with OpenAI. The service streams the citations, asks OpenAI to generate an answer from the history, sources and question, forwards each token to the browser, saves the answer with its citations and cost to Postgres, and sends a done frame." src="docs/diagrams/chat-sequence.light.svg">
 </picture>
+</a>
+
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
 
 1. **Rewrite.** On a follow-up, `gpt-4o-mini` turns the last few turns plus the new message into one standalone search query, so "Does it reach cells all over the body?" searches for the treatment being discussed. The rewritten query is shown to the user as the search runs.
 2. **Retrieve and rerank.** The query goes through the same embed → Qdrant → LLM rerank pipeline as Search, filtered by the thread's own source and similarity settings.
 3. **Generate with history.** The most recent turns that fit a 6,000-character budget are included, with old `[n]` citation markers stripped so they can't be confused with this turn's sources. Safety instructions are placed next to the question, where they hold up under multi-turn pressure.
 4. **Persist.** The user's message is saved before retrieval starts and the answer, with its citations and cost, once it completes. Changing a thread's settings adds a settings event to the conversation and applies to later turns only.
 
-Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagrams/): download `architecture/architecture.html`, `ask-sequence/ask-sequence.html` or `chat-sequence/chat-sequence.html` and open it in a browser to search, focus on a component, and follow each one to the source lines it was drawn from.
+Each diagram opens in an interactive viewer hosted on the live site, where you can zoom, search, focus on a component, and follow it to the source lines it was drawn from. The diagram sources live in [`docs/diagrams/`](docs/diagrams/).
 
 ## Project Status
 
