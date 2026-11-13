@@ -403,8 +403,10 @@ def test_retrieval_config_to_dict():
     assert config_dict["cache_embeddings"] is False
 
 
-def test_retrieval_engine_initialization_with_default_config(mock_embedding_generator, mock_vector_db):
+def test_retrieval_engine_initialization_with_default_config(mock_embedding_generator, mock_vector_db, monkeypatch):
     """Test that retrieval engine initializes with default config loaded from file (lines 56-59)."""
+    # The default reranker builds an OpenAI client, which needs a key (never called here).
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     # Don't provide a config - should load from get_config()
     engine = RetrievalEngine(
         embedding_generator=mock_embedding_generator,

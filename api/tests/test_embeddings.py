@@ -57,7 +57,7 @@ def test_generator_initialization(generator_with_mock):
     assert generator_with_mock is not None
     assert generator_with_mock.model == "text-embedding-3-small"
     assert generator_with_mock.dimensions == 1536
-    assert generator_with_mock.batch_size == 100
+    assert generator_with_mock.batch_size == 50  # embeddings.batch_size in config.yaml
 
 
 def test_embed_single_text(generator_with_mock):
@@ -174,6 +174,7 @@ def test_empty_chunks_handling(generator_with_mock):
 def test_large_batch_splitting(generator_with_mock):
     """Test that large batches are automatically split."""
     # Create a large list of texts
+    generator_with_mock.batch_size = 100  # fixed here so the split arithmetic is explicit
     texts = [f"Text {i}" for i in range(250)]  # Exceeds batch_size of 100
 
     # Mock response to return the correct number of embeddings based on input
@@ -413,6 +414,7 @@ def test_embed_chunks_with_progress_display(generator_with_mock, sample_chunks, 
 def test_embed_chunks_multiple_batches_with_progress(generator_with_mock, capsys):
     """Test embed_chunks with multiple batches and progress display."""
     # Create more chunks than batch size
+    generator_with_mock.batch_size = 100  # fixed here so the split arithmetic is explicit
     chunks = []
     for i in range(150):  # Exceeds batch_size of 100
         chunk = Chunk(
@@ -478,8 +480,10 @@ def test_exponential_backoff_timing(generator_with_mock):
         mock_sleep.assert_any_call(4.0)  # Second retry
 
 
-def test_embedding_generator_initialization_without_api_key():
+def test_embedding_generator_initialization_without_api_key(monkeypatch):
     """Test that generator loads API key from config when not provided (line 26)."""
+    # Reset the cached global Config so it is rebuilt from the patched environment.
+    monkeypatch.setattr("src.config_loader._config_instance", None)
     # Don't provide api_key - should load from config via get_api_key()
     with patch('src.embeddings.embedding_generator.OpenAI') as mock_openai:
         with patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key-from-env'}):

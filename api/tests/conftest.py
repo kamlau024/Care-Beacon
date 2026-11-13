@@ -3,7 +3,25 @@
 import os
 from pathlib import Path
 
+import dotenv
 import pytest
+
+# Tests must behave the same on a developer machine and in CI, which has no .env.
+# Block python-dotenv before any src module imports it, and drop variables a
+# developer's .env or shell would otherwise leak into config. Tests that need a
+# value set it themselves (monkeypatch.setenv). TEST_DATABASE_URL is kept: it
+# opts in to the Postgres tests.
+dotenv.load_dotenv = lambda *args, **kwargs: False
+_LEAKY_ENV = (
+    "OPENAI_API_KEY", "ANTHROPIC_API_KEY",
+    "REDIS_URL", "REDIS_HOST", "REDIS_PORT", "REDIS_PASSWORD", "REDIS_DB",
+    "QDRANT_URL", "QDRANT_API_KEY", "VECTOR_DB_PROVIDER", "CONFIG_PATH",
+    "EMBEDDING_BATCH_SIZE", "INGESTION_CHUNK_BATCH_SIZE", "INGESTION_ARTICLE_BATCH_SIZE",
+    "ADMIN_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED",
+    "LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY", "LANGFUSE_HOST",
+)
+for _name in _LEAKY_ENV:
+    os.environ.pop(_name, None)
 
 # Set test environment
 os.environ["ENVIRONMENT"] = "test"

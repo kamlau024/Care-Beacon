@@ -606,8 +606,11 @@ def test_clear_cache_requires_api_key(client, mock_generator, monkeypatch):
 
 def test_clear_cache_succeeds_with_api_key(client, mock_generator, monkeypatch):
     monkeypatch.setattr("src.api.main.ADMIN_API_KEY", "secret-key")
-    response = client.post("/api/v1/cache/clear", headers={"X-API-Key": "secret-key"})
+    # Patch the generator: the real one would clear whatever Redis REDIS_URL points at.
+    with patch("src.api.main.get_answer_generator", return_value=mock_generator):
+        response = client.post("/api/v1/cache/clear", headers={"X-API-Key": "secret-key"})
     assert response.status_code == 200
+    mock_generator.cache.clear_all.assert_called_once()
 
 
 def test_reset_stats_requires_api_key(client, mock_generator, monkeypatch):

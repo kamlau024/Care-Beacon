@@ -31,7 +31,7 @@ def test_config_embedding_settings(config_path):
 
     assert config.get("embeddings.provider") == "openai"
     assert config.get("embeddings.dimensions") == 1536
-    assert config.get("embeddings.batch_size") == 100
+    assert config.get("embeddings.batch_size") == 50
 
 
 def test_config_vector_db_settings(config_path):
