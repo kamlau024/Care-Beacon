@@ -9,7 +9,7 @@ diagram at `b148fc8`.
 | `architecture.light.svg`, `architecture.dark.svg` | Production architecture, embedded in the main README |
 | `ask-sequence.light.svg`, `ask-sequence.dark.svg` | How one question is answered, embedded in the main README |
 | `chat-sequence.light.svg`, `chat-sequence.dark.svg` | How one chat turn is answered, embedded in the main README |
-| `architecture/architecture.html`, `ask-sequence/ask-sequence.html`, `chat-sequence/chat-sequence.html` | Interactive versions: download and open in a browser to search, focus, and follow source links |
+| `architecture/architecture.html`, `ask-sequence/ask-sequence.html`, `chat-sequence/chat-sequence.html` | Interactive versions, also hosted at `/diagrams/<name>.html` on the live site (copied to `web-client/public/diagrams/`) |
 | `architecture/candidate.json`, `ask-sequence/candidate.json`, `chat-sequence/candidate.json` | The diagram sources |
 
 ## Regenerating after a code change
@@ -26,6 +26,9 @@ diagram at `b148fc8`.
    every source reference against that commit and renders the page in headless Chrome.
 3. Open the HTML, choose **Export → SVG · Light** and **Export → SVG · Dark**, and save
    them over the SVGs in this folder.
+4. Copy the HTML to `web-client/public/diagrams/<name>.html`. The live site serves it at
+   `https://care-beacon-health.vercel.app/diagrams/<name>.html`, and the README diagrams
+   link there, so a production deploy publishes the update.
 
 The check receipts and screenshots that `finalize` writes are git-ignored because they
 contain local paths.
