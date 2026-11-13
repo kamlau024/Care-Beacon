@@ -6,7 +6,12 @@
     },
     "api": {
       "root": "api/",
-      "entrypoint": "src.api.main:app"
+      "entrypoint": "src.api.main:app",
+      "functions": {
+        "src/api/main.py": {
+          "maxDuration": 60
+        }
+      }
     }
   },
   "rewrites": [
