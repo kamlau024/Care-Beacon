@@ -52,39 +52,17 @@ serves answers; it does no crawling of its own. See
 
 Chat reuses the same retrieval and reranking as Search, with three additions: query rewriting, conversation history and streaming.
 
-```mermaid
-sequenceDiagram
-    participant B as Browser
-    participant A as FastAPI /api/v1/chat
-    participant P as Neon Postgres
-    participant O as OpenAI
-    participant Q as Qdrant Cloud
-    B->>A: message + X-Owner-Key (+ thread_id)
-    A->>A: check daily spend cap (Redis)
-    A->>P: load thread, settings and recent turns, save user message
-    opt follow-up turn
-        A-->>B: status: rewriting
-        A->>O: rewrite into a standalone query
-    end
-    A-->>B: status: searching (query)
-    A->>O: embed query
-    A->>Q: vector search with source filter
-    A-->>B: status: ranking
-    A->>O: rerank candidates
-    A-->>B: citations [1], [2], ...
-    A->>O: generate (history + sources + question)
-    O-->>A: token stream
-    A-->>B: token frames
-    A->>P: save assistant message with citations and cost
-    A-->>B: done (thread_id, message_id)
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/chat-sequence.dark.svg">
+  <img alt="Sequence of one chat turn. The browser posts the message with its owner key to /api/v1/chat. FastAPI checks today's spend in Redis and returns 429 if the cap is reached, then calls the chat service, which loads the thread and prior turns from Neon Postgres and saves the question. On follow-up turns the service asks OpenAI to rewrite the message as a standalone query. It streams a status frame to the browser, then asks the retrieval engine to search and rank: the engine embeds the query with OpenAI, fetches six times the results from Qdrant with the thread's source filter, and reranks them with OpenAI. The service streams the citations, asks OpenAI to generate an answer from the history, sources and question, forwards each token to the browser, saves the answer with its citations and cost to Postgres, and sends a done frame." src="docs/diagrams/chat-sequence.light.svg">
+</picture>
 
 1. **Rewrite.** On a follow-up, `gpt-4o-mini` turns the last few turns plus the new message into one standalone search query, so "Does it reach cells all over the body?" searches for the treatment being discussed. The rewritten query is shown to the user as the search runs.
 2. **Retrieve and rerank.** The query goes through the same embed → Qdrant → LLM rerank pipeline as Search, filtered by the thread's own source and similarity settings.
 3. **Generate with history.** The most recent turns that fit a 6,000-character budget are included, with old `[n]` citation markers stripped so they can't be confused with this turn's sources. Safety instructions are placed next to the question, where they hold up under multi-turn pressure.
 4. **Persist.** The user's message is saved before retrieval starts and the answer, with its citations and cost, once it completes. Changing a thread's settings adds a settings event to the conversation and applies to later turns only.
 
-Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagrams/): download `architecture/architecture.html` or `ask-sequence/ask-sequence.html` and open it in a browser to search, focus on a component, and follow each one to the source lines it was drawn from.
+Diagram sources and interactive versions live in [`docs/diagrams/`](docs/diagrams/): download `architecture/architecture.html`, `ask-sequence/ask-sequence.html` or `chat-sequence/chat-sequence.html` and open it in a browser to search, focus on a component, and follow each one to the source lines it was drawn from.
 
 ## Project Status
 

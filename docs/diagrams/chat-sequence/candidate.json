@@ -1,0 +1,442 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "How Care-Beacon Answers a Chat Turn",
+    "output": "docs/diagrams/chat-sequence/chat-sequence.html",
+    "viewBox": [
+      1080,
+      696
+    ],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/kamlau024/Care-Beacon.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "b148fc85f8b0627783618933936f395f2859e162"
+    },
+    "legend": {
+      "entries": {
+        "dashed": {
+          "label": "SSE frame to browser"
+        }
+      }
+    }
+  },
+  "participants": [
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "Patient",
+      "sublabel": "Chat page",
+      "sources": [
+        {
+          "path": "web-client/lib/chat-api.ts",
+          "line": 77,
+          "end_line": 161,
+          "label": "streamChat"
+        }
+      ]
+    },
+    {
+      "id": "fastapi",
+      "type": "backend",
+      "label": "FastAPI",
+      "sublabel": "/api/v1/chat",
+      "sources": [
+        {
+          "path": "api/src/api/chat_routes.py",
+          "line": 140,
+          "end_line": 166,
+          "label": "chat endpoint"
+        }
+      ]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis",
+      "sublabel": "spend counter",
+      "sources": [
+        {
+          "path": "api/src/chat/spend.py",
+          "line": 16,
+          "end_line": 25,
+          "label": "cap_reached"
+        },
+        {
+          "path": "api/src/caching/stats_store.py",
+          "line": 68,
+          "end_line": 78,
+          "label": "get_daily_cost"
+        },
+        {
+          "path": "api/config/config.yaml",
+          "line": 109,
+          "label": "$2.00 / UTC day"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "Chat service",
+      "sublabel": "orchestrates",
+      "sources": [
+        {
+          "path": "api/src/chat/service.py",
+          "line": 101,
+          "end_line": 122,
+          "label": "start_turn"
+        },
+        {
+          "path": "api/src/chat/service.py",
+          "line": 159,
+          "end_line": 248,
+          "label": "turn body: frames, save, errors"
+        },
+        {
+          "path": "api/src/chat/prompt.py",
+          "line": 136,
+          "end_line": 165,
+          "label": "rewrite_query"
+        }
+      ]
+    },
+    {
+      "id": "postgres",
+      "type": "database",
+      "label": "Neon Postgres",
+      "sublabel": "chat history",
+      "sources": [
+        {
+          "path": "api/src/chat/repository.py",
+          "line": 71,
+          "end_line": 130,
+          "label": "thread and message queries"
+        },
+        {
+          "path": "api/migrations/001_threads_messages.sql",
+          "line": 1,
+          "end_line": 25,
+          "label": "schema"
+        }
+      ]
+    },
+    {
+      "id": "retrieval",
+      "type": "backend",
+      "label": "Retrieval",
+      "sublabel": "search · rerank",
+      "sources": [
+        {
+          "path": "api/src/retrieval/retrieval_engine.py",
+          "line": 107,
+          "end_line": 155,
+          "label": "search_candidates"
+        },
+        {
+          "path": "api/src/retrieval/retrieval_engine.py",
+          "line": 156,
+          "end_line": 202,
+          "label": "rank_candidates"
+        }
+      ]
+    },
+    {
+      "id": "qdrant",
+      "type": "database",
+      "label": "Qdrant Cloud",
+      "sublabel": "vector search",
+      "sources": [
+        {
+          "path": "api/src/storage/qdrant_db.py",
+          "line": 277,
+          "end_line": 333,
+          "label": "search"
+        }
+      ]
+    },
+    {
+      "id": "openai",
+      "type": "external",
+      "label": "OpenAI",
+      "sublabel": "gpt-4o-mini",
+      "sources": [
+        {
+          "path": "api/src/embeddings/embedding_generator.py",
+          "line": 36,
+          "label": "embeddings client"
+        },
+        {
+          "path": "api/src/retrieval/reranker.py",
+          "line": 23,
+          "end_line": 84,
+          "label": "LLM reranker"
+        },
+        {
+          "path": "api/src/generation/llm_client.py",
+          "line": 138,
+          "end_line": 172,
+          "label": "generate_stream"
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "from": 286,
+      "to": 310,
+      "label": "follow-up turns only"
+    }
+  ],
+  "messages": [
+    {
+      "id": "chat-request",
+      "from": "browser",
+      "to": "fastapi",
+      "y": 162,
+      "label": "POST /api/v1/chat + X-Owner-Key",
+      "variant": "emphasis"
+    },
+    {
+      "id": "spend-check",
+      "from": "fastapi",
+      "to": "redis",
+      "y": 188,
+      "label": "today's spend (429 if capped)",
+      "variant": "default"
+    },
+    {
+      "id": "start-turn",
+      "from": "fastapi",
+      "to": "service",
+      "y": 216,
+      "label": "start_turn()",
+      "variant": "default"
+    },
+    {
+      "id": "load-thread",
+      "from": "service",
+      "to": "postgres",
+      "y": 242,
+      "label": "load thread, save question",
+      "variant": "default"
+    },
+    {
+      "id": "prior-turns",
+      "from": "postgres",
+      "to": "service",
+      "y": 270,
+      "label": "settings + prior turns",
+      "variant": "return"
+    },
+    {
+      "id": "rewrite",
+      "from": "service",
+      "to": "openai",
+      "y": 298,
+      "label": "rewrite as standalone query",
+      "variant": "default"
+    },
+    {
+      "id": "status",
+      "from": "service",
+      "to": "browser",
+      "y": 318,
+      "label": "status: searching, ranking",
+      "variant": "dashed"
+    },
+    {
+      "id": "search-call",
+      "from": "service",
+      "to": "retrieval",
+      "y": 338,
+      "label": "search, then rank",
+      "variant": "emphasis"
+    },
+    {
+      "id": "embed-query",
+      "from": "retrieval",
+      "to": "openai",
+      "y": 358,
+      "label": "embed query",
+      "variant": "default"
+    },
+    {
+      "id": "vector-search",
+      "from": "retrieval",
+      "to": "qdrant",
+      "y": 386,
+      "label": "fetch 6× · source filter",
+      "variant": "default"
+    },
+    {
+      "id": "candidates",
+      "from": "qdrant",
+      "to": "retrieval",
+      "y": 414,
+      "label": "scored candidates",
+      "variant": "return"
+    },
+    {
+      "id": "rerank",
+      "from": "retrieval",
+      "to": "openai",
+      "y": 442,
+      "label": "LLM rerank",
+      "variant": "default"
+    },
+    {
+      "id": "kept-chunks",
+      "from": "retrieval",
+      "to": "service",
+      "y": 462,
+      "label": "chunks ≥ threshold",
+      "variant": "return"
+    },
+    {
+      "id": "citations",
+      "from": "service",
+      "to": "browser",
+      "y": 482,
+      "label": "citations [1], [2], …",
+      "variant": "dashed"
+    },
+    {
+      "id": "generate",
+      "from": "service",
+      "to": "openai",
+      "y": 502,
+      "label": "history + sources + question",
+      "variant": "emphasis"
+    },
+    {
+      "id": "tokens",
+      "from": "openai",
+      "to": "service",
+      "y": 530,
+      "label": "streamed tokens → token frames",
+      "variant": "return"
+    },
+    {
+      "id": "save-answer",
+      "from": "service",
+      "to": "postgres",
+      "y": 558,
+      "label": "save answer + citations + cost",
+      "variant": "default"
+    },
+    {
+      "id": "done",
+      "from": "service",
+      "to": "browser",
+      "y": 578,
+      "label": "done (thread_id, message_id)",
+      "variant": "dashed"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "fastapi",
+      "from": 162,
+      "to": 582,
+      "type": "backend"
+    },
+    {
+      "participant": "redis",
+      "from": 184,
+      "to": 192,
+      "type": "database"
+    },
+    {
+      "participant": "service",
+      "from": 216,
+      "to": 582,
+      "type": "backend"
+    },
+    {
+      "participant": "postgres",
+      "from": 238,
+      "to": 274,
+      "type": "database"
+    },
+    {
+      "participant": "openai",
+      "from": 294,
+      "to": 302,
+      "type": "external"
+    },
+    {
+      "participant": "retrieval",
+      "from": 338,
+      "to": 466,
+      "type": "backend"
+    },
+    {
+      "participant": "openai",
+      "from": 354,
+      "to": 362,
+      "type": "external"
+    },
+    {
+      "participant": "qdrant",
+      "from": 382,
+      "to": 418,
+      "type": "database"
+    },
+    {
+      "participant": "openai",
+      "from": 438,
+      "to": 446,
+      "type": "external"
+    },
+    {
+      "participant": "openai",
+      "from": 498,
+      "to": 534,
+      "type": "external"
+    },
+    {
+      "participant": "postgres",
+      "from": 554,
+      "to": 562,
+      "type": "database"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Follow-ups become searches",
+      "items": [
+        "On a follow-up, the last 4 turns and the new message are rewritten into one standalone query",
+        "The first turn of a thread skips this step and searches the question as typed"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Conversation memory",
+      "items": [
+        "The most recent turns that fit a 6,000-character budget go into the prompt",
+        "Old [n] markers are stripped so they can't be mistaken for this turn's sources"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "No lost answers",
+      "items": [
+        "On disconnect or error, the partial answer is saved with status interrupted",
+        "Clients get a generic error frame; provider and database details are never echoed"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Spend cap",
+      "items": [
+        "Every OpenAI call adds to a per-UTC-day cost counter in Redis",
+        "At $2.00 chat returns 429 before any stream starts; Search keeps working"
+      ]
+    }
+  ]
+}
