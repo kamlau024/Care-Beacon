@@ -175,3 +175,6 @@ evaluation/.env
 
 # Superpowers brainstorming scratch (mockups, session state)
 .superpowers/
+
+# Claude Code local settings and preview config (per-developer, not project code)
+.claude/
