@@ -1,0 +1,7 @@
+# Archify diagram output (generated from docs/diagrams/*/candidate.json).
+# Marked generated so GitHub's language stats reflect the hand-written code
+# and PR diffs collapse these files. docs/ is already excluded by Linguist;
+# the public/ copies are what the live site serves at /diagrams/*.html.
+web-client/public/diagrams/*.html linguist-generated=true
+docs/diagrams/**/*.html linguist-generated=true
+docs/diagrams/*.svg linguist-generated=true
