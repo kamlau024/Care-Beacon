@@ -696,3 +696,92 @@ Invalid content with broken YAML.
 
     # Should not include the invalid article
     assert not any("Invalid Article" in a.title for a in articles)
+
+
+# --- Lists and their lead-ins -------------------------------------------------
+
+LIST_ARTICLE = """---
+title: "Chemotherapy for test cancer"
+url: https://example.com/chemo
+---
+
+# Chemotherapy for test cancer
+
+## Side effects
+
+Side effects depend on the drug, the dose and how it's given.
+
+Some common side effects of chemotherapy drugs used for test cancer are:
+
+Advertisement
+
+  * [low blood cell counts](https://example.com/side-effects/low_blood_counts#ci_89)
+  * [fatigue](https://example.com/side-effects/fatigue)
+  * nausea and
+    vomiting
+
+Tell your healthcare team about any side effects.
+
+## Steps
+
+Follow these steps:
+
+1. Talk to your **doctor**.
+
+2. Book a ![diagram](https://example.com/img.png)test.
+"""
+
+
+@pytest.fixture
+def list_article(parser, tmp_path):
+    path = tmp_path / "chemo.md"
+    path.write_text(LIST_ARTICLE)
+    return parser.parse_file(path)
+
+
+def _section(article, name):
+    return next(s for s in article.sections if s.name == name)
+
+
+def test_list_joins_its_lead_in(list_article):
+    """A lead-in and the list after it (split by a blank line) become one paragraph."""
+    paragraphs = _section(list_article, "Side effects").paragraphs
+
+    assert paragraphs == [
+        "Side effects depend on the drug, the dose and how it's given.",
+        "Some common side effects of chemotherapy drugs used for test cancer are:\n"
+        "- low blood cell counts\n"
+        "- fatigue\n"
+        "- nausea and vomiting",
+        "Tell your healthcare team about any side effects.",
+    ]
+
+
+def test_no_paragraph_is_a_bare_lead_in(list_article):
+    """Including when an "Advertisement" slot sits between lead-in and list."""
+    for paragraph in list_article.get_all_paragraphs():
+        assert not paragraph.rstrip().endswith(":"), paragraph
+        assert "Advertisement" not in paragraph
+
+
+def test_links_keep_only_their_text(list_article):
+    all_text = "\n".join(list_article.get_all_paragraphs())
+
+    assert "http" not in all_text
+    assert "](" not in all_text
+    # Underscores inside a URL must not be read as italics
+    assert "low blood cell counts" in all_text
+
+
+def test_numbered_loose_list_and_images(list_article):
+    """Numbered items keep their numbers, loose items rejoin, images are dropped."""
+    assert _section(list_article, "Steps").paragraphs == [
+        "Follow these steps:\n1. Talk to your doctor.\n2. Book a test."
+    ]
+
+
+def test_prose_link_keeps_text_without_url(parser, sample_markdown_file):
+    all_text = " ".join(parser.parse_file(sample_markdown_file).get_all_paragraphs())
+
+    assert "see this link." in all_text
+    assert "example.com" not in all_text

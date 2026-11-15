@@ -4,6 +4,9 @@ import re
 from typing import List
 from src.storage.models import Article, Chunk
 
+# A list-item line as the parser writes it: "- text" or "1. text"
+LIST_LINE = re.compile(r'^(?:- |\d+[.)] )', re.MULTILINE)
+
 
 class DocumentChunker:
     """Chunks articles into paragraph-level pieces for embedding."""
@@ -19,7 +22,7 @@ class DocumentChunker:
         self.max_chunk_length = max_chunk_length
 
     def chunk_article(self, article: Article) -> List[Chunk]:
-        """Chunk an article into paragraph-level chunks with bullet point splitting.
+        """Chunk an article into paragraph-level chunks; a list stays in one chunk.
 
         Args:
             article: Article object to chunk
@@ -36,24 +39,18 @@ class DocumentChunker:
                 if not para_text or len(para_text.strip()) < self.min_chunk_length:
                     continue
 
-                # Check if paragraph contains bullet points
-                bullet_chunks = self._split_bullet_points(para_text)
-
-                if len(bullet_chunks) > 1:
-                    # Multiple bullet points found - create separate chunks for each
-                    for bullet_idx, bullet_text in enumerate(bullet_chunks):
-                        # Skip if too short
-                        if len(bullet_text.strip()) < self.min_chunk_length:
-                            continue
-
-                        chunk = self._create_chunk(
+                if len(para_text) > self.max_chunk_length and LIST_LINE.search(para_text):
+                    # A list too long for one chunk: split between items,
+                    # repeating the lead-in so every part says what it lists
+                    sub_chunks = self._split_long_list(para_text)
+                    for sub_idx, sub_text in enumerate(sub_chunks):
+                        chunks.append(self._create_chunk(
                             article=article,
                             section_name=section.name,
-                            paragraph_text=bullet_text,
+                            paragraph_text=sub_text,
                             paragraph_index=global_paragraph_index,
-                            sub_index=bullet_idx
-                        )
-                        chunks.append(chunk)
+                            sub_index=sub_idx if len(sub_chunks) > 1 else None
+                        ))
                     global_paragraph_index += 1
 
                 elif len(para_text) > self.max_chunk_length:
@@ -211,88 +208,39 @@ class DocumentChunker:
         sentences = re.split(r'(?<=[.!?])\s+', text)
         return [s.strip() for s in sentences if s.strip()]
 
-    def _split_bullet_points(self, text: str) -> List[str]:
-        """Split text on bullet points if present.
+    def _split_long_list(self, text: str) -> List[str]:
+        """Split a lead-in plus list that exceeds max_chunk_length.
 
-        Detects markdown bullet points (*, -, +), numbered lists (1., 2., etc.),
-        and bold item patterns (**Item:**) which are common in parsed markdown.
+        The parser keeps a list and the sentence that introduces it as one
+        paragraph, with each item on its own line ("- item" or "1. item"), so a
+        list normally becomes a single chunk. Only lists longer than
+        max_chunk_length are split, between items (never inside one), and each
+        part repeats the lead-in.
 
         Args:
-            text: Text that may contain bullet points
+            text: Paragraph text containing list lines
 
         Returns:
-            List of text chunks (one per bullet if found, otherwise single item)
+            List of chunk texts, each at most max_chunk_length where possible
         """
-        # Pattern 1: Check for bullet point patterns at the start of lines
-        # Patterns: * item, - item, + item, 1. item, 2. item, etc.
-        bullet_pattern = r'^\s*(?:[*\-+]|\d+\.)\s+'
+        lines = text.split("\n")
+        first_item = next(i for i, line in enumerate(lines) if LIST_LINE.match(line))
+        lead_in = "\n".join(lines[:first_item])
+        items = lines[first_item:]
 
-        # Split text into lines
-        lines = text.split('\n')
-
-        # Check if this looks like a bulleted list
-        bullet_lines = [i for i, line in enumerate(lines) if re.match(bullet_pattern, line)]
-
-        # If we have at least 2 bullet points, split them
-        if len(bullet_lines) >= 2:
-            chunks = []
-            current_chunk = []
-            current_bullet_started = False
-
-            for i, line in enumerate(lines):
-                is_bullet = re.match(bullet_pattern, line)
-
-                if is_bullet:
-                    # Start of a new bullet point
-                    if current_chunk and current_bullet_started:
-                        # Save previous bullet
-                        chunks.append('\n'.join(current_chunk).strip())
-                        current_chunk = []
-
-                    # Clean up the bullet marker but keep the content
-                    clean_line = re.sub(bullet_pattern, '', line)
-                    current_chunk.append(clean_line)
-                    current_bullet_started = True
-                else:
-                    # Continuation of current bullet or intro text
-                    if current_bullet_started:
-                        # This is a continuation line for the current bullet
-                        current_chunk.append(line)
-                    # If not in a bullet yet, skip intro lines (they're often just "These are:")
-
-            # Add the last bullet
-            if current_chunk and current_bullet_started:
-                chunks.append('\n'.join(current_chunk).strip())
-
-            return chunks if chunks else [text]
-
-        # Pattern 2: Check for bold item patterns (**Item:**)
-        # This is common after markdown parsing strips bullet markers
-        bold_item_pattern = r'\*\*([^*]+?):\*\*\s'
-
-        # Find all bold items in the text
-        bold_items = list(re.finditer(bold_item_pattern, text))
-
-        # If we have at least 2 bold items that look like list items, split on them
-        if len(bold_items) >= 2:
-            chunks = []
-
-            for i, match in enumerate(bold_items):
-                start_pos = match.start()
-                # Find the end position (start of next item or end of text)
-                end_pos = bold_items[i + 1].start() if i + 1 < len(bold_items) else len(text)
-
-                # Extract the chunk
-                chunk_text = text[start_pos:end_pos].strip()
-
-                # Only include if it meets minimum length
-                if len(chunk_text) >= self.min_chunk_length:
-                    chunks.append(chunk_text)
-
-            return chunks if chunks else [text]
-
-        # No bullet points found, return as single chunk
-        return [text]
+        prefix = f"{lead_in}\n" if lead_in else ""
+        parts: List[str] = []
+        current: List[str] = []
+        for item in items:
+            candidate = prefix + "\n".join(current + [item])
+            if current and len(candidate) > self.max_chunk_length:
+                parts.append(prefix + "\n".join(current))
+                current = [item]
+            else:
+                current.append(item)
+        if current:
+            parts.append(prefix + "\n".join(current))
+        return parts
 
     def chunk_articles(self, articles: List[Article]) -> List[Chunk]:
         """Chunk multiple articles.
