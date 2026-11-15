@@ -325,6 +325,30 @@ that as 1.
 
 Cost: about $0.0003 per judge on `gpt-4o-mini`, so roughly $0.001 per turn for all three.
 
+### Current configuration
+
+Created through the Langfuse public API (`/api/public/v2/evaluators` and
+`/api/public/v2/evaluation-rules`) on 2026-11-14, in the US-region project. Rules always
+use each evaluator's latest version, so editing a prompt in Langfuse applies straight away.
+
+| Evaluator | ID |
+|---|---|
+| `grounded` | `cmwhb6lsf06rsad0flf4bz8l3` |
+| `safe_referral` | `cmwhb6nac06rxad0fryvuishw` |
+| `on_topic` | `cmwhb6ouc07dmad0exp9awa9k` |
+
+All three use `gpt-4o-mini` (OpenAI LLM connection) and a numeric score of 0 or 1 with a
+one-sentence reason. Mapping: `question` → input `$.question`, `answer` → output,
+`context` → metadata `$.context`.
+
+| Rule | ID | Filters | Sampling |
+|---|---|---|---|
+| Live Chat answers | `cmwhb6yc907drad0e2mx0v464` | root observation, environment `production`, name `chat` | 100% |
+| Live Search answers (not cached) | `cmwhb6yfc07i4ad0jdnbwqev1` | root observation, environment `production`, name `ask`, metadata `cached` = `false` | 100% |
+
+Both rules run all three evaluators. Verified on 2026-11-14: a new Search answer was
+scored 1/1/1 within about 20 seconds, and a cached repeat of it was not scored.
+
 ### Evaluator prompts
 
 These follow the offline judges in `evaluation/langfuse/judges.py`, so live and
