@@ -155,3 +155,49 @@ def test_body_exceptions_still_propagate(monkeypatch):
     with pytest.raises(ValueError):
         with span("embed"):
             raise ValueError("real error")
+
+
+def test_root_trace_records_input(monkeypatch):
+    _set_keys(monkeypatch)
+    fake = _FakeClient()
+    monkeypatch.setattr(tracing, "_get_client", lambda: fake)
+    with request_trace("chat", metadata={}, input={"question": "q?"}):
+        pass
+    assert fake.started[0]["input"] == {"question": "q?"}
+
+
+def test_generation_kwargs_only_when_instrumented(monkeypatch):
+    monkeypatch.setattr(tracing, "_openai_instrumented", False)
+    assert tracing.generation_kwargs("answer") == {}
+    monkeypatch.setattr(tracing, "_openai_instrumented", True)
+    assert tracing.generation_kwargs("answer") == {"name": "answer"}
+    assert tracing.generation_kwargs(None) == {}
+
+
+def test_disabled_client_is_not_marked_instrumented(monkeypatch):
+    _clear_keys(monkeypatch)
+    monkeypatch.setattr(tracing, "_openai_instrumented", False)
+    get_openai_client("sk-test")
+    assert tracing.generation_kwargs("answer") == {}
+
+
+@pytest.mark.parametrize(
+    "explicit, vercel, expected",
+    [
+        (None, "production", "production"),
+        (None, "preview", "preview"),
+        ("staging", "production", "staging"),
+        (None, None, None),
+    ],
+)
+def test_tracing_environment(monkeypatch, explicit, vercel, expected):
+    for name, value in (("LANGFUSE_TRACING_ENVIRONMENT", explicit), ("VERCEL_ENV", vercel)):
+        if value is None:
+            monkeypatch.delenv(name, raising=False)
+        else:
+            monkeypatch.setenv(name, value)
+    assert tracing.tracing_environment() == expected
+    tracing._apply_environment()
+    import os
+
+    assert os.getenv("LANGFUSE_TRACING_ENVIRONMENT") == expected

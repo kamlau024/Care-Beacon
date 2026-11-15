@@ -8,7 +8,7 @@ from loguru import logger
 
 from src.caching.stats_store import StatsStore
 from src.config_loader import get_config
-from src.observability.tracing import get_openai_client
+from src.observability.tracing import generation_kwargs, get_openai_client
 
 
 class LLMClient:
@@ -76,6 +76,7 @@ class LLMClient:
         user_prompt: str,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        name: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Generate a response from the LLM.
 
@@ -84,6 +85,7 @@ class LLMClient:
             user_prompt: User prompt (query/question)
             max_tokens: Maximum tokens in response (overrides default)
             temperature: Temperature for generation (overrides default)
+            name: What this call is for (e.g. "answer"); names it in Langfuse traces
 
         Returns:
             Dictionary with:
@@ -98,7 +100,7 @@ class LLMClient:
             {"role": "user", "content": user_prompt},
         ]
         return self.generate_messages(
-            messages, max_tokens=max_tokens, temperature=temperature
+            messages, max_tokens=max_tokens, temperature=temperature, name=name
         )
 
     def generate_messages(
@@ -107,6 +109,7 @@ class LLMClient:
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         model: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Generate a response from an arbitrary message list (blocking).
 
@@ -121,7 +124,7 @@ class LLMClient:
         model = model or self.model
 
         if self.provider == "openai":
-            result = self._generate_openai(messages, max_tokens, temperature, model)
+            result = self._generate_openai(messages, max_tokens, temperature, model, name)
         else:
             raise NotImplementedError(f"Provider {self.provider} not implemented")
 
@@ -141,6 +144,7 @@ class LLMClient:
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         model: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> "LLMStream":
         """Open a streaming completion and return an iterable of text deltas.
 
@@ -166,6 +170,7 @@ class LLMClient:
                 timeout=self.timeout,
                 stream=True,
                 stream_options={"include_usage": True},
+                **generation_kwargs(name),
             )
         )
         return LLMStream(self, raw, model, messages)
@@ -189,6 +194,7 @@ class LLMClient:
         max_tokens: int,
         temperature: float,
         model: str,
+        name: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Generate response using OpenAI API.
 
@@ -203,6 +209,7 @@ class LLMClient:
                 max_tokens=max_tokens,
                 temperature=temperature,
                 timeout=self.timeout,
+                **generation_kwargs(name),
             )
             answer = response.choices[0].message.content
             usage = response.usage

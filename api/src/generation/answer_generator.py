@@ -146,6 +146,16 @@ class AnswerGenerator:
 
         return "\n".join(context_parts)
 
+    def context_text(self, answer: GeneratedAnswer) -> str:
+        """The source text the answer was written from, as the LLM saw it.
+
+        Empty for a cached answer (the cache doesn't keep the retrieved context)
+        and when nothing was retrieved.
+        """
+        if answer.context_used is None:
+            return ""
+        return self._format_context(answer.context_used)
+
     def _extract_citations(self, context: RetrievedContext, include_full_text: bool = False) -> List[Citation]:
         """Extract citations from retrieved context.
 
@@ -280,6 +290,7 @@ class AnswerGenerator:
             user_prompt=user_prompt,
             max_tokens=self.config.max_tokens,
             temperature=self.config.temperature,
+            name="answer",
         )
 
         # Step 4: Extract citations

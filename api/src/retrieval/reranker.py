@@ -56,7 +56,8 @@ class LLMReranker:
             system_prompt="You are a relevance scoring assistant. Evaluate how well medical information chunks answer a specific question.",
             user_prompt=prompt,
             max_tokens=500,
-            temperature=0.0  # Deterministic scoring
+            temperature=0.0,  # Deterministic scoring
+            name="rerank",
         )
 
         # Extract the answer text from the response

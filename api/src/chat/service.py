@@ -26,7 +26,13 @@ from src.api.chat_models import ChatRequest
 from src.api.filters import configured_sources, normalize_sources
 from src.chat.models import Message, Thread, ThreadSettings
 from src.api.models import QuestionRequest
-from src.chat.prompt import build_chat_messages, fallback_title, generate_title, rewrite_query
+from src.chat.prompt import (
+    build_chat_messages,
+    fallback_title,
+    format_sources,
+    generate_title,
+    rewrite_query,
+)
 from src.chat.repository import ThreadNotFound
 from src.chat.sse import frame
 from src.observability.tracing import flush, request_trace
@@ -139,6 +145,7 @@ class ChatService:
         try:
             with request_trace(
                 "chat",
+                input={"question": question},
                 metadata={
                     "endpoint": ENDPOINT,
                     "thread_id": thread.id,
@@ -164,6 +171,9 @@ class ChatService:
         # Set before the final write is attempted, so no path writes twice
         # (a failed final write is never followed by an interrupted one).
         write_attempted = False
+        # What the answer was written from, for the trace (live evaluators read it there).
+        query_text = question
+        context_text = ""
 
         def save_partial() -> None:
             if write_attempted or not "".join(parts):
@@ -189,7 +199,6 @@ class ChatService:
                 logger.warning(f"Chat fallback titling failed: {type(e).__name__}")
 
         try:
-            query_text = question
             if any(m.role != "settings" for m in prior_messages):
                 yield frame("status", {"stage": "rewriting"})
                 query_text = rewrite_query(self.llm_client, question, prior_messages, self.prompts)
@@ -207,6 +216,7 @@ class ChatService:
             results = self.retrieval_engine.rank_candidates(query, candidates)
             results = results[: self.max_context_chunks]
             citations = [_citation(n, r) for n, r in enumerate(results, start=1)]
+            context_text = format_sources(results)
             yield frame("citations", {"citations": [
                 _with_full_text(c, r) if include_full_text else c
                 for c, r in zip(citations, results)
@@ -218,7 +228,7 @@ class ChatService:
                 yield frame("token", {"text": text})
             else:
                 messages = build_chat_messages(question, results, prior_messages, self.prompts)
-                stream = self.llm_client.generate_stream(messages)
+                stream = self.llm_client.generate_stream(messages, name="answer")
                 stream_iter = iter(stream)
                 for delta in stream_iter:
                     parts.append(delta)
@@ -257,7 +267,12 @@ class ChatService:
         try:
             trace.update(
                 output="".join(parts),
-                metadata={"status": "complete", "sources_count": len(citations)},
+                metadata={
+                    "status": "complete",
+                    "sources_count": len(citations),
+                    "search_query": query_text,
+                    "context": context_text,
+                },
             )
         except Exception as e:
             logger.warning(f"Chat trace update failed: {type(e).__name__}")

@@ -155,6 +155,7 @@ def rewrite_query(
             model=get_model("utility"),
             temperature=0,
             max_tokens=150,
+            name="rewrite_query",
         )
         rewritten = (result.get("answer") or "").strip()
     except Exception as e:
@@ -184,6 +185,7 @@ def generate_title(llm: LLMClient, question: str, prompts: Dict[str, str]) -> st
             model=get_model("utility"),
             temperature=0,
             max_tokens=30,
+            name="title",
         )
         title = clean_title(result.get("answer") or "")
     except Exception as e:

@@ -583,6 +583,7 @@ def test_generate_delegates_to_generate_messages():
         [{"role": "system", "content": "SYS"}, {"role": "user", "content": "USR"}],
         max_tokens=5,
         temperature=0.0,
+        name=None,
     )
     assert result["answer"] == "x"
 
@@ -598,3 +599,16 @@ def test_generate_messages_model_override(mock_openai_client):
     assert kwargs["temperature"] == 0.0
     assert kwargs["messages"] == msgs
     assert result["model"] == "utility-model"
+
+
+@pytest.mark.parametrize("instrumented, expected", [(True, {"name": "answer"}), (False, {})])
+def test_generate_names_the_call_only_when_traced(mock_openai_client, monkeypatch, instrumented, expected):
+    from src.observability import tracing
+
+    monkeypatch.setattr(tracing, "_openai_instrumented", instrumented)
+    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
+        with patch("src.generation.llm_client.get_openai_client", return_value=mock_openai_client):
+            client = LLMClient(provider="openai", model="gpt-4o-mini")
+            client.generate(system_prompt="s", user_prompt="u", name="answer")
+    kwargs = mock_openai_client.chat.completions.create.call_args.kwargs
+    assert {k: kwargs[k] for k in ("name",) if k in kwargs} == expected
