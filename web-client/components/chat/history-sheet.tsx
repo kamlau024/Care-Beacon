@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button"
 import { deleteThread, listThreads, renameThread } from "@/lib/chat-api"
 import type { ThreadSummary } from "@/lib/types"
 import { displayTitle } from "@/lib/thread-title"
+import { createThreadListStore } from "@/lib/thread-list-store"
 import { cn } from "@/lib/utils"
+
+// One per tab: the panel opens straight onto the last list while a fresh one loads.
+const store = createThreadListStore(listThreads)
 
 interface Props {
   open: boolean
@@ -22,7 +26,7 @@ interface Props {
 }
 
 export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelect, onDeleted }: Props) {
-  const [threads, setThreads] = useState<ThreadSummary[] | null>(null)
+  const [threads, setThreadsState] = useState<ThreadSummary[] | null>(store.get)
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState<string | null>(null)
   const [draft, setDraft] = useState("")
@@ -39,25 +43,39 @@ export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelec
     return () => clearTimeout(t)
   }, [editing])
 
+  // Local edits (rename, delete) go through the store too, so the next open shows them.
+  const setThreads = useCallback((update: (ts: ThreadSummary[]) => ThreadSummary[]) => {
+    const current = store.get()
+    if (!current) return
+    const next = update(current)
+    store.set(next)
+    setThreadsState(next)
+  }, [])
+
+  // Refreshes in the background: whatever list is on screen stays there until the new one arrives.
   const load = useCallback(async () => {
     try {
-      const { threads } = await listThreads()
-      setThreads(threads)
+      const fresh = await store.refresh()
+      if (!fresh) return // a newer refresh or a local edit superseded this one
+      setThreadsState(fresh)
       setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load conversations")
-      setThreads((t) => t ?? [])
+      setThreadsState((t) => t ?? [])
     }
   }, [])
 
+  // Prefetch when the Chat page mounts, and again whenever a turn finishes (refreshKey), so the
+  // list is current before the panel is opened.
   useEffect(() => {
-    if (!open) {
-      setEditing(null)
-      return
-    }
-    setThreads(null)
     void load()
-  }, [open, refreshKey, load])
+  }, [refreshKey, load])
+
+  // Opening also refreshes, in case another tab changed the list.
+  useEffect(() => {
+    if (open) void load()
+    else setEditing(null)
+  }, [open, load])
 
   const commitRename = async (id: string) => {
     const title = draft.trim()
@@ -65,7 +83,7 @@ export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelec
     if (!title) return
     try {
       await renameThread(id, title)
-      setThreads((ts) => ts?.map((t) => (t.id === id ? { ...t, title } : t)) ?? ts)
+      setThreads((ts) => ts.map((t) => (t.id === id ? { ...t, title } : t)))
     } catch (e) {
       setError(e instanceof Error ? e.message : "Rename failed")
     }
@@ -74,7 +92,7 @@ export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelec
   const remove = async (id: string) => {
     try {
       await deleteThread(id)
-      setThreads((ts) => ts?.filter((t) => t.id !== id) ?? ts)
+      setThreads((ts) => ts.filter((t) => t.id !== id))
       onDeleted(id)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Delete failed")
