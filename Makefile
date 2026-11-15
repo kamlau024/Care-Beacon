@@ -5,7 +5,7 @@
 
 PY := /opt/anaconda3/envs/care-beacon/bin/python
 
-.PHONY: help setup env-activate test test-cov lint format dev ingest migrate test-db clean-cache clean-logs clean-all check
+.PHONY: help setup env-activate test test-cov lint format dev ingest qdrant-aliases migrate test-db clean-cache clean-logs clean-all check
 
 help:  ## Show this help message
 	@echo "Care-Beacon Development Commands:"
@@ -41,8 +41,12 @@ dev:  ## Run both services locally via the Vercel route table
 	vercel dev
 
 # Data Ingestion (local only)
-ingest:  ## Run article ingestion (local only)
-	cd api && $(PY) scripts/ingest.py
+ingest:  ## Build a NEW Qdrant collection: make ingest COLLECTION=care-beacon-medical-v2 [ARGS="--quantize"]
+	@test -n "$(COLLECTION)" || (echo "Usage: make ingest COLLECTION=<new-collection> [ARGS=...]"; exit 2)
+	cd api && $(PY) scripts/ingest.py --collection $(COLLECTION) $(ARGS)
+
+qdrant-aliases:  ## Show Qdrant collections and which alias the app reads
+	cd api && $(PY) scripts/qdrant_alias.py show
 
 # Postgres (Neon)
 migrate:  ## Apply SQL migrations (uses DATABASE_URL_UNPOOLED, else DATABASE_URL)

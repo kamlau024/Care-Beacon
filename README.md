@@ -405,8 +405,11 @@ on only when `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` and `LANGFUSE_HOST` ar
 **Local development:** `vercel dev` runs both services behind the same route table as
 production. `make test` runs the Python suite.
 
-**Ingestion is local-only:** `make ingest`. It reads `scraped_data/` — which lives
-outside `api/` and is never bundled into the function — and upserts into Qdrant Cloud.
+**Ingestion is local-only:** `make ingest COLLECTION=<new-collection>`. It reads
+`scraped_data/` — which lives outside `api/` and is never bundled into the function —
+and builds a new Qdrant collection. The app reads through the `care-beacon-live` alias,
+so a re-ingest goes live by switching that alias (`api/scripts/qdrant_alias.py`), and
+rolls back the same way. See `docs/INGESTION_CONFIGURATION.md`.
 
 **Rate limiting** is enforced by the Vercel WAF, not application code: one custom rule
 (`api-rate-limit`) allows 20 requests per 60 seconds per IP, counted together across
@@ -533,7 +536,8 @@ make lint                # Run linting (flake8 + mypy)
 make format             # Format code with Black
 make check               # Run tests + linting
 make dev                 # Run both services via vercel dev
-make ingest               # Run article ingestion (local only)
+make ingest COLLECTION=…  # Build a new Qdrant collection (local only)
+make qdrant-aliases       # Show collections and which one the app serves
 make migrate              # Apply SQL migrations to Postgres
 make test-db              # Run Postgres tests in an isolated schema
 make clean-cache        # Clear Python cache

@@ -1,323 +1,183 @@
-"""Memory-efficient ingestion for Render free tier (512MB limit).
+"""Ingest the scraped corpus into a NEW Qdrant collection (local only).
 
-This script processes articles in small batches to avoid running out of memory.
-Optimized for Render.com free tier deployment.
-Includes manifest generation for cloud deployment.
+The app reads through the alias in ``vector_db.collection_name`` (e.g.
+``care-beacon-live``). This script never writes to that alias or to the
+collection behind it: it builds a separate collection, which you check and then
+switch the alias to with ``scripts/qdrant_alias.py``.
+
+    python scripts/ingest.py --collection care-beacon-medical-v2 [--quantize]
+    python scripts/qdrant_alias.py show
+    python scripts/qdrant_alias.py point care-beacon-live care-beacon-medical-v2
+
+Articles are processed in small batches. Point ids are a hash of the chunk id,
+so upserts are idempotent: an interrupted run can be continued with
+``--resume --start-batch N`` (N = the first batch that did not finish).
 """
 
-import sys
+import argparse
 import gc
-import json
-import psutil
-from pathlib import Path
-from typing import List, Tuple, Dict
+import sys
 import time
+from pathlib import Path
+from typing import List, Tuple
 
 # Add the api/ service root to path so `src.*` imports resolve.
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
-# scraped_data/ lives at the repository root -- one level above api/ -- kept
-# outside the api/ service directory on purpose so its ~214MB stays out of
-# the Vercel bundle. This script now lives at api/scripts/, so reaching the
-# repo root needs one extra parent beyond project_root.
+# scraped_data/ lives at the repository root, outside api/, so it stays out of
+# the Vercel bundle.
 repo_root = Path(__file__).resolve().parents[2]
 
-from src.ingestion.markdown_parser import MedicalArticleParser
-from src.embeddings.chunking import DocumentChunker
-from src.embeddings.embedding_generator import EmbeddingGenerator
-from src.storage.vector_db import create_vector_database
-from src.storage.models import Article, Chunk
-from src.config_loader import get_config
-from src.storage.qdrant_db import QdrantVectorDatabase
+from src.config_loader import get_config  # noqa: E402
+from src.embeddings.chunking import DocumentChunker  # noqa: E402
+from src.embeddings.embedding_generator import EmbeddingGenerator  # noqa: E402
+from src.ingestion.markdown_parser import MedicalArticleParser  # noqa: E402
+from src.storage.qdrant_admin import (  # noqa: E402
+    UnsafeTargetError,
+    alias_map,
+    check_ingest_target,
+    collection_counts,
+)
+from src.storage.qdrant_db import QdrantVectorDatabase  # noqa: E402
+
+# scraped_data/<dir>/articles -> source name stored on every chunk
+SOURCES = {
+    "bc-cancer": "BC Cancer",
+    "canadian-cancer-society": "Canadian Cancer Society",
+    "cleveland-clinic": "Cleveland Clinic",
+}
 
 
 def find_all_articles(base_path: Path, source_name: str) -> List[Tuple[Path, str]]:
-    """Find all markdown articles."""
-    articles = []
-    for md_file in base_path.rglob("*.md"):
-        if md_file.name.lower() not in ["readme.md", "index.md"]:
-            articles.append((md_file, source_name))
+    """Every article markdown file under base_path, in a stable order."""
+    articles = [
+        (md_file, source_name)
+        for md_file in base_path.rglob("*.md")
+        if md_file.name.lower() not in ["readme.md", "index.md"]
+    ]
     articles.sort(key=lambda x: x[0])
     return articles
 
 
-def get_memory_usage():
-    """Get current memory usage in MB."""
-    process = psutil.Process()
-    return process.memory_info().rss / 1024 / 1024  # Convert to MB
-
-
 def process_batch(
-    article_paths_batch: List[Tuple[Path, str]],
+    batch: List[Tuple[Path, str]],
     parser: MedicalArticleParser,
     chunker: DocumentChunker,
     generator: EmbeddingGenerator,
     db: QdrantVectorDatabase,
-    batch_num: int,
-    total_batches: int,
-) -> Tuple[int, int, int]:
-    """Process a batch of articles and write to database immediately.
-
-    Returns:
-        Tuple of (articles_processed, chunks_created, chunks_stored)
-    """
-    print(f"\n{'='*70}")
-    print(f"Batch {batch_num}/{total_batches} ({len(article_paths_batch)} articles)")
-    print(f"{'='*70}")
-    print(f"💾 Memory: {get_memory_usage():.1f} MB\n")
-
-    # Step 1: Parse articles
-    print(f"[1/4] Parsing {len(article_paths_batch)} articles...")
-    articles = []
-    for article_path, source_name in article_paths_batch:
+    chunk_batch_size: int,
+) -> int:
+    """Parse, chunk, embed and store one batch of articles. Returns chunks stored."""
+    chunks = []
+    for article_path, source_name in batch:
         try:
             article = parser.parse_file(article_path)
-            article.source = source_name
-            articles.append(article)
         except Exception as e:
-            print(f"  ⚠️  Failed to parse {article_path.name}: {e}")
+            print(f"  ⚠️  Failed to parse {article_path}: {e}")
+            continue
+        article.source = source_name
+        chunks.extend(chunker.chunk_article(article))
 
-    if not articles:
-        print("  No articles parsed in this batch")
-        return 0, 0, 0
+    if not chunks:
+        return 0
 
-    print(f"  ✅ Parsed {len(articles)} articles")
-    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
+    embedded = generator.embed_chunks(chunks, show_progress=False)
+    db.add_chunks(embedded, batch_size=chunk_batch_size, show_progress=False)
+    return len(embedded)
 
-    # Step 2: Chunk articles
-    print(f"\n[2/4] Chunking articles...")
-    all_chunks = []
-    for article in articles:
-        chunks = chunker.chunk_article(article)
-        all_chunks.extend(chunks)
 
-    print(f"  ✅ Created {len(all_chunks)} chunks")
-    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
+def parse_args(argv=None) -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--collection", required=True, help="New collection to build (never the served alias)")
+    ap.add_argument("--quantize", action="store_true", help="Create the collection with int8 scalar quantization (~4x less RAM)")
+    ap.add_argument("--reset", action="store_true", help="Delete and recreate --collection first if it has points")
+    ap.add_argument("--resume", action="store_true", help="Write into a non-empty --collection (continue an interrupted run)")
+    ap.add_argument("--start-batch", type=int, default=1, help="First batch to process (1-based), for --resume")
+    ap.add_argument("--sources", nargs="+", choices=sorted(SOURCES), default=sorted(SOURCES), help="Source directories to ingest")
+    ap.add_argument("--limit", type=int, default=None, help="Only ingest the first N articles (trial runs)")
+    ap.add_argument("--yes", action="store_true", help="Don't ask for confirmation")
+    return ap.parse_args(argv)
 
-    # Clear articles from memory
-    del articles
-    gc.collect()
 
-    # Step 3: Generate embeddings (in smaller batches for low memory)
-    print(f"\n[3/4] Generating embeddings...")
-    embedded_chunks = generator.embed_chunks(all_chunks, show_progress=False)
-    print(f"  ✅ Generated {len(embedded_chunks)} embeddings")
-    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
-
-    # Clear unembedded chunks from memory
-    del all_chunks
-    gc.collect()
-
-    # Step 4: Store in database (smaller batches for low memory)
-    print(f"\n[4/4] Storing in database...")
-    # Get chunk batch size from config
+def main(argv=None) -> int:
+    args = parse_args(argv)
     config = get_config()
-    chunk_batch_size = config.get('ingestion.chunk_batch_size', 50)
-    db.add_chunks(embedded_chunks, batch_size=chunk_batch_size, show_progress=False)
-    print(f"  ✅ Stored {len(embedded_chunks)} chunks")
-    print(f"  💾 Memory: {get_memory_usage():.1f} MB")
+    article_batch_size = config.get("ingestion.article_batch_size", 10)
+    chunk_batch_size = config.get("ingestion.chunk_batch_size", 25)
+    serving_name = config.get("vector_db.collection_name")
 
-    chunks_stored = len(embedded_chunks)
+    # Safety check before anything is created, written or deleted.
+    probe = QdrantVectorDatabase(collection_name=args.collection, create_if_missing=False)
+    aliases = alias_map(probe.client)
+    counts = collection_counts(probe.client)
+    try:
+        check_ingest_target(args.collection, serving_name, aliases, counts, reset=args.reset, resume=args.resume)
+    except UnsafeTargetError as e:
+        print(f"❌ {e}")
+        return 2
 
-    # Clear embedded chunks from memory
-    del embedded_chunks
-    gc.collect()
-    print(f"  💾 Memory after cleanup: {get_memory_usage():.1f} MB")
+    all_paths: List[Tuple[Path, str]] = []
+    for source_dir in args.sources:
+        articles_dir = repo_root / "scraped_data" / source_dir / "articles"
+        if not articles_dir.exists():
+            print(f"❌ Directory not found: {articles_dir}")
+            return 1
+        found = find_all_articles(articles_dir, SOURCES[source_dir])
+        print(f"  {SOURCES[source_dir]}: {len(found):,} articles")
+        all_paths.extend(found)
+    if args.limit:
+        all_paths = all_paths[: args.limit]
+    total_batches = (len(all_paths) + article_batch_size - 1) // article_batch_size
 
-    return len(article_paths_batch), len(all_chunks) if 'all_chunks' in locals() else chunks_stored, chunks_stored
-
-
-def create_vector_db_manifest() -> None:
-    """Create manifest file for vector database cloud deployment."""
-    print("\n" + "="*70)
-    print("Creating Vector Database Manifest")
-    print("="*70)
     print()
+    print(f"Target collection : {args.collection} ({counts.get(args.collection, 0):,} points now)")
+    print(f"App serves        : {serving_name} -> {aliases.get(serving_name, serving_name)} (untouched)")
+    print(f"Articles          : {len(all_paths):,} in {total_batches:,} batches, starting at batch {args.start_batch}")
+    print(f"Quantization      : {'int8' if args.quantize else 'none'} (applies only when creating)")
+    if args.reset and counts.get(args.collection, 0):
+        print(f"⚠️  --reset will DELETE the {counts[args.collection]:,} points in {args.collection}")
+    if not args.yes and input("Proceed? [y/N] ").strip().lower() != "y":
+        print("Aborted.")
+        return 1
 
-    vector_db_path = project_root / "data" / "vector_db"
-    manifest_path = vector_db_path / "vector_db_manifest.json"
+    db = QdrantVectorDatabase(collection_name=args.collection, create_if_missing=True, quantize=args.quantize)
+    if args.reset and counts.get(args.collection, 0):
+        db.reset()
 
-    if not vector_db_path.exists():
-        print(f"⚠️  Vector database not found: {vector_db_path}")
-        print("   Skipping manifest creation")
-        return
-
-    # Get all files in vector_db directory
-    files = []
-    for item in vector_db_path.rglob("*"):
-        if item.is_file() and item != manifest_path:  # Exclude the manifest itself
-            rel_path = item.relative_to(vector_db_path)
-            size = item.stat().st_size
-            files.append({
-                "path": str(rel_path).replace("\\", "/"),
-                "size": size
-            })
-
-    if not files:
-        print("⚠️  No files found in vector database")
-        return
-
-    # Calculate total size
-    total_size = sum(f["size"] for f in files)
-
-    print(f"📊 Database Files:")
-    print(f"   Total files: {len(files)}")
-    print(f"   Total size: {total_size:,} bytes ({total_size / 1024 / 1024:.1f} MB)")
-    print()
-
-    # Create manifest
-    manifest = {
-        "version": "1.0",
-        "total_files": len(files),
-        "total_size": total_size,
-        "files": sorted(files, key=lambda x: x["path"])
-    }
-
-    # Write manifest
-    with open(manifest_path, 'w') as f:
-        json.dump(manifest, f, indent=2)
-
-    manifest_size = manifest_path.stat().st_size
-    print(f"✅ Manifest created: {manifest_path}")
-    print(f"   Size: {manifest_size:,} bytes")
-    print()
-    print("📤 Ready for Cloud Upload:")
-    print(f"   Upload entire folder: {vector_db_path}/ → <cloud-url>/vector_db/")
-    print(f"   Includes manifest: vector_db_manifest.json")
-    print()
-
-
-def main():
-    """Memory-efficient ingestion pipeline."""
-    print("="*70)
-    print("Care-Beacon Low-Memory Ingestion (Render Free Tier)")
-    print("="*70)
-    print()
-
-    # Load configuration
-    config = get_config()
-    article_batch_size = config.get('ingestion.article_batch_size', 10)
-    chunk_batch_size = config.get('ingestion.chunk_batch_size', 50)
-
-    print(f"📋 Configuration:")
-    print(f"   Article batch size: {article_batch_size}")
-    print(f"   Chunk batch size: {chunk_batch_size}")
-    print()
-
-    # Define source directories
-    SOURCES = {
-        "bc-cancer": "BC Cancer",
-        "canadian-cancer-society": "Canadian Cancer Society"
-    }
-
-    # Initialize components
-    print("Initializing components...")
     parser = MedicalArticleParser()
     chunker = DocumentChunker()
     generator = EmbeddingGenerator()
-    db = create_vector_database()
-    print("✅ Components initialized\n")
 
-    # Check if database already has data
-    existing_count = db.count()
-    if existing_count > 0:
-        print(f"⚠️  Database already contains {existing_count} chunks")
-        print("   Clearing database for fresh ingestion...")
-        db.reset()
-        print("✅ Database cleared\n")
-
-    # Find all articles from all sources
-    print("="*70)
-    print("Finding Articles")
-    print("="*70)
-    print()
-
-    all_article_paths = []
-    for source_dir, source_name in SOURCES.items():
-        articles_dir = repo_root / "scraped_data" / source_dir / "articles"
-
-        if not articles_dir.exists():
-            print(f"⚠️  Directory not found: {articles_dir}")
-            continue
-
-        article_paths = find_all_articles(articles_dir, source_name)
-        all_article_paths.extend(article_paths)
-        print(f"  {source_name}: {len(article_paths)} articles")
-
-    print(f"\n  Total: {len(all_article_paths)} articles\n")
-
-    if not all_article_paths:
-        print("❌ No articles found")
-        return
-
-    # Process in batches
-    print("="*70)
-    print(f"Processing in Batches (batch size: {article_batch_size})")
-    print("="*70)
-
-    total_batches = (len(all_article_paths) + article_batch_size - 1) // article_batch_size
-    total_articles_processed = 0
-    total_chunks_created = 0
-    total_chunks_stored = 0
-
-    start_time = time.time()
-
-    for i in range(0, len(all_article_paths), article_batch_size):
-        batch = all_article_paths[i:i + article_batch_size]
-        batch_num = (i // article_batch_size) + 1
-
-        articles_processed, chunks_created, chunks_stored = process_batch(
-            batch,
-            parser,
-            chunker,
-            generator,
-            db,
-            batch_num,
-            total_batches
-        )
-
-        total_articles_processed += articles_processed
-        total_chunks_created += chunks_created
-        total_chunks_stored += chunks_stored
-
-        # Force garbage collection between batches
+    start = time.time()
+    stored = 0
+    for batch_num in range(args.start_batch, total_batches + 1):
+        i = (batch_num - 1) * article_batch_size
+        batch = all_paths[i : i + article_batch_size]
+        try:
+            stored += process_batch(batch, parser, chunker, generator, db, chunk_batch_size)
+        except Exception as e:
+            print(f"\n❌ Batch {batch_num} failed: {e}")
+            print(f"   Continue with: --resume --start-batch {batch_num}")
+            return 1
+        if batch_num % 50 == 0 or batch_num == total_batches:
+            elapsed = time.time() - start
+            done = batch_num - args.start_batch + 1
+            eta = elapsed / done * (total_batches - batch_num)
+            print(f"  batch {batch_num:,}/{total_batches:,}  chunks {stored:,}  "
+                  f"elapsed {elapsed / 60:.1f} min  eta {eta / 60:.1f} min", flush=True)
         gc.collect()
 
-    elapsed_time = time.time() - start_time
-
-    # Final statistics
-    print("\n" + "="*70)
-    print("Ingestion Complete!")
-    print("="*70)
-    print()
-    print(f"📊 Summary:")
-    print(f"   Total articles processed: {total_articles_processed}")
-    print(f"   Total chunks created: {total_chunks_created}")
-    print(f"   Total chunks stored: {total_chunks_stored}")
-    print(f"   Database size: {db.count()} chunks")
-    print(f"   Time elapsed: {elapsed_time:.1f} seconds")
-    print()
-
-    # Show embedding stats
     stats = generator.get_embedding_stats()
-    print(f"💰 Embedding Cost:")
-    print(f"   Model: {stats['model']}")
-    print(f"   Total tokens: {stats['total_tokens_used']:,}")
-    print(f"   Total cost: ${stats['total_cost']:.6f}")
     print()
-
-    # Verify database
-    final_count = db.count()
-    if final_count > 0:
-        print(f"✅ Verification: Database contains {final_count} chunks")
-    else:
-        print(f"❌ Warning: Database is empty!")
+    print(f"✅ Stored {stored:,} chunks; {args.collection} now holds {db.count():,} points")
+    print(f"   Embedding tokens {stats['total_tokens_used']:,}, cost ${stats['total_cost']:.4f}")
+    print(f"   Time {(time.time() - start) / 60:.1f} min")
     print()
-
-    # Create manifest for cloud deployment
-    create_vector_db_manifest()
+    print("Next: check it on a preview, then switch the alias:")
+    print(f"   python scripts/qdrant_alias.py point {serving_name} {args.collection}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
