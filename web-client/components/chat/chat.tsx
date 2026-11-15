@@ -271,7 +271,8 @@ export function Chat() {
           disabled={streaming}
           placeholder="Ask a question…"
           aria-label="Your question"
-          className="h-10 flex-1 resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          enterKeyHint="send"
+          className="h-10 flex-1 resize-none rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         />
         <Button type="submit" disabled={streaming || !input.trim() || tooShort(input)} aria-label="Send">
           <Send />
