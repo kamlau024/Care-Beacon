@@ -11,7 +11,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SiteHeader } from "@/components/site-header"
-import { getSourceBadgeStyle } from "@/lib/source-colors"
+import { getCitationNumberStyle, getSourceBadgeStyle } from "@/lib/source-colors"
 import { cn } from "@/lib/utils"
 
 export const GITHUB_URL = "https://github.com/kamlau024/Care-Beacon"
@@ -80,12 +80,7 @@ const sourceLinkClass = "font-medium text-foreground underline underline-offset-
 
 function CitationNumber({ n, source }: { n: number; source: string }) {
   return (
-    <span
-      className={cn(
-        "mx-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 align-[1px] text-[11px] font-semibold leading-none",
-        getSourceBadgeStyle(source)
-      )}
-    >
+    <span className={cn(getCitationNumberStyle(source), "mx-0.5 align-[1px]")}>
       {n}
     </span>
   )

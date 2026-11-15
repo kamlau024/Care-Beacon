@@ -64,6 +64,15 @@ export function getSourceBadgeStyle(source: string): string {
 }
 
 /**
+ * Classes for a numbered citation chip, colored by its source (the same colors as the source badges).
+ * Used in Chat and Search answers, the Search Sources list and the landing page's example answer, so a
+ * citation number always shows which publisher it comes from.
+ */
+export function getCitationNumberStyle(source: string): string {
+  return `inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 text-[11px] font-semibold leading-none ${getSourceBadgeStyle(source)}`
+}
+
+/**
  * Get hex color for a data source
  * Used for general styling purposes
  */
