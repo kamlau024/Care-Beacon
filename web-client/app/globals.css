@@ -59,6 +59,13 @@
   html {
     scrollbar-gutter: stable;
   }
+  /* Dialogs and sheets (Radix, via react-remove-scroll) lock scrolling by hiding the scrollbar
+     and adding a right margin as wide as it was. The gutter above already keeps that space, so
+     the margin would count the scrollbar twice and shift centred content left. Cancel it.
+     The extra `html` outranks the library's own `body[data-scroll-locked]` !important rule. */
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
