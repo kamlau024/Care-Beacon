@@ -104,7 +104,7 @@ Each diagram opens in an interactive viewer hosted on the live site, where you c
 - **Phase 4: Conversational Chat** - Complete
   - Streaming chat endpoint (SSE) with query rewriting and conversation memory
   - Thread history in Neon Postgres: list, rename, delete, per-thread retrieval settings
-  - Chat page as the default view: history drawer, settings popover, citation chips, streamed progress
+  - Chat page (now at `/chat`, behind the landing page at `/`): history drawer, settings popover, citation chips, streamed progress
   - Daily spend cap, pseudonymous Langfuse tracing, evaluation harness with a release gate
   - Search now filters by any combination of sources; per-role model configuration
 
@@ -174,6 +174,8 @@ care-beacon/
 │   ├── config/                # config.yaml, prompts.yaml, prompts_chat.yaml
 │   └── requirements.txt       # Runtime deps only (10 packages)
 ├── web-client/                # Next.js frontend (Vercel Service: web)
+│   ├── app/page.tsx          # Landing page at /
+│   ├── app/(app)/            # /chat, /search, /stats with the shared header layout
 │   ├── components/chat/      # Chat page, transcript, history drawer, settings popover
 │   └── lib/                  # API clients, SSE parser, owner key, citation rendering
 ├── scraped_data/               # Source markdown articles (never bundled into api/)
@@ -239,8 +241,9 @@ See [Deployment](#deployment) below for how the app runs in production, and
 
 ### Production
 
-The app is live at **https://care-beacon-health.vercel.app**. It opens on the Chat
-page; Search and Statistics are in the top navigation.
+The app is live at **https://care-beacon-health.vercel.app**. The root (`/`) is a landing
+page that explains Care Beacon; the app itself is at `/chat`, `/search` and `/stats`, which
+are also the tabs in the top navigation.
 
 ```bash
 # Check health

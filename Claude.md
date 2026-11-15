@@ -30,7 +30,7 @@ This section is the authoritative description of the live system. Sections below
 - **The Phase 1 eval gate passed on 2026-11-12** (`evaluation/results/2026-11-12-phase1-gate.md`): safety 19/19 multi-turn and 19/19 single-turn control; follow-ups 0.88 resolved, 0.96 grounded; Search baseline 0.744 grounded; about $0.0007 per chat turn.
 - **Eval runs against protected previews** need `VERCEL_AUTOMATION_BYPASS_SECRET` (the project's Deployment Protection automation bypass) in `evaluation/.env`; Langfuse is the US region (`https://us.cloud.langfuse.com`). Preview env vars (OpenAI, Qdrant, admin key, Redis via the Upstash connection, Langfuse) are set; previews share production's Redis, Qdrant and Neon.
 - **Local dev gotcha**: under `vercel dev`, the API service reads `.env` (via `load_dotenv`), not `.env.local`, so `DATABASE_URL` must be exported into the shell (or be present in `.env`) for chat to reach Postgres locally. `.vercelignore` excludes `.env` / `.env*` (except `.env.example`) so CLI deploys don't upload env files.
-- **Web client pages**: Search (default), Chat (new, between Search and Statistics in the nav), Statistics.
+- **Web client pages**: `/` is a landing page (what Care Beacon is, features, sources, how to start, disclaimer; `web-client/components/landing/landing-page.tsx`). The app lives in the `web-client/app/(app)/` route group: `/chat`, `/search`, `/stats`, in that nav order (Chat carries a "New" pill). The shared header is `components/site-header.tsx` (logo links to `/`); Search state lives in `components/search-state.tsx` inside the `(app)` layout so it survives tab switches. `/statistics` redirects to `/stats`; the PWA `start_url` is `/chat`.
 
 ## Key Requirements
 
