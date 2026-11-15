@@ -309,3 +309,43 @@ def test_stats_with_empty_chunks(chunker):
     assert stats['total_chunks'] == 0
     assert stats['total_characters'] == 0
     assert stats['avg_chunk_length'] == 0
+
+
+# --- Lists ------------------------------------------------------------------
+
+def _list_article(paragraph: str) -> Article:
+    return Article(
+        article_id="test_list",
+        title="List Article",
+        url="https://example.com/list",
+        date_scraped=datetime(2025, 11, 7),
+        breadcrumbs=[],
+        sections=[ArticleSection(name="Side effects", level=2, paragraphs=[paragraph])],
+    )
+
+
+def test_list_stays_in_one_chunk():
+    """A lead-in plus its list is one chunk, not one chunk per item."""
+    paragraph = "Common side effects include:\n- fatigue\n- nausea and vomiting\n- hair loss"
+
+    chunks = DocumentChunker().chunk_article(_list_article(paragraph))
+
+    assert [c.text for c in chunks] == [paragraph]
+
+
+def test_long_list_splits_between_items_and_repeats_lead_in():
+    lead_in = "Common side effects include:"
+    items = [f"- side effect number {i:02d} with some extra words" for i in range(10)]
+    paragraph = "\n".join([lead_in, *items])
+    chunker = DocumentChunker(max_chunk_length=200)
+
+    chunks = chunker.chunk_article(_list_article(paragraph))
+
+    assert len(chunks) > 1
+    for chunk in chunks:
+        assert chunk.text.startswith(lead_in + "\n- ")
+        assert len(chunk.text) <= 200
+    # Every item appears exactly once, in order, and none is cut
+    seen = [line for c in chunks for line in c.text.split("\n")[1:]]
+    assert seen == items
+    assert len({c.chunk_id for c in chunks}) == len(chunks)
