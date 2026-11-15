@@ -23,9 +23,19 @@ interface Props {
   refreshKey: number
   onSelect: (id: string) => void
   onDeleted: (id: string) => void
+  /** Passed to the sheet so the parent can decide where focus goes when it closes. */
+  onCloseAutoFocus?: (e: Event) => void
 }
 
-export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelect, onDeleted }: Props) {
+export function HistorySheet({
+  open,
+  onOpenChange,
+  activeId,
+  refreshKey,
+  onSelect,
+  onDeleted,
+  onCloseAutoFocus,
+}: Props) {
   const [threads, setThreadsState] = useState<ThreadSummary[] | null>(store.get)
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState<string | null>(null)
@@ -101,7 +111,7 @@ export function HistorySheet({ open, onOpenChange, activeId, refreshKey, onSelec
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent>
+      <SheetContent onCloseAutoFocus={onCloseAutoFocus}>
         <SheetHeader>
           <SheetTitle>History</SheetTitle>
           <SheetDescription>Your recent conversations on this device.</SheetDescription>

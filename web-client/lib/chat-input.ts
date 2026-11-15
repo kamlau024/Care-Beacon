@@ -18,3 +18,12 @@ export function showCounter(length: number): boolean {
 export function restoreInputAfter(httpStatus: number | undefined): boolean {
   return httpStatus !== undefined && httpStatus >= 400 && httpStatus < 500
 }
+
+/**
+ * Whether to move focus to the question box automatically. Not on touch-first devices: focusing a
+ * text field there opens the on-screen keyboard, which would cover the answer just shown.
+ */
+export function autoFocusAllowed(): boolean {
+  if (typeof window === "undefined" || !window.matchMedia) return true
+  return !window.matchMedia("(pointer: coarse)").matches
+}
