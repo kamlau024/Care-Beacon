@@ -10,6 +10,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { api, ApiError } from "@/lib/api"
 import type { QuestionResponse, Citation } from "@/lib/types"
+import { segmentAnswer, toChatCitation } from "@/lib/search-citations"
+import { getCitationNumberStyle } from "@/lib/source-colors"
+import { CitationChip } from "@/components/chat/citation-chip"
 import { SourceBadge } from "@/components/ui/source-badge"
 
 interface SearchInterfaceProps {
@@ -29,60 +32,16 @@ const SOURCES = [
   { id: "cleveland-clinic", label: "Cleveland Clinic" },
 ]
 
-// Helper function to parse and linkify citations in the answer
-function parseCitations(text: string, sources: Citation[]): React.ReactNode[] {
-  // Pattern to match citations like [Source: Article Title - Section] or [Article Title - Section]
-  const citationPattern = /\[(?:Source:\s*)?([^\]]+?)\s*-\s*([^\]]+?)\]/g
-
-  const parts: React.ReactNode[] = []
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-
-  while ((match = citationPattern.exec(text)) !== null) {
-    // Add text before the citation
-    if (match.index > lastIndex) {
-      parts.push(text.substring(lastIndex, match.index))
-    }
-
-    const fullMatch = match[0]
-    const articleTitle = match[1].trim()
-    const section = match[2].trim()
-
-    // Try to find matching source
-    const matchingSource = sources.find(
-      source =>
-        source.article_title.toLowerCase().includes(articleTitle.toLowerCase()) ||
-        articleTitle.toLowerCase().includes(source.article_title.toLowerCase())
+// Renders a Search answer with each [Source: Title - Section] replaced by a numbered chip, colored by
+// source and opening the same popover as Chat. The number matches the Sources card below.
+function renderAnswer(text: string, sources: Citation[]): React.ReactNode[] {
+  return segmentAnswer(text, sources).map((seg, i) =>
+    seg.type === "text" ? (
+      <React.Fragment key={i}>{seg.text}</React.Fragment>
+    ) : (
+      <CitationChip key={i} n={seg.n} citation={toChatCitation(sources[seg.n - 1], seg.n)} />
     )
-
-    if (matchingSource) {
-      // Create clickable link
-      parts.push(
-        <a
-          key={`citation-${match.index}`}
-          href={matchingSource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline inline-flex items-center gap-1"
-        >
-          {fullMatch}
-          <ExternalLink className="h-3 w-3" />
-        </a>
-      )
-    } else {
-      // No matching source, render as plain text
-      parts.push(fullMatch)
-    }
-
-    lastIndex = match.index + fullMatch.length
-  }
-
-  // Add remaining text
-  if (lastIndex < text.length) {
-    parts.push(text.substring(lastIndex))
-  }
-
-  return parts.length > 0 ? parts : [text]
+  )
 }
 
 export function SearchInterface({
@@ -307,7 +266,7 @@ export function SearchInterface({
             <CardContent className="space-y-4">
               <div className="prose prose-sm dark:prose-invert max-w-none">
                 <p className="text-foreground whitespace-pre-wrap">
-                  {parseCitations(result.answer, result.sources)}
+                  {renderAnswer(result.answer, result.sources)}
                 </p>
               </div>
 
@@ -354,6 +313,9 @@ export function SearchInterface({
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
+                            <span className={getCitationNumberStyle(source.source)}>
+                              {index + 1}
+                            </span>
                             <h4 className="font-medium text-sm">{source.article_title}</h4>
                             <Badge variant="secondary" className="text-xs">
                               {(source.similarity_score * 100).toFixed(0)}%

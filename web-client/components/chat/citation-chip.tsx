@@ -3,7 +3,9 @@
 import { ExternalLink } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { SourceBadge } from "@/components/ui/source-badge"
+import { getCitationNumberStyle } from "@/lib/source-colors"
 import type { ChatCitation } from "@/lib/types"
+import { cn } from "@/lib/utils"
 
 function safeHref(url: string | undefined): string | null {
   if (!url) return null
@@ -30,8 +32,11 @@ export function CitationChip({
       <PopoverTrigger asChild>
         <button
           type="button"
-          aria-label={`Citation ${n}: ${citation.article_title}`}
-          className="mx-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-primary/30 bg-primary/10 px-1.5 align-baseline text-[11px] font-semibold leading-none text-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={`Citation ${n}: ${citation.article_title} (${citation.source})`}
+          className={cn(
+            getCitationNumberStyle(citation.source),
+            "mx-0.5 align-baseline hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          )}
         >
           {n}
         </button>
