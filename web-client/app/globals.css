@@ -55,7 +55,7 @@
   }
   /* Always reserve the scrollbar's space, so switching between a page that scrolls
      (Search with results, Statistics) and one that doesn't (Chat) never shifts the
-     header, body or footer sideways. */
+     header or page content sideways. */
   html {
     scrollbar-gutter: stable;
   }
