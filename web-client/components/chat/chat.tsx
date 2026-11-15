@@ -167,10 +167,12 @@ export function Chat() {
     }
   }
 
-  // 15.5rem covers the header, the page's vertical padding and the footer (about 242px),
-  // so the chat fits the window without scrolling the page; only the transcript scrolls.
+  // 9.5625rem (153px) covers the header (65px), main's top padding (16px), the disclaimer line and
+  // its gap (16px + 24px) and main's bottom padding (32px), so the chat fits the window without
+  // scrolling the page; only the transcript scrolls. Below `sm` the disclaimer wraps to two lines,
+  // hence 1rem more. Change these if any of those change.
   return (
-    <div className="flex h-[calc(100dvh-15.5rem)] min-h-[440px] flex-col">
+    <div className="flex h-[calc(100dvh-10.5625rem)] min-h-[440px] flex-col sm:h-[calc(100dvh-9.5625rem)]">
       <div className="flex items-center justify-between gap-2 border-b pb-3">
         <Button variant="outline" size="sm" onClick={() => setHistoryOpen(true)}>
           <History /> History

@@ -93,7 +93,11 @@ export default function Home() {
       </header>
 
       {/* Main Content - Centered */}
-      <main className="container max-w-6xl mx-auto px-4 md:px-8 py-8">
+      <main className="container max-w-6xl mx-auto px-4 md:px-8 pt-4 pb-8">
+        {/* Part of the page, not the sticky header: it scrolls away with the content. */}
+        <p className="mb-6 text-center text-xs text-muted-foreground">
+          ⚠️ For educational purposes only. Consult healthcare professionals for medical advice.
+        </p>
         <div className="space-y-8">
           {/* Page Content */}
           {currentPage === "search" && (
@@ -121,16 +125,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t mt-12">
-        <div className="container max-w-6xl mx-auto px-4 md:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
-            <p className="text-xs text-center">
-              ⚠️ For educational purposes only. Consult healthcare professionals for medical advice.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
