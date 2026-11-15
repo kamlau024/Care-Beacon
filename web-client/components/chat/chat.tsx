@@ -5,7 +5,14 @@ import { History, Plus, Send, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getThread, streamChat, updateThreadSettings } from "@/lib/chat-api"
-import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH, restoreInputAfter, showCounter, tooShort } from "@/lib/chat-input"
+import {
+  autoFocusAllowed,
+  MAX_MESSAGE_LENGTH,
+  MIN_MESSAGE_LENGTH,
+  restoreInputAfter,
+  showCounter,
+  tooShort,
+} from "@/lib/chat-input"
 import { DEFAULT_SETTINGS, settingsEqual } from "@/lib/settings"
 import type { ThreadSettings } from "@/lib/types"
 import { HistorySheet } from "./history-sheet"
@@ -26,12 +33,41 @@ export function Chat() {
   const [historyOpen, setHistoryOpen] = useState(false)
   const [historyKey, setHistoryKey] = useState(0)
   const [panelOpen, setPanelOpen] = useState(false)
+  const [focusTick, setFocusTick] = useState(0)
 
   const abortRef = useRef<AbortController | null>(null)
   const runRef = useRef(0) // identifies the current stream/load; stale callbacks are ignored
   const baselineRef = useRef<ThreadSettings>(DEFAULT_SETTINGS)
   const threadIdRef = useRef<string | null>(null)
   threadIdRef.current = threadId
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const focusPendingRef = useRef(false)
+
+  // Ask for the question box to take focus. It happens once nothing is in the way: the box is
+  // disabled while an answer streams, and an open History panel or settings popover holds focus.
+  const requestInputFocus = useCallback(() => {
+    if (!autoFocusAllowed()) return
+    focusPendingRef.current = true
+    setFocusTick((t) => t + 1)
+  }, [])
+
+  useEffect(() => {
+    if (!focusPendingRef.current || streaming || historyOpen || panelOpen) return
+    focusPendingRef.current = false
+    inputRef.current?.focus()
+  }, [focusTick, streaming, historyOpen, panelOpen])
+
+  // Radix returns focus to the button that opened a panel when it closes. When we asked for the
+  // question box instead, cancel that; otherwise (e.g. Escape with nothing chosen) let it happen.
+  const keepInputFocus = useCallback((e: Event) => {
+    if (!focusPendingRef.current && document.activeElement !== inputRef.current) return
+    e.preventDefault()
+    focusPendingRef.current = false
+    inputRef.current?.focus()
+  }, [])
+
+  // A fresh chat when the page opens.
+  useEffect(() => requestInputFocus(), [requestInputFocus])
 
   // Cancel any in-flight stream on unmount.
   useEffect(() => () => abortRef.current?.abort(), [])
@@ -52,7 +88,8 @@ export function Chat() {
     setNotice(null)
     setInput("")
     setHistoryOpen(false)
-  }, [cancelRun])
+    requestInputFocus()
+  }, [cancelRun, requestInputFocus])
 
   const openThread = useCallback(
     async (id: string) => {
@@ -67,12 +104,13 @@ export function Chat() {
         setSettings(t.settings)
         setMessages(t.messages)
         setDisclaimer(null)
+        requestInputFocus()
       } catch (e) {
         if (runRef.current !== run) return
         setNotice(e instanceof Error ? e.message : "Could not open conversation")
       }
     },
-    [cancelRun]
+    [cancelRun, requestInputFocus]
   )
 
   const send = async () => {
@@ -137,6 +175,7 @@ export function Chat() {
     abortRef.current = null
     setStreaming(false)
     setHistoryKey((k) => k + 1)
+    requestInputFocus() // ready for the next question (or a retry after an error)
   }
 
   const onPanelOpenChange = async (open: boolean) => {
@@ -149,6 +188,7 @@ export function Chat() {
     const after = settings
     // Commit only on close, and only if something actually changed.
     if (settingsEqual(before, after)) return
+    requestInputFocus()
     if (!threadId) return // no thread yet: kept locally, sent with the first message
     // The click that dismissed the popover may also switch thread / start a new chat. Drop the
     // result if either changed; the server-side write for the original thread is still correct.
@@ -187,7 +227,7 @@ export function Chat() {
                 <SlidersHorizontal /> <span>Retrieval</span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-80">
+            <PopoverContent align="end" className="w-80" onCloseAutoFocus={keepInputFocus}>
               <SettingsPanel settings={settings} onChange={setSettings} />
             </PopoverContent>
           </Popover>
@@ -217,6 +257,7 @@ export function Chat() {
         }}
       >
         <textarea
+          ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -244,6 +285,7 @@ export function Chat() {
         refreshKey={historyKey}
         onSelect={(id) => void openThread(id)}
         onDeleted={(id) => id === threadId && newChat()}
+        onCloseAutoFocus={keepInputFocus}
       />
     </div>
   )
