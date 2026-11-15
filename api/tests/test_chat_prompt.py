@@ -51,7 +51,7 @@ class FakeLLM:
         self.raises = raises
         self.calls = []
 
-    def generate_messages(self, messages, max_tokens=None, temperature=None, model=None):
+    def generate_messages(self, messages, max_tokens=None, temperature=None, model=None, name=None):
         self.calls.append({"messages": messages, "model": model})
         if self.raises:
             raise RuntimeError("boom")

@@ -15,6 +15,11 @@ from loguru import logger
 from openai import OpenAI
 
 _ENV_VARS = ("LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY", "LANGFUSE_HOST")
+_ENVIRONMENT_VAR = "LANGFUSE_TRACING_ENVIRONMENT"
+
+# True once a Langfuse-instrumented OpenAI client has been handed out. Only then do
+# chat.completions.create calls accept Langfuse's extra `name` argument.
+_openai_instrumented = False
 
 
 def tracing_enabled() -> bool:
@@ -44,21 +49,49 @@ class _Handle:
             logger.warning(f"Langfuse update failed: {e}")
 
 
+def tracing_environment() -> Optional[str]:
+    """The environment traces are labelled with: LANGFUSE_TRACING_ENVIRONMENT if set,
+    otherwise Vercel's VERCEL_ENV (production, preview or development)."""
+    return os.getenv(_ENVIRONMENT_VAR) or os.getenv("VERCEL_ENV") or None
+
+
+def _apply_environment() -> None:
+    # The SDK reads LANGFUSE_TRACING_ENVIRONMENT when its client is first created.
+    env = tracing_environment()
+    if env and not os.getenv(_ENVIRONMENT_VAR):
+        os.environ[_ENVIRONMENT_VAR] = env
+
+
+def generation_kwargs(name: Optional[str]) -> Dict[str, Any]:
+    """Extra arguments naming an LLM call in Langfuse, e.g. ``{"name": "answer"}``.
+
+    Empty unless the instrumented client is in use: the plain OpenAI client would
+    reject an unknown ``name`` argument.
+    """
+    return {"name": name} if name and _openai_instrumented else {}
+
+
 def _get_client() -> Any:
     from langfuse import get_client
+
+    _apply_environment()
 
     return get_client()
 
 
 def get_openai_client(api_key: str) -> OpenAI:
     """Langfuse-wrapped OpenAI client when tracing is enabled, plain otherwise."""
+    global _openai_instrumented
     if tracing_enabled():
         try:
+            _apply_environment()
             # Importing langfuse.openai instruments the openai package, so only
             # do it when tracing is on. It exposes the same OpenAI class.
             from langfuse.openai import OpenAI as TracedOpenAI
 
-            return TracedOpenAI(api_key=api_key)
+            client = TracedOpenAI(api_key=api_key)
+            _openai_instrumented = True
+            return client
         except Exception as e:
             logger.warning(f"Langfuse OpenAI instrumentation failed: {e}")
     return OpenAI(api_key=api_key)
@@ -102,10 +135,16 @@ def request_trace(
     name: str,
     *,
     metadata: Dict[str, Any],
+    input: Any = None,
     session_id: Optional[str] = None,
     user_id: Optional[str] = None,
 ) -> Iterator[_Handle]:
-    """Root trace for one request. Yields a handle with `.update(...)`."""
+    """Root trace for one request. Yields a handle with `.update(...)`.
+
+    The root observation is what live evaluators read, and they cannot see its
+    children, so it carries the question (`input`), the answer (`output`) and the
+    source text the answer was written from (`metadata["context"]`).
+    """
     if not tracing_enabled():
         yield _Handle()
         return
@@ -118,7 +157,9 @@ def request_trace(
             propagate_attributes(trace_name=name, session_id=session_id, user_id=user_id)
         )
         return stack.enter_context(
-            client.start_as_current_observation(as_type="span", name=name, metadata=metadata)
+            client.start_as_current_observation(
+                as_type="span", name=name, input=input, metadata=metadata
+            )
         )
 
     with _observation(start) as handle:

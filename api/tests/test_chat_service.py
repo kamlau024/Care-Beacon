@@ -99,14 +99,17 @@ class FakeLLM:
         self.stream_calls = []
         self.utility_calls = []
         self.streams = []
+        self.names = []
 
-    def generate_stream(self, messages, max_tokens=None, temperature=None, model=None):
+    def generate_stream(self, messages, max_tokens=None, temperature=None, model=None, name=None):
+        self.names.append(name)
         self.stream_calls.append(messages)
         s = FakeStream(self.deltas, self.raise_after)
         self.streams.append(s)
         return s
 
-    def generate_messages(self, messages, max_tokens=None, temperature=None, model=None):
+    def generate_messages(self, messages, max_tokens=None, temperature=None, model=None, name=None):
+        self.names.append(name)
         prompt = messages[0]["content"]
         self.utility_calls.append(prompt)
         if "Standalone query" in prompt:
@@ -441,7 +444,7 @@ def test_trace_gets_owner_pseudonym_never_raw_key(repo, prompts, monkeypatch):
             recorded.append(("update", output, metadata))
 
     @contextmanager
-    def fake_trace(name, *, metadata, session_id=None, user_id=None):
+    def fake_trace(name, *, metadata, input=None, session_id=None, user_id=None):
         recorded.append(("start", name, metadata, session_id, user_id))
         yield Handle()
 
@@ -458,6 +461,62 @@ def test_trace_gets_owner_pseudonym_never_raw_key(repo, prompts, monkeypatch):
     assert OWNER not in repr(recorded)
     assert OWNER not in raw
 
+
+
+def test_trace_root_carries_question_answer_and_sources(repo, prompts, monkeypatch):
+    """Live evaluators read only the root observation, so it holds all three."""
+    import src.chat.service as service_module
+
+    starts, updates = [], []
+
+    class Handle:
+        def update(self, output=None, metadata=None):
+            updates.append((output, metadata))
+
+    @contextmanager
+    def fake_trace(name, *, metadata, input=None, session_id=None, user_id=None):
+        starts.append(input)
+        yield Handle()
+
+    monkeypatch.setattr(service_module, "request_trace", fake_trace)
+    llm = FakeLLM()
+    service = make_service(repo, prompts, llm=llm)
+    _, gen = run_turn(service, message="What are the side effects of radiation?")
+    "".join(gen)
+
+    assert starts == [{"question": "What are the side effects of radiation?"}]
+    output, metadata = updates[-1]
+    assert output == "Fatigue is common [1]."
+    assert metadata["search_query"] == "What are the side effects of radiation?"
+    assert metadata["context"].startswith("[1] ")
+    assert metadata["context"] == service_module.format_sources(FakeRetrieval().results[:5])
+    assert llm.names == ["answer", "title"]
+
+
+def test_trace_records_rewritten_query_on_follow_up(repo, prompts, monkeypatch):
+    import src.chat.service as service_module
+
+    updates = []
+
+    class Handle:
+        def update(self, output=None, metadata=None):
+            updates.append(metadata)
+
+    @contextmanager
+    def fake_trace(name, *, metadata, input=None, session_id=None, user_id=None):
+        yield Handle()
+
+    llm = FakeLLM()
+    service = make_service(repo, prompts, llm=llm)
+    thread, gen = run_turn(service)
+    "".join(gen)
+    monkeypatch.setattr(service_module, "request_trace", fake_trace)
+    llm.names.clear()
+    _, gen = run_turn(service, message="How long does that last?", thread_id=thread.id)
+    "".join(gen)
+
+    assert updates[-1]["search_query"] == "rewritten standalone query"
+    assert llm.names == ["rewrite_query", "answer"]
 
 # ---------------------------------------------------------------- context pinning
 

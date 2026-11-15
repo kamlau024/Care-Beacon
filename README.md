@@ -21,7 +21,7 @@ serves answers; it does no crawling of its own. See
 - **Measured, not assumed.** A Langfuse evaluation harness with LLM judges gates each release. The latest gate: **19/19** safety refusals in multi-turn drift threads, **0.88** follow-up resolution, **0.96** grounded answers, about **$0.0007 per chat turn** ([results](evaluation/results/2026-11-12-phase1-gate.md)).
 - **Cost and abuse controls.** A daily LLM spend cap ($2/day by default), counted in Redis across all OpenAI calls; a per-IP rate limit at the Vercel firewall; admin endpoints behind an API key.
 - **Privacy by design.** No accounts: each browser holds an anonymous owner key, and traces carry only its SHA-256 pseudonym. Clients get generic error messages, and logs record only the error type, never database error text.
-- **Tested end to end.** 407 API tests, 45 web tests and 32 evaluation-tooling tests, run in GitHub Actions on every push and pull request.
+- **Tested end to end.** 418 API tests, 45 web tests and 32 evaluation-tooling tests, run in GitHub Actions on every push and pull request.
 
 ## Architecture
 
@@ -112,7 +112,7 @@ Each diagram opens in an interactive viewer hosted on the live site, where you c
 
 | Metric | Status |
 |--------|--------|
-| **Test suite** | API: 407 passing, 14 skipped (Postgres tests, which need `TEST_DATABASE_URL`); web: 45 passing (Vitest); evaluation tooling: 32 passing. CI runs the API and web suites, the TypeScript check and a production build on every push and pull request. |
+| **Test suite** | API: 418 passing, 14 skipped (Postgres tests, which need `TEST_DATABASE_URL`); web: 45 passing (Vitest); evaluation tooling: 32 passing. CI runs the API and web suites, the TypeScript check and a production build on every push and pull request. |
 | **Safety** | 19/19 refusal-and-referral passes in multi-turn drift threads; 19/19 in the single-turn control |
 | **Answer quality** | Chat: 0.88 follow-ups resolved, 0.96 grounded. Search baseline: 0.744 grounded |
 | **Latency** | Chat turn: 12.5 s median, 19.8 s worst on the follow-up set. Most of it is spent before the first token (rewrite, search, rerank) |
@@ -353,7 +353,7 @@ A bare `pytest` may resolve to a different interpreter (e.g. an Anaconda base
 environment) and fail; use the `care-beacon` conda env's Python explicitly, or
 `make test`, which does this for you.
 
-**Current state** (2026-11-12): API 407 passed, 14 skipped (Postgres tests), 0 failed;
+**Current state** (2026-11-14): API 418 passed, 14 skipped (Postgres tests), 0 failed;
 web 45 passed; evaluation tooling 32 passed. `make test-db` runs the Postgres tests in an
 isolated schema and refuses to run outside it.
 
@@ -369,6 +369,10 @@ drives the real API, Search or Chat, and posts every score to Langfuse.
 | Follow-ups (25 threads) | Does the answer to a vague follow-up address what the user meant, and stay grounded? |
 | Safety (19 threads of 2, 3 and 5 turns) | Does the assistant still refuse personal medical decisions and refer the user to a clinician when a conversation drifts from general information to "what should I do"? |
 | Safety control (19 single turns) | The same final questions asked cold, to show whether the conversation weakens refusals |
+
+Live Langfuse evaluators also score real production answers for groundedness, safe
+referral and relevance; setup and prompts are in
+[`evaluation/README.md`](evaluation/README.md#live-evaluators-langfuse-on-real-traffic).
 
 Safety is a hard gate: every item must pass before release. The current results and
 the three follow-ups that still miss are written up in

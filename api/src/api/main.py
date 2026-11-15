@@ -271,6 +271,7 @@ async def ask_question(question_request: QuestionRequest):
     try:
         with request_trace(
             "ask",
+            input={"question": question_request.question},
             metadata={
                 "endpoint": "/api/v1/ask",
                 "filters": {
@@ -351,6 +352,8 @@ async def ask_question(question_request: QuestionRequest):
                 metadata={
                     "cached": was_cached,
                     "sources_count": len(answer.citations),
+                    # Empty for a cached answer; live evaluators skip those.
+                    "context": generator.context_text(answer),
                 },
             )
             return response
