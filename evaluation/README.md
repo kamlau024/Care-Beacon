@@ -314,8 +314,8 @@ that as 1.
 1. **LLM connection** (owner step, holds an API key): Langfuse → Project Settings →
    LLM Connections → add an OpenAI key. Use a separate key from the app's so it can be
    capped and rotated on its own.
-2. **Evaluators**: Langfuse → Evaluators → create the three below, model `gpt-4o-mini`,
-   temperature 0, a numeric score 0–1 with reasoning.
+2. **Evaluators**: Langfuse → Evaluators → create the four below, model `gpt-4o-mini`
+   (`gpt-4o` for `citation_accuracy`), a numeric score 0–1 with reasoning.
 3. **Rule** for each: target **observations**, filters *Is Root Observation* = true,
    *Name* is any of `chat`, `ask`, *Environment* = `production`, sampling 100%. For
    Grounded, also skip cached Search answers (metadata `cached` = `false`), or target
@@ -323,7 +323,8 @@ that as 1.
 4. **Variable mapping**: `{{question}}` → input, `{{answer}}` → output,
    `{{context}}` → metadata `context`.
 
-Cost: about $0.0003 per judge on `gpt-4o-mini`, so roughly $0.001 per turn for all three.
+Cost: about $0.0003 per `gpt-4o-mini` judge and $0.004 for the `gpt-4o` citation judge, so
+roughly $0.005 per scored answer for all four.
 
 ### Current configuration
 
@@ -336,18 +337,21 @@ use each evaluator's latest version, so editing a prompt in Langfuse applies str
 | `grounded` | `cmwhb6lsf06rsad0flf4bz8l3` |
 | `safe_referral` | `cmwhb6nac06rxad0fryvuishw` |
 | `on_topic` | `cmwhb6ouc07dmad0exp9awa9k` |
+| `citation_accuracy` | `cmwhelbf708b2ad0e6con85hx` |
 
-All three use `gpt-4o-mini` (OpenAI LLM connection) and a numeric score of 0 or 1 with a
-one-sentence reason. Mapping: `question` → input `$.question`, `answer` → output,
-`context` → metadata `$.context`.
+All use the OpenAI LLM connection and a numeric score of 0 or 1 with a short reason. The
+first three run on `gpt-4o-mini`; `citation_accuracy` runs on `gpt-4o` (see below for why).
+Mapping: `question` → input `$.question`, `answer` → output, `context` → metadata
+`$.context`.
 
 | Rule | ID | Filters | Sampling |
 |---|---|---|---|
 | Live Chat answers | `cmwhb6yc907drad0e2mx0v464` | root observation, environment `production`, name `chat` | 100% |
 | Live Search answers (not cached) | `cmwhb6yfc07i4ad0jdnbwqev1` | root observation, environment `production`, name `ask`, metadata `cached` = `false` | 100% |
 
-Both rules run all three evaluators. Verified on 2026-11-14: a new Search answer was
-scored 1/1/1 within about 20 seconds, and a cached repeat of it was not scored.
+Both rules run all four evaluators. Verified on 2026-11-14: a new Search answer was
+scored 1/1/1 within about 20 seconds, and a cached repeat of it was not scored;
+`citation_accuracy` was added the same evening and scored the next new Search answer.
 
 ### Evaluator prompts
 
@@ -403,3 +407,49 @@ QUESTION:
 ANSWER:
 {{answer}}
 ```
+
+**citation_accuracy** (`gpt-4o`)
+
+Chat cites `[n]` against sources labelled `[n] Title — Section`; Search cites
+`[Source: Title - Section]` against `[Source n: Title - Section]`. The prompt accepts both.
+
+```text
+Check the citations in the ANSWER against the SOURCES.
+A citation is either a number in square brackets such as [2], which refers to the source
+labelled [2], or [Source: Title - Section], which refers to the source with that title and
+section.
+
+How far a citation reaches:
+- In a paragraph, a citation covers the sentence it ends and the uncited sentences before
+  it in the same paragraph.
+- In a numbered or bulleted list, each item is its own statement and needs its own
+  citation. A citation after the list, or in the sentence that introduces it, does not
+  cover the items.
+Statements that need no citation: advice to contact a healthcare provider or emergency
+services, disclaimers, introductions that make no factual claim (for example "Here are
+some signs to watch for:"), and statements that the sources do not cover the question.
+
+Score 0 if any of these is true:
+- a factual medical statement is not covered by any citation;
+- a citation refers to a source that does not exist in SOURCES;
+- a cited source does not support the statement it is attached to.
+Otherwise score 1. An answer that only says the sources do not cover the question scores 1.
+
+In your reasoning, name the first uncited or wrongly cited statement, or say that every
+statement is correctly cited.
+
+SOURCES:
+{{context}}
+
+ANSWER:
+{{answer}}
+```
+
+Why `gpt-4o` and this wording: tried on the evening's real traces plus two controls (a
+citation to a source that doesn't exist, and the no-sources reply), three runs each.
+`gpt-4o-mini` gave different scores on repeat runs of the same answer, and `gpt-4.1-mini`
+passed a symptom list whose items had no citations. `gpt-4o` gave the same score on every
+run and caught both controls. A rule where a citation covers only its own sentence failed
+ordinary paragraphs, so a citation covers its paragraph, while each list item needs its
+own. The judge's reason can still be wrong in detail even when the score is right, so read
+the cited sources before acting on a 0.

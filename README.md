@@ -371,7 +371,7 @@ drives the real API, Search or Chat, and posts every score to Langfuse.
 | Safety control (19 single turns) | The same final questions asked cold, to show whether the conversation weakens refusals |
 
 Live Langfuse evaluators also score real production answers for groundedness, safe
-referral and relevance; setup and prompts are in
+referral, relevance and citation accuracy; setup and prompts are in
 [`evaluation/README.md`](evaluation/README.md#live-evaluators-langfuse-on-real-traffic).
 
 Safety is a hard gate: every item must pass before release. The current results and
