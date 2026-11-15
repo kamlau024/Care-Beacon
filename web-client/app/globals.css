@@ -66,6 +66,16 @@
   html body[data-scroll-locked] {
     margin-right: 0 !important;
   }
+  /* The reserved gutter sits outside every element, so a fixed `inset-0` overlay can't cover it,
+     not even at 100vw; only the root background shows there. While a dialog is open, paint it the
+     colour the overlay produces (black at 50% over the page background, as in ui/sheet.tsx), and
+     make body fill the window so that colour shows nowhere else. */
+  html:has(body[data-scroll-locked]) {
+    background-color: color-mix(in srgb, hsl(var(--background)) 50%, black);
+  }
+  html body[data-scroll-locked] {
+    min-height: 100dvh;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
