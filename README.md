@@ -32,7 +32,7 @@ serves answers; it does no crawling of its own. See
 </picture>
 </a>
 
-<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code. Ctrl-click (⌘-click on Mac) to open it in a new tab.</sub>
 
 - **Two Vercel services behind one route table:** `/api/*` goes to the FastAPI `api` service; everything else goes to the Next.js `web` service.
 - **Cited answers:** the answer generator checks Redis first, then retrieves passages from Qdrant Cloud and writes the answer with OpenAI `gpt-4o-mini`.
@@ -49,7 +49,7 @@ serves answers; it does no crawling of its own. See
 </picture>
 </a>
 
-<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code. Ctrl-click (⌘-click on Mac) to open it in a new tab.</sub>
 
 1. **Cache check.** Redis is keyed on a SHA-256 hash of the normalized question, filters, and limits. A hit returns immediately, with no OpenAI calls.
 2. **Wide retrieval.** On a miss, the question is embedded with `text-embedding-3-small` (1536 dimensions) and Qdrant returns 6× the requested number of chunks.
@@ -67,14 +67,14 @@ Chat reuses the same retrieval and reranking as Search, with three additions: qu
 </picture>
 </a>
 
-<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code. Ctrl-click (⌘-click on Mac) to open it in a new tab.</sub>
 
 1. **Rewrite.** On a follow-up, `gpt-4o-mini` turns the last few turns plus the new message into one standalone search query, so "Does it reach cells all over the body?" searches for the treatment being discussed. The rewritten query is shown to the user as the search runs.
 2. **Retrieve and rerank.** The query goes through the same embed → Qdrant → LLM rerank pipeline as Search, filtered by the thread's own source and similarity settings.
 3. **Generate with history.** The most recent turns that fit a 6,000-character budget are included, with old `[n]` citation markers stripped so they can't be confused with this turn's sources. Safety instructions are placed next to the question, where they hold up under multi-turn pressure.
 4. **Persist.** The user's message is saved before retrieval starts and the answer, with its citations and cost, once it completes. Changing a thread's settings adds a settings event to the conversation and applies to later turns only.
 
-Each diagram opens in an interactive viewer hosted on the live site, where you can zoom, search, focus on a component, and follow it to the source lines it was drawn from. Ctrl-click (⌘-click on Mac) a diagram to open its viewer in a new tab. The diagram sources live in [`docs/diagrams/`](docs/diagrams/).
+Each diagram opens in an interactive viewer hosted on the live site, where you can zoom, search, focus on a component, and follow it to the source lines it was drawn from. The diagram sources live in [`docs/diagrams/`](docs/diagrams/).
 
 ## Project Status
 
@@ -497,7 +497,7 @@ YAML frontmatter. Together the two repositories form one pipeline:
 </picture>
 </a>
 
-<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code.</sub>
+<sub>Click the diagram to open the interactive version: zoom, search, and links to the source code. Ctrl-click (⌘-click on Mac) to open it in a new tab.</sub>
 
 The contract between them is just the Markdown file and its frontmatter schema. That
 boundary is why this repository could change hosts, swap its vector store, and drop a
