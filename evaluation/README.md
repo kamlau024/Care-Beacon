@@ -314,8 +314,8 @@ that as 1.
 1. **LLM connection** (owner step, holds an API key): Langfuse → Project Settings →
    LLM Connections → add an OpenAI key. Use a separate key from the app's so it can be
    capped and rotated on its own.
-2. **Evaluators**: Langfuse → Evaluators → create the four below, model `gpt-4o-mini`
-   (`gpt-4o` for `citation_accuracy`), a numeric score 0–1 with reasoning.
+2. **Evaluators**: Langfuse → Evaluators → create the six below, model `gpt-4o-mini`
+   (`gpt-4o` for `citation_accuracy`), a numeric score with reasoning.
 3. **Rule** for each: target **observations**, filters *Is Root Observation* = true,
    *Name* is any of `chat`, `ask`, *Environment* = `production`, sampling 100%. For
    Grounded, also skip cached Search answers (metadata `cached` = `false`), or target
@@ -324,7 +324,7 @@ that as 1.
    `{{context}}` → metadata `context`.
 
 Cost: about $0.0003 per `gpt-4o-mini` judge and $0.004 for the `gpt-4o` citation judge, so
-roughly $0.005 per scored answer for all four.
+roughly $0.006 per scored answer for all six.
 
 ### Current configuration
 
@@ -338,18 +338,24 @@ use each evaluator's latest version, so editing a prompt in Langfuse applies str
 | `safe_referral` | `cmwhb6nac06rxad0fryvuishw` |
 | `on_topic` | `cmwhb6ouc07dmad0exp9awa9k` |
 | `citation_accuracy` | `cmwhelbf708b2ad0e6con85hx` |
+| `completeness` | `cmwhiiepw0167ad0hdd21qfwm` |
+| `source_relevance` | `cmwhiifql014ead0e7kp0jhoq` |
 
-All use the OpenAI LLM connection and a numeric score of 0 or 1 with a short reason. The
-first three run on `gpt-4o-mini`; `citation_accuracy` runs on `gpt-4o` (see below for why).
+All use the OpenAI LLM connection and return a numeric score with a short reason. The four
+checks score 0 or 1; `completeness` scores 1–5 and `source_relevance` scores 1, 0.5 or 0.
+All run on `gpt-4o-mini` except `citation_accuracy`, which runs on `gpt-4o` (see below).
 Mapping: `question` → input `$.question`, `answer` → output, `context` → metadata
-`$.context`.
+`$.context`. The two quality judges read `query` instead of `question`: input
+`$.question` for Search, overridden in the Chat rule to metadata `$.search_query` (the
+rewritten standalone query), so a follow-up such as "What are the early signs I should
+watch for?" is judged as the full question it stands for.
 
 | Rule | ID | Filters | Sampling |
 |---|---|---|---|
 | Live Chat answers | `cmwhb6yc907drad0e2mx0v464` | root observation, environment `production`, name `chat` | 100% |
 | Live Search answers (not cached) | `cmwhb6yfc07i4ad0jdnbwqev1` | root observation, environment `production`, name `ask`, metadata `cached` = `false` | 100% |
 
-Both rules run all four evaluators. Verified on 2026-11-14: a new Search answer was
+Both rules run all six evaluators. Verified on 2026-11-14: a new Search answer was
 scored 1/1/1 within about 20 seconds, and a cached repeat of it was not scored;
 `citation_accuracy` was added the same evening and scored the next new Search answer.
 
@@ -453,3 +459,77 @@ run and caught both controls. A rule where a citation covers only its own senten
 ordinary paragraphs, so a citation covers its paragraph, while each list item needs its
 own. The judge's reason can still be wrong in detail even when the score is right, so read
 the cited sources before acting on a 0.
+
+### Quality evaluators
+
+The checks above are pass/fail. These two show room for improvement.
+
+**completeness** (1–5, `gpt-4o-mini`): how much of the relevant information in the sources
+the answer includes. Judged against the sources, not general knowledge.
+
+```text
+Rate how completely the ANSWER covers what the SOURCES say that is relevant to the QUERY.
+Judge only against the SOURCES, not your own knowledge: an answer is complete if it
+includes every relevant point the sources make, even if more could be said in general.
+
+First list, for yourself, the points in the SOURCES that answer the QUERY (for example
+every symptom, test, treatment, side effect or step, plus important conditions such as
+who it applies to or when to seek help). Then check which of them the ANSWER includes.
+
+5 - includes every relevant point from the sources.
+4 - misses one minor point; nothing important is missing.
+3 - misses one important point, or several minor ones.
+2 - covers only a small part of the relevant points.
+1 - leaves out most of the relevant points, or says the sources do not cover the question
+    when they do.
+If the SOURCES contain nothing relevant to the QUERY and the ANSWER says so, score 5.
+
+In your reasoning, name the most important relevant point the answer leaves out, or say
+that nothing relevant is missing.
+
+QUERY:
+{{query}}
+
+SOURCES:
+{{context}}
+
+ANSWER:
+{{answer}}
+```
+
+**source_relevance** (1 / 0.5 / 0, `gpt-4o-mini`): whether the retrieved sources contain the
+answer at all. This scores retrieval, not the writing: a low score means the search, not
+the model, is the place to improve.
+
+```text
+Decide whether the retrieved SOURCES contain what is needed to answer the QUERY. Judge the
+sources only; ignore how any answer was written. Off-topic sources alongside useful ones
+do not lower the score.
+
+1   - the sources contain a direct answer to every part of the query.
+0.5 - the sources answer only part of the query, or only indirectly (for example general
+      information when the query asks about a specific cancer, treatment or situation).
+0   - the sources do not answer the query at all, or there are no sources.
+
+In your reasoning, name the part of the query the sources miss, or say they cover all of it.
+
+QUERY:
+{{query}}
+
+SOURCES:
+{{context}}
+```
+
+How these were chosen (2026-11-15, on the evening's 15 real Search and Chat traces plus a
+deliberately partial answer and a question paired with the wrong sources, three runs each):
+
+- `completeness` gave the same score on repeat runs in 15 of 17 cases, spread real answers
+  from 3 to 5, and scored the partial answer 3.
+- A 1–5 `source_relevance` scale scored nearly every real case 4. Asking the judge to count
+  on-topic sources made it worse: both `gpt-4o-mini` and `gpt-4o` miscounted and the scores
+  varied between runs. The three-level coverage question gave identical scores on every
+  run with both models and scored the wrong sources 0.
+- `gpt-4o-mini` was kept for `source_relevance` because it flagged a real gap `gpt-4o`
+  missed: asked to compare stool tests with colonoscopy, the sources described each test
+  but never compared them. It can be strict: it gave 0.5 to lymphedema sources that
+  described arm symptoms without saying "after breast cancer surgery".
