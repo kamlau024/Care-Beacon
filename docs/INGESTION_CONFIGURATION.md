@@ -69,38 +69,39 @@ INGESTION_CHUNK_BATCH_SIZE=100
 
 ## Running Ingestion
 
+The app reads Qdrant through an **alias** (`vector_db.collection_name`, `care-beacon-live`), never a collection directly. A re-ingest builds a new collection next to the live one, gets checked, and then the alias is switched to it in one atomic call. Production keeps serving the old collection the whole time, and rolling back is one more alias switch.
+
 ```bash
-make ingest   # runs `cd api && python scripts/ingest.py`, picking up the config/env vars above
+make qdrant-aliases                                        # collections, point counts, which one the app serves
+make ingest COLLECTION=care-beacon-medical-v2              # build the new collection (asks to confirm)
+make ingest COLLECTION=care-beacon-medical-v2 ARGS="--quantize"   # same, with int8 quantization (~4x less RAM)
 ```
+
+`api/scripts/ingest.py` refuses to write to the served alias, to the collection behind it, or to any other non-empty collection unless you pass `--reset` (rebuild from scratch) or `--resume` (continue an interrupted run). Point ids are a hash of the chunk id, so re-writing points is idempotent: if a batch fails, the script prints the `--resume --start-batch N` to continue with. `--sources` and `--limit N` allow a small trial run first.
+
+Run `python scripts/check_chunks.py` (from `api/`) before a full run. It parses and chunks the whole corpus without embedding anything and reports lead-in-only chunks and leftover URLs.
+
+### Switching production to the new collection
+
+1. Check the new collection on a preview deployment (Deployment Protection applies; see `evaluation/README.md`), including the eval gate.
+2. `cd api && python scripts/qdrant_alias.py point care-beacon-live care-beacon-medical-v2`. Production and previews switch immediately, because they share the alias.
+3. Clear the answer cache, since cached answers were built from the old chunks: `POST /api/v1/cache/clear` with the `X-API-Key` header.
+4. To roll back, point the alias at the previous collection (`point` prints the command) and clear the cache again.
 
 There is no Admin UI or API endpoint to trigger ingestion remotely — that capability was deleted because it required spawning a subprocess, which isn't possible on Vercel's serverless functions.
 
-## Monitoring Memory Usage
+## Monitoring Progress
 
-The ingestion scripts display memory usage throughout the process:
+Every 50 batches the script prints the batch number, chunks stored, elapsed time and an ETA:
 
 ```
-[1/4] Parsing 10 articles...
-  ✅ Parsed 10 articles
-  💾 Memory: 245.3 MB
-
-[2/4] Chunking articles...
-  ✅ Created 324 chunks
-  💾 Memory: 267.8 MB
-
-[3/4] Generating embeddings...
-  ✅ Generated 324 embeddings
-  💾 Memory: 312.4 MB
-
-[4/4] Storing in database...
-  ✅ Stored 324 chunks
-  💾 Memory: 285.2 MB
+  batch 50/1,234  chunks 1,840  elapsed 3.2 min  eta 75.8 min
 ```
 
 ### Signs You Need to Reduce Batch Sizes
 
 If you see any of these while running `make ingest` locally:
-- Memory usage climbing higher than you're comfortable with (`api/scripts/ingest.py` prints memory usage via `psutil` as it runs)
+- Memory usage climbing higher than you're comfortable with (watch the `python` process in Activity Monitor while `api/scripts/ingest.py` runs)
 - Out of Memory (OOM) errors
 - Process killed unexpectedly
 - Ingestion hanging or becoming very slow

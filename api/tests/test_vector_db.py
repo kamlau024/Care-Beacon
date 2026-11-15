@@ -46,8 +46,23 @@ def test_create_if_missing_false_never_creates_collection():
 
 
 def test_create_if_missing_true_creates_missing_collection():
-    """The default (create_if_missing=True) must still auto-create for
-    normal query/ingestion callers -- only the health check opts out."""
+    """Ingestion opts in to creating a missing collection."""
+    from src.storage.qdrant_db import QdrantVectorDatabase
+
+    with patch("src.storage.qdrant_db.QdrantClient") as mock_client_cls:
+        mock_client = MagicMock()
+        mock_client.get_collection.side_effect = Exception("Not found: doesn't exist!")
+        mock_client_cls.return_value = mock_client
+
+        QdrantVectorDatabase(url="https://example.qdrant.io", api_key="test-key", create_if_missing=True)
+
+        assert mock_client.create_collection.called
+        assert mock_client.create_collection.call_args.kwargs["quantization_config"] is None
+
+
+def test_default_never_creates_collection():
+    """Query paths use the default, which must not turn a missing alias into
+    an empty collection of the same name."""
     from src.storage.qdrant_db import QdrantVectorDatabase
 
     with patch("src.storage.qdrant_db.QdrantClient") as mock_client_cls:
@@ -57,7 +72,45 @@ def test_create_if_missing_true_creates_missing_collection():
 
         QdrantVectorDatabase(url="https://example.qdrant.io", api_key="test-key")
 
-        assert mock_client.create_collection.called
+        assert not mock_client.create_collection.called
+
+
+def test_quantize_creates_int8_collection():
+    from qdrant_client.models import ScalarType
+    from src.storage.qdrant_db import QdrantVectorDatabase
+
+    with patch("src.storage.qdrant_db.QdrantClient") as mock_client_cls:
+        mock_client = MagicMock()
+        mock_client.get_collection.side_effect = Exception("Not found: doesn't exist!")
+        mock_client_cls.return_value = mock_client
+
+        QdrantVectorDatabase(
+            url="https://example.qdrant.io", api_key="test-key", create_if_missing=True, quantize=True
+        )
+
+        kwargs = mock_client.create_collection.call_args.kwargs
+        assert kwargs["quantization_config"].scalar.type == ScalarType.INT8
+        assert kwargs["vectors_config"].on_disk is True
+
+
+def test_reset_refuses_an_alias():
+    """Deleting through an alias would delete the collection the app serves."""
+    import pytest
+    from src.storage.qdrant_db import QdrantVectorDatabase
+
+    with patch("src.storage.qdrant_db.QdrantClient") as mock_client_cls:
+        mock_client = MagicMock()
+        alias = MagicMock(alias_name="care-beacon-live", collection_name="care-beacon-medical")
+        mock_client.get_aliases.return_value = MagicMock(aliases=[alias])
+        mock_client_cls.return_value = mock_client
+
+        db = QdrantVectorDatabase(
+            url="https://example.qdrant.io", api_key="test-key", collection_name="care-beacon-live"
+        )
+        with pytest.raises(RuntimeError, match="is an alias"):
+            db.reset()
+
+        assert not mock_client.delete_collection.called
 
 
 def test_list_filter_value_uses_match_any():

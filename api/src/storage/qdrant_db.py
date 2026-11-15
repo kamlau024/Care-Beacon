@@ -11,6 +11,9 @@ from qdrant_client.models import (
     FieldCondition,
     MatchAny,
     MatchValue,
+    ScalarQuantization,
+    ScalarQuantizationConfig,
+    ScalarType,
     SearchRequest
 )
 
@@ -55,7 +58,8 @@ class QdrantVectorDatabase:
         url: Optional[str] = None,
         api_key: Optional[str] = None,
         collection_name: Optional[str] = None,
-        create_if_missing: bool = True,
+        create_if_missing: bool = False,
+        quantize: bool = False,
     ):
         """Initialize the Qdrant vector database.
 
@@ -63,19 +67,23 @@ class QdrantVectorDatabase:
             url: Qdrant Cloud URL (if None, reads from config or QDRANT_URL env var)
             api_key: Qdrant API key (if None, reads from config or QDRANT_API_KEY env var)
             collection_name: Name of the collection (if None, loads from config)
-            create_if_missing: If True (default), create the collection (and its
-                payload indexes) when it doesn't already exist -- the behaviour
-                normal query/ingestion paths need. Pass False for read-only
-                callers such as the health check, which must observe the
-                collection's real state rather than conjure an empty one back
-                into existence and report it as healthy.
+            create_if_missing: If True, create the collection (and its payload
+                indexes) when it doesn't already exist. Only ingestion should
+                pass True. The default is False because the app reads through
+                an alias: a query path that "helpfully" created a missing
+                collection would turn a missing alias into an empty collection
+                of the same name, serving no results and blocking the alias.
+                Read paths, the health check included, must see the real state.
+            quantize: When creating the collection, add int8 scalar
+                quantization (about 4x less RAM; full vectors kept on disk for
+                rescoring). Has no effect on an existing collection.
         """
         config = get_config()
 
         # Get configuration
         self.url = url or config.get('vector_db.qdrant_url') or os.getenv('QDRANT_URL')
         self.api_key = api_key or config.get('vector_db.qdrant_api_key') or os.getenv('QDRANT_API_KEY')
-        self.collection_name = collection_name or config.get('vector_db.collection_name', 'care-beacon-medical')
+        self.collection_name = collection_name or config.get('vector_db.collection_name', 'care-beacon-live')
         self.distance_metric = config.get('vector_db.distance_metric', 'cosine')
         self.vector_size = config.get('embeddings.dimensions', 1536)
 
@@ -98,6 +106,7 @@ class QdrantVectorDatabase:
             'ip': Distance.DOT
         }
         self.qdrant_distance = distance_map.get(self.distance_metric, Distance.COSINE)
+        self.quantize = quantize
 
         # Create collection if it doesn't exist (unless explicitly disabled --
         # see create_if_missing docstring above).
@@ -118,7 +127,17 @@ class QdrantVectorDatabase:
                     collection_name=self.collection_name,
                     vectors_config=VectorParams(
                         size=self.vector_size,
-                        distance=self.qdrant_distance
+                        distance=self.qdrant_distance,
+                        on_disk=True if self.quantize else None,
+                    ),
+                    quantization_config=(
+                        ScalarQuantization(
+                            scalar=ScalarQuantizationConfig(
+                                type=ScalarType.INT8, quantile=0.99, always_ram=True
+                            )
+                        )
+                        if self.quantize
+                        else None
                     ),
                 )
                 collection_exists = True
@@ -500,7 +519,18 @@ class QdrantVectorDatabase:
         """Delete all data from the collection.
 
         Warning: This cannot be undone!
+
+        Raises:
+            RuntimeError: If ``collection_name`` is an alias. Deleting through
+                an alias would delete whatever collection it points to, which
+                is normally the one the app is serving.
         """
+        aliases = {a.alias_name for a in self.client.get_aliases().aliases}
+        if self.collection_name in aliases:
+            raise RuntimeError(
+                f"Refusing to reset {self.collection_name!r}: it is an alias, not a collection."
+            )
+
         # Delete the collection
         self.client.delete_collection(collection_name=self.collection_name)
 

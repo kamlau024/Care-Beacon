@@ -17,7 +17,9 @@ embeddings:
 # Vector Database
 vector_db:
   provider: "qdrant"  # Qdrant Cloud vector database
-  collection_name: "care-beacon-medical"
+  # An ALIAS, not a collection: re-ingests build a new collection and switch
+  # this alias to it (api/scripts/qdrant_alias.py). Must exist in Qdrant.
+  collection_name: "care-beacon-live"
   distance_metric: "cosine"  # cosine, l2, or ip
 
   # Qdrant Cloud Configuration

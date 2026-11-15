@@ -38,7 +38,7 @@ def test_config_vector_db_settings(config_path):
     """Test vector database configuration."""
     config = Config(str(config_path))
 
-    assert config.get("vector_db.collection_name") == "care-beacon-medical"
+    assert config.get("vector_db.collection_name") == "care-beacon-live"
     assert config.get("vector_db.distance_metric") == "cosine"
 
 
