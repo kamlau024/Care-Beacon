@@ -74,7 +74,7 @@ Chat reuses the same retrieval and reranking as Search, with three additions: qu
 3. **Generate with history.** The most recent turns that fit a 6,000-character budget are included, with old `[n]` citation markers stripped so they can't be confused with this turn's sources. Safety instructions are placed next to the question, where they hold up under multi-turn pressure.
 4. **Persist.** The user's message is saved before retrieval starts and the answer, with its citations and cost, once it completes. Changing a thread's settings adds a settings event to the conversation and applies to later turns only.
 
-Each diagram opens in an interactive viewer hosted on the live site, where you can zoom, search, focus on a component, and follow it to the source lines it was drawn from. The diagram sources live in [`docs/diagrams/`](docs/diagrams/).
+Each diagram opens in an interactive viewer hosted on the live site, where you can zoom, search, focus on a component, and follow it to the source lines it was drawn from. Ctrl-click (⌘-click on Mac) a diagram to open its viewer in a new tab. The diagram sources live in [`docs/diagrams/`](docs/diagrams/).
 
 ## Project Status
 
