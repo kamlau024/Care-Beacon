@@ -83,8 +83,7 @@ medical_disclaimer: |
 no_context_found: |
   I couldn't find relevant information in the selected sources to answer your question. You may want to:
   1. Rephrase your question
-  2. Contact BC Cancer directly for more specific information
-  3. Speak with your healthcare provider
+  2. Speak with your healthcare provider
 
 insufficient_context: |
   The available materials provide some related information, but may not fully address your specific question. Here's what I found:
