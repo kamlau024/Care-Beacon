@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Care Beacon",
-  description: "Evidence-based medical information powered by AI and BC Cancer resources",
+  description: "Cited cancer information from BC Cancer, the Canadian Cancer Society and Cleveland Clinic",
 }
 
 export default function RootLayout({

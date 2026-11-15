@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Care Beacon",
     short_name: "Care Beacon",
-    description: "Evidence-based medical information powered by AI and BC Cancer resources",
-    start_url: "/",
+    description: "Cited cancer information from BC Cancer, the Canadian Cancer Society and Cleveland Clinic",
+    start_url: "/chat",
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#0a0a0a",
