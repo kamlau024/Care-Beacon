@@ -135,3 +135,22 @@ def test_no_filter_returns_none():
 
     assert build_qdrant_filter(None) is None
     assert build_qdrant_filter({}) is None
+
+
+def test_create_with_float16_and_deferred_indexing():
+    from unittest.mock import MagicMock, patch
+    from qdrant_client.models import Datatype
+    from src.storage.qdrant_db import QdrantVectorDatabase
+
+    with patch("src.storage.qdrant_db.QdrantClient") as cls:
+        client = MagicMock()
+        client.get_collection.side_effect = Exception("not found")
+        cls.return_value = client
+        db = QdrantVectorDatabase(url="http://x", api_key="k", collection_name="c", create_if_missing=True,
+                                  quantize=True, float16=True, defer_indexing=True)
+        kwargs = client.create_collection.call_args.kwargs
+        assert kwargs["vectors_config"].datatype == Datatype.FLOAT16
+        assert kwargs["optimizers_config"].indexing_threshold == 0
+        assert kwargs["optimizers_config"].max_segment_size == QdrantVectorDatabase.MAX_SEGMENT_KB
+        db.enable_indexing()
+        assert client.update_collection.call_args.kwargs["optimizers_config"].indexing_threshold == 10000

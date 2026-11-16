@@ -88,6 +88,22 @@ Run `python scripts/check_chunks.py` (from `api/`) before a full run. It parses 
 3. Clear the answer cache, since cached answers were built from the old chunks: `POST /api/v1/cache/clear` with the `X-API-Key` header.
 4. To roll back, point the alias at the previous collection (`point` prints the command) and clear the cache again.
 
+### When the cluster has no room for a second collection (build locally, swap)
+
+The free-tier cluster cannot hold two full collections: a `--quantize` build next to the live one ran out of disk ("WAL buffer size exceeds available disk space") on 2026-11-15. In that case, build the new collection in a local Qdrant and copy it up. Search is down only while the copy runs.
+
+1. `make qdrant-local` starts Qdrant 1.16.3 in Docker on `127.0.0.1:6333` (data in `data/qdrant-local/`, gitignored).
+2. Keep a rollback copy: `cd api && python scripts/qdrant_copy.py --from cloud --to local care-beacon-medical care-beacon-medical-backup --quantize`.
+3. Build the new collection locally: `python scripts/ingest.py --target local --collection care-beacon-medical-v2`. A local Qdrant serves nothing, so it needs no served alias; the other checks still apply.
+4. Check the local build (point counts per source, a few known questions).
+5. Delete the cloud collection to free its disk. **Search and chat retrieval fail from here until step 7.**
+6. `python scripts/qdrant_copy.py --from local --to cloud care-beacon-medical-v2 --quantize --float16 --workers 6`. Ids, vectors and payloads are copied as-is, so nothing is re-embedded. Measured 2026-11-16: about 640 points/s, 10 minutes for 412,473 points (one worker manages only about 100/s). Failed upserts are retried; if the copy still fails, rerun it with `--resume`.
+   - `--float16` is required on the free tier. With float32 originals the cluster ran out of disk while indexing ("Not enough space available for optimization"), leaving 72K vectors unindexed and searches at about 4 s. float16 halves the originals on disk; top-20 results match float32 to within 0.002 in score.
+   - The copy creates the collection with indexing off and segments capped at 150 MB, then switches indexing on at the end. The HNSW index then builds in the background. **Until it finishes, searches are brute force and slow** (about 11 s right after the upload).
+7. `python scripts/qdrant_alias.py point care-beacon-live care-beacon-medical-v2`, then clear the answer cache.
+
+To roll back, delete the new cloud collection, copy `care-beacon-medical-backup` up the same way, and point the alias at it.
+
 There is no Admin UI or API endpoint to trigger ingestion remotely — that capability was deleted because it required spawning a subprocess, which isn't possible on Vercel's serverless functions.
 
 ## Monitoring Progress

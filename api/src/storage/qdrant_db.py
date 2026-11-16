@@ -4,7 +4,9 @@ import os
 from typing import List, Dict, Any, Optional
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
+    Datatype,
     Distance,
+    OptimizersConfigDiff,
     VectorParams,
     PointStruct,
     Filter,
@@ -53,6 +55,11 @@ def build_qdrant_filter(where: Optional[Dict[str, Any]]) -> Optional[Filter]:
 class QdrantVectorDatabase:
     """Qdrant Cloud vector database for storing and retrieving embeddings."""
 
+    # Segment size cap (KB) for bulk loads: the optimizer needs temporary disk
+    # about the size of the segment it rebuilds, and the free-tier cluster has
+    # only a few hundred MB spare (a 565 MB rebuild failed on 2026-11-16).
+    MAX_SEGMENT_KB = 150_000
+
     def __init__(
         self,
         url: Optional[str] = None,
@@ -60,6 +67,8 @@ class QdrantVectorDatabase:
         collection_name: Optional[str] = None,
         create_if_missing: bool = False,
         quantize: bool = False,
+        float16: bool = False,
+        defer_indexing: bool = False,
     ):
         """Initialize the Qdrant vector database.
 
@@ -77,6 +86,12 @@ class QdrantVectorDatabase:
             quantize: When creating the collection, add int8 scalar
                 quantization (about 4x less RAM; full vectors kept on disk for
                 rescoring). Has no effect on an existing collection.
+            float16: When creating the collection, store the full vectors as
+                float16 (half the disk of float32; scores barely change).
+            defer_indexing: When creating the collection, don't build the HNSW
+                index while points are written (indexing_threshold=0), and cap
+                segments at MAX_SEGMENT_KB so optimizing later needs little
+                temporary disk. Call ``enable_indexing()`` when done writing.
         """
         config = get_config()
 
@@ -107,6 +122,8 @@ class QdrantVectorDatabase:
         }
         self.qdrant_distance = distance_map.get(self.distance_metric, Distance.COSINE)
         self.quantize = quantize
+        self.float16 = float16
+        self.defer_indexing = defer_indexing
 
         # Create collection if it doesn't exist (unless explicitly disabled --
         # see create_if_missing docstring above).
@@ -129,6 +146,12 @@ class QdrantVectorDatabase:
                         size=self.vector_size,
                         distance=self.qdrant_distance,
                         on_disk=True if self.quantize else None,
+                        datatype=Datatype.FLOAT16 if self.float16 else None,
+                    ),
+                    optimizers_config=(
+                        OptimizersConfigDiff(indexing_threshold=0, max_segment_size=self.MAX_SEGMENT_KB)
+                        if self.defer_indexing
+                        else None
                     ),
                     quantization_config=(
                         ScalarQuantization(
@@ -150,6 +173,15 @@ class QdrantVectorDatabase:
         # Create payload indexes for commonly filtered fields
         if collection_exists:
             self._ensure_payload_indexes()
+
+    def enable_indexing(self, indexing_threshold: int = 10000) -> None:
+        """Turn HNSW indexing back on after a ``defer_indexing`` bulk load."""
+        self.client.update_collection(
+            collection_name=self.collection_name,
+            optimizers_config=OptimizersConfigDiff(
+                indexing_threshold=indexing_threshold, max_segment_size=self.MAX_SEGMENT_KB
+            ),
+        )
 
     def _ensure_payload_indexes(self) -> None:
         """Create payload indexes for commonly filtered fields."""
