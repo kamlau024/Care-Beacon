@@ -5,7 +5,7 @@
 
 PY := /opt/anaconda3/envs/care-beacon/bin/python
 
-.PHONY: help setup env-activate test test-cov lint format dev ingest qdrant-aliases migrate test-db clean-cache clean-logs clean-all check
+.PHONY: help setup env-activate test test-cov lint format dev ingest qdrant-aliases qdrant-local migrate test-db clean-cache clean-logs clean-all check
 
 help:  ## Show this help message
 	@echo "Care-Beacon Development Commands:"
@@ -47,6 +47,11 @@ ingest:  ## Build a NEW Qdrant collection: make ingest COLLECTION=care-beacon-me
 
 qdrant-aliases:  ## Show Qdrant collections and which alias the app reads
 	cd api && $(PY) scripts/qdrant_alias.py show
+
+qdrant-local:  ## Start a local Qdrant (Docker, 127.0.0.1:6333, data in data/qdrant-local) for --target local
+	@docker start care-beacon-qdrant 2>/dev/null || docker run -d --name care-beacon-qdrant \
+		-p 127.0.0.1:6333:6333 -e QDRANT__SERVICE__API_KEY=local-dev-key \
+		-v "$(CURDIR)/data/qdrant-local:/qdrant/storage" qdrant/qdrant:v1.16.3
 
 # Postgres (Neon)
 migrate:  ## Apply SQL migrations (uses DATABASE_URL_UNPOOLED, else DATABASE_URL)
