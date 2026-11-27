@@ -56,6 +56,7 @@ from src.mcp_server.limits import (
     mcp_cap_reached,
 )
 from src.mcp_server.schemas import AnswerMeta, AppliedSettings, CareBeaconAnswer, ErrorInfo
+from src.observability.tracing import flush
 
 MCP_PATH = "/api/mcp"
 TOOL_NAME = "ask_care_beacon"
@@ -333,6 +334,14 @@ async def run_ask(
     started = time.perf_counter()
 
     def run() -> AskOutcome:
+        try:
+            return _answer()
+        finally:
+            # After the root span has closed: on Vercel the instance can freeze once
+            # the reply is sent, losing whatever the Langfuse SDK still buffers.
+            flush()
+
+    def _answer() -> AskOutcome:
         return answer_question(
             req,
             generator,
