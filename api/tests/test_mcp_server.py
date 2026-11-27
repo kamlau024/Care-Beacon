@@ -436,3 +436,29 @@ def test_the_trace_is_mcp_ask_with_channel_and_caller(client, monkeypatch):
     assert final["context"] == "CONTEXT"
     assert final["unmatched_markers"] == 0
     assert result["structuredContent"]["meta"]["trace_id"] == "t-1"
+
+
+# --- tracing -------------------------------------------------------------------
+# Seen live: a production mcp_ask trace kept only its early spans; the answer
+# generation and the root span (which the live evaluators score) were still
+# buffered when the function went idle. /ask and Chat flush; MCP must too.
+
+
+@pytest.fixture
+def flushes(monkeypatch):
+    import src.mcp_server.server as server
+
+    calls = []
+    monkeypatch.setattr(server, "flush", lambda: calls.append(1), raising=False)
+    return calls
+
+
+def test_the_trace_is_flushed_after_an_answer(client, flushes):
+    assert call(client, {"question": "Why am I so tired?"})["isError"] is False
+    assert flushes == [1]
+
+
+def test_the_trace_is_flushed_when_the_answer_fails(client, generator, flushes):
+    generator.generate_answer.side_effect = RuntimeError("openai down")
+    assert _error(call(client, {"question": "Why am I so tired?"}))["code"] == "upstream_unavailable"
+    assert flushes == [1]
