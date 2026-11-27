@@ -110,6 +110,15 @@ cost_tracking:
 chat:
   daily_spend_cap_usd: 2.0  # Kill-switch: chat refuses (429) once today's UTC spend reaches this
 
+# MCP server (/api/mcp). Its spend is counted separately from Chat's: neither
+# cap can close the other. Both limits fail closed if Redis is unreadable.
+mcp:
+  daily_spend_cap_usd: 2.0  # ask_care_beacon returns daily_limit_reached once today's MCP spend reaches this
+  min_similarity_default: 0.5  # Same default as the Search page and Chat (not retrieval.min_similarity_threshold)
+  rate_limit:
+    per_minute: 10  # Per caller (key name now, hashed OAuth subject later)
+    per_day: 50
+
 # Medical Safety Configuration
 safety:
   add_disclaimers: true

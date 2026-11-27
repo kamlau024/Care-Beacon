@@ -327,6 +327,21 @@ For more examples, see [Usage Examples](docs/USAGE_EXAMPLES.md).
 
 </details>
 
+## Use Care Beacon from Claude (MCP)
+
+Care Beacon is also a [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp`, with one tool, `ask_care_beacon`. It answers with the same sources, citations and disclaimer as the Search page. The contract is in [docs/API.md](docs/API.md#mcp-server).
+
+**Status: in development.** It runs on preview deployments with static keys. Public sign-in (OAuth) comes before it goes to production.
+
+To connect Claude Desktop during development:
+
+1. Create a key: `make mcp-key NAME=claude-desktop-<you>`. Add the printed `name:sha256` entry to `MCP_API_KEYS` for the preview, then redeploy.
+2. On claude.ai, open **Customize → Connectors → + Add → Add custom connector**. Connectors are per account, so Claude Desktop shares them.
+   - **URL:** the preview's `https://…/api/mcp`. A protected preview also needs `?x-vercel-protection-bypass=<secret>` on the end.
+   - **Authentication:** **No sign in**.
+   - **Request headers:** `authorization` = `Bearer <raw key>`.
+3. In a chat, click **+**, then **Connectors**, switch it on, and ask a cancer question.
+
 ## Testing
 
 ```bash

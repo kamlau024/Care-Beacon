@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 from typing import Dict, Any
 from contextlib import asynccontextmanager
-import time
 
 from fastapi import FastAPI, HTTPException, Request, Response, status, Depends, Header
 from fastapi.responses import JSONResponse
@@ -14,15 +13,15 @@ from loguru import logger
 from src.generation.answer_generator import AnswerGenerator
 from src.caching.redis_cache import RedisCache
 from src.config_loader import get_config
-from src.observability.tracing import flush, request_trace
-from src.api.filters import configured_sources, normalize_sources
+from src.observability.tracing import flush
+from src.api.ask_service import InvalidSources, answer_question
 from src.storage.vector_db import create_vector_database
 from src.db.connection import db_healthy, DatabaseUnavailable
 from src.api.chat_routes import router as chat_router, database_unavailable_handler
+from src.mcp_server.server import MCP_PATH, mcp_asgi, mcp_lifespan
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
-    CitationResponse,
     HealthResponse,
     StatsResponse,
     ErrorResponse,
@@ -92,7 +91,10 @@ async def lifespan(app: FastAPI):
     print("API is ready to accept requests!")
     print("=" * 70)
 
-    yield
+    # The MCP SDK's session manager owns a task group that must be running
+    # before /api/mcp can serve a request.
+    async with mcp_lifespan():
+        yield
 
     # Shutdown
     print("\nShutting down Care-Beacon API...")
@@ -126,6 +128,8 @@ def get_answer_generator() -> AnswerGenerator:
 
 
 app.include_router(chat_router)
+# A plain route (not a Mount), so /api/mcp has no trailing-slash redirect.
+app.router.add_route(MCP_PATH, mcp_asgi, methods=["GET", "POST", "DELETE"], include_in_schema=False)
 app.add_exception_handler(DatabaseUnavailable, database_unavailable_handler)
 
 
@@ -269,95 +273,10 @@ async def ask_question(question_request: QuestionRequest):
         HTTPException: If processing fails
     """
     try:
-        with request_trace(
-            "ask",
-            input={"question": question_request.question},
-            metadata={
-                "endpoint": "/api/v1/ask",
-                "filters": {
-                    "cancer_type": question_request.cancer_type,
-                    "source": question_request.source,
-                },
-                "min_similarity": question_request.min_similarity,
-            },
-        ) as trace:
-            # Get generator
-            generator = get_answer_generator()
-
-            # Build filters
-            filters = {}
-            if question_request.cancer_type:
-                filters["cancer_type"] = question_request.cancer_type
-            try:
-                source_filter = normalize_sources(
-                    question_request.source, configured_sources()
-                )
-            except ValueError as e:
-                raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
-                )
-            if source_filter is not None:
-                filters["source"] = source_filter
-
-            # Generate answer
-            start_time = time.time()
-
-            # Use the requested max_results directly
-            # Re-ranking will automatically fetch more results (2x) for better quality
-            max_results = question_request.max_results
-
-            answer = generator.generate_answer(
-                question=question_request.question,
-                filters=filters if filters else None,
-                max_results=max_results,
-                min_similarity=question_request.min_similarity,
-                include_full_text=question_request.include_full_text,
-            )
-
-            # Whether THIS answer came from the cache (not a cumulative hit counter)
-            was_cached = answer.cached
-
-            # Convert citations
-            sources = [
-                CitationResponse(
-                    article_title=citation.article_title,
-                    section=citation.section,
-                    url=citation.url,
-                    paragraph_index=citation.paragraph_index,
-                    text_excerpt=citation.text_excerpt,
-                    similarity_score=citation.similarity_score,
-                    source=citation.source,
-                    full_text=citation.full_text,
-                )
-                for citation in answer.citations
-            ]
-
-            # Build response
-            response = QuestionResponse(
-                question=answer.query,
-                answer=answer.answer,
-                sources=sources,
-                disclaimer=answer.disclaimer,
-                model=answer.model,
-                metadata={
-                    "tokens_used": answer.tokens_used.get("total", 0),
-                    "cost": answer.cost,
-                    "generation_time_ms": answer.generation_time_ms,
-                    "cached": was_cached,
-                    "sources_count": len(answer.citations),
-                },
-            )
-            trace.update(
-                output=response.answer,
-                metadata={
-                    "cached": was_cached,
-                    "sources_count": len(answer.citations),
-                    # Empty for a cached answer; live evaluators skip those.
-                    "context": generator.context_text(answer),
-                },
-            )
-            return response
-
+        outcome = answer_question(question_request, get_answer_generator())
+        return outcome.response
+    except InvalidSources as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:

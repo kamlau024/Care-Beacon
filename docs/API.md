@@ -11,6 +11,7 @@ Complete REST API documentation for the Care-Beacon Medical RAG System.
   - [Root / Health](#root--health)
   - [Question Answering](#question-answering)
   - [Chat and Threads](#chat-and-threads)
+  - [MCP Server](#mcp-server)
   - [System Statistics](#system-statistics)
   - [Cache Management](#cache-management)
 - [Data Models](#data-models)
@@ -311,6 +312,73 @@ Delete a thread and its messages. Response: `{"ok": true}`.
 #### PATCH `/api/v1/threads/{id}/settings`
 
 Change a thread's retrieval settings. Body: `{"sources": [...], "min_similarity": 0.3}`. Response: `{"settings": {...}, "marker": <message or null>}`, where `marker` is a `settings` role message recorded in the thread when the settings changed.
+
+---
+
+### MCP Server
+
+`POST /api/mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server, so AI agents (Claude Desktop, claude.ai, Claude Code and other MCP clients) can ask Care Beacon questions. It speaks MCP **2026-07-28** (stateless; `server/discover`, no `initialize` or session id) and still serves older clients that send `initialize`. Transport: Streamable HTTP with plain JSON responses: one POST, one JSON reply, no SSE.
+
+**Status:** static keys only (development and evals). OAuth sign-in for the public is Phase 2 of `docs/superpowers/plans/2026-11-16-mcp-server-plan.md`.
+
+**Authentication:** `Authorization: Bearer <key>`. Keys are created with `make mcp-key NAME=<name>`, which prints the raw key once and a `name:sha256` entry for the `MCP_API_KEYS` environment variable (comma-separated). The server stores only hashes.
+
+| Response | When |
+|---|---|
+| `401` + `WWW-Authenticate: Bearer` | Missing or wrong key |
+| `503 {"error": "mcp_disabled"}` | `MCP_API_KEYS` is unset (fails closed) |
+| `403 {"error": "forbidden_origin"}` | An `Origin` header other than `https://care-beacon-health.vercel.app`. Requests without `Origin` (server-to-server, such as Claude's connector) are allowed |
+| `405` + `Allow: POST` | Any method other than POST |
+
+#### Tool: `ask_care_beacon`
+
+The same pipeline as `POST /api/v1/ask` (same retrieval, cache and cost accounting), with the Search page's defaults.
+
+| Argument | Type | Default | Notes |
+|---|---|---|---|
+| `question` | string, 3–500 chars | required | One self-contained question |
+| `sources` | array of `BC Cancer`, `Canadian Cancer Society`, `Cleveland Clinic` | all three | |
+| `min_similarity` | number 0–1 | `0.5` | As on the Search page (a bare `/api/v1/ask` uses the config's 0.6) |
+| `max_results` | integer 1–10 | `5` | A hard cap: the answer is written from, and cites, at most this many passages (the best-ranked ones). Unlike Search and `/api/v1/ask`, which return every passage above `min_similarity` when re-ranking is on |
+| `include_source_text` | boolean | `false` | Adds each passage's full text |
+
+Unknown arguments are rejected. Annotations: read-only, idempotent, closed-world.
+
+**Result.** `structuredContent` (schema published as the tool's `outputSchema`):
+
+```json
+{
+  "answer": "Fatigue is common during chemotherapy [1]. ...",
+  "answered": true,
+  "citations": [
+    {"n": 1, "title": "Managing side effects", "section": "Fatigue", "section_url": null,
+     "url": "https://www.bccancer.bc.ca/...", "source": "BC Cancer", "similarity": 0.81,
+     "excerpt": "...", "text": null}
+  ],
+  "disclaimer": "This information is for educational purposes only. ...",
+  "settings": {"sources": ["BC Cancer", "Canadian Cancer Society", "Cleveland Clinic"], "min_similarity": 0.5, "max_results": 5},
+  "meta": {"model": "gpt-4o-mini", "cached": false, "cost_usd": 0.0005, "duration_ms": 14200, "trace_id": "..."}
+}
+```
+
+- `[n]` refers to `citations[n-1]`. The number is the source's position in the list, the same numbering as the Search page. Sources that were retrieved but not cited are still listed.
+- `section` is plain text. When the stored section was a markdown link, its URL is in `section_url`.
+- `answered: false` (not an error) means no source met `min_similarity`.
+- `content` has two text blocks: readable Markdown (the answer, a **Sources** list and the disclaimer), then the same JSON as `structuredContent`.
+
+**Errors** come back as tool results with `isError: true`, a readable message and `structuredContent.error`:
+
+| `error.code` | Meaning | Extra fields |
+|---|---|---|
+| `invalid_arguments` | An argument is outside the schema. No retrieval or LLM call is made | `field` |
+| `rate_limited` | Per-key limit: 10 calls/minute, 50/day (`mcp.rate_limit` in `config.yaml`) | `retry_after_s` |
+| `daily_limit_reached` | MCP's own daily spend cap (`mcp.daily_spend_cap_usd`, $2.00), separate from Chat's | `resets_at` |
+| `timeout` | No answer within 50 s | |
+| `upstream_unavailable` | Qdrant, OpenAI or Redis failed | |
+
+The rate limit and spend cap **fail closed**: if Redis can't be read, the call is refused. MCP spend is counted on its own daily counter and excluded from Chat's cap, so neither can close the other. The WAF rule `api-rate-limit` does not cover `/api/mcp` yet.
+
+**Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the key's name, metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply.
 
 ---
 

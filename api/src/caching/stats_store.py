@@ -8,14 +8,32 @@ When no Redis client is available the store degrades to a silent no-op rather th
 raising, so a cache outage never breaks the request path.
 """
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import date, datetime, timezone
-from typing import Dict, Optional
+from typing import Dict, Iterator, Optional
 
 import redis
 from redis.exceptions import RedisError
 
 # Daily cost keys outlive their UTC day so late reads still work, then expire.
 _DAILY_COST_TTL_SECONDS = 172_800
+
+# Which channel the current request's spend belongs to (e.g. "mcp"), or None.
+# Cost is recorded deep inside the embedding and LLM clients, so the request
+# sets this once instead of threading a parameter through every layer. A
+# ContextVar follows the request into anyio.to_thread worker threads.
+_spend_channel: ContextVar[Optional[str]] = ContextVar("spend_channel", default=None)
+
+
+@contextmanager
+def spend_channel(name: str) -> Iterator[None]:
+    """Also count spend recorded inside this block toward channel `name`."""
+    token = _spend_channel.set(name)
+    try:
+        yield
+    finally:
+        _spend_channel.reset(token)
 
 
 class StatsStore:
@@ -50,23 +68,34 @@ class StatsStore:
         except RedisError:
             pass
 
-    def _daily_key(self, day: Optional[date]) -> str:
+    def _daily_key(self, day: Optional[date], channel: Optional[str] = None) -> str:
         day = day or datetime.now(timezone.utc).date()
-        return f"{self._key_prefix}cost:{day.isoformat()}"
+        key = f"{self._key_prefix}cost:{day.isoformat()}"
+        return f"{key}:{channel}" if channel else key
 
     def incr_daily_cost(self, amount: float, day: Optional[date] = None) -> None:
-        """Add to the per-UTC-day cost counter (a separate string key with a TTL)."""
+        """Add to the per-UTC-day cost counter (a separate string key with a TTL).
+
+        Inside `spend_channel(name)`, the amount is also added to that channel's
+        own daily counter. The total always includes every channel.
+        """
         if self.client is None:
             return
-        key = self._daily_key(day)
+        keys = [self._daily_key(day)]
+        channel = _spend_channel.get()
+        if channel:
+            keys.append(self._daily_key(day, channel))
         try:
-            self.client.incrbyfloat(key, amount)
-            self.client.expire(key, _DAILY_COST_TTL_SECONDS)
+            for key in keys:
+                self.client.incrbyfloat(key, amount)
+                self.client.expire(key, _DAILY_COST_TTL_SECONDS)
         except RedisError:
             pass
 
-    def get_daily_cost(self, day: Optional[date] = None) -> Optional[float]:
-        """Read the day's cost.
+    def get_daily_cost(
+        self, day: Optional[date] = None, channel: Optional[str] = None
+    ) -> Optional[float]:
+        """Read the day's cost: the total, or one channel's share.
 
         Returns:
             Dollars spent (0.0 if nothing recorded yet), or None when Redis is
@@ -75,7 +104,7 @@ class StatsStore:
         if self.client is None:
             return None
         try:
-            raw = self.client.get(self._daily_key(day))
+            raw = self.client.get(self._daily_key(day, channel))
             return 0.0 if raw is None else float(raw)
         except (RedisError, ValueError):
             return None

@@ -121,6 +121,7 @@ class RedisCache:
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
         min_similarity: Optional[float] = None,
+        cap_results: bool = False,
     ) -> str:
         """Generate a unique cache key for a query.
 
@@ -142,6 +143,9 @@ class RedisCache:
             "max_results": max_results,
             "min_similarity": min_similarity,
         }
+        if cap_results:
+            # Only added when set, so existing (uncapped) keys stay valid.
+            query_dict["cap_results"] = True
 
         # Convert to JSON string (sorted for consistency)
         query_str = json.dumps(query_dict, sort_keys=True)
@@ -158,6 +162,7 @@ class RedisCache:
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
         min_similarity: Optional[float] = None,
+        cap_results: bool = False,
     ) -> Optional[GeneratedAnswer]:
         """Get cached answer if available.
 
@@ -177,7 +182,9 @@ class RedisCache:
         self.stats_store.incr("cache_queries")
 
         try:
-            cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
+            cache_key = self._generate_cache_key(
+                question, filters, max_results, min_similarity, cap_results=cap_results
+            )
             cached_data = self.client.get(cache_key)
 
             if cached_data:
@@ -211,6 +218,7 @@ class RedisCache:
         filters: Optional[Dict[str, Any]] = None,
         max_results: Optional[int] = None,
         min_similarity: Optional[float] = None,
+        cap_results: bool = False,
     ):
         """Store answer in cache.
 
@@ -225,7 +233,9 @@ class RedisCache:
             return
 
         try:
-            cache_key = self._generate_cache_key(question, filters, max_results, min_similarity)
+            cache_key = self._generate_cache_key(
+                question, filters, max_results, min_similarity, cap_results=cap_results
+            )
 
             # Serialize answer to JSON
             answer_dict = self._serialize_answer(answer)
