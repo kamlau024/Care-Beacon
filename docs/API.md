@@ -319,7 +319,7 @@ Change a thread's retrieval settings. Body: `{"sources": [...], "min_similarity"
 
 `POST /api/mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server, so AI agents (Claude Desktop, claude.ai, Claude Code and other MCP clients) can ask Care Beacon questions. It speaks MCP **2026-07-28** (stateless; `server/discover`, no `initialize` or session id) and still serves older clients that send `initialize`. Transport: Streamable HTTP with plain JSON responses: one POST, one JSON reply, no SSE.
 
-**Status:** OAuth sign-in and static keys work on previews (Phases 1–2 of `docs/superpowers/plans/2026-11-16-mcp-server-plan.md`). Not enabled in production yet.
+**Status:** live in production since 2026-11-27 at `https://care-beacon-health.vercel.app/api/mcp`, with OAuth sign-in (Phase 3 of `docs/superpowers/plans/2026-11-16-mcp-server-plan.md`).
 
 **Authentication: OAuth 2.1** (MCP 2026-07-28 authorization). [Descope](https://www.descope.com) is the authorization server (the Vercel Marketplace product *Descope MCP Auth*). Clients need only the URL:
 
@@ -388,9 +388,9 @@ Unknown arguments are rejected. Annotations: read-only, idempotent, closed-world
 | `timeout` | No answer within 50 s | |
 | `upstream_unavailable` | Qdrant, OpenAI or Redis failed | |
 
-The rate limit and spend cap **fail closed**: if Redis can't be read, the call is refused. MCP spend is counted on its own daily counter and excluded from Chat's cap, so neither can close the other. The WAF rule `api-rate-limit` does not cover `/api/mcp` yet.
+The rate limit and spend cap **fail closed**: if Redis can't be read, the call is refused. MCP spend is counted on its own daily counter and excluded from Chat's cap, so neither can close the other. The WAF rule `api-rate-limit` (20 requests / 60 s per IP, shared with `/api/v1/ask` and `/api/v1/chat`) also covers `/api/mcp`.
 
-**Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the caller: `oauth:<first 32 hex of SHA-256(sub)>` for a signed-in user, or the static key's name; metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply.
+**Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the caller: `oauth:<first 32 hex of SHA-256(sub)>` for a signed-in user, or the static key's name; metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply: the live rule scores uncached `mcp_ask` roots in production. `mcp_ask` is always the root span, because `build_server()` removes the MCP SDK's own tracing middleware, and each call flushes its trace before returning.
 
 #### MCP privacy (shown at sign-in)
 

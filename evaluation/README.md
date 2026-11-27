@@ -299,6 +299,7 @@ observation of each request carries everything a judge needs:
 |---|---|---|---|
 | `chat` | `{"question": ...}` | the answer | `context` (the numbered sources the answer was written from), `search_query` (the rewritten query on follow-ups), `sources_count`, `status`, `settings` |
 | `ask` | `{"question": ...}` | the answer | `context` (empty for a cached answer), `cached`, `sources_count` |
+| `mcp_ask` | `{"question": ...}` | the answer | as `ask`, plus `channel: "mcp"`, `mcp` (client, protocol version), `arguments`, `unmatched_markers` |
 
 Each LLM call inside a trace is named for its job: `answer`, `rerank`, `rewrite_query`,
 `title`. Every trace carries an environment: `LANGFUSE_TRACING_ENVIRONMENT` if set,
@@ -317,7 +318,7 @@ that as 1.
 2. **Evaluators**: Langfuse → Evaluators → create the six below, model `gpt-4o-mini`
    (`gpt-4o` for `citation_accuracy`), a numeric score with reasoning.
 3. **Rule** for each: target **observations**, filters *Is Root Observation* = true,
-   *Name* is any of `chat`, `ask`, *Environment* = `production`, sampling 100%. For
+   *Name* is any of `chat`, `ask`, `mcp_ask`, *Environment* = `production`, sampling 100%. For
    Grounded, also skip cached Search answers (metadata `cached` = `false`), or target
    `chat` only if the metadata filter can't express it.
 4. **Variable mapping**: `{{question}}` → input, `{{answer}}` → output,
@@ -353,11 +354,14 @@ watch for?" is judged as the full question it stands for.
 | Rule | ID | Filters | Sampling |
 |---|---|---|---|
 | Live Chat answers | `cmwhb6yc907drad0e2mx0v464` | root observation, environment `production`, name `chat` | 100% |
-| Live Search answers (not cached) | `cmwhb6yfc07i4ad0jdnbwqev1` | root observation, environment `production`, name `ask`, metadata `cached` = `false` | 100% |
+| Live Search answers (not cached) | `cmwhb6yfc07i4ad0jdnbwqev1` | root observation, environment `production`, name `ask` or `mcp_ask`, metadata `cached` = `false` | 100% |
 
 Both rules run all six evaluators. Verified on 2026-11-14: a new Search answer was
 scored 1/1/1 within about 20 seconds, and a cached repeat of it was not scored;
 `citation_accuracy` was added the same evening and scored the next new Search answer.
+`mcp_ask` (the MCP server's root span) was added to the Search rule's name filter on
+2026-11-27 through the API. Verified the same day: two new MCP answers in a row, served
+by one warm instance, were both root spans and both got all six scores.
 
 ### Evaluator prompts
 
