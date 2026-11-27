@@ -1,6 +1,6 @@
 ---
 title: "Care Beacon MCP server: research and plan"
-status: Stage 1 acceptance passed on the preview (2026-11-27, evaluation/results/2026-11-27-mcp-smoke.md); Phase 3 (production) next, on request
+status: Stage 1 complete, live in production since 2026-11-27 (Phase 3 findings below). Stage 2 decision due around 2026-12-04, after a week of live mcp_ask scores
 date: 2026-11-16
 claude_sessions:
   - "2026-11-16 · Research and plan a Care Beacon MCP server with evals · claude://claude.ai/epitaxy/local_06845a28-a297-4c14-aac9-ea8d70f7f3f6"
@@ -559,6 +559,18 @@ Spike branch `spike/mcp-phase0` (local worktree `.claude/worktrees/mcp-phase0`, 
 3. Update the Langfuse live Search rule to include `mcp_ask`, and verify on one real MCP call. This gives MCP the same six live evaluator scores as Search from day one, at no extra build cost.
 4. Connect Claude Desktop to production, and make one smoke call.
 5. Update `CLAUDE.md` "Current Production State" (the dependency count, the `/api/mcp` endpoint, the separate MCP spend cap, the WAF paths) and `evaluation/README.md`.
+
+#### Phase 3 findings (2026-11-27)
+
+All five steps are done and verified in production (`https://care-beacon-health.vercel.app/api/mcp`).
+
+| Step | Result |
+|---|---|
+| 1. Env vars | Descope issuer and `MCP_RESOURCE_URL` set in Production, plus `MCP_API_KEYS` (smoke key). A request without a token gets 401 with `resource_metadata` pointing at the production metadata URL. |
+| 2. WAF | `api-rate-limit` now matches `/api/v1/ask`, `/api/v1/chat` and `/api/mcp`. Burst test at 18:57 UTC: 25 POSTs to `/api/mcp` with no token returned **20 × 401, then 5 × 429**. The app never returns 429 to a request without a token, so the 429s are the edge rule. No LLM calls. |
+| 3. Langfuse rule | "Live Search answers (not cached)" now matches `ask` and `mcp_ask`. Two fixes were needed before MCP traces were scored: #35 (`run_ask` flushes, because the root and generation spans were lost when the instance froze) and #36 (the MCP SDK's `OpenTelemetryMiddleware` removed: on warm instances it made `mcp_ask` a child of a `tools/call` span that was never exported, so the root-only rule skipped it). Verified: two calls on one warm instance were both root spans and both got all six scores. |
+| 4. Claude smoke | Claude's production connector (OAuth, URL only) answered new questions; `user_id` `oauth:1f29c966…`, `channel: mcp`. |
+| 5. Docs | CLAUDE.md "Current Production State", `docs/API.md` and `evaluation/README.md` (#37). |
 
 ## Stage 2: MCP evals (optional, decided after Stage 1)
 
