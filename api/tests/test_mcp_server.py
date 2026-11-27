@@ -112,7 +112,9 @@ def generator(redis_client):
 @pytest.fixture
 def client(monkeypatch, generator):
     monkeypatch.setenv("MCP_API_KEYS", KEY_LINE)
-    for var in ("MCP_DAILY_SPEND_CAP_USD", "MCP_RATE_LIMIT_PER_MIN", "VERCEL_ENV"):
+    # OAuth off: these are the static-key contract tests (OAuth: test_mcp_oauth_routes.py).
+    for var in ("MCP_DAILY_SPEND_CAP_USD", "MCP_RATE_LIMIT_PER_MIN", "VERCEL_ENV",
+                "DESCOPE_ISSUER", "MCP_RESOURCE_URL", "MCP_OAUTH_ISSUER"):
         monkeypatch.delenv(var, raising=False)
     with patch("src.api.main.get_answer_generator", return_value=generator):
         with TestClient(app) as c:
@@ -426,7 +428,7 @@ def test_the_trace_is_mcp_ask_with_channel_and_caller(client, monkeypatch):
     assert kw["tags"] == ["mcp"]
     meta = kw["metadata"]
     assert meta["channel"] == "mcp"
-    assert meta["mcp"]["key_name"] == "pytest"
+    assert meta["mcp"]["caller"] == "pytest"  # a key name, or oauth:<hash> with OAuth
     assert meta["mcp"]["client"] == "pytest/1"
     assert meta["mcp"]["protocol_version"] == VERSION
     assert meta["arguments"]["max_results"] == 4

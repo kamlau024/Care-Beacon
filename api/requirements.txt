@@ -14,3 +14,4 @@ python-dotenv==1.0.1
 langfuse==4.18.0
 psycopg[binary]==3.3.8
 mcp==2.3.0  # /api/mcp (src/mcp_server): MCP 2026-07-28, stateless Streamable HTTP
+pyjwt[crypto]==2.15.1  # /api/mcp OAuth: RS256 access-token checks (src/mcp_server/oauth.py)

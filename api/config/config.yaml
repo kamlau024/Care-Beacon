@@ -118,6 +118,10 @@ mcp:
   rate_limit:
     per_minute: 10  # Per caller (key name now, hashed OAuth subject later)
     per_day: 50
+  oauth:
+    # Required access-token scope. OAuth itself is on when DESCOPE_ISSUER and
+    # MCP_RESOURCE_URL are set (src/mcp_server/oauth.py).
+    scope: ask
 
 # Medical Safety Configuration
 safety:

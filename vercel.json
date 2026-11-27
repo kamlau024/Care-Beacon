@@ -22,6 +22,12 @@
       }
     },
     {
+      "source": "/.well-known/oauth-protected-resource(.*)",
+      "destination": {
+        "service": "api"
+      }
+    },
+    {
       "source": "/(.*)",
       "destination": {
         "service": "web"

@@ -37,6 +37,18 @@ from src.caching.stats_store import spend_channel
 from src.config_loader import get_config
 from src.mcp_server.auth import authenticate, parse_keys
 from src.mcp_server.format import build_citations, render_markdown, renumber
+from src.mcp_server.oauth import (
+    AuthUnavailable,
+    OAuthSettings,
+    WELL_KNOWN,
+    TokenError,
+    cached_verifier,
+    caller_for_subject,
+    load_oauth_settings,
+    looks_like_jwt,
+    protected_resource_metadata,
+    www_authenticate,
+)
 from src.mcp_server.limits import (
     MCP_CHANNEL,
     RateLimiter,
@@ -333,7 +345,7 @@ async def run_ask(
                 "mcp": {
                     "client": _client(ctx),
                     "protocol_version": ctx.protocol_version,
-                    "key_name": caller,
+                    "caller": caller,  # key name, or oauth:<sha256 of sub>
                 },
                 "arguments": {
                     "sources": sources,
@@ -414,6 +426,59 @@ async def mcp_lifespan() -> AsyncIterator[None]:
 
 _LOGGED_HEADERS = ("origin", "user-agent", "mcp-protocol-version", "mcp-method", "mcp-name")
 
+# Once OAuth is on, static keys are for automation only (plan §4).
+STATIC_KEY_NAMES_WITH_OAUTH = frozenset({"eval-harness", "smoke"})
+
+# Patched in tests; one verifier (and JWKS cache) per settings per instance.
+get_token_verifier = cached_verifier
+
+
+def _bearer(authorization: Optional[str]) -> Optional[str]:
+    scheme, _, token = (authorization or "").strip().partition(" ")
+    token = token.strip()
+    return token if scheme.lower() == "bearer" and token else None
+
+
+async def _authorize(
+    authorization: Optional[str], oauth: Optional[OAuthSettings], keys: Dict[str, str]
+):
+    """Return (caller, None) when allowed, else (None, (status, body, headers, reason))."""
+    challenge = {"WWW-Authenticate": www_authenticate(oauth) if oauth else "Bearer"}
+    token = _bearer(authorization)
+    if token is None:
+        reason = "missing" if not authorization else "not_bearer"
+        return None, (401, {"error": "unauthorized"}, challenge, reason)
+    if oauth is not None and looks_like_jwt(token):
+        try:
+            claims = await anyio.to_thread.run_sync(get_token_verifier(oauth).verify, token)
+        except AuthUnavailable as e:
+            logger.warning("mcp auth unavailable: {}", e)
+            return None, (503, {"error": "auth_unavailable"}, None, "auth_unavailable")
+        except TokenError as e:
+            status = 403 if e.code == "insufficient_scope" else 401
+            headers = {"WWW-Authenticate": www_authenticate(oauth, error=e.code)}
+            return None, (status, {"error": e.code}, headers, f"{e.code}: {e.description}")
+        return caller_for_subject(claims.subject), None
+    name = authenticate(authorization, keys)
+    if name is None:
+        return None, (401, {"error": "unauthorized"}, challenge, "unknown_key")
+    if oauth is not None and name not in STATIC_KEY_NAMES_WITH_OAUTH:
+        return None, (401, {"error": "unauthorized"}, challenge, f"static_key_not_allowed:{name}")
+    return name, None
+
+
+PRM_PATHS = (WELL_KNOWN + MCP_PATH, WELL_KNOWN)
+
+
+async def protected_resource_metadata_endpoint(request: Any) -> JSONResponse:
+    """GET /.well-known/oauth-protected-resource[/api/mcp] (RFC 9728). Public."""
+    oauth = load_oauth_settings()
+    if oauth is None:
+        return JSONResponse({"error": "not_found"}, status_code=404)
+    return JSONResponse(
+        protected_resource_metadata(oauth), headers={"Cache-Control": "public, max-age=300"}
+    )
+
 
 class McpGuard:
     """Checks every /api/mcp request before the SDK sees it."""
@@ -438,13 +503,17 @@ class McpGuard:
         origin = headers.get("origin")
         if origin and origin not in ALLOWED_ORIGINS:
             return await reply(403, {"error": "forbidden_origin"})
+        oauth = load_oauth_settings()
         keys = parse_keys(os.getenv("MCP_API_KEYS"))
-        if not keys:
-            # Fail closed: no keys configured means the endpoint is off.
+        if oauth is None and not keys:
+            # Fail closed: no way to authenticate means the endpoint is off.
             return await reply(503, {"error": "mcp_disabled"})
-        caller = authenticate(headers.get("authorization"), keys)
-        if caller is None:
-            return await reply(401, {"error": "unauthorized"}, {"WWW-Authenticate": "Bearer"})
+        caller, refusal = await _authorize(headers.get("authorization"), oauth, keys)
+        if refusal is not None:
+            status, body, extra, reason = refusal
+            # The reason, never the credential (Phase 1 finding).
+            logger.info("mcp auth refused status={} reason={}", status, reason)
+            return await reply(status, body, extra)
         if _current_endpoint is None:
             return await reply(503, {"error": "mcp_not_started"})
         scope.setdefault("state", {})["mcp_caller"] = caller

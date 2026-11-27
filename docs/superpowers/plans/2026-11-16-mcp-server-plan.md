@@ -1,6 +1,6 @@
 ---
 title: "Care Beacon MCP server: research and plan"
-status: Phases 0 and 1 done (Phase 1 in 7f9cc7b, preview only); Phase 2 (OAuth) next
+status: Phases 0–2 done on the preview (OAuth via Descope); Stage 1 acceptance and Phase 3 (production) next
 date: 2026-11-16
 claude_sessions:
   - "2026-11-16 · Research and plan a Care Beacon MCP server with evals · claude://claude.ai/epitaxy/local_06845a28-a297-4c14-aac9-ea8d70f7f3f6"
@@ -347,7 +347,7 @@ Which provider to use is decided at the start of Phase 2, checking the Vercel Ma
 ## 5. Langfuse tracing
 
 - Root trace **name `mcp_ask`**, from the shared `answer_question(..., trace_name="mcp_ask")`. It has the same root shape as `ask` (`input.question`, `output`, `metadata.context`, `metadata.cached`, `metadata.sources_count`), so **the existing six evaluators work unchanged**.
-- Extra metadata: `channel: "mcp"`, `mcp.client` (`clientInfo.name`/`version` from `_meta`), `mcp.protocol_version`, `mcp.key_name`, `arguments` (the settings as passed), `settings_applied`, `unmatched_markers`, and `error_code` when `isError`. Tags: `["mcp"]`. `user_id` is the key name.
+- Extra metadata: `channel: "mcp"`, `mcp.client` (`clientInfo.name`/`version` from `_meta`), `mcp.protocol_version`, `mcp.caller` (the key name, or `oauth:<hash>` after Phase 2), `arguments` (the settings as passed), `settings_applied`, `unmatched_markers`, and `error_code` when `isError`. Tags: `["mcp"]`. `user_id` is the key name.
 - **The environment is not used for the channel.** It stays `production`/`preview`/`development`, so existing filters and the live-rule `Environment = production` condition keep their meaning.
 - **Live evaluators:** edit the "Live Search answers (not cached)" rule (`cmwhb6yfc07i4ad0jdnbwqev1`) so its name filter is `ask` or `mcp_ask`. The judges' `$.question` mapping already fits. Done through the Langfuse public API, as the README documents. Record it in `evaluation/README.md`.
 - Optional: pass the client's W3C `traceparent` from `_meta` (now documented in the spec) as the Langfuse trace's parent, if the SDK exposes it. Not needed for v1.
@@ -529,6 +529,18 @@ Spike branch `spike/mcp-phase0` (local worktree `.claude/worktrees/mcp-phase0`, 
 4. Switch the per-caller limiter and trace `user_id` to the hashed `sub`.
 5. Contract tests: valid token, expired token, wrong audience, wrong issuer, missing scope, and static-key fallback limited to the `eval-harness`/`smoke` names.
 6. Write the privacy note shown at sign-in: what is stored (an email or subject at the authorization server; questions in Langfuse traces) and for how long.
+
+#### Phase 2 findings (2026-11-26)
+
+| Finding | Consequence |
+|---|---|
+| **Provider: Descope**, via the Marketplace product *Descope MCP Auth* (`descope/mcp-auth`, free plan; resource `care-beacon-mcp-auth`, connected to Preview and Development only). Chosen over Clerk (JWT/JWKS details for MCP tokens unconfirmed), Better Auth (we'd own a security-critical authorization server and its sign-in UI) and Auth0 (not Marketplace-native). | Free tier: 7,500 MAU and about 2,000 MCP consents a month, no overage charges. Production env vars are a Phase 3 step. |
+| **Each Descope MCP server has its own issuer**, `https://api.descope.com/v1/apps/agentic/<project>/<server>`, separate from the project issuer the Marketplace sets as `DESCOPE_ISSUER`. CIMD is advertised only on the MCP server's metadata. A `vercel deploy -e DESCOPE_ISSUER=…` doesn't override the integration's own variable. | `MCP_OAUTH_ISSUER` (the MCP server issuer) takes precedence over `DESCOPE_ISSUER`; discovery is derived from it. Descope console setup: MCP Server URL = `MCP_RESOURCE_URL` exactly (it becomes `aud`), scope `ask`, CIMD on, DCR off. |
+| **Descope returns 403 to urllib's default `Python-urllib` user agent**, so discovery failed on the first deploy and every token got `503 auth_unavailable`. | Discovery and `PyJWKClient` send `User-Agent: care-beacon-mcp/1.0`; a test pins it. |
+| `cryptography` wasn't in the runtime dependencies (mcp requires `pyjwt` without the crypto extra). | `pyjwt[crypto]==2.15.1` added to `api/requirements.txt`. |
+| **CLI previews have random URLs**, and this branch's git pushes don't create previews, but `aud` must be one fixed URL. | Previews are aliased to `care-beacon-mcp-preview.vercel.app` (`vercel alias set`), and `MCP_RESOURCE_URL` is that alias's `/api/mcp`. |
+| **Vercel Deployment Protection blocks OAuth discovery:** Claude fetches `/.well-known/oauth-protected-resource…` without the bypass query and gets Vercel's login redirect. | For the OAuth smoke test, protection for Preview was paused and then switched back on. Production has no Deployment Protection, so this only affects previews. |
+| **OAuth smoke test passed (2026-11-27, Claude Desktop, URL only):** 401 → metadata 200 → Descope sign-in with Claude's CIMD identity → consent for `ask` → 4 × `tools/call` 200 in 9.6–15.7 s, 5 sources each (the cap held), `unmatched_markers` 0. Traces carry `user_id` `oauth:<hash>` and never the Descope user id. Descope doesn't advertise RFC 9207 `authorization_response_iss_parameter_supported`; Claude didn't need it. | The trace field `mcp.key_name` was renamed `mcp.caller`. The privacy note is in `docs/API.md` (MCP Server → Privacy) and the README; it should also be pasted into Descope's consent screen text. |
 
 ### Stage 1 acceptance (on the preview, before production)
 

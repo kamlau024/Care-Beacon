@@ -18,7 +18,13 @@ from src.api.ask_service import InvalidSources, answer_question
 from src.storage.vector_db import create_vector_database
 from src.db.connection import db_healthy, DatabaseUnavailable
 from src.api.chat_routes import router as chat_router, database_unavailable_handler
-from src.mcp_server.server import MCP_PATH, mcp_asgi, mcp_lifespan
+from src.mcp_server.server import (
+    MCP_PATH,
+    PRM_PATHS,
+    mcp_asgi,
+    mcp_lifespan,
+    protected_resource_metadata_endpoint,
+)
 from src.api.models import (
     QuestionRequest,
     QuestionResponse,
@@ -130,6 +136,9 @@ def get_answer_generator() -> AnswerGenerator:
 app.include_router(chat_router)
 # A plain route (not a Mount), so /api/mcp has no trailing-slash redirect.
 app.router.add_route(MCP_PATH, mcp_asgi, methods=["GET", "POST", "DELETE"], include_in_schema=False)
+# OAuth Protected Resource Metadata (RFC 9728), public; 404 while OAuth is off.
+for _path in PRM_PATHS:
+    app.router.add_route(_path, protected_resource_metadata_endpoint, methods=["GET"], include_in_schema=False)
 app.add_exception_handler(DatabaseUnavailable, database_unavailable_handler)
 
 

@@ -319,14 +319,26 @@ Change a thread's retrieval settings. Body: `{"sources": [...], "min_similarity"
 
 `POST /api/mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server, so AI agents (Claude Desktop, claude.ai, Claude Code and other MCP clients) can ask Care Beacon questions. It speaks MCP **2026-07-28** (stateless; `server/discover`, no `initialize` or session id) and still serves older clients that send `initialize`. Transport: Streamable HTTP with plain JSON responses: one POST, one JSON reply, no SSE.
 
-**Status:** static keys only (development and evals). OAuth sign-in for the public is Phase 2 of `docs/superpowers/plans/2026-11-16-mcp-server-plan.md`.
+**Status:** OAuth sign-in and static keys work on previews (Phases 1–2 of `docs/superpowers/plans/2026-11-16-mcp-server-plan.md`). Not enabled in production yet.
 
-**Authentication:** `Authorization: Bearer <key>`. Keys are created with `make mcp-key NAME=<name>`, which prints the raw key once and a `name:sha256` entry for the `MCP_API_KEYS` environment variable (comma-separated). The server stores only hashes.
+**Authentication: OAuth 2.1** (MCP 2026-07-28 authorization). [Descope](https://www.descope.com) is the authorization server (the Vercel Marketplace product *Descope MCP Auth*). Clients need only the URL:
+
+1. A request without a token gets `401` with `WWW-Authenticate: Bearer resource_metadata="<origin>/.well-known/oauth-protected-resource/api/mcp", scope="ask"`.
+2. The client reads that **Protected Resource Metadata** (RFC 9728, public; also served at `/.well-known/oauth-protected-resource`), which names the Descope MCP server as `authorization_servers`.
+3. It signs the user in at Descope with PKCE, identifying itself with a **Client ID Metadata Document** (CIMD; Dynamic Client Registration is off), and sends `resource=<our /api/mcp URL>` (RFC 8707).
+4. Every call carries `Authorization: Bearer <access token>`. The server checks the RS256 signature against Descope's JWKS, `iss`, `aud` (must be our `/api/mcp` URL), `exp`, a `sub`, and the `ask` scope (`mcp.oauth.scope` in `config.yaml`).
+
+Configuration: OAuth is on when an issuer (`MCP_OAUTH_ISSUER`, the Descope MCP server's own issuer `https://api.descope.com/v1/apps/agentic/<project>/<server>`; falls back to the Marketplace's `DESCOPE_ISSUER`) and `MCP_RESOURCE_URL` (the canonical `https://<host>/api/mcp`, no trailing slash or query; it must equal the MCP Server URL set in Descope) are both set.
+
+**Static keys** (automation only): `Authorization: Bearer <key>`, created with `make mcp-key NAME=<name>`, which prints the raw key once and a `name:sha256` entry for `MCP_API_KEYS` (comma-separated; only hashes are stored). Once OAuth is on, only the names `smoke` and `eval-harness` are accepted.
 
 | Response | When |
 |---|---|
-| `401` + `WWW-Authenticate: Bearer` | Missing or wrong key |
-| `503 {"error": "mcp_disabled"}` | `MCP_API_KEYS` is unset (fails closed) |
+| `401` + `WWW-Authenticate: Bearer resource_metadata=…, scope="ask"` | No token, or a static key that is wrong or (with OAuth on) not `smoke`/`eval-harness` |
+| `401` + `WWW-Authenticate: Bearer error="invalid_token", …` | Bad signature, wrong `iss` or `aud`, expired, or no `sub` |
+| `403` + `WWW-Authenticate: Bearer error="insufficient_scope", …` | Valid token without the `ask` scope |
+| `503 {"error": "auth_unavailable"}` | Descope's discovery or JWKS can't be fetched (retry; the token may be fine) |
+| `503 {"error": "mcp_disabled"}` | Neither OAuth nor `MCP_API_KEYS` is configured (fails closed) |
 | `403 {"error": "forbidden_origin"}` | An `Origin` header other than `https://care-beacon-health.vercel.app`. Requests without `Origin` (server-to-server, such as Claude's connector) are allowed |
 | `405` + `Allow: POST` | Any method other than POST |
 
@@ -371,14 +383,16 @@ Unknown arguments are rejected. Annotations: read-only, idempotent, closed-world
 | `error.code` | Meaning | Extra fields |
 |---|---|---|
 | `invalid_arguments` | An argument is outside the schema. No retrieval or LLM call is made | `field` |
-| `rate_limited` | Per-key limit: 10 calls/minute, 50/day (`mcp.rate_limit` in `config.yaml`) | `retry_after_s` |
+| `rate_limited` | Per-caller limit (per signed-in user, or per static key): 10 calls/minute, 50/day (`mcp.rate_limit` in `config.yaml`) | `retry_after_s` |
 | `daily_limit_reached` | MCP's own daily spend cap (`mcp.daily_spend_cap_usd`, $2.00), separate from Chat's | `resets_at` |
 | `timeout` | No answer within 50 s | |
 | `upstream_unavailable` | Qdrant, OpenAI or Redis failed | |
 
 The rate limit and spend cap **fail closed**: if Redis can't be read, the call is refused. MCP spend is counted on its own daily counter and excluded from Chat's cap, so neither can close the other. The WAF rule `api-rate-limit` does not cover `/api/mcp` yet.
 
-**Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the key's name, metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply.
+**Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the caller: `oauth:<first 32 hex of SHA-256(sub)>` for a signed-in user, or the static key's name; metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply.
+
+**Privacy (shown at sign-in).** Signing in creates an account at Descope that holds your email address (or the identity you sign in with) and your consent for Claude to use Care Beacon. Care Beacon itself stores only a one-way pseudonym of your Descope user id, never your email. The questions you (or Claude) ask are kept in Care Beacon's Langfuse traces, as Search questions are, for quality review, and cached answers stay in Redis for up to an hour (`cache.ttl_seconds`). Don't include personal health details you wouldn't want stored. To stop access, disconnect the connector in Claude; your Descope account can be deleted on request.
 
 ---
 
