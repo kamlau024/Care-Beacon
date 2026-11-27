@@ -9,7 +9,7 @@ any SDK failure is logged and swallowed, never raised into the caller.
 import os
 import sys
 from contextlib import ExitStack, contextmanager
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 from loguru import logger
 from openai import OpenAI
@@ -32,6 +32,11 @@ class _Handle:
 
     def __init__(self, observation: Any = None):
         self._observation = observation
+
+    @property
+    def trace_id(self) -> Optional[str]:
+        """The Langfuse trace id, or None when tracing is off or failed to start."""
+        return getattr(self._observation, "trace_id", None)
 
     def update(self, output: Any = None, metadata: Optional[Dict[str, Any]] = None) -> None:
         if self._observation is None:
@@ -138,6 +143,7 @@ def request_trace(
     input: Any = None,
     session_id: Optional[str] = None,
     user_id: Optional[str] = None,
+    tags: Optional[List[str]] = None,
 ) -> Iterator[_Handle]:
     """Root trace for one request. Yields a handle with `.update(...)`.
 
@@ -154,7 +160,9 @@ def request_trace(
 
         client = _get_client()
         stack.enter_context(
-            propagate_attributes(trace_name=name, session_id=session_id, user_id=user_id)
+            propagate_attributes(
+                trace_name=name, session_id=session_id, user_id=user_id, tags=tags
+            )
         )
         return stack.enter_context(
             client.start_as_current_observation(

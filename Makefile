@@ -48,6 +48,10 @@ ingest:  ## Build a NEW Qdrant collection: make ingest COLLECTION=care-beacon-me
 qdrant-aliases:  ## Show Qdrant collections and which alias the app reads
 	cd api && $(PY) scripts/qdrant_alias.py show
 
+mcp-key:  ## Create a static /api/mcp key: make mcp-key NAME=claude-desktop-kam (prints the raw key once)
+	@test -n "$(NAME)" || (echo "usage: make mcp-key NAME=<name>"; exit 2)
+	cd api && $(PY) scripts/mcp_key.py $(NAME)
+
 qdrant-local:  ## Start a local Qdrant (Docker, 127.0.0.1:6333, data in data/qdrant-local) for --target local
 	@docker start care-beacon-qdrant 2>/dev/null || docker run -d --name care-beacon-qdrant \
 		-p 127.0.0.1:6333:6333 -e QDRANT__SERVICE__API_KEY=local-dev-key \

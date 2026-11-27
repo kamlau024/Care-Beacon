@@ -193,6 +193,7 @@ class AnswerGenerator:
         max_results: Optional[int] = None,
         min_similarity: Optional[float] = None,
         include_full_text: bool = False,
+        cap_results: bool = False,
     ) -> GeneratedAnswer:
         """Generate an answer to a medical question.
 
@@ -209,6 +210,9 @@ class AnswerGenerator:
             question: User's question
             filters: Optional metadata filters for retrieval
             max_results: Maximum chunks to retrieve
+            cap_results: Answer from at most max_results passages. With
+                re-ranking on, retrieval otherwise returns every passage above
+                min_similarity (Search relies on that); the MCP tool caps.
 
         Returns:
             GeneratedAnswer with answer, citations, and metadata
@@ -216,7 +220,9 @@ class AnswerGenerator:
         start_time = time.time()
 
         # Step 1: Check cache first
-        cached_answer = self.cache.get(question, filters, max_results, min_similarity)
+        cached_answer = self.cache.get(
+            question, filters, max_results, min_similarity, cap_results=cap_results
+        )
         if cached_answer:
             # Cache hit! Track savings
             elapsed_ms = (time.time() - start_time) * 1000
@@ -239,6 +245,9 @@ class AnswerGenerator:
             min_similarity=min_similarity,
             filters=filters,
         )
+        if cap_results:
+            # Results are ranked best-first, so this keeps the top passages.
+            context.results = context.results[:max_results]
 
         # Debug logging: show what chunks were retrieved
         from loguru import logger
@@ -310,7 +319,9 @@ class AnswerGenerator:
         )
 
         # Step 6: Store in cache for future requests
-        self.cache.set(question, answer, filters, max_results, min_similarity)
+        self.cache.set(
+            question, answer, filters, max_results, min_similarity, cap_results=cap_results
+        )
 
         return answer
 

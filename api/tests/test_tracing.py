@@ -201,3 +201,38 @@ def test_tracing_environment(monkeypatch, explicit, vercel, expected):
     import os
 
     assert os.getenv("LANGFUSE_TRACING_ENVIRONMENT") == expected
+
+
+def test_root_trace_passes_tags_and_user(monkeypatch):
+    _set_keys(monkeypatch)
+    monkeypatch.setattr(tracing, "_get_client", lambda: _FakeClient())
+    seen = {}
+
+    @contextmanager
+    def fake_propagate(**kw):
+        seen.update(kw)
+        yield
+
+    import langfuse
+
+    monkeypatch.setattr(langfuse, "propagate_attributes", fake_propagate)
+    with request_trace("mcp_ask", metadata={}, user_id="kam", tags=["mcp"]):
+        pass
+    assert seen["trace_name"] == "mcp_ask"
+    assert seen["user_id"] == "kam"
+    assert seen["tags"] == ["mcp"]
+
+
+def test_handle_exposes_trace_id(monkeypatch):
+    _set_keys(monkeypatch)
+    fake = _FakeClient()
+    monkeypatch.setattr(tracing, "_get_client", lambda: fake)
+    with request_trace("ask", metadata={}) as t:
+        fake.obs[0].trace_id = "abc123"
+        assert t.trace_id == "abc123"
+
+
+def test_disabled_handle_has_no_trace_id(monkeypatch):
+    _clear_keys(monkeypatch)
+    with request_trace("ask", metadata={}) as t:
+        assert t.trace_id is None

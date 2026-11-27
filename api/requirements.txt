@@ -4,7 +4,7 @@
 # requirements-dev.txt and are never installed on Vercel.
 
 fastapi==0.115.0
-pydantic>=2.9.0
+pydantic>=2.12.0  # mcp 2.3.0 requires >=2.12.0
 openai>=1.109.1
 qdrant-client==1.12.1
 redis==5.0.1
@@ -13,3 +13,5 @@ loguru==0.7.2
 python-dotenv==1.0.1
 langfuse==4.18.0
 psycopg[binary]==3.3.8
+mcp==2.3.0  # /api/mcp (src/mcp_server): MCP 2026-07-28, stateless Streamable HTTP
+pyjwt[crypto]==2.15.1  # /api/mcp OAuth: RS256 access-token checks (src/mcp_server/oauth.py)

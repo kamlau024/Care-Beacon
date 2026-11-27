@@ -164,7 +164,10 @@ CHAT_BODY = {"message": "What are the side effects of radiation therapy?"}
 
 def _stats(daily_cost=0.0):
     stats = MagicMock()
-    stats.get_daily_cost.return_value = daily_cost
+    # Total spend is daily_cost; none of it is MCP's channel.
+    stats.get_daily_cost.side_effect = lambda day=None, channel=None: (
+        0.0 if channel == "mcp" else daily_cost
+    )
     return stats
 
 
@@ -200,7 +203,10 @@ def test_chat_requires_owner_key(chat_client):
 
 
 def test_spend_cap_returns_429_before_any_model_call(chat_client, chat_parts, repo):
-    chat_parts.stats.get_daily_cost.return_value = 1000.0
+    # Total spend is over the cap; none of it is MCP's (MCP has its own cap).
+    chat_parts.stats.get_daily_cost.side_effect = lambda day=None, channel=None: (
+        0.0 if channel == "mcp" else 1000.0
+    )
     r = chat_client.post("/api/v1/chat", json=CHAT_BODY, headers=h())
     assert r.status_code == 429
     assert r.json() == {

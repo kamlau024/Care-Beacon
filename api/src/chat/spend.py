@@ -14,7 +14,10 @@ def daily_cap_usd() -> float:
 
 
 def cap_reached(stats_store: StatsStore) -> bool:
-    """True when today's (UTC) spend is at or above the cap.
+    """True when today's (UTC) spend, excluding MCP, is at or above the cap.
+
+    MCP has its own cap (src/mcp_server/limits.py), so its spend is subtracted
+    here: a busy MCP day must not close Chat.
 
     Fails open: if the day's cost can't be read, logs a warning and returns False.
     """
@@ -22,4 +25,5 @@ def cap_reached(stats_store: StatsStore) -> bool:
     if cost is None:
         logger.warning("Daily spend cap check skipped: today's cost is unavailable")
         return False
-    return cost >= daily_cap_usd()
+    mcp_cost = stats_store.get_daily_cost(channel="mcp") or 0.0
+    return cost - mcp_cost >= daily_cap_usd()
