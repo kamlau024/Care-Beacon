@@ -392,7 +392,9 @@ The rate limit and spend cap **fail closed**: if Redis can't be read, the call i
 
 **Tracing:** each call is a Langfuse trace named `mcp_ask` (tag `mcp`, `user_id` = the caller: `oauth:<first 32 hex of SHA-256(sub)>` for a signed-in user, or the static key's name; metadata `channel: "mcp"`, client name and version, protocol version, arguments, `unmatched_markers`). The root shape matches `ask`, so the Search evaluators apply.
 
-**Privacy (shown at sign-in).** Signing in creates an account at Descope that holds your email address (or the identity you sign in with) and your consent for Claude to use Care Beacon. Care Beacon itself stores only a one-way pseudonym of your Descope user id, never your email. The questions you (or Claude) ask are kept in Care Beacon's Langfuse traces, as Search questions are, for quality review, and cached answers stay in Redis for up to an hour (`cache.ttl_seconds`). Don't include personal health details you wouldn't want stored. To stop access, disconnect the connector in Claude; your Descope account can be deleted on request.
+#### MCP privacy (shown at sign-in)
+
+Signing in creates an account at Descope that holds your email address (or the identity you sign in with) and your consent for Claude to use Care Beacon. Care Beacon itself stores only a one-way pseudonym of your Descope user id, never your email. The questions you (or Claude) ask are kept in Care Beacon's Langfuse traces, as Search questions are, for quality review, and cached answers stay in Redis for up to an hour (`cache.ttl_seconds`). Don't include personal health details you wouldn't want stored. To stop access, disconnect the connector in Claude; your Descope account can be deleted on request.
 
 ---
 

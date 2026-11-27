@@ -340,7 +340,7 @@ To connect Claude (Desktop, claude.ai or mobile; connectors are per account):
 3. **Authentication:** sign in, using **Claude's published identity** (a Client ID Metadata Document). Claude opens Descope's sign-in page; sign in and approve access for `ask`.
 4. In a chat, click **+**, then **Connectors**, switch it on, and ask a cancer question.
 
-Signing in stores your email at Descope only; Care Beacon keeps a one-way pseudonym of your user id, and your questions go into its Langfuse traces as Search questions do. Details: [docs/API.md](docs/API.md#mcp-server).
+Signing in stores your email at Descope only; Care Beacon keeps a one-way pseudonym of your user id, and your questions go into its Langfuse traces as Search questions do. Details: [MCP privacy](docs/API.md#mcp-privacy-shown-at-sign-in).
 
 **Previews are behind Vercel Deployment Protection,** which also blocks the unauthenticated `/.well-known/oauth-protected-resource` fetch OAuth starts with. To test sign-in on a preview, pause protection for Preview deployments, test, and switch it back on. Scripts and evals use a static key instead (`make mcp-key NAME=smoke` or `NAME=eval-harness`; once OAuth is on, only those two names are accepted): add the printed `name:sha256` entry to `MCP_API_KEYS`, and send `authorization: Bearer <raw key>` with `?x-vercel-protection-bypass=<secret>` on a protected preview.
 
