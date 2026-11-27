@@ -278,6 +278,15 @@ def build_server() -> CareBeaconMCP:
         "resources/templates/list",
     ):
         server._lowlevel_server._request_handlers.pop(method, None)
+
+    # The SDK wraps every request in its own OpenTelemetry span. Once Langfuse
+    # sets the global tracer, mcp_ask nests under it, but that span ends after
+    # run_ask's flush and is lost when the instance freezes: mcp_ask is left with
+    # a missing parent and the root-only live evaluators skip it. mcp_ask is the
+    # root, as ask is for Search. Pinned by test_mcp_ask_is_not_nested_under_an_sdk_span.
+    server._lowlevel_server.middleware = [
+        m for m in server._lowlevel_server.middleware if type(m).__name__ != "OpenTelemetryMiddleware"
+    ]
     return server
 
 
