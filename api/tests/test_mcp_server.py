@@ -462,3 +462,27 @@ def test_the_trace_is_flushed_when_the_answer_fails(client, generator, flushes):
     generator.generate_answer.side_effect = RuntimeError("openai down")
     assert _error(call(client, {"question": "Why am I so tired?"}))["code"] == "upstream_unavailable"
     assert flushes == [1]
+
+
+# Seen live: on a warm instance the MCP SDK's own OpenTelemetry middleware
+# wrapped the call in a "tools/call" span that closed after our flush and was
+# lost, so mcp_ask had a missing parent and the root-only evaluators skipped it.
+
+
+def test_mcp_ask_is_not_nested_under_an_sdk_span(client, generator, monkeypatch):
+    import mcp.shared._otel as sdk_otel
+    from opentelemetry import trace
+    from opentelemetry.sdk.trace import TracerProvider
+
+    # A recording tracer, as the SDK gets once Langfuse sets the global provider.
+    monkeypatch.setattr(sdk_otel, "_tracer", TracerProvider().get_tracer("mcp-python-sdk"))
+    ambient = []
+    answer = generator.generate_answer.side_effect
+
+    def generate(**kwargs):
+        ambient.append(trace.get_current_span().get_span_context().is_valid)
+        return answer(**kwargs)
+
+    generator.generate_answer.side_effect = generate
+    assert call(client, {"question": "Why am I so tired?"})["isError"] is False
+    assert ambient == [False]
