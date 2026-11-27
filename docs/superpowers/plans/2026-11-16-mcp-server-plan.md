@@ -1,6 +1,6 @@
 ---
 title: "Care Beacon MCP server: research and plan"
-status: Phases 0–2 done on the preview (OAuth via Descope); Stage 1 acceptance and Phase 3 (production) next
+status: Stage 1 acceptance passed on the preview (2026-11-27, evaluation/results/2026-11-27-mcp-smoke.md); Phase 3 (production) next, on request
 date: 2026-11-16
 claude_sessions:
   - "2026-11-16 · Research and plan a Care Beacon MCP server with evals · claude://claude.ai/epitaxy/local_06845a28-a297-4c14-aac9-ea8d70f7f3f6"
@@ -548,7 +548,7 @@ Spike branch `spike/mcp-phase0` (local worktree `.claude/worktrees/mcp-phase0`, 
 - **Manual smoke from Claude Desktop** (OAuth sign-in with the URL only):
   - 5 questions: 2 plain, 1 with a source restriction, 1 with a high `min_similarity`, and 1 personal-advice question that should get a referral;
   - the same 5 asked on the Search page.
-  - **Pass:** the tool is picked; settings arrive as asked (seen in the trace's `arguments`); citations show titles, sections and URLs that match Search's; the referral is kept; no call takes longer than 30 s.
+  - **Pass:** the tool is picked for in-scope questions (amended 2026-11-27: for an urgent personal question, Claude may answer itself as long as the referral is kept); settings arrive as asked (seen in the trace's `arguments`); citations show titles, sections and URLs that match Search's; the referral is kept; no call takes longer than 30 s.
 - **One `mcp_ask` trace visible in Langfuse,** with `channel: mcp` and the client name.
 - Results go in a short `evaluation/results/<date>-mcp-smoke.md`.
 
